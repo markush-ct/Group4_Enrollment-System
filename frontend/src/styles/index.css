@@ -1,0 +1,25 @@
+@font-face {
+  font-family: poppins reg;
+  src: url(../assets/Poppins/Poppins-Regular.ttf);
+}
+@font-face {
+  font-family: poppins semibold;
+  src: url(../assets/Poppins/Poppins-SemiBold.ttf);
+}
+@font-face {
+  font-family: poppins bold;
+  src: url(../assets/Poppins/Poppins-Bold.ttf);
+}
+
+:root {
+  --greenText: #3d8c4b;
+  --backgroundColor: #f7f7f7;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  background-color: var(--backgroundColor);
+}

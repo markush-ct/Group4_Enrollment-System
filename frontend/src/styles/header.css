@@ -1,0 +1,87 @@
+#nav{
+    width: 100%;
+    position: fixed;
+}
+#header{
+    width: 100%;
+    display: flex;
+    position: fixed;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.384);
+    background-color: var(--backgroundColor);
+}
+.navLeft{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.institution{
+    display: flex;
+    flex-direction: column;
+}
+.navRight{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+.nav-ul{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+#abt-dropdown-div, #admissions-dropdown-div{
+    position: absolute;
+    bottom: 0;
+    top: 85px;
+    display: none;
+}
+#dd-about, #dd-admissions{
+    background-color: white;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.527);
+    border-radius: 0px 0px 8px 8px;
+    height: max-content;
+}
+.nav-ul li{
+    list-style: none;
+    height: 100%;
+    padding: 30px 10px;
+    display: flex;
+    flex-direction: row;
+    align-self: center;
+    justify-content: center;
+    justify-self: center;
+    cursor: pointer;
+}
+.nav-ul li:hover{
+    background-color: rgb(230, 230, 230);
+}
+li a{
+    text-decoration: none;
+    color: black;
+    height: 100%;
+    font: 15px poppins reg;
+    background-color: transparent;
+}
+#dd-about li, #dd-admissions li{
+    padding: 5px 15px;
+}
+.abt-nav:hover #abt-dropdown-div{
+    display: flex;
+}
+.admissions-nav:hover #admissions-dropdown-div{
+    display: flex;
+}
+.schoolName{
+    font: 25px poppins bold;
+    line-height: 1.5rem;
+    color: var(--greenText);
+}
+.department{
+    font: 15px poppins semibold;
+}
