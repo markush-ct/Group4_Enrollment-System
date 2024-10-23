@@ -10,10 +10,15 @@
   font-family: poppins bold;
   src: url(../assets/Poppins/Poppins-Bold.ttf);
 }
+@font-face {
+  font-family: poppins thin;
+  src:url(../assets/Poppins/Poppins-Thin.ttf);
+}
 
 :root {
   --greenText: #3d8c4b;
   --backgroundColor: #f7f7f7;
+  --darkBgColor: #3f4250;
 }
 
 * {

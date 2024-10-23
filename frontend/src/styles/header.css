@@ -17,10 +17,16 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    width: 50%;
+}
+.cvsuLogo{
+    width: 4rem;
 }
 .institution{
     display: flex;
     flex-direction: column;
+    width: 80%;
+    margin-left: 10px;
 }
 .navRight{
     display: flex;
@@ -28,48 +34,49 @@
     justify-content: center;
     align-items: center;
     height: 100%;
+    width: 50%;
 }
 .nav-ul{
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
+    width: 100%;
 }
 #abt-dropdown-div, #admissions-dropdown-div{
     position: absolute;
     bottom: 0;
-    top: 85px;
+    top: 75px;
     display: none;
 }
 #dd-about, #dd-admissions{
     background-color: white;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.527);
-    border-radius: 0px 0px 8px 8px;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.336);
     height: max-content;
 }
 .nav-ul li{
     list-style: none;
     height: 100%;
-    padding: 30px 10px;
+    padding: 30px 20px;
     display: flex;
     flex-direction: row;
-    align-self: center;
     justify-content: center;
-    justify-self: center;
     cursor: pointer;
 }
 .nav-ul li:hover{
     background-color: rgb(230, 230, 230);
 }
-li a{
+li, li a{
     text-decoration: none;
     color: black;
     height: 100%;
     font: 15px poppins reg;
     background-color: transparent;
+    line-height: 1.1rem;
 }
 #dd-about li, #dd-admissions li{
     padding: 5px 15px;
+    width: 100%;
 }
 .abt-nav:hover #abt-dropdown-div{
     display: flex;
@@ -78,10 +85,172 @@ li a{
     display: flex;
 }
 .schoolName{
-    font: 25px poppins bold;
-    line-height: 1.5rem;
+    font: 20px poppins bold;
+    line-height: 1.2rem;
     color: var(--greenText);
 }
 .department{
+    font: 13px poppins semibold;
+}
+#menuBtn{
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+/* SIDEBAR MENU */
+.sideBarContainer{
+    position: absolute;
+    background-color: var(--darkBgColor);
+    top: 0;
+    left: -100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    transition: .8s ease;
+}
+.toggleSideBar{
+    left: 0%;
+}
+.sbTop{
+    background-color: transparent;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+    margin: 3rem 0rem 4rem 0rem;
+}
+.sb-cvsuLogo{
+    background-color: transparent;
+    width: 3rem;
+}
+.sbInstitution{
+    display: block;
+    text-align: center;
+    background-color: transparent;
+    margin: 0px 10px;
+}
+.sbSchoolName{
+    font: 15px poppins bold;
+    background-color: transparent;
+    color: white;
+}
+.sbDepartment{
+    font: 13px poppins reg;
+    background-color: transparent;
+    color: white;
+}
+#closeSB{
+    background-color: rgba(255, 255, 255, 0.493);
+    border: none;
+    padding: 0px 8px;
     font: 15px poppins semibold;
+}
+.sbBot{
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: left;
+    width: 75%;
+
+}
+.sbBot .sb-nav-ul li{
+    list-style: none;
+    background-color: transparent;
+    padding: 0;
+    text-decoration: none;
+    margin: 10px 0px;
+}
+.sbBot ul{
+    background-color: transparent;
+}
+.sbBot ul li, .sbBot ul li a{
+    color: white;
+    background-color: transparent;
+    font: 15px poppins reg;
+}
+.sb-abt-dropdown-div, .sb-admissions-dropdown-div{
+    background-color: transparent;
+    margin-left: 30px;
+    margin-bottom: 10px;
+    display: none;
+}
+.sb-abt-dropdown-div #sb-dd-about li, .sb-admissions-dropdown-div #sb-dd-admissions li{
+    list-style: circle;
+}
+.displayDropdown{
+    display: flex;
+}
+
+
+/* MOBILE */
+@media screen and (max-width: 767px){
+    .navRight{
+        display: none;
+    }
+    .navLeft{
+        width: 95%;
+        justify-content: space-between;
+        margin: 12px 0px;
+    }
+    .institution{
+        margin: 0px 10px;
+    }
+    .schoolName{
+        font-size: 17px;
+        text-align: center;
+    }
+    .department{
+        font-size: 13px;
+        text-align: center;
+    }
+    .cvsuLogo{
+        width: 2.5rem;
+    }
+    .menuIcon{
+        width: 20px;
+    }
+}
+/* TABLET */
+@media screen and (min-width: 767px) and (max-width: 1023px){
+    .navRight{
+        display: none;
+    }
+    .navLeft{
+        width: 95%;
+        justify-content: space-evenly;
+        margin: 12px 0px;
+    }
+    .schoolName{
+        font-size: 20px;
+        text-align: center;
+    }
+    .department{
+        font-size: 16px;
+        text-align: center;
+    }
+    .cvsuLogo{
+        width: 3rem;
+    }
+    .menuIcon{
+        width: 20px;
+    }
+    .institution{
+        margin: 0px 10px;
+    }
+}
+/* DESKTOP */
+@media screen and (min-width: 1024px){
+    #menuBtn{
+         display: none;
+    }
+    .sideBarContainer{
+        display: none;
+    }
 }
