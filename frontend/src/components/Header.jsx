@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import SidebarMenu from './SidebarMenu'
+import SidebarMenu from '/src/components/SidebarMenu'
 import '/src/styles/header.css'
 
 function Header() {
@@ -16,7 +16,8 @@ function Header() {
                     <div className="navLeft">
                         <img className='cvsuLogo' src="/src/assets/cvsu-logo.png" alt="cvsu logo" />
                         <div className="institution">
-                            <h2 className="schoolName">CAVITE STATE UNIVERSITY - BACOOR CITY CAMPUS</h2>
+                            <h2 className="schoolName">CAVITE STATE UNIVERSITY</h2>
+                            <h2 className="schoolName">BACOOR CAMPUS</h2>
                             <p className="department">DEPARTMENT OF COMPUTER STUDIES</p>
                         </div>
 

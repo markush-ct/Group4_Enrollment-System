@@ -1,41 +1,41 @@
 import { useRef, useState } from "react"
 
-function SidebarMenu({SideBar, setSideBar}) {
+function SidebarMenu({ SideBar, setSideBar }) {
 
     const [about, setAbout] = useState(false);
     const [admissions, setAdmissions] = useState(false);
 
-    function displayAboutDropDown(){
-        if(about){
+    function displayAboutDropDown() {
+        if (about) {
             setAbout(false);
-        } else{
+        } else {
             setAbout(true);
         }
     }
 
-    function displayAdmissionsDropDown(){
-        if(admissions){
+    function displayAdmissionsDropDown() {
+        if (admissions) {
             setAdmissions(false);
-        } else{
+        } else {
             setAdmissions(true);
         }
     }
 
-    function close(){
-        if(SideBar){
+    function close() {
+        if (SideBar) {
             setSideBar(false);
-        } else{
+        } else {
             setSideBar(true);
         }
     }
 
 
     return (
-        <div className={`sideBarContainer ${SideBar ? 'toggleSideBar': ''}`}>
+        <div className={`sideBarContainer ${SideBar ? 'toggleSideBar' : ''}`}>
             <div className="sbTop">
                 <img className='sb-cvsuLogo' src="/src/assets/cvsu-logo.png" alt="cvsu logo" />
                 <div className="sbInstitution">
-                    <h2 className="sbSchoolName">CAVITE STATE UNIVERSITY - BACOOR CITY CAMPUS</h2>
+                    <h2 className="sbSchoolName">CAVITE STATE UNIVERSITY BACOOR CITY CAMPUS</h2>
                     <p className="sbDepartment">DEPARTMENT OF COMPUTER STUDIES</p>
                 </div>
 
