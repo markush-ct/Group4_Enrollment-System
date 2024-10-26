@@ -1,9 +1,51 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import '/src/styles/mainpage.css';
+import Header from '/src/components/Header.jsx';
+import emailjs from '@emailjs/browser';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useRef, useState } from 'react';
 
 function MainPage() {
+    const emailUs = useRef(null);
+    const [senderName, setSenderName] = useState('');
+    const [email, setEmail] = useState('');
+    const [message, setMessage] = useState('');
+
+    const sendEmail = (e) => {
+        e.preventDefault();
+
+        if(!senderName, !email, !message){
+            toast.error('meow'), {
+                position: 'top-center',
+            }
+        }
+                
+        emailjs
+            .sendForm('service_mpjmyfm', 'template_b3wgc54', emailUs.current, {
+                publicKey: 'Z9nUoyrtbdrLWu_kT',
+            })
+            .then(
+                () => {
+                    toast.success('Email sent successfully!', {
+                        position: 'bottom-right',
+                        autoClose: 3000, // Close after 3 seconds
+                    });
+                    setSenderName('');
+                    setEmail('');
+                    setMessage('');
+                },
+                (error) => {
+                    toast.error(`Failed to send email: ${error}`, {
+                        position: 'bottom-right',
+                        autoClose: 5000, // Close after 5 seconds
+                    });                    
+                }
+            );
+    };
+
     return (
+        <>
+        <Header />
         <div className="main-page">
             {/* Parallax Section 1 */}
             <div className="parallax-section parallax1">
@@ -37,7 +79,7 @@ function MainPage() {
             {/* Parallax Section 2 */}
             <div className="parallax-section parallax2">
                 <h2>Join us now</h2>
-                <h3>Taking a course in Computer Studies is a great way to prepare for a career in a world that's becoming more digital every day.</h3>
+                <h3>Taking a course in Computer Studies is a great way to prepare for a career in a world that&apos;s becoming more digital every day.</h3>
             </div>
 
 
@@ -83,21 +125,22 @@ function MainPage() {
                         </iframe>
                     </div>
 
+                    {/* CONTACT FORM */}
                     <div className="contact-form">
-                        <h3>Email Us</h3>
-                        <form>
+                        <h3 className='emailUs-txt'>Email Us</h3>
+                        <form ref={emailUs} onSubmit={sendEmail}>
                             <div className="form-group">
-                                <input type="text" placeholder="Your Name" required />
-                                <input type="email" placeholder="Your Email" required />
+                                <input value={senderName} name='from_senderName' type="text" placeholder="Your Name" onChange={(e) => {setSenderName(e.target.value)}}  />
                             </div>
                             <div className="form-group">
-                                <input type="text" placeholder="Subject" required />
+                            <input value={email} name='from_email' type="email" placeholder="Your Email" onChange={(e) => {setEmail(e.target.value)}}  />
                             </div>
                             <div className="form-group">
-                                <textarea placeholder="Message" required></textarea>
+                                <textarea value={message} name='message' placeholder="Message" onChange={(e) => {setMessage(e.target.value)}} ></textarea>
                             </div>
-                            <button type="submit">Send Message</button>
+                            <button type="submit" id='sendEmailBtn'>Send Message</button>
                         </form>
+                        <ToastContainer />
                     </div>
                 </div>
             </div>
@@ -126,6 +169,8 @@ function MainPage() {
                 </div>
             </footer>
         </div>
+
+        </>
     );
 }
 
