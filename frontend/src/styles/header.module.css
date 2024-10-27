@@ -1,10 +1,16 @@
-#nav{
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.nav{
     width: 100%;
     position: fixed;
     top: 0;
     z-index: 1000;
 }
-#header{
+.header{
     width: 100%;
     display: flex;
     position: fixed;
@@ -39,25 +45,25 @@
     height: 100%;
     width: 50%;
 }
-.nav-ul{
+.nav_ul{
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
     width: 100%;
 }
-#abt-dropdown-div, #admissions-dropdown-div{
+.abt_dropdown_div, .admissions_dropdown_div{
     position: absolute;
     bottom: 0;
     top: 5.5rem;
     display: none;
 }
-#dd-about, #dd-admissions{
+.dd_about, .dd_admissions{
     background-color: white;
     box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.336);
     height: max-content;
 }
-.nav-ul li{
+.nav_ul li{
     list-style: none;
     height: 100%;
     padding: 2.2rem 1rem;
@@ -66,10 +72,10 @@
     justify-content: center;
     cursor: pointer;
 }
-.nav-ul li:hover{
+.nav_ul li:hover{
     background-color: rgb(230, 230, 230);
 }
-li, li a{
+.header li, .header li a{
     text-decoration: none;
     color: black;
     height: 100%;
@@ -77,14 +83,14 @@ li, li a{
     background-color: transparent;
     line-height: 1.1rem;
 }
-#dd-about li, #dd-admissions li{
+.dd_about li, .dd_admissions li{
     padding: 5px 15px;
     width: 100%;
 }
-.abt-nav:hover #abt-dropdown-div{
+.abt_nav:hover .abt_dropdown_div{
     display: flex;
 }
-.admissions-nav:hover #admissions-dropdown-div{
+.admissions_nav:hover .admissions_dropdown_div{
     display: flex;
 }
 .schoolName{
@@ -96,7 +102,7 @@ li, li a{
     font: 13px poppins semibold;
     line-height: .5rem;
 }
-#menuBtn{
+.menuBtn{
     border: none;
     background-color: transparent;
     cursor: pointer;
@@ -104,7 +110,7 @@ li, li a{
 
 /* SIDEBAR MENU */
 .sideBarContainer{
-    position: absolute;
+    position: fixed;
     background-color: var(--darkBgColor);
     top: 0;
     left: -100%;
@@ -117,7 +123,7 @@ li, li a{
     z-index: 10000;
     transition: .8s ease;
 }
-.toggleSideBar{
+#toggleSideBar{
     left: 0%;
 }
 .sbTop{
@@ -129,7 +135,7 @@ li, li a{
     width: 90%;
     margin: 3rem 0rem 4rem 0rem;
 }
-.sb-cvsuLogo{
+.sb_cvsuLogo{
     background-color: transparent;
     width: 3rem;
 }
@@ -149,7 +155,7 @@ li, li a{
     background-color: transparent;
     color: white;
 }
-#closeSB{
+.closeSB{
     background-color: rgba(255, 255, 255, 0.493);
     border: none;
     padding: 0px 8px;
@@ -164,12 +170,11 @@ li, li a{
     width: 75%;
 
 }
-.sbBot .sb-nav-ul li{
+.sbBot .sb_nav_ul li{
     list-style: none;
     background-color: transparent;
-    padding: 0;
     text-decoration: none;
-    margin: 10px 0px;
+    margin-bottom: 30px;
 }
 .sbBot ul{
     background-color: transparent;
@@ -178,17 +183,17 @@ li, li a{
     color: white;
     background-color: transparent;
     font: 15px poppins reg;
+    text-decoration: none;
 }
-.sb-abt-dropdown-div, .sb-admissions-dropdown-div{
+.sb_abt_dropdown_div, .sb_admissions_dropdown_div{
     background-color: transparent;
-    margin-left: 30px;
-    margin-bottom: 10px;
-    display: none;
+    margin: 5px 0px 10px 0px;
 }
-.sb-abt-dropdown-div #sb-dd-about li, .sb-admissions-dropdown-div #sb-dd-admissions li{
+.sb_abt_dropdown_div .sb_dd_about li, .sb_admissions_dropdown_div .sb_dd_admissions li{
     list-style: circle;
+    margin: 0px 0px 0px 30px;
 }
-.displayDropdown{
+#displayDropdown{
     display: flex;
 }
 
@@ -251,7 +256,7 @@ li, li a{
 }
 /* DESKTOP */
 @media screen and (min-width: 1024px){
-    #menuBtn{
+    .menuBtn{
          display: none;
     }
     .sideBarContainer{

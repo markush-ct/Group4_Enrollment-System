@@ -1,24 +1,25 @@
 import '/src/styles/mainpage.css';
-import Header from '/src/components/Header.jsx';
 import emailjs from '@emailjs/browser';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRef, useState } from 'react';
+import Header from '/src/components/Header.jsx';
 
 function MainPage() {
+    /* REWRITE IN OTHER LANDING PAGES */
+    const [SideBar, setSideBar] = useState(false)
+    SideBar ? document.body.style.overflow = 'hidden' : document.body.style.overflow = 'auto';
+    /* END */
+
     const emailUs = useRef(null);
     const [senderName, setSenderName] = useState('');
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
 
+    
+
     const sendEmail = (e) => {
         e.preventDefault();
-
-        if(!senderName, !email, !message){
-            toast.error('meow'), {
-                position: 'top-center',
-            }
-        }
                 
         emailjs
             .sendForm('service_mpjmyfm', 'template_b3wgc54', emailUs.current, {
@@ -45,7 +46,10 @@ function MainPage() {
 
     return (
         <>
-        <Header />
+        {/* REWRITE IN OTHER LANDING PAGES */}
+        <Header SideBar={SideBar} setSideBar={setSideBar} />
+        {/* END */}
+        
         <div className="main-page">
             {/* Parallax Section 1 */}
             <div className="parallax-section parallax1">
@@ -101,14 +105,14 @@ function MainPage() {
                             <img src="/src/assets/email-logo.svg" alt="Email Icon" className="contact-icon" />
                         </div>
                         <h3>Email Us</h3>
-                        <p><a href="mailto:kupal@gmail.com">kupal@gmail.com</a></p>
+                        <p><a href="mailto:cvsubacoor@cvsu.edu.ph">cvsubacoor@cvsu.edu.ph</a></p>
                     </div>
                     <div className="contact-card">
                         <div className="icon-container">
                             <img src="/src/assets/phone-logo.svg" alt="Phone Icon" className="contact-icon" />
                         </div>
                         <h3>Call Us</h3>
-                        <p><a href="tel:+8177436898">(817) 743-6898</a></p>
+                        <p><a href="tel:+0464765029">(046)476-5029</a></p>
                     </div>
                 </div>
 
@@ -130,13 +134,13 @@ function MainPage() {
                         <h3 className='emailUs-txt'>Email Us</h3>
                         <form ref={emailUs} onSubmit={sendEmail}>
                             <div className="form-group">
-                                <input value={senderName} name='from_senderName' type="text" placeholder="Your Name" onChange={(e) => {setSenderName(e.target.value)}}  />
+                                <input value={senderName} name='from_senderName' type="text" placeholder="Your Name" onChange={(e) => {setSenderName(e.target.value)}} required />
                             </div>
                             <div className="form-group">
-                            <input value={email} name='from_email' type="email" placeholder="Your Email" onChange={(e) => {setEmail(e.target.value)}}  />
+                            <input value={email} name='from_email' type="email" placeholder="Your Email" onChange={(e) => {setEmail(e.target.value)}} required />
                             </div>
                             <div className="form-group">
-                                <textarea value={message} name='message' placeholder="Message" onChange={(e) => {setMessage(e.target.value)}} ></textarea>
+                                <textarea value={message} name='message' placeholder="Message" onChange={(e) => {setMessage(e.target.value)}} required ></textarea>
                             </div>
                             <button type="submit" id='sendEmailBtn'>Send Message</button>
                         </form>
