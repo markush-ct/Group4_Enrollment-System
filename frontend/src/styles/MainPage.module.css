@@ -3,7 +3,7 @@
     src: url(../assets/Poppins/Poppins-Regular.ttf);
 }
 
-.parallax-section {
+.parallaxSection {
     position: relative;
     color: white;
     padding: 100px 20px;
@@ -45,9 +45,17 @@
 }
 
 .parallax2 h2 {
-    font: 80px poppins reg;
+    font: 50px poppins BOLD;
     color: white;
     font-weight: 50;
+    background-color: transparent;
+    margin: 0; 
+    text-align: center;
+}
+
+.parallax2 h3 {
+    font: 25px poppins reg;
+    color: white;
     background-color: transparent;
     margin: 0; 
     text-align: center;
@@ -59,7 +67,7 @@
     background-color: transparent;
     margin: 0; 
 }
-.parallax-section::before {
+.parallaxSection::before {
     content: '';
     position: absolute;
     top: 0;
@@ -70,12 +78,13 @@
     z-index: 1; 
 }
 
-.parallax-section > * {
+.parallaxSection > * {
     position: relative;
     z-index: 2; 
 }
 
-.main-button {
+.mainButton {
+    font-size: 20px;
     color: #f7f7f7;
     margin-top: 20px; 
     align-self: flex-start; 
@@ -89,12 +98,12 @@
     cursor: pointer;
 }
 
-.main-button:hover {
+.mainButton:hover {
     background-color: #d0943d;
     border: none; 
 }
 
-.content-section {
+.contentSection {
     padding: 40px 20px 10px 20px;
     text-align: center;
     background-color: #f7f7f7;
@@ -118,7 +127,7 @@ h2, p {
 
 .parallax1 h1,
 .parallax1 h2,
-.main-button {
+.mainButton {
     font-weight: bold;
     color: white;
     background-color: transparent;
@@ -137,7 +146,7 @@ h2, p {
     cursor: pointer;
 }
 
-.gallery-container {
+.galleryContainer {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* Two columns */
     grid-template-rows: repeat(2, 1fr); /* Two rows */
@@ -149,7 +158,7 @@ h2, p {
     margin-bottom: 2rem;
 }
 
-.gallery-item {
+.galleryItem {
     display: flex; /* Use flexbox for centering */
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
@@ -158,47 +167,83 @@ h2, p {
     transition: transform 0.3s ease; /* Smooth transition for scale effect */
 }
 
-.gallery-item img {
+.galleryItem img {
     width: 100%;
     height: 100%; /* Ensure images fill the container */
     object-fit: cover; /* Maintain aspect ratio */
     transition: transform 0.3s ease; /* Smooth transition for scale effect */
 }
 
-.gallery-item:hover img {
+.galleryItem:hover img {
     transform: scale(1.05); /* Scale up on hover */
 }
 
 /* Media Queries for Responsiveness */
 @media (max-width: 768px) {
-    .parallax-section {
-        padding: 60px 10px; /* Reduced padding */
+
+    .parallaxSection {
+        min-height: 60vh;
+        padding: 60px 10px; 
+    }
+
+    .parallax1 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    
     }
 
     .parallax1 h1 {
-        font: 35px poppins BOLD; /* Smaller font size */
-        margin-left: 20px; /* Reduced margin */
+        font: 35px poppins BOLD; 
+        margin-left: 20px; 
     }
 
     .parallax1 h2 {
-        font: 25px poppins BOLD; /* Smaller font size */
-        margin-left: 20px; /* Reduced margin */
+        font: 25px poppins BOLD; 
+        margin-left: 20px; 
     }
 
-    .main-button {
-        width: 150px; /* Smaller button */
-        margin-left: 20px; /* Reduced margin */
+    .mainButton {
+        width: 150px;
+        font-size: 15px;
+        margin: 0 auto;      
     }
 
-    .gallery-container {
-        grid-template-columns: 1fr; /* One column on smaller screens */
-        width: 90%; /* Wider width for small screens */
+    .contentSection h2{
+        font-size: 15px;
+    }
+
+    .contentSection p{
+        font-size: 12px;
+    }
+    
+    .galleryContainer {
+        grid-template-columns: 1fr; 
+        width: 90%; 
+    }
+
+    .parallax2 h2{
+        font-size: 30px;
+    }
+
+    .parallax2 h3{
+        font-size: 15px;
     }
 }
 
 @media (max-width: 480px) {
-    .parallax-section {
-        padding: 40px 5px; /* Further reduced padding */
+    .parallaxSection {
+        min-height: 60vh;
+        padding: 40px 5px; 
+    }
+
+    .parallax1 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    
     }
 
     .parallax1 h1 {
@@ -209,21 +254,23 @@ h2, p {
         font: 20px poppins BOLD; /* Even smaller font size */
     }
 
-    .main-button {
-        width: 100px; 
+    .mainButton {
+        width: 150px;
+        font-size: 10px;
+        margin: 0 auto;      
     }
 
-    .gallery-container {
+    .galleryContainer {
         padding: 10px; 
     }
 }
 
-.contact-section {
+.contactSection {
     padding: 50px 20px;
     background-color: #f9f9f9;
 }
 
-.contact-title {
+.contactTitle {
     font-size: 2.5rem;
     margin-bottom: 40px;
     text-align: center;
@@ -232,7 +279,7 @@ h2, p {
 }
 
 
-.contact-info {
+.contactInfo {
     display: flex;
     flex-wrap: wrap; 
     justify-content: space-around;
@@ -240,7 +287,7 @@ h2, p {
     background-color: transparent;
 }
 
-.contact-card {
+.contactCard {
     background-color: transparent;
     padding: 20px;
     border-radius: 12px;
@@ -250,53 +297,53 @@ h2, p {
     margin-bottom: 20px; 
 }
 
-.icon-container {
+.iconContainer {
     width: 60px; 
     height: 60px;
     margin: 0 auto 20px;
 }
 
-.contact-icon {
+.contactIcon {
     width: 100%;
     height: auto;
 }
 
-.contact-card h3 {
+.contactCard h3 {
     color: rgb(54, 54, 54);
     font-size: 1.5rem;
     margin-bottom: 10px;
 }
 
-.contact-card p {
+.contactCard p {
     font-size: 1rem;
 }
 
 
-.map-and-form {
+.mapAndForm {
     display: flex;
     justify-content: space-between;
     gap: 20px;
 }
 
-.map-container {
+.mapContainer {
     width: 50%;
 }
 
-.contact-form {
+.contactForm {
     width: 45%;
 }
 
-.contact-form .emailUs-txt {
+.contactForm .emailUsTxt {
     font-size: 2rem;
     color: black;
     margin-bottom: 30px;
 }
 
-.contact-form .form-group {
+.contactForm .formGroup {
     margin-bottom: 20px;
 }
 
-.contact-form .form-group input{
+.contactForm .formGroup input{
     width: 100%;
     padding: 15px;
     border-radius: 8px;
@@ -304,7 +351,7 @@ h2, p {
     outline: none;
 }
 
-.contact-form .form-group textarea {
+.contactForm .formGroup textarea {
     width: 100%;
     height: 10rem;
     padding: 15px;
@@ -313,7 +360,7 @@ h2, p {
     outline: none;
 }
 
-.contact-form #sendEmailBtn {
+.contactForm .sendEmailBtn {
     background-color: #d0943d;
     border: none; 
     color: #fff;
@@ -325,48 +372,94 @@ h2, p {
 
 
 @media (max-width: 1024px) {
-    .contact-title {
+    .contactTitle {
         font-size: 2rem;
     }
-    .contact-card {
+    .contactCard {
         width: 45%; 
     }
-    .map-container,
-    .contact-form {
+    .mapContainer,
+    .contactForm {
         width: 48%; 
     }
 }
 
 /* Mobile-specific Styles */
 @media (max-width: 768px) {
-    .contact-info {
+
+    .contactTitle {
+        font-size: 25px;
+    }
+    .contactCard {
+        width: 45%; 
+    }
+
+    .iconContainer {
+        width: 50px; 
+        height: 50px;
+        margin: 0 auto 20px;
+    }
+    
+    .contactIcon {
+        width: 100%;
+        height: auto;
+    }
+    
+    .contactCard h3 {
+        color: rgb(54, 54, 54);
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+    
+    .contactCard p {
+        font-size: 12px;
+    }
+    
+    
+
+    .mapContainer,
+    .contactForm {
+        width: 48%; 
+    }
+    .contactInfo {
         flex-direction: column; 
         align-items: center;
     }
-    .contact-card {
+
+    .contactForm .sendEmailBtn{
+        margin-left: 15%;
+        font-size: 10px;
+        margin-right: 10%;
+    }
+
+    .contactCard {
         width: 80%; 
     }
-    .map-and-form {
+    .mapAndForm {
         flex-direction: column; 
         align-items: center;
     }
-    .map-container,
-    .contact-form {
+    .mapContainer,
+    .contactForm {
+        align-items: center;
         width: 100%;
     }
-    .contact-form h3 {
-        font-size: 1.5rem;
+    .contactForm h3 {
+        font-size: 10px;
     }
-    .contact-form button {
-        width: 100%;
+
+    
+
+    .contactForm button {
+        width: 75%;
         padding: 15px;
         font-size: 1rem;
     }
 }
 
 
-/* Footer Logo and Branding */
-.footer-branding {
+
+.footerBranding {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -374,17 +467,17 @@ h2, p {
     background-color: transparent;
 }
 
-.footer-logo {
-    width: 60px; /* Adjust size as needed */
+.footerLogo {
+    width: 60px; 
     height: auto;
     margin-right: 15px;
     background-color: transparent;
 }
 
-/* Same Parallax Footer Styles from Before */
-.parallax-footer {
+
+.parallaxFooter {
     position: relative;
-    background-image: url('/src/assets/2.jpg'); /* Your parallax background image */
+    background-image: url('/src/assets/2.jpg'); 
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
@@ -395,35 +488,35 @@ h2, p {
     background-color: transparent;
 }
 
-.parallax-content {
+.parallaxContent {
     position: relative;
     z-index: 2;
     background-color: transparent;
 }
 
-.parallax-footer h2 {
+.parallaxFooter h2 {
     font-size: 3rem;
     margin-bottom: 10px;
     color: #fff;
     background-color: transparent;
 }
 
-.parallax-footer p {
+.parallaxFooter p {
     font-size: 1.5rem;
     margin-bottom: 20px;
     background-color: transparent;
 }
 
-.social-icons {
+.socialIcons {
     margin-bottom: 20px;
     background-color: transparent;
 }
 
-.social-icons img {
+.socialIcons img {
     background-color: transparent;
 }
 
-.social-icons a {
+.socialIcons a {
     color: white;
     font-size: 1.5rem;
     margin: 0 10px;
@@ -432,12 +525,12 @@ h2, p {
     background-color: transparent;
 }
 
-.social-icons a:hover {
+.socialIcons a:hover {
     color: #129406;
 }
 
-/* Dark overlay for parallax background */
-.parallax-footer::before {
+
+.parallaxFooter::before {
     content: "";
     position: absolute;
     top: 0;
@@ -448,7 +541,7 @@ h2, p {
     z-index: 1;
 }
 
-.footer-copyright {
+.footerCopyright {
     text-align: center;
     margin-top: 20px;
     color: #fff;
@@ -458,39 +551,59 @@ h2, p {
 
 }
 
-.footer-copyright p {
+.footerCopyright p {
     background-color: transparent;
 }
 
-.footer-copyright span {
+.footerCopyright span {
     font-weight: bold;
     background-color: transparent;
 }
 
-.footer-copyright .highlighted {
+.footerCopyright .highlighted {
     color: rgb(233, 185, 41); 
 }
 
-/* Responsive Footer for Mobile */
+/* MOBILE */
 @media (max-width: 768px) {
-    .footer-branding {
-        flex-direction: column; /* Stack logo and text vertically on mobile */
+    .footerBranding {
+
+        flex-direction: column; 
     }
-    .footer-logo {
+    .footerLogo {
+        width: 50px;
         margin-right: 0;
         margin-bottom: 10px;
     }
     
-    .parallax-footer h2 {
-        font-size: 2rem;
+    .parallaxFooter {
+        height: 50vh;
+    }
+
+    .parallaxFooter h2 {
+        font-size: 20px;
     }
     
-    .parallax-footer p {
-        font-size: 1.2rem;
+    .parallaxFooter p {
+        font-size: 15px;
     }
     
-    .social-icons a {
-        font-size: 1.2rem;
+    .socialIcons a {
+        font-size: 10px;
     }
+
+    .socialIcons img{
+        width: 30px;
+    }
+
+    .footerCopyright {
+
+
+        font-size: 10px;
+        background-color: #00540d;
+        padding: 10px 0;
+    
+    }
+    
 }
 

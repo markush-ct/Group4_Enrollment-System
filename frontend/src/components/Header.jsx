@@ -1,6 +1,6 @@
-
+import { Link } from 'react-router-dom'; // FOR LINKING PAGE
 import SidebarMenu from '/src/components/SidebarMenu'
-import style from '/src/styles/header.module.css';
+import style from '/src/styles/Header.module.css';
 
 function Header({SideBar, setSideBar}) {
 
@@ -33,10 +33,10 @@ function Header({SideBar, setSideBar}) {
                             <li className={style.abt_nav}>About&#x25BE;
                                 <div className={style.abt_dropdown_div}>
                                     <ul className={style.dd_about}>
-                                        <li><a href="">History of CvSU</a></li>
-                                        <li><a href="">Mission, Vision, and Core Values</a></li>
-                                        <li><a href="">Department of Computer Studies</a></li>
-                                        <li><a href="">Computer Studies Society Officers</a></li>
+                                        <li><Link to="/CvsuHistory">History of CvSU</Link></li>
+                                        <li><Link to="/MissionVision">Mission, Vision, and Core Values</Link></li>
+                                        <li><Link to="/DcsPage">Department of Computer Studies</Link></li>
+                                        <li><Link to="/SocOff">Computer Studies Society Officers</Link></li>
                                     </ul>
                                 </div>
                             </li>

@@ -1,0 +1,355 @@
+* {
+    font-family: poppins reg;
+    src: url(../assets/Poppins/Poppins-Regular.ttf);
+}
+
+.parallaxSection {
+    position: relative;
+    color: white;
+    padding: 20px; 
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    justify-content: flex-end; 
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    min-height: 60vh;
+    text-align: left; 
+}
+
+.parallax1 {
+    background-image: url('../assets/laya-at-diwa-bg.jpg');
+    margin-top: 90px;
+}
+
+.parallax1 h1 {
+    font: 50px poppins BOLD;
+    color: white;
+    background-color: transparent;
+    margin: 0; 
+    margin-top: 10px; 
+    margin-left: 50px;
+}
+
+.parallax1 h2 {
+    font: 30px poppins BOLD;
+    color: white;
+    background-color: transparent;
+    margin: 0; 
+    margin-bottom: 0px;
+    margin-left: 50px;
+}
+
+.parallaxSection::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 1; 
+}
+
+.parallaxSection > * {
+    position: relative;
+    z-index: 2; 
+}
+
+.contentSection {
+    padding: 40px 20px 10px 20px;
+    text-align:justify;
+    background-color: #f7f7f7;
+    color: #333;
+    margin-bottom: 300px;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.contentSection h2{
+    color: #129406;
+}
+
+h2, p {
+    margin: 10px 0;
+}
+
+@keyframes slideUp {
+    0% {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.parallax1 h1,
+.parallax1 h2{
+    font-weight: bold;
+    color: white;
+
+    margin: 0; 
+    margin-left: 50px;
+    animation: slideUp 1s ease-out forwards; 
+}
+
+.parallax1 h1,
+.parallax1 h2{
+    animation-delay: 0.3s;
+}
+
+.footerCopyright {
+    text-align: center;
+    margin-top: 20px;
+    color: #fff;
+    font-size: 1rem;
+    background-color: #00540d;
+    padding: 10px 0;
+
+}
+
+.footerCopyright p {
+    background-color: transparent;
+}
+
+.footerCopyright span {
+    font-weight: bold;
+    background-color: transparent;
+}
+
+.footerCopyright .highlighted {
+    color: rgb(233, 185, 41); 
+}
+
+
+
+
+/* MOBILE */
+@media (max-width: 768px) {
+    .parallaxSection {
+        text-align: center;
+        padding: 60px 10px; 
+        justify-content:flex-end;
+    }
+
+    .parallax1 h1 {
+        font: 35px poppins BOLD; 
+        margin-left: 20px;
+
+    }
+
+    .parallax1 h2 {
+        font: 25px poppins BOLD; 
+        margin-left: 20px;
+
+    }
+
+    .contentSection {
+        font-size: 12px;
+        text-align:justify;
+        background-color: #f7f7f7;
+        color: #333;
+        margin-bottom: 200px;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .footerCopyright {
+
+
+        font-size: 10px;
+        background-color: #00540d;
+        padding: 10px 0;
+    
+    }
+
+    
+
+    
+}
+
+@media (max-width: 480px) {
+    .parallaxSection {
+        padding: 40px 5px; 
+    }
+
+    .parallax1 h1 {
+        font: 30px poppins BOLD; 
+    }
+
+    .parallax1 h2 {
+        font: 20px poppins BOLD; 
+    }
+
+    
+}
+
+
+.PageTitle {
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    margin-top: 50px;
+    margin-bottom: 50px; 
+    font-weight: 800;
+    color: #129406;
+    text-align: center;
+    background-color: transparent;
+}
+
+.DcsContainer {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    max-width: 300px;
+    margin: 20px auto;
+    transition: transform 0.3s ease; 
+}
+
+.DcsContainer:hover {
+    transform: scale(1.05);
+}
+
+.mainContainer:hover {
+    transform: scale(1.05);
+}
+.mainContainer {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px; 
+    transition: transform 0.3s ease; 
+}
+
+.TwoContainers {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px; 
+    max-width: 800px;
+    margin: 0 auto; 
+}
+
+.DcsIcon img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+.DcsContainer h2 {
+    font-size: 24px;
+    margin: 10px 0;
+}
+
+.DcsContainer p {
+    font-size: 18px;
+    color: #129406;
+    text-decoration: none;
+}
+
+
+.ProfContainer {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    margin-bottom: 200px;
+}
+
+.InstructorContainer:hover {
+    transform: scale(1.01);
+}
+
+.InstructorContainer {
+    border-radius: 10px;
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 50%;
+    text-align: center;
+    transition: transform 0.3s ease; 
+
+  }
+  
+  .InstructorTitle {
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #129406;
+  }
+  
+  .InstructorGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+  }
+  
+  .InstructorName {
+    font-size: 20px;
+    color: #555;
+  }
+  
+
+  /* MOBILE */
+@media (max-width: 768px) {
+    .PageTitle {
+        font-size: 1.8rem; 
+        margin-top: 30px;
+        margin-left: 10%;
+        margin-right: 10%;
+        margin-bottom: 30px;
+    }
+
+    .DcsContainer {
+        width: 80%; 
+        padding: 15px;
+        margin: 15px auto;
+    }
+
+    .mainContainer {
+        flex-direction: column; 
+        margin-bottom: 15px;
+    }
+
+    .TwoContainers {
+        flex-direction: column; 
+        gap: 15px;
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .DcsIcon img {
+        width: 80px; 
+        height: 80px;
+    }
+
+    .DcsContainer h2 {
+        font-size: 20px;
+    }
+
+    .DcsContainer p {
+        font-size: 16px; 
+    }
+
+    .ProfContainer {
+        margin-bottom: 100px;
+
+    }
+
+    .InstructorContainer {
+        width: 80%; 
+        padding: 15px;
+    }
+
+    .InstructorGrid {
+        grid-template-columns: 1fr; 
+        gap: 10px;
+    }
+
+    .InstructorTitle {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+
+    .InstructorName {
+        font-size: 18px;
+    }
+}

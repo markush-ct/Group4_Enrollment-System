@@ -1,0 +1,193 @@
+* {
+    font-family: poppins reg;
+    src: url(../assets/Poppins/Poppins-Regular.ttf);
+}
+
+.parallaxSection {
+    position: relative;
+    color: white;
+    padding: 20px; 
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    justify-content: flex-end; 
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    min-height: 60vh;
+    text-align: left; 
+}
+
+.parallax1 {
+    background-image: url('../assets/laya-at-diwa-bg.jpg');
+    margin-top: 90px;
+}
+
+.parallax1 h1 {
+    font: 50px poppins BOLD;
+    color: white;
+    background-color: transparent;
+    margin: 0; 
+    margin-top: 10px; 
+    margin-left: 50px;
+}
+
+.parallax1 h2 {
+    font: 30px poppins BOLD;
+    color: white;
+    background-color: transparent;
+    margin: 0; 
+    margin-bottom: 0px;
+    margin-left: 50px;
+}
+
+.parallaxSection::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 1; 
+}
+
+.parallaxSection > * {
+    position: relative;
+    z-index: 2; 
+}
+
+.contentSection {
+    padding: 40px 20px 10px 20px;
+    text-align:justify;
+    background-color: #f7f7f7;
+    color: #333;
+    margin-bottom: 300px;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.contentSection h2{
+    color: #129406;
+}
+
+h2, p {
+    margin: 10px 0;
+}
+
+@keyframes slideUp {
+    0% {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.parallax1 h1,
+.parallax1 h2{
+    font-weight: bold;
+    color: white;
+
+    margin: 0; 
+    margin-left: 50px;
+    animation: slideUp 1s ease-out forwards; 
+}
+
+.parallax1 h1,
+.parallax1 h2{
+    animation-delay: 0.3s;
+}
+
+.footerCopyright {
+    text-align: center;
+    margin-top: 20px;
+    color: #fff;
+    font-size: 1rem;
+    background-color: #00540d;
+    padding: 10px 0;
+
+}
+
+.footerCopyright p {
+    background-color: transparent;
+}
+
+.footerCopyright span {
+    font-weight: bold;
+    background-color: transparent;
+}
+
+.footerCopyright .highlighted {
+    color: rgb(233, 185, 41); 
+}
+
+
+
+
+/* MOBILE */
+@media (max-width: 768px) {
+    .parallaxSection {
+        text-align: center;
+        padding: 60px 10px; 
+        justify-content:flex-end;
+    }
+
+    .parallax1 h1 {
+        font: 35px poppins BOLD; 
+        margin-left: 20px;
+
+    }
+
+    .parallax1 h2 {
+        font: 25px poppins BOLD; 
+        margin-left: 20px;
+
+    }
+
+    .contentSection {
+        font-size: 12px;
+        text-align:justify;
+        background-color: #f7f7f7;
+        color: #333;
+        margin-bottom: 200px;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .footerCopyright {
+
+
+        font-size: 10px;
+        background-color: #00540d;
+        padding: 10px 0;
+    
+    }
+
+    
+
+    
+}
+
+@media (max-width: 480px) {
+    .parallaxSection {
+        padding: 40px 5px; 
+    }
+
+    .parallax1 h1 {
+        font: 30px poppins BOLD; 
+    }
+
+    .parallax1 h2 {
+        font: 20px poppins BOLD; 
+    }
+
+    
+}
+
+
+
+
+
