@@ -148,7 +148,7 @@ h2, p {
     }
 
     .contentSection {
-        font-size: 12px;
+        font-size: 14px;
         text-align:justify;
         background-color: #f7f7f7;
         color: #333;
@@ -287,6 +287,8 @@ h2, p {
         margin-right: 10%;
         margin-bottom: 30px;
     }
+    
+    
 
     .DcsContainer {
         width: 50%; 
@@ -324,6 +326,10 @@ h2, p {
     .InstructorContainer {
         width: 80%; 
         padding: 15px;
+    }
+
+    .InstructorContainer p{
+        font-size: 16px;
     }
 
     .InstructorGrid {

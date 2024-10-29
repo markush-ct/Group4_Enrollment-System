@@ -148,7 +148,7 @@ h2, p {
     }
 
     .contentSection {
-        font-size: 12px;
+        font-size: 14px;
         text-align:justify;
         background-color: #f7f7f7;
         color: #333;
@@ -322,7 +322,7 @@ h2, p {
     }
 
     .DcsContainer h2 {
-        font-size: 20px;
+        font-size: 18px;
     }
 
     .DcsContainer p {
@@ -342,6 +342,7 @@ h2, p {
     .InstructorGrid {
         grid-template-columns: 1fr; 
         gap: 10px;
+        
     }
 
     .InstructorTitle {
@@ -350,6 +351,6 @@ h2, p {
     }
 
     .InstructorName {
-        font-size: 18px;
+        font-size: 16px;
     }
 }

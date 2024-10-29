@@ -98,7 +98,7 @@ function SocOff() {
             <h2 className={styles.InstructorTitle}>Officers - {selectedSociety.name}</h2>
             {selectedSociety.officers.map((officer) => (
               <p key={officer.name}>
-                {officer.name} - {officer.position}
+                <span style={{fontWeight: 600}}>{officer.position}</span>: {officer.name}
               </p>
             ))}
           </div>

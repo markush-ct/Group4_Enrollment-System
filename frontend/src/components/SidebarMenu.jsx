@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useState } from "react"
 import style from '/src/styles/header.module.css'
 
@@ -47,10 +48,10 @@ function SidebarMenu({ SideBar, setSideBar }) {
                     <li className={style.sb_abt_nav} onClick={displayAboutDropDown}>About&#x25BE;
                         <div className={style.sb_abt_dropdown_div} style={{display: about ? 'flex' : 'none'}} >
                             <ul className={style.sb_dd_about}>
-                                <li><a href="">History of CvSU</a></li>
-                                <li><a href="">Mission, Vision, and Core Values</a></li>
-                                <li><a href="">Department of Computer Studies</a></li>
-                                <li><a href="">Computer Studies Society Officers</a></li>
+                                <li><Link to="/CvsuHistory">History of CvSU</Link></li>
+                                <li><Link to="/MissionVision">Mission, Vision, and Core Values</Link></li>
+                                <li><Link to="/DcsPage">Department of Computer Studies</Link></li>
+                                <li><Link to="/SocOff">Computer Studies Society Officers</Link></li>
                             </ul>
                         </div>
                     </li>
