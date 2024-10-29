@@ -44,7 +44,7 @@ function Header({SideBar, setSideBar}) {
                             <li className={style.admissions_nav}>Admissions&#x25BE;
                                 <div className={style.admissions_dropdown_div}>
                                     <ul className={style.dd_admissions}>
-                                        <li><a href="">Apply</a></li>
+                                        <li><Link to="/Apply">Apply</Link></li>
                                         <li><a href="">Enrollment FAQs</a></li>
                                         <li><a href="">Undergraduate Programs</a></li>
                                     </ul>

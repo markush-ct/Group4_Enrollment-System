@@ -1,0 +1,312 @@
+* {
+    font-family: poppins reg;
+    src: url(../assets/Poppins/Poppins-Regular.ttf);
+}
+
+.contentSection{
+    padding: 40px 20px 10px 20px;
+    text-align: justify;
+    background-color: #f7f7f7;
+    color: #333;
+    margin-bottom: 300px;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.parallaxSection {
+    position: relative;
+    color: white;
+    padding: 20px; 
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    justify-content: flex-end; 
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    min-height: 40vh;
+    text-align: left; 
+}
+
+.parallax1 {
+    background-image: url('../assets/cvsub-bg.jpg');
+    margin-top: 90px;
+}
+
+.parallax1 h1 {
+    font: 50px poppins BOLD;
+    color: white;
+    background-color: transparent;
+    margin: 0; 
+    margin-top: 10px; 
+    margin-left: 50px;
+}
+
+.parallax1 h2 {
+    font: 30px poppins BOLD;
+    color: white;
+    background-color: transparent;
+    margin: 0; 
+    margin-bottom: 0px;
+    margin-left: 50px;
+}
+
+
+.parallaxSection::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 1; 
+}
+
+.parallaxSection > * {
+    position: relative;
+    z-index: 2; 
+}
+
+.PageTitle {
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    margin-top: 0px;
+    margin-bottom: 50px; 
+    font-weight: 800;
+    color: #3d8c4b;
+    text-align: center;
+    background-color: transparent;
+}
+
+.PageTitle2 {
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    margin-top: 60px;
+    margin-bottom: 50px; 
+    font-weight: 800;
+    color: #3d8c4b;
+    text-align: center;
+    background-color: transparent;
+}
+
+.studentContainer {
+    display: flex;
+    font-size: 1.5rem;
+    align-items: center;
+    gap: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px 30px;
+    height: 100px;
+    width: 700px;
+    margin: 20px auto;
+    color: #3d8c4b;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.studentContainer:hover {
+    transform: scale(1.05);
+    color: #3d8c4b;
+}
+
+.studentContainer img {
+    width: 30px;
+    height: 30px;
+}
+
+.popup {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7); 
+    z-index: 1000;
+}
+
+.popupContent {
+    padding: 20px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 1000px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    text-align: left;
+    position: relative;
+}
+
+.popupHeader {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    height: 30px;
+    margin-bottom: 50px;
+    padding-bottom: 10px;
+
+}
+
+.studentType {
+    display: flex;
+    color: #3d8c4b;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    font-weight: 800;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.studentType::before,
+.studentType::after {
+    content: "";
+    flex: 1; 
+    border-bottom: 1px solid #3d8c4b; 
+    margin: 0 10px; 
+}
+
+.popupText{
+    font-size: 1.0rem;
+}
+.popupHeader h2 {
+    font-size: 2.0rem;
+    margin: 0;
+    text-align: center;
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.2s;
+    position: absolute; 
+    top: 0;             
+    right: 0;          
+    padding: 10px;     
+}
+.closeButton:hover {
+    color: #900;
+}
+
+.footerCopyright {
+    text-align: center;
+    margin-top: 20px;
+    color: #fff;
+    font-size: 1rem;
+    background-color: #00540d;
+    padding: 10px 0;
+
+}
+
+.footerCopyright p {
+    background-color: transparent;
+}
+
+.footerCopyright span {
+    font-weight: bold;
+    background-color: transparent;
+}
+
+.footerCopyright .highlighted {
+    color: rgb(233, 185, 41); 
+}
+
+
+
+
+
+
+/* MOBILE */
+@media (max-width: 768px) {
+
+    .contentSection {
+
+        margin-bottom: 200px;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+    
+    .parallaxSection {
+        text-align: center;
+        padding: 60px 10px; 
+        justify-content:flex-end;
+        min-height: 10vh;
+    }
+
+    .parallax1 h1 {
+        font: 35px poppins BOLD; 
+        margin-left: 20px;
+
+    }
+
+    .parallax1 h2 {
+        font: 25px poppins BOLD; 
+        margin-left: 20px;
+
+    }
+
+    .PageTitle {
+        font-size: 1.5rem; 
+    }
+
+    .PageTitle2 {
+        font-size: 1.5rem;
+    }
+
+    .studentContainer {
+        font-size: 1.0rem;
+        
+        width: 100%; 
+        height: 50px; 
+    }
+
+    .popupContent{
+        max-height: 80vh;
+        margin-top: 10%;
+        margin-bottom: 20%;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .popupHeader {
+        margin: 10px 0 20px;
+    }
+
+    .popupHeader h2 {
+        font-size: 1.5rem; 
+    }
+
+    .popupText{
+        font-size: 14px;
+    }
+
+    .studentType {
+        font-size: 1.25rem; 
+    }
+
+
+
+
+
+    .footerCopyright {
+        font-size: 10px;
+        background-color: #00540d;
+        padding: 10px 0;
+    
+    }
+
+}
+
+
+
+
+
+    

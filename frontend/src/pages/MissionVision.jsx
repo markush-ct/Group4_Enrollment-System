@@ -73,6 +73,21 @@ function MissionVision() {
                 
                     <h2 data-aos="fade-up" style={{ textAlign: 'center' }}>Core Values</h2>
                     <p data-aos="fade-up" className={styles.CoreValues}>Truth&emsp;  &emsp; Excellence &emsp; &emsp; Service</p>
+                    <br></br>
+
+
+                    <h2 data-aos="fade-up">Goals of the CvSU Bacoor City Campus</h2>
+                    <p data-aos="fade-up">In support to the Vision and Mission of the
+                     University, CvSU – Bacoor City Campus shall:</p>
+                     <p data-aos="fade-up" className={styles.boxText}>1. provide quality and affordable education which promotes 
+                        intellectual growth, academic excellence and moral integrity;<br></br><br></br>
+                        2. prepare students to meet the demands of the global market and respond to the society’s needs;<br></br><br></br>
+                        3. develop innovative and scholarly researchers who have the ability to create new 
+                        understanding in quest for quality 
+                        research through inquiry, analysis and problem solving; and<br></br><br></br>
+                        4. produce globally competitive graduates with full competence in their fields of study.</p>
+
+
                 </div>
 
                 {/* Footer */}

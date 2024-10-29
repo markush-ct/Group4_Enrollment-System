@@ -75,7 +75,7 @@
 }
 
 .contentSection h2{
-    color: #129406;
+    color: #3d8c4b;
 }
 
 h2, p {
@@ -89,6 +89,15 @@ h2, p {
     color: #d0943d;
 
 }
+
+.boxText {
+    border-color:#3d8c4b;
+    border-style: solid;
+    padding: 10px;
+    text-align: left;
+
+}
+
 
 @keyframes slideUp {
     0% {
