@@ -108,7 +108,7 @@
 
 .studentContainer:hover {
     transform: scale(1.05);
-    color: #3d8c4b;
+    color: #d0943d;
 }
 
 .studentContainer img {
@@ -126,7 +126,7 @@
     align-items: center;
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.7); 
-    z-index: 1000;
+    z-index: 2000;
 }
 
 .popupContent {
@@ -141,11 +141,16 @@
     position: relative;
 }
 
+.popupContent::-webkit-scrollbar {
+    width: 20px;
+}
+
 .popupHeader {
     display: flex;
     justify-content: center;
     text-align: center;
     height: 30px;
+    color: #d0943d;;
     margin-bottom: 50px;
     padding-bottom: 10px;
 

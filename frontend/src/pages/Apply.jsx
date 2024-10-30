@@ -20,77 +20,77 @@ function Apply() {
     
       const enrollmentProcess = {
         Freshmen: `
-SENIOR HIGH SCHOOL GRADUATES AND ALS PASSER:
-1. Go to link ng application signup dito
-2. Fill up and have your email verified
-3. Check your registered email for your temporary login credentials.
-4. Sign in using the provided temporary account. Then, update your password promptly.
-5. Click “Sign in“, then select “Application Form“ Type: Freshmen. Fill out all the necessary information then submit once done.
-6. Wait for your application result. 
-7. Once successful, confirm your slot, then download and print the Notice of Admission (NOA). Failure to confirm your slot 5(?) days after your application result has been posted will mean forfeiture of application.
+<b>SENIOR HIGH SCHOOL GRADUATES AND ALS PASSER:</b><br>
+1. Go to link ng <a href="" target="_blank" >application signup link</a>.<br>
+2. Fill up and have your email verified<br>
+3. Check your registered email for your temporary login credentials.<br>
+4. Sign in using the provided temporary account. Then, update your password promptly.<br>
+5. Click "<b>Sign in</b>", then select “<b>Application Form</b>“ Type: <b>Freshmen</b>. Fill out all the necessary information then submit once done.<br>
+6. Wait for your application result. <br>
+7. Once successful, confirm your slot, then download and print the <b>Notice of Admission (NOA)</b>. Failure to confirm your slot 5(?) days after your application result has been posted will mean forfeiture of application.<br>
+<br>
+<b>REQUIREMENTS TO BE SUBMITTED IN SCHOOL (SENIOR HIGH SCHOOL GRADUATES):</b><br>
+1. Accomplished application form with 1x1 picture and signature<br>
+2. Notice of Admission (NOA)<br>
+3. Original copy of Grade 12 Report Card<br>
+4. Original copy of Good Moral Certificate<br>
+<br>
+<b>REQUIREMENTS TO BE SUBMITTED IN SCHOOL (ALS PASSERS):</b><br>
+1. Accomplished application form with 1x1 picture and signature<br>
+2. Notice of Admission (NOA)<br>
+3. Original copy of Rating (COR) with eligibility to enroll in College<br>`,
 
-REQUIREMENTS TO BE SUBMITTED IN SCHOOL (SENIOR HIGH SCHOOL GRADUATES):
-1. Accomplished application form with 1x1 picture and signature
-2. Notice of Admission (NOA)
-3. Original copy of Grade 12 Report Card
-4. Original copy of Good Moral Certificate
-
-REQUIREMENTS TO BE SUBMITTED IN SCHOOL (ALS PASSERS):
-1. Accomplished application form with 1x1 picture and signature
-2. Notice of Admission (NOA)
-3. Original copy of Rating (COR) with eligibility to enroll in College`,
-
-        Transferee: `1. Go to link ng application signup dito
-2. Fill up and have your email verified
-3. Check your registered email for your temporary login credentials.
-4. Sign in using the provided temporary account. Then, update your password promptly.
-5. Click “Sign in“, then select “Application Form“ Type: Transferee. Fill out all the necessary information then submit once done.
-6. Wait for your application result. 
-
-REQUIRED DOCUMENTS TO BE SUBMITTED IN SCHOOL:
-1. Accomplished application form with 1x1 picture and signature
-2. Notice of Admission (NOA)
-3. Original copy of Transcript of Records
-4. Honorable Dismissal
-5. Certificate of Good Moral Character
-6. NBI or Police Clearance`,
-        Shiftee: `1. Ask permission to your department head about shifting programs 15 days prior to enrollment period. 
-2. Once permitted, go to link ng application signup dito
-3. Fill up and have your email verified
-4. Check your registered email for your temporary login credentials.
-5. Sign in using the provided temporary account. Then, update your password promptly.
-6. Click “Sign in“, then select “Application Form“ Type: Shifter. Fill out all the necessary information then submit once done.
-7. Wait for your shifting request result. 
-
-REQUIRED DOCUMENTS TO BE SUBMITTED IN SCHOOL:
-1. Accomplished Shifting Form with 1x1 picture and signature
-2. 
-
-REMINDER:
-1. It is not guaranteed that you can shift to IT/CS unless the reason is valid.
-2. Your strand in senior high school must be aligned to IT/CS.
-Accepted shs strands:
-TVI-ICT
-TVL
-STEM`,
-        Regular:  `1. Fill up and submit registration form at linkditongsignuppageforoldstudents
-2. Check your registered email for your temporary login credentials. 
-3. Sign in using the provided temporary account. Then, update your password promptly.
-4. Click “Enroll Now” and check your Society Fee payment status.
-5. If paid, fill out the Google Form link provided. Then, submit a screenshot for proof of attendance.
-6. Submit soft copy of COG (make sure it is clear and legible). Fill out digital checklist and submit.
-7. Adviser will send an advise and the lists of courses you are eligible to take.
-8. Fill out the pre-enrollment form and submit.
-9. Check your enrollment status.`,
-        Irregular: `1. Fill up and submit registration form at linkditongsignuppageforoldstudents
-2. Check your registered email for your temporary login credentials. 
-3. Sign in using the provided temporary account. Then, update your password promptly.
-4. Click “Enroll Now” and check your Society Fee payment status.
-5. If paid, fill out the Google Form link provided. Then, submit a screenshot for proof of attendance.
-6. Submit soft copy of COG (make sure it is clear and legible). Fill out digital checklist and submit.
-7. Adviser will send an advise and the lists of courses you are eligible to take.
-8. Fill out the pre-enrollment form and submit.
-9. Check your enrollment status.`
+        Transferee: `1. Go to link ng  <a href="" target="_blank" >application signup link</a>.<br>
+2. Fill up and have your email verified<br>
+3. Check your registered email for your temporary login credentials.<br>
+4. Sign in using the provided temporary account. Then, update your password promptly.<br>
+5. Click “<b>Sign in</b>“, then select “<b>Application Form</b>“ Type: <b>Transferee</b>. Fill out all the necessary information then submit once done.<br>
+6. Wait for your application result. <br>
+<br>
+<b>REQUIRED DOCUMENTS TO BE SUBMITTED IN SCHOOL:</b><br>
+1. Accomplished application form with 1x1 picture and signature<br>
+2. Notice of Admission (NOA)<br>
+3. Original copy of Transcript of Records<br>
+4. Honorable Dismissal<br>
+5. Certificate of Good Moral Character<br>
+6. NBI or Police Clearance<br>`,
+        Shiftee: `1. Ask permission to your department head about shifting programs 15 days prior to enrollment period. <br>
+2. Once permitted, go to <a href="" target="_blank" >application signup link</a>.<br>
+3. Fill up and have your email verified<br>
+4. Check your registered email for your temporary login credentials.<br>
+5. Sign in using the provided temporary account. Then, update your password promptly.<br>
+6. Click “<b>Sign in</b>“, then select “<b>Application Form</b>“ Type: <b>Shifter</b>. Fill out all the necessary information then submit once done.<br>
+7. Wait for your shifting request result. <br>
+<br>
+<b>REQUIRED DOCUMENTS TO BE SUBMITTED IN SCHOOL:</b><br>
+1. Accomplished Shifting Form with 1x1 picture and signature<br>
+2. <br>
+<br>
+<b>REMINDER:</b><br>
+1. It is not guaranteed that you can shift to IT/CS <b>unless the reason is valid</b>.<br>
+2. Your strand in senior high school must be aligned to IT/CS.<br>
+<b>Accepted SHS strands:</b><br>
+&#8226; TVI-ICT<br>
+&#8226; TVL<br>
+&#8226; STEM<br>`,
+        Regular:  `1. Fill up and submit registration form at <a href="" target="_blank" >application signup link</a>.<br>
+2. Check your registered email for your temporary login credentials. <br>
+3. Sign in using the provided temporary account. Then, update your password promptly.<br>
+4. Click “<b>Enroll Now</b>” and check your Society Fee payment status.<br>
+5. If paid, fill out the Google Form link provided. Then, submit a screenshot for proof of attendance.<br>
+6. Submit soft copy of COG (make sure it is clear and legible). Fill out digital checklist and submit.<br>
+7. Adviser will send an advise and the lists of courses you are eligible to take.<br>
+8. Fill out the pre-enrollment form and submit.<br>
+9. Check your enrollment status.<br>`,
+        Irregular: `1. Fill up and submit registration form at <a href="" target="_blank" >application signup link</a>.<br>
+2. Check your registered email for your temporary login credentials. <br>
+3. Sign in using the provided temporary account. Then, update your password promptly.<br>
+4. Click “<b>Enroll Now</b>” and check your Society Fee payment status.<br>
+5. If paid, fill out the Google Form link provided. Then, submit a screenshot for proof of attendance.<br>
+6. Submit soft copy of COG (make sure it is clear and legible). Fill out digital checklist and submit.<br>
+7. Adviser will send an advise and the lists of courses you are eligible to take.<br>
+8. Fill out the pre-enrollment form and submit.<br>
+9. Check your enrollment status.<br>`
     };
     
 
@@ -137,40 +137,42 @@ STEM`,
                         <img src="/src/assets/arrow-icon.svg" alt="Arrow Icon" />
                         Shiftee
                     </div>
+                    
 
-                    {selectedType && (
-                        <div data-aos="fade-up" className={styles.popup}>
-                            <div className={styles.popupContent}>
-                                <div className={styles.popupHeader}>
-                                <button onClick={closePopup} className={styles.closeButton}>✖</button>
-                                    <h2>Application Procedures</h2>
-                                    
-                                  
-                                </div>
-                                <div data-aos="fade-up" className={styles.studentType}>
-                                <span>{selectedType}</span>
-                                </div>
-                                <div className={styles.popupText}>
-                                    {enrollmentProcess[selectedType].split('\n').map((step, index) => (
-                                        <p key={index}>{step}</p>
-                                    ))}
-                                </div>
-                            </div>
+                    {/* Old Stduent Section */}
+                    <div data-aos="fade-up" className={styles.PageTitle2}>Enrollment Procedures For Old Students</div>
+
+<div onClick={() => handleContainerClick("Regular")} className={styles.studentContainer}>
+    <img src="/src/assets/arrow-icon.svg" alt="Arrow Icon" />
+        Regular Student
+</div>
+<div onClick={() => handleContainerClick("Irregular")} className={styles.studentContainer}>
+    <img src="/src/assets/arrow-icon.svg" alt="Arrow Icon" />
+    Irregular Student
+</div>
+
+</div>
+
+
+{selectedType && (
+                <div data-aos="zoom-out" data-aos-duration="500" className={styles.popup}>
+                    <div className={styles.popupContent}>
+                        <div className={styles.popupHeader}>
+                            <button onClick={closePopup} className={styles.closeButton}>✖</button>
+                            <h2>Application Procedures</h2>
                         </div>
-                    )}
-                        {/* Old Stduent Section */}
-                        <div data-aos="fade-up" className={styles.PageTitle2}>Enrollment Procedures For Old Students</div>
-
-                                <div onClick={() => handleContainerClick("Regular")} className={styles.studentContainer}>
-                                    <img src="/src/assets/arrow-icon.svg" alt="Arrow Icon" />
-                                        Regular Student
-                                </div>
-                                <div onClick={() => handleContainerClick("Irregular")} className={styles.studentContainer}>
-                                    <img src="/src/assets/arrow-icon.svg" alt="Arrow Icon" />
-                                    Regular Student
-                                </div>
-
+                        <div data-aos="fade-up" className={styles.studentType}>
+                            <span>{selectedType}</span>
+                        </div>
+                        <div
+                            className={styles.popupText}
+                            dangerouslySetInnerHTML={{ __html: enrollmentProcess[selectedType] }}
+                        />
                     </div>
+                </div>
+            )}
+
+                    
   
 
                 {/* Footer */}
