@@ -46,7 +46,7 @@ function Header({SideBar, setSideBar}) {
                                     <ul className={style.dd_admissions}>
                                         <li><Link to="/Apply">Apply</Link></li>
                                         <li><a href="">Enrollment FAQs</a></li>
-                                        <li><a href="">Undergraduate Programs</a></li>
+                                        <li><Link to="/Undergrad">Undergraduate Programs</Link></li>
                                     </ul>
                                 </div>
 

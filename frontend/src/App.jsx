@@ -7,6 +7,7 @@ import MissionVision from './pages/MissionVision';
 import DcsPage from './pages/DcsPage';
 import SocOff from './pages/SocOff';
 import Apply from './pages/Apply';
+import Undergrad from './pages/Undergrad';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/DcsPage" element={<DcsPage />} />
         <Route path="/SocOff" element={<SocOff />} />
         <Route path="/Apply" element={<Apply />} />
+        <Route path="/Undergrad" element={<Undergrad />} />
         {/* Add other routes as needed */}
       </Routes>
     </Router>
