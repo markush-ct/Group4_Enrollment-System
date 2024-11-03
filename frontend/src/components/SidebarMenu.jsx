@@ -11,6 +11,7 @@ function SidebarMenu({ SideBar, setSideBar }) {
             setAbout(false);
         } else {
             setAbout(true);
+            setAdmissions(false);
         }
     }
 
@@ -19,12 +20,15 @@ function SidebarMenu({ SideBar, setSideBar }) {
             setAdmissions(false);
         } else {
             setAdmissions(true);
+            setAbout(false);
         }
     }
 
     function close() {
         if (SideBar) {
             setSideBar(false);
+            setAbout(false);
+            setAdmissions(false);
         } else {
             setSideBar(true);
         }
