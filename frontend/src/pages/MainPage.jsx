@@ -58,7 +58,7 @@ function MainPage() {
                 <div className={`${styles.parallaxSection} ${styles.parallax1}`}>
                     <h2>STEP INTO THE FUTURE WITH</h2>
                     <h1>CAVITE STATE UNIVERSITY</h1>
-                    <button className={styles.mainButton}>ENROLL NOW</button>
+                    <button className={styles.mainButton}><span>ENROLL NOW</span></button>
                 </div>
 
                 <div data-aos="fade-up" className={styles.contentSection}>
@@ -138,7 +138,7 @@ function MainPage() {
                                 <div className={styles.formGroup}>
                                     <textarea value={message} name='message' placeholder="Message" onChange={(e) => { setMessage(e.target.value); }} required ></textarea>
                                 </div>
-                                <button type="submit" className={styles.sendEmailBtn}>Send Message</button>
+                                <button type="submit" className={styles.sendEmailBtn}><span>Send Message</span></button>
                             </form>
                             <ToastContainer />
                         </div>

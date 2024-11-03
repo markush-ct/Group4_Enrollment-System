@@ -204,13 +204,15 @@ h2, p {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
     text-align: center;
-    width: 300px; /* Fixed width for larger screens */
+    width: 300px; 
+    cursor: pointer;
     margin: 20px auto;
     transition: transform 0.3s ease; 
 }
 
 .DcsContainer:hover {
     transform: scale(1.05);
+    color: #d0943d;
 }
 
 .TwoContainers {

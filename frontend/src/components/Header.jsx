@@ -16,7 +16,7 @@ function Header({SideBar, setSideBar}) {
             <div className={style.nav}>
                 <header className={style.header}>
                     <div className={style.navLeft}>
-                        <img className={style.cvsuLogo} src="/src/assets/cvsu-logo.png" alt="cvsu logo" />
+                    <Link to="/MainPage"><img className={style.cvsuLogo} src="/src/assets/cvsu-logo.png" alt="cvsu logo" /></Link>
                         <div className={style.institution}>
                             <h2 className={style.schoolName}>CAVITE STATE UNIVERSITY</h2>
                             <h2 className={style.schoolName}>BACOOR CAMPUS</h2>
@@ -51,8 +51,8 @@ function Header({SideBar, setSideBar}) {
                                 </div>
 
                             </li>
-                            <li><a href="">Admin Portal</a></li>
-                            <li><a href="">Student Portal</a></li>
+                            <li><Link to="/StudentLoginPage">Admin Portal</Link></li>
+                            <li><Link to="/StudentLoginPage">Student Portal</Link></li>
                         </ul>
 
                     </div>

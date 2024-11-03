@@ -1,0 +1,232 @@
+* {
+    font-family: poppins reg;
+    src: url(../assets/Poppins/Poppins-Regular.ttf);
+}
+
+.mainPage {
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    position: relative;
+    background-image: url('/src/assets/login-bg.jpg'); 
+    background-size: cover; 
+    background-position: center;
+    height: 100vh; 
+    padding-top: 50px;
+    color: white; 
+}
+
+
+.PageTitle {
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    margin-top: 120px;
+    margin-bottom: 0px; 
+    top: 0;
+    font-weight: 800;
+    color: white;
+    text-align: center;
+    background-color: transparent;
+    position: relative; 
+
+}
+
+.formContainer {
+    padding: 2rem;
+    padding-top: 60px;
+    margin: 10px; 
+    height: 300px;
+    width: 500px;
+    border-radius: 20px;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2); 
+    position: relative; 
+    margin-top: 30px; 
+}
+
+form{
+    background-color: transparent;
+}
+
+.inputGroup {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+    background-color: transparent;
+}
+
+.inputIcon {
+    position: absolute;
+    left: 15px;
+    background-color: transparent;
+}
+
+.inputIcon img {
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+}
+
+.inputGroup ::placeholder {
+    color: gray;
+    opacity: 1;
+    font-size: 18px;
+}
+
+.inputGroup input {
+    width: 100%;
+    height: 50px;
+    background-color: #F4F5F0;
+    padding: 0.8rem 0.5rem 0.5rem 3.5rem;
+    border: 1px solid #ffffff;
+    border-radius: 25px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+
+.loginButton {
+    position: relative; 
+    width: 100%;
+    padding: 0.5rem;
+    height: 50px;
+    font: 20px Poppins bold;
+    color: #ffffff;
+    background-color: #d0943d;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    margin-top: 1rem;
+    overflow: hidden; 
+    transition: transform 0.3s ease;
+    z-index: 1; 
+}
+
+.loginButton span {
+    position: relative;
+    font: 20px Poppins bold;
+    background-color: transparent;
+    z-index: 2; 
+}
+
+.loginButton::before {
+    content: ''; 
+    position: absolute;
+    top: 0;
+    left: -100%; 
+    width: 100%;
+    height: 100%;
+    background-color: #3d8c4b; 
+    transition: left 0.3s ease; 
+    z-index: 0; 
+}
+
+.loginButton:hover::before {
+    left: 0; 
+}
+
+.loginButton:hover {
+    color: #ffffff; 
+    transform: scale(1.01); 
+}
+
+
+
+
+
+.options {
+    display: flex;
+    margin-top: -15px;
+    font: 16px poppins reg;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    margin-left: 15px;
+    background-color: transparent;
+    margin-right: 15px;
+}
+
+.rememberMe {
+    display: flex;
+    align-items: center;
+    color: #3685cd;
+    background-color: transparent;
+}
+
+.rememberMe input[type="checkbox"] {
+    margin-right: 8px;
+    color: #3685cd;
+}
+
+
+.forgotPassword {
+    color: #3685cd;
+    text-decoration: none;
+    background-color: transparent;
+    transition: color 0.3s ease;
+    margin-right: 8px;
+}
+
+.forgotPassword:hover {
+    color: #d0943d;
+    text-decoration: underline;
+}
+
+
+
+/* MOBILE */
+@media (max-width: 768px) {
+    .PageTitle {
+        font-size: 1.8rem; 
+        margin-top: 30px;
+        margin-left: 10%;
+        margin-right: 10%;
+        margin-bottom: 30px;
+    }
+    .formContainer {
+        width: 80%; 
+        height: auto; 
+        padding: 1.5rem; 
+    }
+
+    .inputGroup input {
+        padding: 1rem 1rem 1rem 3.5rem;
+    }
+
+    .inputIcon {
+        top: 15px;
+        left: 25px;
+
+    }
+
+    .inputIcon img{
+        width: 20px;
+        height: 20px;
+    }
+
+    .inputGroup {
+        flex-direction: column; 
+        align-items: flex-start; 
+    }
+
+    
+
+    .inputGroup ::placeholder {
+        font-size: 14px;
+    }
+
+
+    .loginButton {
+        height: 45px; 
+        font-size: 1rem; 
+    }
+
+    .options {
+        
+        font: 10px poppins reg;
+
+    
+    }
+}

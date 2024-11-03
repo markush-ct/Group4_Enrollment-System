@@ -81,10 +81,11 @@
     border-width: 2px;
     border-collapse: collapse; 
     margin: 0 auto;
+    
 }
 
 .contentSection table td {
-    border: 1px solid #3d8c4b; 
+    border: 2px solid #3d8c4b; 
     height: 50px;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -183,14 +184,10 @@ h2, p {
         width: 100%;
         font-size: 18px;
         
-        
-        
     }
 
 
     .footerCopyright {
-
-
         font-size: 10px;
         background-color: #00540d;
         padding: 10px 0;
@@ -254,9 +251,8 @@ h2, p {
 }
 
 .iconContainer:hover {
-    transform: scale(1.08);
+    transform: scale(1.05);
     color: #d0943d;
-    cursor: pointer;
 }
 
 .SocIcon img {

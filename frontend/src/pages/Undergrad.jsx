@@ -34,30 +34,28 @@ function Undergrad() {
                     
                     <h2 data-aos="fade-up">Courses Offered</h2>
                     <table>
-        <tr>
-            <td>Bachelor of Secondary Education</td>
-        </tr>
-        <tr>
-            <td>Bachelor of Science in Business Management</td>
-        </tr>
-        <tr>
-            <td>Bachelor of Science in Computer Science</td>
-        </tr>
-        <tr>
-            <td>Bachelor of Science in Criminology</td>
-        </tr>
-        <tr>
-            <td>Bachelor of Science in Hospitality Management</td>
-        </tr>
-        <tr>
-            <td>Bachelor of Science in Information Technology</td>
-        </tr>
-        <tr>
-            <td>Bachelor of Science in Psychology</td>
-        </tr>
-    </table>
-
-
+                            <tr>
+                                <td>Bachelor of Secondary Education</td>
+                            </tr>
+                            <tr>
+                                <td>Bachelor of Science in Business Management</td>
+                            </tr>
+                            <tr>
+                                <td>Bachelor of Science in Computer Science</td>
+                            </tr>
+                            <tr>
+                                <td>Bachelor of Science in Criminology</td>
+                            </tr>
+                            <tr>
+                                <td>Bachelor of Science in Hospitality Management</td>
+                            </tr>
+                            <tr>
+                                <td>Bachelor of Science in Information Technology</td>
+                            </tr>
+                            <tr>
+                                <td>Bachelor of Science in Psychology</td>
+                            </tr>
+                    </table>
                 </div>
 
                 {/* Soc Icon Section */}

@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MainPage from '/src/pages/MainPage.jsx';
 import Header from '/src/components/Header.jsx';
-import LoginPage from '/src/pages/LoginPage.jsx'; 
+import StudentLoginPage from '/src/pages/StudentLoginPage.jsx'; 
 import CvsuHistory from './pages/CvsuHistory';
 import MissionVision from './pages/MissionVision';
 import DcsPage from './pages/DcsPage';
@@ -15,7 +15,8 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/MainPage" element={<MainPage />} />
+        <Route path="/StudentLoginPage" element={<StudentLoginPage />} />
         <Route path="/CvsuHistory" element={<CvsuHistory />} />
         <Route path="/MissionVision" element={<MissionVision />} />
         <Route path="/DcsPage" element={<DcsPage />} />
