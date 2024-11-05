@@ -7,7 +7,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function LoginPage() {
-    const [values, setValues] = useState({ email: '', password: '' });
+    const [values, setValues] = useState({ 
+        email: '', 
+        password: '' 
+    });
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
@@ -20,15 +23,25 @@ function LoginPage() {
                     const role = res.data.role;
 
                     // Redirect based on role
-                    if (role === 'Enrollment Officer') {
-                        navigate('/AdminDashboard');
-                    } else if (role === 'Student') {
-                        navigate('/');
-                    } else if (role === '') {
-                        navigate('/');
-                    } else {
-                        navigate('/LoginPage'); // Fallback route if role is not recognized
-                    }
+                    if(res.data.status === 'Active'){
+                        if (role === 'Enrollment Officer') {
+                            navigate('/AdminDashboard');
+                        } else if (role === 'Student') {
+                            navigate('/');
+                        } else if (role === 'Society Officer') {
+                            navigate('/');
+                        } else if (role === 'Adviser') {
+                            navigate('/');
+                        } else if (role === 'DCS Head') {
+                            navigate('/');
+                        } else if (role === 'School Head') {
+                            navigate('/');
+                        } else {
+                            navigate('/LoginPage'); // Fallback route if role is not recognized
+                        }
+                    }else{
+                        setError('Account is no longer active. Contact the admin for reactivation')
+                    }            
                 } else {
                     setError(res.data.message);
                 }

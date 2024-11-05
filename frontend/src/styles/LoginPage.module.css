@@ -249,4 +249,8 @@ form{
     .createAcc p{
         font-size: 13px;
     }
+
+    .errorMessage{
+        font-size: 13px;
+    }
 }

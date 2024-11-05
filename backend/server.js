@@ -21,17 +21,17 @@ app.post('/LoginPage', (req, res) => {
     const sql = 'SELECT * FROM account WHERE Email = ? AND Password = ?';
     const { email, password } = req.body;
 
-    db.query(sql, [email, password], (err, results) => {
-        if (err) return res.json({ message: 'Login Failed', error: err });
-        if (results.length === 0) return res.json({ message: 'Invalid credentials' });
+    db.query(sql, [email, password], (err, result) => {
+        if (err) return res.json({ message: "Error in server" });
+        if (result === 0) return res.json({ message: "Invalid credentials" });
 
-        const user = results[0];
-        
-        // Send the user's role along with the response
+        const user = result[0];
         res.json({
             message: 'Login successful',
             role: user.Role,
-            user: { email: user.Email, name: user.Name }
-        });
+            user: { email: user.Email, name: user.Name },
+            status: user.Status
+        })
+
     });
 });
