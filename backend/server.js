@@ -13,13 +13,17 @@ const db = mysql.createConnection({
     database: 'cvsuenrollmentsystem'
 })
 
+app.listen(8080, () => {
+    console.log('listening');
+})
+
 app.post('/LoginPage', (req, res) => {
     const sql = 'SELECT * FROM account WHERE Email = ? AND Password = ?';
     const { email, password } = req.body;
 
     db.query(sql, [email, password], (err, results) => {
-        if (err) return res.status(500).json({ message: 'Login Failed', error: err });
-        if (results.length === 0) return res.status(401).json({ message: 'Invalid credentials' });
+        if (err) return res.json({ message: 'Login Failed', error: err });
+        if (results.length === 0) return res.json({ message: 'Invalid credentials' });
 
         const user = results[0];
         
@@ -31,8 +35,3 @@ app.post('/LoginPage', (req, res) => {
         });
     });
 });
-
-
-app.listen(8080, () => {
-    console.log('listening');
-})
