@@ -70,8 +70,8 @@ function SidebarMenu({ SideBar, setSideBar }) {
                         </div>
 
                     </li>
-                    <li><Link to="/StudentLoginPage">Admin Portal</Link></li>
-                    <li><Link to="/StudentLoginPage">Student Portal</Link></li>
+                    <li><Link to="/MainPage#contact">Contact</Link></li>
+                    <li><Link to="/LoginPage">Sign In</Link></li>
                 </ul>
             </div>
         </div>

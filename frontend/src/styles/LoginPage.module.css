@@ -21,8 +21,6 @@
 .PageTitle {
     font-size: 2.5rem;
     text-transform: uppercase;
-    margin-top: 120px;
-    margin-bottom: 0px; 
     top: 0;
     font-weight: 800;
     color: white;
@@ -33,26 +31,29 @@
 }
 
 .formContainer {
-    padding: 2rem;
-    padding-top: 60px;
-    margin: 10px; 
-    height: 300px;
+    padding: 3rem 2rem;
+    height: max-content;
     width: 500px;
     border-radius: 20px;
     background-color: #ffffff;
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2); 
     position: relative; 
     margin-top: 30px; 
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
 
 form{
     background-color: transparent;
+    width: 100%;
 }
 
 .inputGroup {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     position: relative;
     background-color: transparent;
 }
@@ -84,6 +85,7 @@ form{
     border-radius: 25px;
     font-size: 1rem;
     box-sizing: border-box;
+    outline: none;
 }
 
 
@@ -132,10 +134,6 @@ form{
     transform: scale(1.01); 
 }
 
-
-
-
-
 .options {
     display: flex;
     margin-top: -15px;
@@ -174,8 +172,30 @@ form{
     text-decoration: underline;
 }
 
+.createAcc{
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
 
+.createAcc p{
+    background-color: transparent;
+    color: rgba(0, 0, 0, 0.521);
+    font-size: 15px;
+    margin-top: 15px;
+}
 
+.createAccBtn{
+    text-decoration: none;
+    background-color: transparent;
+}
+
+.errorMessage{
+    color: red;
+    background-color: transparent;
+}
 /* MOBILE */
 @media (max-width: 768px) {
     .PageTitle {
@@ -183,7 +203,6 @@ form{
         margin-top: 30px;
         margin-left: 10%;
         margin-right: 10%;
-        margin-bottom: 30px;
     }
     .formContainer {
         width: 80%; 
@@ -224,9 +243,10 @@ form{
     }
 
     .options {
-        
-        font: 10px poppins reg;
+        font: 10px poppins reg;    
+    }
 
-    
+    .createAcc p{
+        font-size: 13px;
     }
 }

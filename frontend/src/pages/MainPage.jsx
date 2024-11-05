@@ -7,6 +7,8 @@ import { useRef, useState } from 'react';
 import Header from '../components/Header.jsx';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import { useLocation } from "react-router-dom";
+
 
 function MainPage() {
     const [SideBar, setSideBar] = useState(false);
@@ -17,13 +19,25 @@ function MainPage() {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
 
-    {/* FOR ANIMATION */}
+    {/* Linking contact section */ }
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.hash) {
+            const element = document.querySelector(location.hash);
+            if (element) {
+                element.scrollIntoView({ behavior: "smooth" });
+            }
+        }
+    }, [location]);
+
+    {/* FOR ANIMATION */ }
     useEffect(() => {
         AOS.init({
-          duration: 1000, 
-          once: true, 
+            duration: 1000,
+            once: true,
         });
-      }, []);
+    }, []);
 
     const sendEmail = (e) => {
         e.preventDefault();
@@ -86,7 +100,7 @@ function MainPage() {
                     <h3>Taking a course in Computer Studies is a great way to prepare for a career in a world that&apos;s becoming more digital every day.</h3>
                 </div>
 
-                <div data-aos="fade-up" className={styles.contactSection}>
+                <div data-aos="fade-up" className={styles.contactSection} id='contact'>
                     <h1 className={styles.contactTitle}>Contact Us</h1>
 
                     <div className={styles.contactInfo}>
