@@ -25,15 +25,15 @@ function LoginPage() {
                     if(res.data.role === 'Enrollment Officer'){
                         navigate('/EnrollmentOfficerDashboard');
                     } else if (res.data.role === 'Student') {
-                        navigate('/');
+                        navigate('/StudentDashboard');
                     } else if (res.data.role === 'Society Officer') {
                         navigate('/SocOfficerDashboard');
                     } else if (res.data.role === 'Adviser') {
-                        navigate('/');
+                        navigate('/AdviserDashboard');
                     } else if (res.data.role === 'DCS Head') {
-                        navigate('/');
+                        navigate('/DCSHeadDashboard');
                     } else if (res.data.role === 'School Head') {
-                        navigate('/');
+                        navigate('/SchoolHeadDashboard');
                     }
                 } else {
                     navigate('/LoginPage');
@@ -56,15 +56,15 @@ function LoginPage() {
                         if (role === 'Enrollment Officer') {
                             navigate('/EnrollmentOfficerDashboard');
                         } else if (role === 'Student') {
-                            navigate('/');
+                            navigate('/StudentDashboard');
                         } else if (role === 'Society Officer') {
                             navigate('/SocOfficerDashboard');
                         } else if (role === 'Adviser') {
-                            navigate('/');
+                            navigate('/AdviserDashboard');
                         } else if (role === 'DCS Head') {
-                            navigate('/');
+                            navigate('/DCSHeadDashboard');
                         } else if (role === 'School Head') {
-                            navigate('/');
+                            navigate('/SchoolHeadDashboard');
                         } else {
                             navigate('/LoginPage'); // Fallback route if role is not recognized
                         }
