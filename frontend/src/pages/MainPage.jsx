@@ -17,6 +17,7 @@ function MainPage() {
     const emailUs = useRef(null);
     const [senderName, setSenderName] = useState('');
     const [email, setEmail] = useState('');
+    const [subject, setSubject] = useState('');
     const [message, setMessage] = useState('');
 
     {/* Linking contact section */ }
@@ -148,6 +149,9 @@ function MainPage() {
                                 </div>
                                 <div className={styles.formGroup}>
                                     <input value={email} name='from_email' type="email" placeholder="Your Email" onChange={(e) => { setEmail(e.target.value); }} required />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <input value={subject} name='subject' type="text" placeholder="Subject" onChange={(e) => { setSubject(e.target.value); }} required />
                                 </div>
                                 <div className={styles.formGroup}>
                                     <textarea value={message} name='message' placeholder="Message" onChange={(e) => { setMessage(e.target.value); }} required ></textarea>

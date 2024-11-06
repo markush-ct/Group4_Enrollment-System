@@ -7,7 +7,8 @@ import DcsPage from './pages/DcsPage';
 import SocOff from './pages/SocOff';
 import Apply from './pages/Apply';
 import Undergrad from './pages/Undergrad';
-import AdminDashboard from './pages/AdminDashboard';
+import EnrollmentOfficerDashboard from './pages/EnrollmentOfficerDashboard';
+import SocOfficerDashboard from './pages/SocOfficerDashboard';
 
 function App() {
   return (
@@ -22,7 +23,8 @@ function App() {
         <Route path="/SocOff" element={<SocOff />} />
         <Route path="/Apply" element={<Apply />} />
         <Route path="/Undergrad" element={<Undergrad />} />
-        <Route path="/AdminDashboard" element={<AdminDashboard />} />
+        <Route path="/EnrollmentOfficerDashboard" element={<EnrollmentOfficerDashboard />} />
+        <Route path="/SocOfficerDashboard" element={<SocOfficerDashboard />} />
         {/* Add other routes as needed */}
       </Routes>
     </Router>

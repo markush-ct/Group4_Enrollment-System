@@ -5,31 +5,60 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
 
 function LoginPage() {
-    const [values, setValues] = useState({ 
-        email: '', 
-        password: '' 
+    const [values, setValues] = useState({
+        email: '',
+        password: ''
     });
     const [error, setError] = useState('');
+
+    {/* NECESSARY FOR OTHER MAIN PAGES TO AVOID ROLLING BACK WHEN LOGGED IN. COPY TOGETHER WITH NECESSARY IMPORTED MODULES */}
     const navigate = useNavigate();
+    axios.defaults.withCredentials = true;
+
+    useEffect(() => {
+        axios.get('http://localhost:8080')
+            .then(res => {
+                if (res.data.valid) {
+                    if(res.data.role === 'Enrollment Officer'){
+                        navigate('/EnrollmentOfficerDashboard');
+                    } else if (res.data.role === 'Student') {
+                        navigate('/');
+                    } else if (res.data.role === 'Society Officer') {
+                        navigate('/SocOfficerDashboard');
+                    } else if (res.data.role === 'Adviser') {
+                        navigate('/');
+                    } else if (res.data.role === 'DCS Head') {
+                        navigate('/');
+                    } else if (res.data.role === 'School Head') {
+                        navigate('/');
+                    }
+                } else {
+                    navigate('/LoginPage');
+                }
+            })
+            .catch(err => console.log(err))
+    }, []);
+    {/* NECESSARY FOR OTHER MAIN PAGES TO AVOID ROLLING BACK WHEN LOGGED IN. COPY TOGETHER WITH NECESSARY IMPORTED MODULES */}
 
     const submitLogin = (e) => {
         e.preventDefault();
 
         axios.post('http://localhost:8080/LoginPage', values)
             .then((res) => {
-                if (res.data.message === 'Login successful') {
+                if (res.data.isLoggedIn) {
                     const role = res.data.role;
 
                     // Redirect based on role
-                    if(res.data.status === 'Active'){
+                    if (res.data.status === 'Active') {
                         if (role === 'Enrollment Officer') {
-                            navigate('/AdminDashboard');
+                            navigate('/EnrollmentOfficerDashboard');
                         } else if (role === 'Student') {
                             navigate('/');
                         } else if (role === 'Society Officer') {
-                            navigate('/');
+                            navigate('/SocOfficerDashboard');
                         } else if (role === 'Adviser') {
                             navigate('/');
                         } else if (role === 'DCS Head') {
@@ -39,11 +68,16 @@ function LoginPage() {
                         } else {
                             navigate('/LoginPage'); // Fallback route if role is not recognized
                         }
-                    }else{
-                        setError('Account is no longer active. Contact the admin for reactivation')
-                    }            
+                    } else {
+                        toast.error('Account is no longer active. Fill out contact form to ask for reactivation', {
+                            position: 'top-center',
+                            autoClose: 5000,
+
+                        });
+                        setError('');
+                    }
                 } else {
-                    setError(res.data.message);
+                    setError('Invalid credentials');
                 }
             })
             .catch((err) => {
@@ -61,6 +95,7 @@ function LoginPage() {
 
     return (
         <>
+            <ToastContainer hideProgressBar={true} className={styles.toast} />
             <Header SideBar={SideBar} setSideBar={setSideBar} />
             <div className={styles.mainPage}>
                 <div data-aos="fade-up" className={styles.PageTitle}>Log In</div>
