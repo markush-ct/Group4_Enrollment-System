@@ -5,6 +5,8 @@ import Header from '/src/components/Header.jsx';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
+
+
 function Apply() {
 
     const [SideBar, setSideBar] = useState(false);
@@ -20,8 +22,8 @@ function Apply() {
     
       const enrollmentProcess = {
         Freshmen: `
-<b>SENIOR HIGH SCHOOL GRADUATES AND ALS PASSER:</b><br>
-1. Go to link ng <a href="" target="_blank" >application signup link</a>.<br>
+<b>SENIOR HIGH SCHOOL GRADUATES AND ALS PASSERS:</b><br>
+1. Go to the sign up link <a href="/SignUp" target="_blank"><b> "Click here to sign up"</b></a>.<br>
 2. Fill up and have your email verified<br>
 3. Check your registered email for your temporary login credentials.<br>
 4. Sign in using the provided temporary account. Then, update your password promptly.<br>
@@ -40,7 +42,7 @@ function Apply() {
 2. Notice of Admission (NOA)<br>
 3. Original copy of Rating (COR) with eligibility to enroll in College<br>`,
 
-        Transferee: `1. Go to link ng  <a href="" target="_blank" >application signup link</a>.<br>
+        Transferee: `1. Go to the sign up link <a href="/SignUp" target="_blank"><b> "Click here to sign up"</b></a>.<br>
 2. Fill up and have your email verified<br>
 3. Check your registered email for your temporary login credentials.<br>
 4. Sign in using the provided temporary account. Then, update your password promptly.<br>
@@ -55,7 +57,7 @@ function Apply() {
 5. Certificate of Good Moral Character<br>
 6. NBI or Police Clearance<br>`,
         Shiftee: `1. Ask permission to your department head about shifting programs 15 days prior to enrollment period. <br>
-2. Once permitted, go to <a href="" target="_blank" >application signup link</a>.<br>
+2. Once permitted, Go to the sign up link <a href="/SignUp" target="_blank"><b> "Click here to sign up"</b></a>.<br>
 3. Fill up and have your email verified<br>
 4. Check your registered email for your temporary login credentials.<br>
 5. Sign in using the provided temporary account. Then, update your password promptly.<br>
@@ -153,26 +155,28 @@ function Apply() {
 
 </div>
 
-
 {selectedType && (
-                <div data-aos="zoom-out" data-aos-duration="500" className={styles.popup}>
-                    <div className={styles.popupContent}>
-                        <div className={styles.popupHeader}>
-                            <button onClick={closePopup} className={styles.closeButton}>✖</button>
-                            <h2>Application Procedures</h2>
-                        </div>
-                        <div data-aos="fade-up" className={styles.studentType}>
-                            <span>{selectedType}</span>
-                        </div>
-                        <div
-                            className={styles.popupText}
-                            dangerouslySetInnerHTML={{ __html: enrollmentProcess[selectedType] }}
-                        />
-                    </div>
-                </div>
-            )}
+    <div data-aos="zoom-out" data-aos-duration="500" className={styles.popup}>
+        <div className={styles.popupContent}>
+            <div className={styles.popupHeader}>
+                <button onClick={closePopup} className={styles.closeButton}>✖</button>
+                <h2>
+                    {(selectedType === 'Regular' || selectedType === 'Irregular') 
+                        ? 'Enrollment Procedures' 
+                        : 'Application Procedures'}
+                </h2>
+            </div>
+            <div data-aos="fade-up" className={styles.studentType}>
+                <span>{selectedType}</span>
+            </div>
+            <div
+                className={styles.popupText}
+                dangerouslySetInnerHTML={{ __html: enrollmentProcess[selectedType] }}
+            />
+        </div>
+    </div>
+)}
 
-                    
   
 
                 {/* Footer */}

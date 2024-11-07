@@ -1,0 +1,313 @@
+* {
+    font-family: poppins reg;
+    src: url(../assets/Poppins/Poppins-Regular.ttf);
+}
+
+.contentSection{
+    padding: 40px 20px 10px 20px;
+    text-align: justify;
+    background-color: #f7f7f7;
+    color: #333;
+    margin-bottom: 300px;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.parallaxSection {
+    position: relative;
+    color: white;
+    padding: 20px; 
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    justify-content: flex-end; 
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    min-height: 40vh;
+    text-align: left; 
+}
+
+.parallax1 {
+    background-image: url('../assets/cvsub-bg.jpg');
+    margin-top: 90px;
+}
+
+.parallax1 h1 {
+    font: 50px poppins BOLD;
+    color: white;
+    background-color: transparent;
+    margin: 0; 
+    margin-top: 10px; 
+    margin-left: 50px;
+}
+
+.parallax1 h2 {
+    font: 30px poppins BOLD;
+    color: white;
+    background-color: transparent;
+    margin: 0; 
+    margin-bottom: 0px;
+    margin-left: 50px;
+}
+
+
+.parallaxSection::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 1; 
+}
+
+.parallaxSection > * {
+    position: relative;
+    z-index: 2; 
+}
+
+.PageTitle {
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    margin-top: 0px;
+    margin-bottom: 50px; 
+    font-weight: 800;
+    color: #3d8c4b;
+    text-align: center;
+    background-color: transparent;
+}
+
+
+.radioGroup {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 50px;
+    
+}
+
+.radioGroup label {
+    font-weight: bold;
+    cursor: pointer;
+    margin-right: 20px;
+    font-size: 1.5rem;
+}
+
+.radioGroup input[type="radio"] {
+    margin-right: 10px;
+    transform: scale(1.2); 
+    accent-color: blue; 
+}
+
+.formGroup {
+    margin-top: 20px;
+}
+
+.formGroup label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.formGroup input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.formGroup input[type="email"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.formGroup select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.required {
+    color: red;
+    font-weight: bold;
+}
+
+
+.buttonContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.registerButton {
+    position: relative; 
+    width: 50%;
+    padding: 0.5rem;
+    height: 50px;
+    font: 20px Poppins bold;
+    color: #ffffff;
+    background-color: #d0943d;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    margin-top: 1rem;
+    overflow: hidden; 
+    transition: transform 0.3s ease;
+    z-index: 1; 
+}
+
+.registerButton span {
+    position: relative;
+    font: 20px Poppins bold;
+    background-color: transparent;
+    z-index: 2; 
+}
+
+.registerButton::before {
+    content: ''; 
+    position: absolute;
+    top: 0;
+    left: -100%; 
+    width: 100%;
+    height: 100%;
+    background-color: #3d8c4b; 
+    transition: left 0.3s ease; 
+    z-index: 0; 
+}
+
+.registerButton:hover::before {
+    left: 0; 
+}
+
+.registerButton:hover {
+    color: #ffffff; 
+    transform: scale(1.01); 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.footerCopyright {
+    text-align: center;
+    margin-top: 20px;
+    color: #fff;
+    font-size: 1rem;
+    background-color: #00540d;
+    padding: 10px 0;
+
+}
+
+.footerCopyright p {
+    background-color: transparent;
+}
+
+.footerCopyright span {
+    font-weight: bold;
+    background-color: transparent;
+}
+
+.footerCopyright .highlighted {
+    color: rgb(233, 185, 41); 
+}
+
+
+
+
+
+
+/* MOBILE */
+@media (max-width: 768px) {
+
+    .contentSection {
+
+        margin-bottom: 200px;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+    
+    .parallaxSection {
+        text-align: center;
+        padding: 60px 10px; 
+        justify-content:flex-end;
+        min-height: 10vh;
+    }
+
+    .parallax1 h1 {
+        font: 35px poppins BOLD; 
+        margin-left: 20px;
+
+    }
+
+    .parallax1 h2 {
+        font: 25px poppins BOLD; 
+        margin-left: 20px;
+
+    }
+
+    .PageTitle {
+        font-size: 1.5rem; 
+    }
+
+    .radioGroup {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .radioGroup label {
+        font-size: 20px;
+    }
+
+    .formGroup label {
+        font-size: 16px;
+    }
+
+    .registerButton {
+        width: 100%;
+        height: 45px; 
+        font-size: 1rem; 
+    }
+    
+
+
+    .footerCopyright {
+        font-size: 10px;
+        background-color: #00540d;
+        padding: 10px 0;
+    
+    }
+
+    
+}
+
+
+
+
+
+    

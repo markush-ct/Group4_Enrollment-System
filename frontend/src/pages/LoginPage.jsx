@@ -18,6 +18,12 @@ function LoginPage() {
     const navigate = useNavigate();
     axios.defaults.withCredentials = true;
 
+    const [showPassword, setShowPassword] = useState(false);
+
+    const togglePasswordVisibility = () => {
+        setShowPassword((prevShowPassword) => !prevShowPassword);
+    };
+
     useEffect(() => {
         axios.get('http://localhost:8080')
             .then(res => {
@@ -111,12 +117,19 @@ function LoginPage() {
                             <div className={styles.inputIcon}>
                                 <img src="/src/assets/login-pwlogo.svg" alt="Lock Icon" />
                             </div>
-                            <input name='password' type="password" placeholder="Password" onChange={(e) => setValues({ ...values, password: e.target.value })} required />
+                            <input name='password' type={showPassword ? "text" : "password"} placeholder="Password" onChange={(e) => setValues({ ...values, password: e.target.value })} required />
+                            <div className={styles.togglePasswordIcon} onClick={togglePasswordVisibility}>
+                <img title='Show/Hide Password'
+                    src={showPassword ? "/src/assets/showPass.png" : "/src/assets/hidePass.png"} 
+                    alt={showPassword ? "Hide Password" : "Show Password"} 
+                />
+            </div>
                         </div>
+                        
 
                         <div className={styles.options}>
                             <label className={styles.rememberMe}>
-                                <input type="checkbox" name="remember" />
+                                <input type="checkbox" name="remember" title='Remember my username for next time' />
                                 Remember Me
                             </label>
                             <a href="/forgot-password" className={styles.forgotPassword}>Forgot Password?</a>

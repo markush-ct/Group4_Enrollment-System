@@ -12,7 +12,8 @@ import SocOfficerDashboard from './pages/SocOfficerDashboard';
 import StudentDashboard from './pages/StudentDashboard';
 import AdviserDashboard from './pages/AdviserDashboard.jsx';
 import DCSHeadDashboard from './pages/DCSHeadDashboard.jsx';
-import SchoolHeadDashboard from './pages/SchoolHeadDashboard.jsx'
+import SchoolHeadDashboard from './pages/SchoolHeadDashboard.jsx';
+import SignUp from './pages/SignUp.jsx'
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Route path="/AdviserDashboard" element={<AdviserDashboard />} />
         <Route path="/DCSHeadDashboard" element={<DCSHeadDashboard />} />
         <Route path="/SchoolHeadDashboard" element={<SchoolHeadDashboard />} />
+        <Route path="/SignUp" element={<SignUp />} />
         {/* Add other routes as needed */}
       </Routes>
     </Router>
