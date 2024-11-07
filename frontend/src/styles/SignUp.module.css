@@ -117,6 +117,8 @@
     margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-size: 16px;
+    outline: none;
 }
 
 .formGroup input[type="email"] {
@@ -125,6 +127,8 @@
     margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-size: 16px;
+    outline: none;
 }
 
 .formGroup select {
@@ -133,6 +137,8 @@
     margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-size: 16px;
+    outline: none;
 }
 
 .required {

@@ -31,6 +31,26 @@ const db = mysql.createConnection({
     database: 'cvsuenrollmentsystem'
 })
 
+//GET PROGRAMS (IT & CS)
+app.post('/SignUp', (req, res) => {
+    const sql = 'SELECT * FROM program';
+    db.query(sql, (err, result) => {
+        if(err){
+            console.log('Error getting programs: ' + err)
+            return res.json({message : 'Error' + err})
+        } else{
+            const programs = result.map(row => ({
+                programID: row.ProgramID,
+                programName: row.ProgramName,
+            }));
+
+            return res.json(programs);
+        }
+        
+    })
+})
+
+//LOGIN
 app.get('/', (req, res) => {
     if(req.session.name){
         return res.json({valid: true, name: req.session.name, role: req.session.role})

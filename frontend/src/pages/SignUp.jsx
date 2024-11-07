@@ -4,8 +4,21 @@ import { useState } from 'react';
 import Header from '/src/components/Header.jsx';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import axios from 'axios';
 
 function SignUp() {
+    const [programs, setPrograms] = useState('');
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        axios.post('http://localhost:8080/SignUp')
+        .then(res => {
+            setPrograms(res.data);
+        })
+        .catch(err => {
+            setError('Error from frontend' + err);
+        })
+    })
 
     const [SideBar, setSideBar] = useState(false);
     SideBar ? document.body.style.overflow = 'hidden' : document.body.style.overflow = 'auto';
@@ -21,11 +34,6 @@ function SignUp() {
 
       const [applicantCategory, setApplicantCategory] = useState("Freshmen");
     
-      
-
-
-
-
     return (
         <>
             <Header SideBar={SideBar} setSideBar={setSideBar} />
@@ -76,38 +84,11 @@ function SignUp() {
                     </label>
                 </div>
                 
+                {error && <p className={styles.errorMessage}>{error}</p>}
                 {/* Conditional Fields Based on Applicant Type */}
-                {applicantCategory === "Freshmen" && (
-                    <div data-aos="fade-up" className={styles.formGroup}>
-                    <label>Given Name <span className={styles.required}>*</span></label>
-                    <input type="text" placeholder="Given Name" required />
-
-                    <label>Middle Name</label>
-                    <input type="text" placeholder="Middle Name" />
-
-                    <label>Last Name <span className={styles.required}>*</span></label>
-                    <input type="text" placeholder="Last Name" required />
-
-                    <label>Name of Last School Attended <span className={styles.required}>*</span></label>
-                    <input type="text" placeholder="Name of Last School Attended" required />
-
-                    <label>Email <span className={styles.required}>*</span></label>
-                    <input type="email" placeholder="Email" required />
-
-                    <label>Contact Number <span className={styles.required}>*</span></label>
-                    <input type="text" placeholder="Contact Number" required />
-
-                    <label>Academic Preference <span className={styles.required}>*</span></label>
-                    <select required>
-                        <option value="">Select Academic Preference</option>
-                        <option value="Option1">Bachelor of Science in Computer Science</option>
-                        <option value="Option2">Bachelor of Science in Information Technology</option>
-                    </select>
-                </div>
-
-                )}
-
-                {applicantCategory === "Transferee" && (
+                {applicantCategory === "Freshmen" && (                       
+                    
+                    
                     <div data-aos="fade-up" className={styles.formGroup}>
                     <label>Given Name <span className={styles.required}>*</span></label>
                     <input type="text" placeholder="Given Name" required />
@@ -129,9 +110,45 @@ function SignUp() {
 
                     <label>Academic Preference <span className={styles.required}>*</span></label>
                     <select required>
-                        <option value="">Select Academic Preference</option>
-                        <option value="Option1">Bachelor of Science in Computer Science</option>
-                        <option value="Option2">Bachelor of Science in Information Technology</option>
+                        <option value="" selected disabled>Select Academic Preference</option>
+                        {programs.length > 0 ? (
+                            programs.map((row) => (
+                                <option key={row.programID} value={row.programID}>{row.programName}</option>
+                            ))
+                        ) : ''}
+                    </select>
+                </div>
+
+                )}
+
+                {applicantCategory === "Transferee" && (
+                    <div data-aos="fade-up" className={styles.formGroup}>
+                    <label>Given Name <span className={styles.required}>*</span></label>
+                    <input type="text" placeholder="Given Name" required />
+
+                    <label>Middle Name</label>
+                    <input type="text" placeholder="Middle Name" />
+
+                    <label>Last Name <span className={styles.required}>*</span></label>
+                    <input type="text" placeholder="Last Name" required />
+
+                    <label>Name of Last School Attended <span className={styles.required}>*</span></label>
+                    <input type="text" placeholder="Name of Last School Attended" required />
+
+                    <label>Email <span className={styles.required}>*</span></label>
+                    <input type="email" placeholder="Email" required />
+
+                    <label>Contact Number <span className={styles.required}>*</span></label>
+                    <input type="text" placeholder="Contact Number" required />
+
+                    <label>Academic Preference <span className={styles.required}>*</span></label>
+                    <select required>
+                        <option value="" selected disabled>Select Academic Preference</option>
+                        {programs.length > 0 ? (
+                            programs.map((row) => (
+                                <option key={row.programID} value={row.programID}>{row.programName}</option>
+                            ))
+                        ) : ''}
                     </select>
                 </div>
 
@@ -149,16 +166,16 @@ function SignUp() {
                     <input type="text" placeholder="Last Name" required />
 
                     <label>Student ID <span className={styles.required}>*</span></label>
-                    <input type="text" placeholder="Name of Last School Attended" required />
+                    <input type="text" placeholder="Student ID" required />
 
                     <label>Previous Program <span className={styles.required}>*</span></label>
                     <select required>
-                        <option value="">Select Previous Program</option>
-                        <option value="Option1">Bachelor of Secondary Education</option>
-                        <option value="Option2">Bachelor of Science in Business Management</option>
-                        <option value="Option3">Bachelor of Science in Criminology</option>
-                        <option value="Option4">Bachelor of Science in Hospitality Management</option>
-                        <option value="Option5">Bachelor of Science in Psychology</option>
+                        <option value="" selected disabled>Select Previous Program</option>
+                        <option value="Bachelor of Secondary Education">Bachelor of Secondary Education</option>
+                        <option value="Bachelor of Science in Business Management">Bachelor of Science in Business Management</option>
+                        <option value="Bachelor of Science in Criminology">Bachelor of Science in Criminology</option>
+                        <option value="Bachelor of Science in Hospitality Management">Bachelor of Science in Hospitality Management</option>
+                        <option value="Bachelor of Science in Psychology">Bachelor of Science in Psychology</option>
                     </select>
 
                     <label>Year and Section <span className={styles.required}>*</span></label>
@@ -170,8 +187,11 @@ function SignUp() {
                     <label>Academic Preference <span className={styles.required}>*</span></label>
                     <select required>
                         <option value="">Select Academic Preference</option>
-                        <option value="Option1">Bachelor of Science in Computer Science</option>
-                        <option value="Option2">Bachelor of Science in Information Technology</option>
+                        {programs.length > 0 ? (
+                            programs.map((row) => (
+                                <option key={row.programID} value={row.programID}>{row.programName}</option>
+                            ))
+                        ) : ''}
                     </select>
                 </div>
 
