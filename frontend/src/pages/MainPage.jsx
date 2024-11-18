@@ -3,6 +3,7 @@ import styles from '../styles/MainPage.module.css';
 import emailjs from '@emailjs/browser';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import '/src/styles/globalToastStyles.css'; // for toastify css 
 import { useRef, useState } from 'react';
 import Header from '../components/Header.jsx';
 import AOS from 'aos';

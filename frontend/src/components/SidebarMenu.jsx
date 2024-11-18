@@ -64,7 +64,7 @@ function SidebarMenu({ SideBar, setSideBar }) {
                         <div className={style.sb_admissions_dropdown_div} style={{display: admissions ? 'flex' : 'none'}} >
                             <ul className={style.sb_dd_admissions}>
                                 <li><Link to="/Apply">Apply</Link></li>
-                                <li><a href="">Enrollment FAQs</a></li>
+                                <li><Link to="/FAQS">Enrollment FAQs</Link></li>
                                 <li><Link to="/Undergrad">Undergraduate Programs</Link></li>
                             </ul>
                         </div>

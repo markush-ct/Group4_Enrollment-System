@@ -6,6 +6,7 @@ import MissionVision from './pages/MissionVision';
 import DcsPage from './pages/DcsPage';
 import SocOff from './pages/SocOff';
 import Apply from './pages/Apply';
+import FAQs from './pages/FAQs';
 import Undergrad from './pages/Undergrad';
 import EnrollmentOfficerDashboard from './pages/EnrollmentOfficerDashboard';
 import SocOfficerDashboard from './pages/SocOfficerDashboard';
@@ -14,6 +15,7 @@ import AdviserDashboard from './pages/AdviserDashboard.jsx';
 import DCSHeadDashboard from './pages/DCSHeadDashboard.jsx';
 import SchoolHeadDashboard from './pages/SchoolHeadDashboard.jsx';
 import SignUp from './pages/SignUp.jsx'
+import CreateAcc from './pages/CreateAcc.jsx'
 
 function App() {
   return (
@@ -27,6 +29,7 @@ function App() {
         <Route path="/DcsPage" element={<DcsPage />} />
         <Route path="/SocOff" element={<SocOff />} />
         <Route path="/Apply" element={<Apply />} />
+        <Route path="/FAQs" element={<FAQs />} />
         <Route path="/Undergrad" element={<Undergrad />} />
         <Route path="/EnrollmentOfficerDashboard" element={<EnrollmentOfficerDashboard />} />
         <Route path="/SocOfficerDashboard" element={<SocOfficerDashboard />} />
@@ -35,6 +38,7 @@ function App() {
         <Route path="/DCSHeadDashboard" element={<DCSHeadDashboard />} />
         <Route path="/SchoolHeadDashboard" element={<SchoolHeadDashboard />} />
         <Route path="/SignUp" element={<SignUp />} />
+        <Route path="/CreateAcc" element={<CreateAcc />} />
         {/* Add other routes as needed */}
       </Routes>
     </Router>

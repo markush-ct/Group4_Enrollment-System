@@ -140,7 +140,7 @@ function LoginPage() {
                     </form>
 
                     <div className={styles.createAcc}>
-                        <p>Don&apos;t have an account? <Link to='/' className={styles.createAccBtn}>Create an account</Link></p>
+                        <p>Don&apos;t have an account? <Link to='/CreateAcc' className={styles.createAccBtn}>Create an account</Link></p>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,501 @@
+* {
+    font-family: poppins reg;
+    src: url(../assets/Poppins/Poppins-Regular.ttf);
+}
+
+.parallaxSection {
+    position: relative;
+    color: white;
+    padding: 20px; 
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    justify-content: flex-end; 
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    min-height: 60vh;
+    text-align: left; 
+}
+
+
+.parallax1 {
+    background-image: url('../assets/faq-bg.jpg');
+    margin-top: 90px;
+    
+}
+
+.parallax1 h1 {
+    font: 50px poppins BOLD;
+    color: white;
+    background-color: transparent;
+    margin: 0; 
+    margin-top: 10px; 
+    margin-left: 50px;
+}
+
+.parallax1 h2 {
+    font: 30px poppins BOLD;
+    color: white;
+    background-color: transparent;
+    margin: 0; 
+    margin-bottom: 0px;
+    margin-left: 50px;
+}
+
+.parallaxSection::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 1; 
+}
+
+.parallaxSection > * {
+    position: relative;
+    z-index: 2; 
+}
+
+.contentSection {
+    padding: 40px 20px 10px 20px;
+    text-align:justify;
+    background-color: #f7f7f7;
+    color: #333;
+    margin-bottom: 300px;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.contentSection h2{
+    color: #129406;
+}
+
+h2, p {
+    margin: 10px 0;
+}
+
+@keyframes slideUp {
+    0% {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.parallax1 h1,
+.parallax1 h2{
+    font-weight: bold;
+    color: white;
+
+    margin: 0; 
+    margin-left: 50px;
+    animation: slideUp 1s ease-out forwards; 
+}
+
+.parallax1 h1,
+.parallax1 h2{
+    animation-delay: 0.3s;
+}
+
+.PageTitle {
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    margin-top: 50px; 
+    font-weight: 800;
+    color: #3d8c4b;
+    text-align: center;
+    background-color: transparent;
+}
+
+.PageTitle2 {
+    font-size: 2rem;
+    text-transform: uppercase;
+    margin-top: 50px; 
+    margin-bottom: 10px;
+    font-weight: 800;
+    color: #3d8c4b;
+    text-align: center;
+    background-color: transparent;
+}
+
+.studentSelection {
+    display: flex;
+    color: #3d8c4b;
+    text-transform: uppercase;
+    font-size: 1rem;
+    justify-content: space-be;
+    align-items: center;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 10px;
+    gap: 20px; 
+}
+
+.studentSelection::before,
+.studentSelection::after {
+    content: "";
+    flex: 1; 
+    border-bottom: 1px solid #3d8c4b; 
+    margin: 0 10px;
+}
+
+
+
+.AcademicContainer {
+    display: flex;
+    font-size: 1.5rem;
+    justify-content: center;
+    align-items: center;
+    border-radius: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px 30px;
+    height: auto;
+    width: 70%;
+    margin: 20px auto;
+    text-align: center;
+    color: white;
+    background-color: #3d8c4b;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.AcademicContainer:hover {
+    transform: scale(1.01);
+}
+
+.popup {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7); 
+    z-index: 2000;
+}
+
+.popupContent {
+    padding: 20px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 1000px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    text-align: left;
+    position: relative;
+}
+
+.popupContent img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    display: block; 
+    margin: 20px 0; 
+}
+
+.popupContent::-webkit-scrollbar {
+    width: 20px;
+}
+
+.popupHeader {
+    display: flex;
+    text-transform: uppercase;
+    justify-content: center;
+    text-align: center;
+    font-size: 2rem;
+    height: 30px;
+    color: #d0943d;;
+    margin-bottom: 50px;
+    padding-bottom: 10px;
+
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.2s;
+    position: absolute; 
+    top: 0;             
+    right: 0;          
+    padding: 10px;     
+}
+.closeButton:hover {
+    color: #900;
+}
+
+.searchBar {
+    display: flex;
+    justify-content: center; 
+    align-items: center;     
+    margin: 0 auto;         
+    height: 100%;            
+    width: 100%;              
+}
+  
+  .searchInput {
+    width: 100%;  
+    padding: 12px 20px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #333;
+  }
+  
+  .searchInput:focus {
+    outline: none;
+    border-color: #3d8c4b;
+    box-shadow: 0 0 8px rgba(61, 140, 75, 0.5);
+  }
+
+  
+
+
+.faqTable {
+    border-style: solid;
+    width: 100%;
+    font-size: 18px;
+    height: auto;
+    border-color: #3d8c4b;
+    border-width: 2px;
+    border-collapse: collapse; 
+    margin: 0 auto;
+    margin-top: 10px;
+}
+
+.faqTable th,
+.faqTable td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+    vertical-align: top; 
+}
+
+.faqTable th {
+    background-color: #00540d;
+    color: #fff;
+    font-weight: bold;
+    text-align: left;
+}
+
+.faqTable tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+
+.faqTable .question {
+    background-color: rgba(61, 140, 75, 0.1); 
+    
+}
+
+.faqTable td {
+    border: 2px solid #ddd;
+    
+}
+
+
+
+
+
+.noResults {
+    text-align: center;
+    font-style: italic;
+    color: #888;
+}
+
+  
+
+
+.footerCopyright {
+    text-align: center;
+    margin-top: 20px;
+    color: #fff;
+    font-size: 1rem;
+    background-color: #00540d;
+    padding: 10px 0;
+
+}
+
+.footerCopyright p {
+    background-color: transparent;
+}
+
+.footerCopyright span {
+    font-weight: bold;
+    background-color: transparent;
+}
+
+.footerCopyright .highlighted {
+    color: rgb(233, 185, 41); 
+}
+
+
+
+
+/* MOBILE */
+@media (max-width: 768px) {
+    .parallaxSection {
+        text-align: center;
+        padding: 60px 10px; 
+        min-height: 30vh;
+        justify-content:flex-end;
+    }
+
+    .parallax1 {
+        background-image: url('../assets/faq-bg-mobile.jpg');
+    }
+    .parallax1 h1 {
+        font: 35px poppins BOLD; 
+        margin-left: 20px;
+
+    }
+
+    .parallax1 h2 {
+        font: 25px poppins BOLD; 
+        margin-left: 20px;
+
+    }
+
+    .contentSection {
+        font-size: 14px;
+        text-align:justify;
+        background-color: #f7f7f7;
+        color: #333;
+        margin-bottom: 50px;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .contentSection table {
+        border-style: solid;
+        width: 100%;
+        font-size: 18px;
+        
+    }
+
+    .PageTitle {
+        font-size: 1.8rem; 
+        margin-top: 30px;
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+    .PageTitle2 {
+        font-size: 1.5rem; 
+        margin-top: 30px;
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+
+    .studentSelection {
+        flex-direction: column;
+        font-size: 0.875rem; 
+        gap: 10px; 
+        padding: 5px; 
+    }
+
+    .studentSelection::before,
+    .studentSelection::after {
+        display: none; 
+    }
+    .AcademicContainer {
+        
+        font-size: 1rem;
+        height: auto;
+        width: 90%;
+        text-align: center;
+        color: white;
+        background-color: #3d8c4b;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    .popupContent{
+        max-height: 80vh;
+        max-width: 90vw;
+        margin-top: 10%;
+        margin-bottom: 20%;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .popupHeader {
+        margin: 10px 0 20px;
+        font-size: 1.5rem; 
+    }
+
+    
+
+
+    .searchBar {
+        margin-top: 10px;
+        width: 90%;              
+    }
+
+    .faqTable {
+        width: 100%; 
+        font-size: 16px; 
+      }
+    
+      .faqTable th,
+      .faqTable td {
+        padding: 8px; 
+      }
+    
+      .faqTable td {
+        display: block; 
+        width: 100%;
+        box-sizing: border-box;
+      }
+    
+      .faqTable th {
+        display: none; 
+      }
+    
+      .faqTable td::before {
+        content: attr(data-label); 
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+      }
+
+    .footerCopyright {
+        font-size: 10px;
+        background-color: #00540d;
+        padding: 10px 0;
+    
+    }
+
+    
+
+    
+}
+
+@media (max-width: 480px) {
+    .parallaxSection {
+        padding: 40px 5px; 
+    }
+
+    .parallax1 h1 {
+        font: 30px poppins BOLD; 
+    }
+
+    .parallax1 h2 {
+        font: 20px poppins BOLD; 
+    }
+
+    
+}

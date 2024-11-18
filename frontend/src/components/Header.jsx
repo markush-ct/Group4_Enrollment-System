@@ -45,13 +45,13 @@ function Header({SideBar, setSideBar}) {
                                 <div className={style.admissions_dropdown_div}>
                                     <ul className={style.dd_admissions}>
                                         <li><Link to="/Apply">Apply</Link></li>
-                                        <li><a href="">Enrollment FAQs</a></li>
+                                        <li><Link to="/FAQS">Enrollment FAQs</Link></li>
                                         <li><Link to="/Undergrad">Undergraduate Programs</Link></li>
                                     </ul>
                                 </div>
 
                             </li>
-                            <li><Link to="/MainPage#contact" className={style.headerLinks}>Contact</Link></li>
+                            <li><Link to="/MainPage#contact" offset="-50" className={style.headerLinks}>Contact</Link></li>
                             <li><Link to="/LoginPage" className={style.headerLinks}>Sign In</Link></li>
                         </ul>
 
