@@ -1,204 +1,251 @@
-import { useEffect } from 'react';
-import styles from '/src/styles/SignUp.module.css'; 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import styles from '/src/styles/SignUp.module.css';
 import Header from '/src/components/Header.jsx';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import axios from 'axios';
 
 function SignUp() {
+    const [signUpPrompt, setsignUpPrompt] = useState(false);
+    const [signUpMsg, setsignUpMsg] = useState("");
     const [programs, setPrograms] = useState('');
     const [error, setError] = useState('');
+    const [values, setValues] = useState({
+        applicantCategory: "Freshman", // default value
+        firstname: '',
+        middlename: '',
+        lastname: '',
+        lastschoolattended: '',
+        email: '',
+        contactnum: '',
+        year: '',
+        preferredProgram: '',
+        studentID: '',
+        prevProgram: '',
+    });
 
     useEffect(() => {
-        axios.post('http://localhost:8080/SignUp')
-        .then(res => {
-            setPrograms(res.data);
-        })
-        .catch(err => {
-            setError('Error from frontend' + err);
-        })
-    })
+        axios.get('http://localhost:8080/programs')
+            .then(res => {
+                setPrograms(res.data);
+            })
+            .catch(err => {
+                setError('Error: ' + err);
+            });
+    }, []);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        axios.post('http://localhost:8080/SignUp', values)
+            .then((res) => {
+                setsignUpMsg(res.data.message);
+                setsignUpPrompt(true);
+                setValues({
+                    applicantCategory: "Freshman", // default value
+                    firstname: '',
+                    middlename: '',
+                    lastname: '',
+                    lastschoolattended: '',
+                    email: '',
+                    contactnum: '',
+                    year: '',
+                    preferredProgram: '',
+                    studentID: '',
+                    prevProgram: '',
+                })
+            })
+            .catch((err) => {
+                alert("Error: " + err);
+                setsignUpPrompt(false);
+            });
+    }
 
     const [SideBar, setSideBar] = useState(false);
     SideBar ? document.body.style.overflow = 'hidden' : document.body.style.overflow = 'auto';
 
-    {/* FOR ANIMATION */}
     useEffect(() => {
         AOS.init({
-          duration: 1000, 
-          once: true, 
+            duration: 1000,
+            once: true,
         });
-      }, []);
+    }, []);
 
+    const handleApplicantCategoryChange = (category) => {
+        setValues({ ...values, applicantCategory: category });
+    };
 
-      const [applicantCategory, setApplicantCategory] = useState("Freshmen");
-    
     return (
         <>
             <Header SideBar={SideBar} setSideBar={setSideBar} />
-            
-                {/* Parallax Section 1 */}
-                <div className={`${styles.parallaxSection} ${styles.parallax1}`}>
-                    <h2>CAVITE STATE UNIVERSITY</h2>
-                    <h1>DEPARTMENT OF COMPUTER STUDIES</h1>
-                </div>
 
-                {/* Application Section */}
-                
-        <div data-aos="fade-up" className={styles.contentSection}>
-            <div data-aos="fade-up" className={styles.PageTitle}>Applicant Sign Up</div>
-            <form>
-                {/* Applicant Tyep */}
-                <div data-aos="fade-up" className={styles.radioGroup}>
-                <label>Applicant Type <span className={styles.required}>*</span></label>
-                    <label>
-                        <input
-                            type="radio"
-                            name="applicantCategory"
-                            value="Freshmen"
-                            checked={applicantCategory === "Freshmen"}
-                            onChange={() => setApplicantCategory("Freshmen")}
-                        />
-                        Freshmen
-                    </label>
-                    <label>
-                        <input
-                            type="radio"
-                            name="applicantCategory"
-                            value="Transferee"
-                            checked={applicantCategory === "Transferee"}
-                            onChange={() => setApplicantCategory("Transferee")}
-                        />
-                        Transferee
-                    </label>
-                    <label>
-                        <input
-                            type="radio"
-                            name="applicantCategory"
-                            value="Shiftee"
-                            checked={applicantCategory === "Shiftee"}
-                            onChange={() => setApplicantCategory("Shiftee")}
-                        />
-                        Shiftee
-                    </label>
-                </div>
-                
-                {error && <p className={styles.errorMessage}>{error}</p>}
-                {/* Conditional Fields Based on Applicant Type */}
-                {applicantCategory === "Freshmen" && (                       
-                    
-                    
-                    <div data-aos="fade-up" className={styles.formGroup}>
-                    <label>Given Name <span className={styles.required}>*</span></label>
-                    <input type="text" placeholder="Given Name" required />
+            {/* Parallax Section 1 */}
+            <div className={`${styles.parallaxSection} ${styles.parallax1}`}>
+                <h2>CAVITE STATE UNIVERSITY</h2>
+                <h1>DEPARTMENT OF COMPUTER STUDIES</h1>
+            </div>
 
-                    <label>Middle Name</label>
-                    <input type="text" placeholder="Middle Name" />
+            {/* SIGN UP PROMPT */}
+            <div id='prompt' className={`prompt ${signUpPrompt ? 'togglePrompt' : ''}`}>
+                {signUpMsg && <p className={styles.signUpMsg}>{signUpMsg}</p>}
+            </div>
 
-                    <label>Last Name <span className={styles.required}>*</span></label>
-                    <input type="text" placeholder="Last Name" required />
+            {/* Application Section */}
+            <div data-aos="fade-up" className={styles.contentSection}>
+                <div data-aos="fade-up" className={styles.PageTitle}>Applicant Sign Up</div>
+                <form onSubmit={handleSubmit}>
+                    {/* Applicant Type */}
+                    <div data-aos="fade-up" className={styles.radioGroup}>
+                        <label>Applicant Type <span className={styles.required}>*</span></label>
+                        <label>
+                            <input
+                                type="radio"
+                                name="applicantCategory"
+                                value="Freshman"
+                                checked={values.applicantCategory === "Freshman"}
+                                onChange={() => handleApplicantCategoryChange("Freshman")}
+                            />
+                            Freshman
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                name="applicantCategory"
+                                value="Transferee"
+                                checked={values.applicantCategory === "Transferee"}
+                                onChange={() => handleApplicantCategoryChange("Transferee")}
+                            />
+                            Transferee
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                name="applicantCategory"
+                                value="Shiftee"
+                                checked={values.applicantCategory === "Shiftee"}
+                                onChange={() => handleApplicantCategoryChange("Shiftee")}
+                            />
+                            Shiftee
+                        </label>
+                    </div>
 
-                    <label>Name of Senior High School <span className={styles.required}>*</span></label>
-                    <input type="text" placeholder="Name of Senior High School" required />
+                    {error && <p className={styles.errorMessage}>{error}</p>}
 
-                    <label>Email <span className={styles.required}>*</span></label>
-                    <input type="email" placeholder="Email" required />
+                    {/* Conditional Fields Based on Applicant Type */}
+                    {values.applicantCategory === "Freshman" && (
+                        <div data-aos="fade-up" className={styles.formGroup}>
+                            <label>Given Name <span className={styles.required}>*</span></label>
+                            <input type="text" name='firstname' value={values.firstname} onChange={(e) => setValues({ ...values, firstname: e.target.value })} required />
 
-                    <label>Contact Number <span className={styles.required}>*</span></label>
-                    <input type="text" placeholder="Contact Number" required />
+                            <label>Middle Name</label>
+                            <input type="text" placeholder="if applicable" name='middlename' value={values.middlename} onChange={(e) => setValues({ ...values, middlename: e.target.value })} />
 
-                    <label>Academic Preference <span className={styles.required}>*</span></label>
-                    <select required>
-                        <option value="" selected disabled>Select Academic Preference</option>
-                        {programs.length > 0 ? (
-                            programs.map((row) => (
-                                <option key={row.programID} value={row.programID}>{row.programName}</option>
-                            ))
-                        ) : ''}
-                    </select>
-                </div>
+                            <label>Last Name <span className={styles.required}>*</span></label>
+                            <input type="text" name='lastname' value={values.lastname} onChange={(e) => setValues({ ...values, lastname: e.target.value })} required />
 
-                )}
+                            <label>Name of Senior High School <span className={styles.required}>*</span></label>
+                            <input type="text" name='lastschoolattended' value={values.lastschoolattended} onChange={(e) => setValues({ ...values, lastschoolattended: e.target.value })} required />
 
-                {applicantCategory === "Transferee" && (
-                    <div data-aos="fade-up" className={styles.formGroup}>
-                    <label>Given Name <span className={styles.required}>*</span></label>
-                    <input type="text" placeholder="Given Name" required />
+                            <label>Email <span className={styles.required}>*</span></label>
+                            <input type="email" name='email' value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} required />
 
-                    <label>Middle Name</label>
-                    <input type="text" placeholder="Middle Name" />
+                            <label>Contact Number <span className={styles.required}>*</span></label>
+                            <input type="text" name='contactnum' value={values.contactnum} onChange={(e) => setValues({ ...values, contactnum: e.target.value })} required />
 
-                    <label>Last Name <span className={styles.required}>*</span></label>
-                    <input type="text" placeholder="Last Name" required />
+                            <label>Academic Preference <span className={styles.required}>*</span></label>
+                            <select name='preferredProgram' value={values.preferredProgram} onChange={(e) => setValues({ ...values, preferredProgram: e.target.value })} required >
+                                <option value="" selected disabled>Select your preferred program</option>
+                                {programs.length > 0 ? (
+                                    programs.map((row) => (
+                                        <option key={row.programID} value={row.programID}>{row.programName}</option>
+                                    ))
+                                ) : ''}
+                            </select>
+                        </div>
+                    )}
 
-                    <label>Name of Last School Attended <span className={styles.required}>*</span></label>
-                    <input type="text" placeholder="Name of Last School Attended" required />
+                    {values.applicantCategory === "Transferee" && (
+                        <div data-aos="fade-up" className={styles.formGroup}>
+                            <label>Given Name <span className={styles.required}>*</span></label>
+                            <input type="text" name='firstname' value={values.firstname} onChange={(e) => setValues({ ...values, firstname: e.target.value })} required />
 
-                    <label>Email <span className={styles.required}>*</span></label>
-                    <input type="email" placeholder="Email" required />
+                            <label>Middle Name</label>
+                            <input type="text" placeholder="if applicable" name='middlename' value={values.middlename} onChange={(e) => setValues({ ...values, middlename: e.target.value })} />
 
-                    <label>Contact Number <span className={styles.required}>*</span></label>
-                    <input type="text" placeholder="Contact Number" required />
+                            <label>Last Name <span className={styles.required}>*</span></label>
+                            <input type="text" name='lastname' value={values.lastname} onChange={(e) => setValues({ ...values, lastname: e.target.value })} required />
 
-                    <label>Academic Preference <span className={styles.required}>*</span></label>
-                    <select required>
-                        <option value="" selected disabled>Select Academic Preference</option>
-                        {programs.length > 0 ? (
-                            programs.map((row) => (
-                                <option key={row.programID} value={row.programID}>{row.programName}</option>
-                            ))
-                        ) : ''}
-                    </select>
-                </div>
+                            <label>Name of Last School Attended <span className={styles.required}>*</span></label>
+                            <input type="text" name='lastschoolattended' value={values.lastschoolattended} onChange={(e) => setValues({ ...values, lastschoolattended: e.target.value })} required />
 
-                )}
+                            <label>Email <span className={styles.required}>*</span></label>
+                            <input type="email" name='email' value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} required />
 
-                {applicantCategory === "Shiftee" && (
-                    <div data-aos="fade-up" className={styles.formGroup}>
-                    <label>Given Name <span className={styles.required}>*</span></label>
-                    <input type="text" placeholder="Given Name" required />
+                            <label>Contact Number <span className={styles.required}>*</span></label>
+                            <input type="text" name='contactnum' value={values.contactnum} onChange={(e) => setValues({ ...values, contactnum: e.target.value })} required />
 
-                    <label>Middle Name</label>
-                    <input type="text" placeholder="Middle Name" />
+                            <label>Academic Preference <span className={styles.required}>*</span></label>
+                            <select name='preferredProgram' value={values.preferredProgram} onChange={(e) => setValues({ ...values, preferredProgram: e.target.value })} required >
+                                <option value="" selected disabled>Select academic preference</option>
+                                {programs.length > 0 ? (
+                                    programs.map((row) => (
+                                        <option key={row.programID} value={row.programID}>{row.programName}</option>
+                                    ))
+                                ) : ''}
+                            </select>
+                        </div>
+                    )}
 
-                    <label>Last Name <span className={styles.required}>*</span></label>
-                    <input type="text" placeholder="Last Name" required />
+                    {values.applicantCategory === "Shiftee" && (
+                        <div data-aos="fade-up" className={styles.formGroup}>
+                            <label>Given Name <span className={styles.required}>*</span></label>
+                            <input type="text" name='firstname' value={values.firstname} onChange={(e) => setValues({ ...values, firstname: e.target.value })} required />
 
-                    <label>Student ID <span className={styles.required}>*</span></label>
-                    <input type="text" placeholder="Student ID" required />
+                            <label>Middle Name</label>
+                            <input type="text" placeholder="if applicable" name='middlename' value={values.middlename} onChange={(e) => setValues({ ...values, middlename: e.target.value })} />
 
-                    <label>Previous Program <span className={styles.required}>*</span></label>
-                    <select required>
-                        <option value="" selected disabled>Select Previous Program</option>
-                        <option value="Bachelor of Secondary Education">Bachelor of Secondary Education</option>
-                        <option value="Bachelor of Science in Business Management">Bachelor of Science in Business Management</option>
-                        <option value="Bachelor of Science in Criminology">Bachelor of Science in Criminology</option>
-                        <option value="Bachelor of Science in Hospitality Management">Bachelor of Science in Hospitality Management</option>
-                        <option value="Bachelor of Science in Psychology">Bachelor of Science in Psychology</option>
-                    </select>
+                            <label>Last Name <span className={styles.required}>*</span></label>
+                            <input type="text" name='lastname' value={values.lastname} onChange={(e) => setValues({ ...values, lastname: e.target.value })} required />
 
-                    <label>Year and Section <span className={styles.required}>*</span></label>
-                    <input type="text" placeholder="Year and Section" required />
+                            <label>Student ID <span className={styles.required}>*</span></label>
+                            <input type="text" value={values.studentID} onChange={(e) => setValues({ ...values, studentID: e.target.value })} required />
 
-                    <label>CvSU Email <span className={styles.required}>*</span></label>
-                    <input type="email" placeholder="CvSU Email" required />
+                            <label>Previous Program <span className={styles.required}>*</span></label>
+                            <select name="prevProgram" value={values.prevProgram} onChange={(e) => setValues({ ...values, prevProgram: e.target.value })} required >
+                                <option value="" selected disabled>Select your previous program</option>
+                                <option value="Bachelor of Secondary Education">Bachelor of Secondary Education</option>
+                                <option value="Bachelor of Science in Business Management">Bachelor of Science in Business Management</option>
+                                <option value="Bachelor of Science in Criminology">Bachelor of Science in Criminology</option>
+                                <option value="Bachelor of Science in Hospitality Management">Bachelor of Science in Hospitality Management</option>
+                                <option value="Bachelor of Science in Psychology">Bachelor of Science in Psychology</option>
+                            </select>
 
-                    <label>Academic Preference <span className={styles.required}>*</span></label>
-                    <select required>
-                        <option value="">Select Academic Preference</option>
-                        {programs.length > 0 ? (
-                            programs.map((row) => (
-                                <option key={row.programID} value={row.programID}>{row.programName}</option>
-                            ))
-                        ) : ''}
-                    </select>
-                </div>
+                            <label>Year <span className={styles.required}>*</span></label>
+                            <select name="year" value={values.year} onChange={(e) => setValues({ ...values, year: e.target.value })} required>
+                                <option value="" selected disabled>Select your current year</option>
+                                <option value="First Year">First Year</option>
+                                <option value="Second Year">Second Year</option>
+                                <option value="Third Year">Third Year</option>
+                                <option value="Mid-Year">Mid-Year</option>
+                                <option value="Fourth Year">Fourth Year</option>
+                            </select>
 
-                
+                            <label>CvSU Email <span className={styles.required}>*</span></label>
+                            <input type="email" value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} required />
 
-                )}
-            {/* Register Button */}
+                            <label>Academic Preference <span className={styles.required}>*</span></label>
+                            <select name='preferredProgram' onChange={(e) => setValues({ ...values, preferredProgram: e.target.value })} value={values.preferredProgram} required>
+                                <option value="" selected disabled>Select academic preference</option>
+                                {programs.length > 0 ? (
+                                    programs.map((row) => (
+                                        <option key={row.programID} value={row.programID}>{row.programName}</option>
+                                    ))
+                                ) : ''}
+                            </select>
+                        </div>
+                    )}
+
+                    {/* Register Button */}
             <div className={styles.buttonContainer}>
             <button type="submit" className={styles.registerButton}>
                     <span>Register</span>
@@ -207,23 +254,13 @@ function SignUp() {
         </div>
 
 
-  
-           
-
-
-      
-
-
-  
-
-                {/* Footer */}
-                <footer className={styles.footer}>
+            {/* Footer */}
+            <footer className={styles.footer}>
                     <div className={styles.footerCopyright}>
                         <p>© Copyright <span>Cavite State University</span>. All Rights Reserved</p>
                         <p>Designed by <span className={styles.highlighted}>BSCS 3-5 Group 4</span></p>
                     </div>
                 </footer>
-            
         </>
     );
 }

@@ -3,6 +3,23 @@
     src: url(../assets/Poppins/Poppins-Regular.ttf);
 }
 
+#prompt{
+    width: 60%;
+    padding: 2rem;
+    text-align: center;
+    display: none;
+    background-color: red;
+}
+
+.togglePrompt{
+    display: flex;
+}
+
+.signUpMsg{
+    font-size: 5rem;
+}
+
+
 .contentSection{
     padding: 40px 20px 10px 20px;
     text-align: justify;
@@ -146,6 +163,10 @@
     font-weight: bold;
 }
 
+.errorMessage{
+    color: red;
+    background-color: transparent;
+}
 
 .buttonContainer {
     display: flex;
@@ -197,21 +218,6 @@
     color: #ffffff; 
     transform: scale(1.01); 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
