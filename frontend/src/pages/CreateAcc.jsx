@@ -2,35 +2,48 @@ import { useState, useEffect } from 'react';
 import styles from '/src/styles/CreateAcc.module.css';
 import Header from '/src/components/Header.jsx';
 import AOS from 'aos';
+import axios from 'axios';
 import 'aos/dist/aos.css';
 
 function CreateAcc() {
     const [SideBar, setSideBar] = useState(false);
-    const [applicantCategory, setApplicantCategory] = useState("Regular/Irregular");
-    const [jobRole, setJobRole] = useState('');
-    const [department, setDepartment] = useState('');
+    const [programs, setPrograms] = useState('');
+    const [values, setValues] = useState({
+        applicantCategory: "Regular/Irregular", // default value
+        firstname: '',
+        middlename: '',
+        lastname: '',
+        studentID: '',
+        employeeID: '',
+        email: '',
+        contactnum: '',
+        program: '',
+        position: ''
+    });
 
-    
+    //TODO (BACKEND): HANDLESUBMIT
+
     useEffect(() => {
         document.body.style.overflow = SideBar ? 'hidden' : 'auto';
     }, [SideBar]);
 
-    
+
     useEffect(() => {
         AOS.init({ duration: 1000, once: true });
     }, []);
 
-    
-    
-    //for department option
-    const handleDepartmentChange = (e) => {
-        setDepartment(e.target.value);
-    };
+    useEffect(() => {
+        axios.get('http://localhost:8080/programs')
+            .then(res => {
+                setPrograms(res.data);
+            })
+            .catch(err => {
+                setError('Error: ' + err);
+            });
+    }, []);
 
-    //for job role extension
-    const handleJobRoleChange = (e) => {
-        setJobRole(e.target.value);
-        setDepartment(''); 
+    const handleApplicantCategoryChange = (category) => {
+        setValues({ ...values, applicantCategory: category });
     };
 
     return (
@@ -55,8 +68,8 @@ function CreateAcc() {
                                 type="radio"
                                 name="applicantCategory"
                                 value="Regular/Irregular"
-                                checked={applicantCategory === "Regular/Irregular"}
-                                onChange={() => setApplicantCategory("Regular/Irregular")}
+                                checked={values.applicantCategory === "Regular/Irregular"}
+                                onChange={() => handleApplicantCategoryChange("Regular/Irregular")}
                             />
                             Regular/Irregular
                         </label>
@@ -65,8 +78,8 @@ function CreateAcc() {
                                 type="radio"
                                 name="applicantCategory"
                                 value="Society Officer"
-                                checked={applicantCategory === "Society Officer"}
-                                onChange={() => setApplicantCategory("Society Officer")}
+                                checked={values.applicantCategory === "Society Officer"}
+                                onChange={() => handleApplicantCategoryChange("Society Officer")}
                             />
                             Society Officer
                         </label>
@@ -75,61 +88,74 @@ function CreateAcc() {
                                 type="radio"
                                 name="applicantCategory"
                                 value="Employee"
-                                checked={applicantCategory === "Employee"}
-                                onChange={() => setApplicantCategory("Employee")}
+                                checked={values.applicantCategory === "Employee"}
+                                onChange={() => handleApplicantCategoryChange("Employee")}
                             />
                             Employee
                         </label>
                     </div>
 
                     {/* CONDITION FOR ACCOUNT TYPE */}
-                    {applicantCategory === "Regular/Irregular" && (
+                    {values.applicantCategory === "Regular/Irregular" && (
                         <div data-aos="fade-up" className={styles.formGroup}>
                             <label>Given Name <span className={styles.required}>*</span></label>
-                            <input type="text" placeholder="Given Name" required />
+                            <input type="text" name='firstname' value={values.firstname} onChange={(e) => setValues({ ...values, firstname: e.target.value })} required />
 
                             <label>Middle Name</label>
-                            <input type="text" placeholder="Middle Name" />
+                            <input type="text" placeholder="if applicable" name='middlename' value={values.middlename} onChange={(e) => setValues({ ...values, middlename: e.target.value })} />
 
                             <label>Last Name <span className={styles.required}>*</span></label>
-                            <input type="text" placeholder="Last Name" required />
+                            <input type="text" name='lastname' value={values.lastname} onChange={(e) => setValues({ ...values, lastname: e.target.value })} required />
 
                             <label>Student ID <span className={styles.required}>*</span></label>
-                            <input type="text" placeholder="Student ID" required />
+                            <input type="text" name='studentID' value={values.studentID} onChange={(e) => setValues({ ...values, studentID: e.target.value })} required />
 
                             <label>CvSU Email <span className={styles.required}>*</span></label>
-                            <input type="email" placeholder="CvSU Email" required />
+                            <input type="email" name='email' value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} required />
 
                             <label>Phone Number <span className={styles.required}>*</span></label>
-                            <input type="text" placeholder="Phone Number" required />
+                            <input type="text" name='contactnum' value={values.contactnum} onChange={(e) => setValues({ ...values, contactnum: e.target.value })} required />
+
+                            <label>Program <span className={styles.required}>*</span></label>
+                            <select name='program' value={values.program} onChange={(e) => setValues({ ...values, program: e.target.value })} required >
+                                <option value="" selected disabled>Select your program</option>
+                                {programs.length > 0 ? (
+                                    programs.map((row) => (
+                                        <option key={row.programID} value={row.programID}>{row.programName}</option>
+                                    ))
+                                ) : ''}
+                            </select>
                         </div>
                     )}
 
-                    {applicantCategory === "Society Officer" && (
+                    {values.applicantCategory === "Society Officer" && (
                         <div data-aos="fade-up" className={styles.formGroup}>
                             <label>Given Name <span className={styles.required}>*</span></label>
-                            <input type="text" placeholder="Given Name" required />
+                            <input type="text" name='firstname' value={values.firstname} onChange={(e) => setValues({ ...values, firstname: e.target.value })} required />
 
                             <label>Middle Name</label>
-                            <input type="text" placeholder="Middle Name" />
+                            <input type="text" placeholder="if applicable" name='middlename' value={values.middlename} onChange={(e) => setValues({ ...values, middlename: e.target.value })} />
 
                             <label>Last Name <span className={styles.required}>*</span></label>
-                            <input type="text" placeholder="Last Name" required />
+                            <input type="text" name='lastname' value={values.lastname} onChange={(e) => setValues({ ...values, lastname: e.target.value })} required />
 
                             <label>Student ID <span className={styles.required}>*</span></label>
-                            <input type="text" placeholder="Student ID" required />
+                            <input type="text" name='studentID' value={values.studentID} onChange={(e) => setValues({ ...values, studentID: e.target.value })} required />
 
                             <label>CvSU Email <span className={styles.required}>*</span></label>
-                            <input type="email" placeholder="CvSU Email" required />
+                            <input type="email" name='email' value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} required />
 
                             <label>Phone Number <span className={styles.required}>*</span></label>
-                            <input type="text" placeholder="Phone Number" required />
+                            <input type="text" name='contactnum' value={values.contactnum} onChange={(e) => setValues({ ...values, contactnum: e.target.value })} required />
 
-                            <label>Department <span className={styles.required}>*</span></label>
-                            <select required>
-                                <option value="" disabled>Select Department</option>
-                                <option value="Bachelor of Science in Computer Science">Bachelor of Science in Computer Science</option>
-                                <option value="Bachelor of Science in Information Technology">Bachelor of Science in Information Technology</option>
+                            <label>Program <span className={styles.required}>*</span></label>
+                            <select name='program' value={values.program} onChange={(e) => setValues({ ...values, program: e.target.value })} required >
+                                <option value="" selected disabled>Select your program</option>
+                                {programs.length > 0 ? (
+                                    programs.map((row) => (
+                                        <option key={row.programID} value={row.programID}>{row.programName}</option>
+                                    ))
+                                ) : ''}
                             </select>
 
                             <label>Position <span className={styles.required}>*</span></label>
@@ -141,28 +167,28 @@ function CreateAcc() {
                         </div>
                     )}
 
-                    {applicantCategory === "Employee" && (
+                    {values.applicantCategory === "Employee" && (
                         <div data-aos="fade-up" className={styles.formGroup}>
                             <label>Given Name <span className={styles.required}>*</span></label>
-                            <input type="text" placeholder="Given Name" required />
+                            <input type="text" name='firstname' value={values.firstname} onChange={(e) => setValues({ ...values, firstname: e.target.value })} required />
 
                             <label>Middle Name</label>
-                            <input type="text" placeholder="Middle Name" />
+                            <input type="text" placeholder="if applicable" name='middlename' value={values.middlename} onChange={(e) => setValues({ ...values, middlename: e.target.value })} />
 
                             <label>Last Name <span className={styles.required}>*</span></label>
-                            <input type="text" placeholder="Last Name" required />
+                            <input type="text" name='lastname' value={values.lastname} onChange={(e) => setValues({ ...values, lastname: e.target.value })} required />
 
                             <label>Employee ID <span className={styles.required}>*</span></label>
-                            <input type="text" placeholder="Employee ID" required />
+                            <input type="text" name='employeeID' value={values.employeeID} onChange={(e) => setValues({ ...values, employeeID: e.target.value })} required />
 
                             <label>CvSU Email <span className={styles.required}>*</span></label>
-                            <input type="email" placeholder="CvSU Email" required />
+                            <input type="email" name='email' value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} required />
 
                             <label>Phone Number <span className={styles.required}>*</span></label>
-                            <input type="text" placeholder="Phone Number" required />
+                            <input type="text" name='contactnum' value={values.contactnum} onChange={(e) => setValues({ ...values, contactnum: e.target.value })} required />
 
                             <label>Job/Role <span className={styles.required}>*</span></label>
-                            <select value={jobRole} onChange={handleJobRoleChange} required>
+                            <select name='position' value={values.position} onChange={(e) => setValues({ ...values, position: e.target.value })} required>
                                 <option value="" disabled>Select Job/Role</option>
                                 <option value="Enrollment Officer">Enrollment Officer</option>
                                 <option value="Adviser">Adviser</option>
@@ -170,16 +196,17 @@ function CreateAcc() {
                                 <option value="School Head">School Head</option>
                             </select>
 
-                        
 
-                            {(jobRole === 'Adviser' || jobRole === 'DCS Head') && (
+                            {(values.position === 'Adviser' || values.position === 'DCS Head') && (
                                 <>
-                                    <label>Department <span className={styles.required}>*</span></label>
-                                    <select value={department} onChange={handleDepartmentChange} required>
-                                        <option value="" disabled>Select Department</option>
-                                        <option value="Bachelor of Science in Computer Science">Bachelor of Science in Computer Science</option>
-                                <option value="Bachelor of Science in Information Technology">Bachelor of Science in Information Technology</option>
-                                        
+                                    <label>Program <span className={styles.required}>*</span></label>
+                                    <select name='program' value={values.program} onChange={(e) => setValues({ ...values, program: e.target.value })} required >
+                                        <option value="" selected disabled>Select your program</option>
+                                        {programs.length > 0 ? (
+                                            programs.map((row) => (
+                                                <option key={row.programID} value={row.programID}>{row.programName}</option>
+                                            ))
+                                        ) : ''}
                                     </select>
                                 </>
                             )}

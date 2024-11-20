@@ -50,9 +50,48 @@ app.get('/programs', (req, res) => {
     })
 })
 
-app.post('/SignUp', (req, res) => {
-    //SIGN UP FOR FRESHMEN, TRANSFERES, AND SHIFTEES
+//SIGN UP FOR REG/IRREG, SOC OFFICER, AND EMPLOYEE
+app.post('/CreateAcc', (req, res) => {
+    const applicantType = req.body.applicantCategory;
+    const values1 = [
+        applicantType,
+        req.body.firstname,
+        req.body.middlename,
+        req.body.lastname,
+        req.body.studentID,
+        req.body.email,
+        req.body.contactnum,
+        req.body.program
+    ]
 
+    const values2 = [
+        applicantType,
+        req.body.firstname,
+        req.body.middlename,
+        req.body.lastname,
+        req.body.studentID,
+        req.body.email,
+        req.body.contactnum,
+        req.body.program,
+        req.body.position
+    ]
+
+    const values3 = [
+        applicantType,
+        req.body.firstname,
+        req.body.middlename,
+        req.body.lastname,
+        req.body.employeeID,
+        req.body.email,
+        req.body.contactnum,
+        req.body.position,
+        req.body.program
+    ]
+    //TODO: QUERY FOR CREATEACC PAGE
+})
+
+//SIGN UP FOR FRESHMEN, TRANSFERES, AND SHIFTEES
+app.post('/SignUp', (req, res) => {
     //CHECK IF EMAIL EXISTS TO AVOID ENTRY DUPLICATION
     const emailQuery = "SELECT * FROM student WHERE Email = ?";
 

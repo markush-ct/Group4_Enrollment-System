@@ -75,7 +75,7 @@ function Apply() {
 &#8226; TVI-ICT<br>
 &#8226; TVL<br>
 &#8226; STEM<br>`,
-        Regular:  `1. Fill up and submit registration form at <a href="" target="_blank" >application signup link</a>.<br>
+        Regular:  `1. Fill up and submit registration form at <a href="/CreateAcc" target="_blank" >signup link</a>.<br>
 2. Check your registered email for your temporary login credentials. <br>
 3. Sign in using the provided temporary account. Then, update your password promptly.<br>
 4. Click “<b>Enroll Now</b>” and check your Society Fee payment status.<br>
@@ -84,7 +84,7 @@ function Apply() {
 7. Adviser will send an advise and the lists of courses you are eligible to take.<br>
 8. Fill out the pre-enrollment form and submit.<br>
 9. Check your enrollment status.<br>`,
-        Irregular: `1. Fill up and submit registration form at <a href="" target="_blank" >application signup link</a>.<br>
+        Irregular: `1. Fill up and submit registration form at <a href="/CreateAcc" target="_blank" >signup link</a>.<br>
 2. Check your registered email for your temporary login credentials. <br>
 3. Sign in using the provided temporary account. Then, update your password promptly.<br>
 4. Click “<b>Enroll Now</b>” and check your Society Fee payment status.<br>
