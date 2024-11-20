@@ -149,23 +149,65 @@ function CreateAcc() {
                             <input type="text" name='contactnum' value={values.contactnum} onChange={(e) => setValues({ ...values, contactnum: e.target.value })} required />
 
                             <label>Program <span className={styles.required}>*</span></label>
-                            <select name='program' value={values.program} onChange={(e) => setValues({ ...values, program: e.target.value })} required >
-                                <option value="" selected disabled>Select your program</option>
-                                {programs.length > 0 ? (
-                                    programs.map((row) => (
-                                        <option key={row.programID} value={row.programID}>{row.programName}</option>
-                                    ))
-                                ) : ''}
-                            </select>
+        <select
+            name="program"
+            value={values.program}
+            onChange={(e) => setValues({ ...values, program: e.target.value })}
+            required
+        >
+            <option value="" disabled>Select your program</option>
+            <option value="Bachelor of Science in Computer Science">Bachelor of Science in Computer Science</option>
+            <option value="Bachelor of Science in Information Technology">Bachelor of Science in Information Technology</option>
+        </select>
 
-                            <label>Position <span className={styles.required}>*</span></label>
-                            <select required>
-                                <option value="" disabled>Select Position</option>
-                                <option value="President">President</option>
-                                <option value="Vice President">Vice President</option>
-                            </select>
-                        </div>
-                    )}
+        
+ 
+             {/* POSITION PER PROGRAM */}
+        {values.program === "Bachelor of Science in Information Technology" && (
+            <>
+                <label>Position <span className={styles.required}>*</span></label>
+                <select name="position" required>
+                    <option value="" disabled>Select Position</option>
+                    <option value="President">President</option>
+                    <option value="Vice President">Vice President</option>
+                    <option value="Secretary">Secretary</option>
+                    <option value="Assistant Secretary">Assistant Secretary</option>
+                    <option value="Treasurer">Treasurer</option>
+                    <option value="Assistant Treasurer">Assistant Treasurer</option>
+                    <option value="Business Manager">Business Manager</option>
+                    <option value="Auditor">Auditor</option>
+                    <option value="P.R.O.">P.R.O.</option>
+                    <option value="GAD Representative">GAD Representative</option>
+                    <option value="1st Year Senator">1st Year Senator</option>
+                    <option value="2nd Year Senator">2nd Year Senator</option>
+                    <option value="3rd Year Senator">3rd Year Senator</option>
+                    <option value="4th Year Senator">4th Year Senator</option>
+                </select>
+            </>
+        )}
+
+        {values.program === "Bachelor of Science in Computer Science" && (
+            <>
+                <label>Position <span className={styles.required}>*</span></label>
+                <select name="position" required>
+                    <option value="" disabled>Select Position</option>
+                    <option value="President">President</option>
+                    <option value="Vice President">Vice President</option>
+                    <option value="Secretary">Secretary</option>
+                    <option value="Assistant Secretary">Assistant Secretary</option>
+                    <option value="Treasurer">Treasurer</option>
+                    <option value="Auditor">Auditor</option>
+                    <option value="P.R.O.">P.R.O.</option>
+                    <option value="Assistant P.R.O.">Assistant P.R.O.</option>
+                    <option value="1st Year Chairperson">1st Year Chairperson</option>
+                    <option value="2nd Year Chairperson">2nd Year Chairperson</option>
+                    <option value="3rd Year Chairperson">3rd Year Chairperson</option>
+                    <option value="4th Year Chairperson">4th Year Chairperson</option>
+                </select>
+            </>
+        )}
+    </div>
+    )}
 
                     {values.applicantCategory === "Employee" && (
                         <div data-aos="fade-up" className={styles.formGroup}>
