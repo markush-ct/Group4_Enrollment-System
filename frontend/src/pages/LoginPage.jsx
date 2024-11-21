@@ -75,6 +75,7 @@ function LoginPage() {
                             navigate('/LoginPage'); // Fallback route if role is not recognized
                         }
                     } else {
+                        //TODO: CHANGE LOGIC FOR TERMINATED ACCOUNT BASED ON SERVER.JS CODE
                         toast.error('Account is no longer active. Fill out contact form to ask for reactivation', {
                             position: 'top-center',
                             autoClose: 5000,

@@ -292,8 +292,8 @@ app.post('/SignUp', (req, res) => {
 
 //LOGIN
 app.get('/', (req, res) => {
-    if (req.session.name) {
-        return res.json({ valid: true, name: req.session.name, role: req.session.role })
+    if (req.session.id) {
+        return res.json({ valid: true, accountID: req.session.accountID , name: req.session.name, role: req.session.role })
     } else {
         return res.json({ valid: false })
     }
@@ -308,13 +308,16 @@ app.post('/LoginPage', (req, res) => {
 
         const user = result[0];
         if (result.length > 0) {
+            req.session.accountID = user.AccountID;
             req.session.name = user.Name;
-            req.session.role = user.Role;
+            req.session.role = user.Role;            
 
+            //TODO: CONDITION FOR WHEN STATUS IS TERMINATED
             return res.json({
                 message: 'Login successful',
                 role: req.session.role,
                 email: user.Email,
+                accountID: req.session.id,
                 status: user.Status,
                 isLoggedIn: true,
                 name: req.session.name
