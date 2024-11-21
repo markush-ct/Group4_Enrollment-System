@@ -84,10 +84,8 @@ function FAQs() {
       {
         question: 'Are there any fees associated with the enrollment system?',
         reply: 'None. Payment transactions, such as society fee payments, should be done face-to-face per program and wait until the society officer sets your payment status to access the attendance as part of the requirements of the enrollment process.<br><br>Late enrollees have an additional 20 pesos to the original fee of society payment as a penalty for not following the enrollment schedule.',
-      },{
-        question: '',
-        reply: '',
       },
+        
 
 
     ],

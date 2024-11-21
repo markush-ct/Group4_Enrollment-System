@@ -108,7 +108,7 @@ function SignUp() {
                             <h2>Success</h2>
                         </div>
                         <div className={styles.Message}>
-                            <span>Applied Successly</span>
+                        <img src="/src/assets/checkmark.png" alt="Success Icon" className={styles.messageImage} />
                         </div>
                         <p className={styles.popupText}>{signUpMsg}</p>
                     </div>
@@ -128,14 +128,15 @@ function SignUp() {
                         <div className={styles.popupHeaderError}>
                             <h2>Error</h2>
                         </div>
-                        <div className={styles.MessageError} style={{ color: '#900' }}>
-                            <span>Error Occurred</span>
+                        <div className={styles.MessageError} >
+                            <img src="/src/assets/errormark.png" alt="Error Icon" className={styles.messageImage} />
                         </div>
                         <p className={styles.popupTextError}>{errorMsg}</p>
                     </div>
                 </div>
             )}
 
+            
             {/* Application Section */}
             <div data-aos="fade-up" className={styles.contentSection}>
                 <div data-aos="fade-up" className={styles.PageTitle}>Applicant Sign Up</div>
