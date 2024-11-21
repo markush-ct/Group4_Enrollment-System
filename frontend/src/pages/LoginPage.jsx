@@ -5,9 +5,14 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
 
 function LoginPage() {
+
+    const [signUpPrompt, setsignUpPrompt] = useState(false); //success
+    const [signUpMsg, setsignUpMsg] = useState("");
+    const [errorPrompt, setErrorPrompt] = useState(false); //errors
+    const [errorMsg, setErrorMsg] = useState("");
+    
     const [values, setValues] = useState({
         email: '',
         password: ''
@@ -74,11 +79,10 @@ function LoginPage() {
                             navigate('/LoginPage'); // Fallback route if role is not recognized
                         }
                 } else {
-                    toast.error(res.data.message, {
-                        position: 'top-center',
-                        autoClose: 5000,
-
-                    });
+                    setsignUpPrompt(false);
+                    setsignUpMsg(false);
+                    setErrorPrompt(true);
+                    setErrorMsg(res.data.message);
                     setError('');
                     res.data.isLoggedIn = false;
                 }
@@ -98,7 +102,7 @@ function LoginPage() {
 
     return (
         <>
-            <ToastContainer hideProgressBar={true} className={styles.toast} />
+
             <Header SideBar={SideBar} setSideBar={setSideBar} />
             <div className={styles.mainPage}>
                 <div data-aos="fade-up" className={styles.PageTitle}>Log In</div>
@@ -122,6 +126,50 @@ function LoginPage() {
                 />
             </div>
                         </div>
+
+
+                        {/* SIGN UP PROMPT */}
+            {/* SUCCESS PROMPT */}
+            {signUpPrompt && (
+                <div data-aos="zoom-out" data-aos-duration="500" className={styles.popup}>
+                    <div className={styles.popupContent}>
+                        <button
+                            className={styles.closeButton}
+                            onClick={() => setsignUpPrompt(false)}
+                        >
+                            &times;
+                        </button>
+                        <div className={styles.popupHeader}>
+                            <h2>Success</h2>
+                        </div>
+                        <div className={styles.Message}>
+                        <img src="/src/assets/checkmark.png" alt="Success Icon" className={styles.messageImage} />
+                        </div>
+                        <p className={styles.popupText}>{signUpMsg}</p>
+                    </div>
+                </div>
+            )}
+
+            {/* ERROR PROMPT */}
+            {errorPrompt && (
+                <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupError}>
+                    <div className={styles.popupContentError}>
+                        <button
+                            className={styles.closeButton}
+                            onClick={() => setErrorPrompt(false)}
+                        >
+                            &times;
+                        </button>
+                        <div className={styles.popupHeaderError}>
+                            <h2>Error</h2>
+                        </div>
+                        <div className={styles.MessageError} >
+                            <img src="/src/assets/errormark.png" alt="Error Icon" className={styles.messageImage} />
+                        </div>
+                        <p className={styles.popupTextError}>{errorMsg}</p>
+                    </div>
+                </div>
+            )}
                         
 
                         <div className={styles.options}>
