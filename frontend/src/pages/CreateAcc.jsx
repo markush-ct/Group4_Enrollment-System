@@ -31,25 +31,32 @@ function CreateAcc() {
 
         axios.post('http://localhost:8080/CreateAcc', values)
             .then((res) => {
-                setsignUpPrompt(true);
-                setsignUpMsg(res.data.message);
-                setValues({
-                    applicantCategory: "Regular/Irregular", // default value
-                    firstname: '',
-                    middlename: '',
-                    lastname: '',
-                    studentID: '',
-                    employeeID: '',
-                    email: '',
-                    contactnum: '',
-                    program: '',
-                    regIrreg: '',
-                    position: ''
-                })
+                if (res.data.message === "Sign up successful. Wait for your temporary account to be sent through your email.") {
+                    setsignUpPrompt(true);
+                    setsignUpMsg(res.data.message);
+                    setValues({
+                        applicantCategory: "Regular/Irregular", // default value
+                        firstname: '',
+                        middlename: '',
+                        lastname: '',
+                        studentID: '',
+                        employeeID: '',
+                        email: '',
+                        contactnum: '',
+                        program: '',
+                        regIrreg: '',
+                        position: ''
+                    })
+                } else{
+                    setsignUpPrompt(false);
+                    setErrorPrompt(true);
+                    setErrorMsg(res.data.message);
+                }
+
+
             })
             .catch((err) => {
-                setErrorPrompt(true);
-                setErrorMsg(err.response?.data?.message || "An unexpected error occurred.");
+                alert("Error: " + err);
             })
     }
 
@@ -89,46 +96,46 @@ function CreateAcc() {
 
             {/* SIGN UP PROMPT */}
             {/* SUCCESS PROMPT */}
-    {signUpPrompt && (
-        <div data-aos="zoom-out" data-aos-duration="500" className={styles.popup}>
-            <div className={styles.popupContent}>
-                <button
-                    className={styles.closeButton}
-                    onClick={() => setsignUpPrompt(false)}
-                >
-                    &times;
-                </button>
-                <div className={styles.popupHeader}>
-                    <h2>Success</h2>
+            {signUpPrompt && (
+                <div data-aos="zoom-out" data-aos-duration="500" className={styles.popup}>
+                    <div className={styles.popupContent}>
+                        <button
+                            className={styles.closeButton}
+                            onClick={() => setsignUpPrompt(false)}
+                        >
+                            &times;
+                        </button>
+                        <div className={styles.popupHeader}>
+                            <h2>Success</h2>
+                        </div>
+                        <div className={styles.Message}>
+                            <span>Account Created</span>
+                        </div>
+                        <p className={styles.popupText}>{signUpMsg}</p>
+                    </div>
                 </div>
-                <div className={styles.Message}>
-                    <span>Account Created</span>
-                </div>
-                <p className={styles.popupText}>{signUpMsg}</p>
-            </div>
-        </div>
-    )}
+            )}
 
-    {/* ERROR PROMPT */}
-    {errorPrompt && (
-        <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupError}>
-            <div className={styles.popupContentError}>
-                <button
-                    className={styles.closeButton}
-                    onClick={() => setErrorPrompt(false)}
-                >
-                    &times;
-                </button>
-                <div className={styles.popupHeaderError}>
-                    <h2>Error</h2>
+            {/* ERROR PROMPT */}
+            {errorPrompt && (
+                <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupError}>
+                    <div className={styles.popupContentError}>
+                        <button
+                            className={styles.closeButton}
+                            onClick={() => setErrorPrompt(false)}
+                        >
+                            &times;
+                        </button>
+                        <div className={styles.popupHeaderError}>
+                            <h2>Error</h2>
+                        </div>
+                        <div className={styles.MessageError} style={{ color: '#900' }}>
+                            <span>Error Occurred</span>
+                        </div>
+                        <p className={styles.popupTextError}>{errorMsg}</p>
+                    </div>
                 </div>
-                <div className={styles.MessageError} style={{ color: '#900' }}>
-                    <span>Error Occurred</span>
-                </div>
-                <p className={styles.popupTextError}>{errorMsg}</p>
-            </div>
-        </div>
-    )}
+            )}
 
             {/* Create Account Form */}
             <div data-aos="fade-up" className={styles.contentSection}>

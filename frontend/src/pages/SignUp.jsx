@@ -41,25 +41,31 @@ function SignUp() {
 
         axios.post('http://localhost:8080/SignUp', values)
             .then((res) => {
-                setsignUpMsg(res.data.message);
-                setsignUpPrompt(true);
-                setValues({
-                    applicantCategory: "Freshman", // default value
-                    firstname: '',
-                    middlename: '',
-                    lastname: '',
-                    lastschoolattended: '',
-                    email: '',
-                    contactnum: '',
-                    year: '',
-                    preferredProgram: '',
-                    studentID: '',
-                    prevProgram: '',
-                })
+
+                if (res.data.message === "Sign up successful. Wait for your temporary account to be sent through your email.") {
+                    setsignUpMsg(res.data.message);
+                    setsignUpPrompt(true);
+                    setValues({
+                        applicantCategory: "Freshman", // default value
+                        firstname: '',
+                        middlename: '',
+                        lastname: '',
+                        lastschoolattended: '',
+                        email: '',
+                        contactnum: '',
+                        year: '',
+                        preferredProgram: '',
+                        studentID: '',
+                        prevProgram: '',
+                    })
+                } else{
+                    setsignUpPrompt(false);
+                    setErrorPrompt(true);
+                    setErrorMsg(res.data.message);
+                }
             })
             .catch((err) => {
-                setErrorPrompt(true);
-                setErrorMsg(err.response?.data?.message || "An unexpected error occurred.");
+                alert("Error: " + err);
             })
     }
 
@@ -89,46 +95,46 @@ function SignUp() {
 
             {/* SIGN UP PROMPT */}
             {/* SUCCESS PROMPT */}
-    {signUpPrompt && (
-        <div data-aos="zoom-out" data-aos-duration="500" className={styles.popup}>
-            <div className={styles.popupContent}>
-                <button
-                    className={styles.closeButton}
-                    onClick={() => setsignUpPrompt(false)}
-                >
-                    &times;
-                </button>
-                <div className={styles.popupHeader}>
-                    <h2>Success</h2>
+            {signUpPrompt && (
+                <div data-aos="zoom-out" data-aos-duration="500" className={styles.popup}>
+                    <div className={styles.popupContent}>
+                        <button
+                            className={styles.closeButton}
+                            onClick={() => setsignUpPrompt(false)}
+                        >
+                            &times;
+                        </button>
+                        <div className={styles.popupHeader}>
+                            <h2>Success</h2>
+                        </div>
+                        <div className={styles.Message}>
+                            <span>Applied Successly</span>
+                        </div>
+                        <p className={styles.popupText}>{signUpMsg}</p>
+                    </div>
                 </div>
-                <div className={styles.Message}>
-                    <span>Applied Successly</span>
-                </div>
-                <p className={styles.popupText}>{signUpMsg}</p>
-            </div>
-        </div>
-    )}
+            )}
 
-    {/* ERROR PROMPT */}
-    {errorPrompt && (
-        <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupError}>
-            <div className={styles.popupContentError}>
-                <button
-                    className={styles.closeButton}
-                    onClick={() => setErrorPrompt(false)}
-                >
-                    &times;
-                </button>
-                <div className={styles.popupHeaderError}>
-                    <h2>Error</h2>
+            {/* ERROR PROMPT */}
+            {errorPrompt && (
+                <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupError}>
+                    <div className={styles.popupContentError}>
+                        <button
+                            className={styles.closeButton}
+                            onClick={() => setErrorPrompt(false)}
+                        >
+                            &times;
+                        </button>
+                        <div className={styles.popupHeaderError}>
+                            <h2>Error</h2>
+                        </div>
+                        <div className={styles.MessageError} style={{ color: '#900' }}>
+                            <span>Error Occurred</span>
+                        </div>
+                        <p className={styles.popupTextError}>{errorMsg}</p>
+                    </div>
                 </div>
-                <div className={styles.MessageError} style={{ color: '#900' }}>
-                    <span>Error Occurred</span>
-                </div>
-                <p className={styles.popupTextError}>{errorMsg}</p>
-            </div>
-        </div>
-    )}
+            )}
 
             {/* Application Section */}
             <div data-aos="fade-up" className={styles.contentSection}>
@@ -286,21 +292,21 @@ function SignUp() {
                     )}
 
                     {/* Register Button */}
-            <div className={styles.buttonContainer}>
-            <button type="submit" className={styles.registerButton}>
-                    <span>Register</span>
-                </button></div>
-            </form>
-        </div>
+                    <div className={styles.buttonContainer}>
+                        <button type="submit" className={styles.registerButton}>
+                            <span>Register</span>
+                        </button></div>
+                </form>
+            </div>
 
 
             {/* Footer */}
             <footer className={styles.footer}>
-                    <div className={styles.footerCopyright}>
-                        <p>© Copyright <span>Cavite State University</span>. All Rights Reserved</p>
-                        <p>Designed by <span className={styles.highlighted}>BSCS 3-5 Group 4</span></p>
-                    </div>
-                </footer>
+                <div className={styles.footerCopyright}>
+                    <p>© Copyright <span>Cavite State University</span>. All Rights Reserved</p>
+                    <p>Designed by <span className={styles.highlighted}>BSCS 3-5 Group 4</span></p>
+                </div>
+            </footer>
         </>
     );
 }

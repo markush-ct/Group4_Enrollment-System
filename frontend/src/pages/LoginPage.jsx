@@ -54,11 +54,10 @@ function LoginPage() {
 
         axios.post('http://localhost:8080/LoginPage', values)
             .then((res) => {
-                if (res.data.isLoggedIn) {
+                if (res.data.isLoggedIn && res.data.status === 'Active') {
                     const role = res.data.role;
 
-                    // Redirect based on role
-                    if (res.data.status === 'Active') {
+
                         if (role === 'Enrollment Officer') {
                             navigate('/EnrollmentOfficerDashboard');
                         } else if (role === 'Student') {
@@ -74,17 +73,14 @@ function LoginPage() {
                         } else {
                             navigate('/LoginPage'); // Fallback route if role is not recognized
                         }
-                    } else {
-                        //TODO: CHANGE LOGIC FOR TERMINATED ACCOUNT BASED ON SERVER.JS CODE
-                        toast.error('Account is no longer active. Fill out contact form to ask for reactivation', {
-                            position: 'top-center',
-                            autoClose: 5000,
-
-                        });
-                        setError('');
-                    }
                 } else {
-                    setError('Invalid credentials');
+                    toast.error(res.data.message, {
+                        position: 'top-center',
+                        autoClose: 5000,
+
+                    });
+                    setError('');
+                    res.data.isLoggedIn = false;
                 }
             })
             .catch((err) => {

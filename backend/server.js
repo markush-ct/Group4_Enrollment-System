@@ -52,6 +52,7 @@ app.get('/programs', (req, res) => {
 
 //SIGN UP FOR REG/IRREG, SOC OFFICER, AND EMPLOYEE
 app.post('/CreateAcc', (req, res) => {
+    //AVOID EMAIL DUPLICATION IN ACCOUNT TABLE
     const emailQuery = `SELECT * FROM account WHERE Email = ?`;
 
     db.query(emailQuery, req.body.email, (err, result) => {
@@ -72,7 +73,7 @@ app.post('/CreateAcc', (req, res) => {
                     if (result.length >= 1) {
                         return res.json({ message: "Student ID exists" });
                     } else {
-                        //CHECK EMAIL TO AVOID DUPLICATION
+                        //AVOID EMAIL DUPLICATION IN STUDENT TABLE
                         const cvsuEmailQuery = `SELECT * FROM student WHERE Email = ?`;
                         db.query(cvsuEmailQuery, req.body.email, (err, result) => {
                             if (err) return res.json({ message: "Error in server: " + err });
@@ -108,7 +109,7 @@ app.post('/CreateAcc', (req, res) => {
                 })
 
             } else if (applicantType === "Society Officer") {
-                //CHECK EMAIL TO AVOID DUPLICATION
+                //AVOID EMAIL DUPLICATION IN SOCIETYOFFICER TABLE
                 const socOfficerEmailQuery = `SELECT * FROM societyofficer WHERE Email = ?`;
                 db.query(socOfficerEmailQuery, req.body.email, (err, result) => {
                     if (err) {
@@ -140,7 +141,7 @@ app.post('/CreateAcc', (req, res) => {
                     }
                 })
             } else if (applicantType === "Employee") {
-                //CHECK EMPLOYEE ID TO AVOID DUPLICATION
+                //AVOID ID DUPLICATION IN EMPLOYEE TABLE
                 const employeeIDQuery = `SELECT * FROM employee WHERE EmployeeID = ?`;
                 db.query(employeeIDQuery, req.body.employeeID, (err, result) => {
                     if (err) {
@@ -148,7 +149,7 @@ app.post('/CreateAcc', (req, res) => {
                     } else if (result.length >= 1) {
                         return res.json({ message: "Employee ID exists" });
                     } else {
-                        //CHECK EMPLOYEE EMAIL
+                        //AVOID EMAIL DUPLICATION IN EMPLOYEE TABLE
                         const employeeEmailQuery = `SELECT * FROM employee WHERE Email = ?`;
                         db.query(employeeEmailQuery, req.body.email, (err, result) => {
                             if (err) {
@@ -156,8 +157,8 @@ app.post('/CreateAcc', (req, res) => {
                             } else if (result.length >= 1) {
                                 return res.json({ message: "Email exists" });
                             } else {
-                                //NO PROGRAM ID STORED FOR ENROLLMENT OFFICER AND SCHOOL HEAD
-                                if (req.body.position === "Enrollment Officer" || req.body.position === "School Head") {
+                                //NO PROGRAM ID STORED FOR ADVISER, ENROLLMENT OFFICER AND SCHOOL HEAD
+                                if (req.body.position === "Adviser" || req.body.position === "Enrollment Officer" || req.body.position === "School Head") {
                                     const employeeQuery = `INSERT INTO employee (Firstname, Middlename, Lastname, EmployeeID, Email, PhoneNo, EmpJobRole)
                                                         VALUES(?, ?, ?, ?, ?, ?, ?)`;
                                     const employeeValues = [
@@ -181,7 +182,7 @@ app.post('/CreateAcc', (req, res) => {
                                     })
 
                                     //WITH PROGRAM ID STORED FOR ADVISER AND DCS HEAD
-                                } else if (req.body.position === "Adviser" || req.body.position === "DCS Head") {
+                                } else if (req.body.position === "DCS Head") {
                                     const employeeQuery = `INSERT INTO employee (Firstname, Middlename, Lastname, EmployeeID, Email, PhoneNo, EmpJobRole, ProgramID)
                                                         VALUES(?, ?, ?, ?, ?, ?, ?, ?)`;
                                     const employeeValues = [
@@ -305,14 +306,17 @@ app.post('/LoginPage', (req, res) => {
 
     db.query(sql, [email, password], (err, result) => {
         if (err) return res.json({ message: "Error in server" + err });
+        
 
         const user = result[0];
         if (result.length > 0) {
-            req.session.accountID = user.AccountID;
+            if (user.Status === "Terminated"){
+                return res.json({message : "Account is no longer active. Fill out contact form to ask for reactivation", isLoggedIn: false});
+            } else if (user.Status === "Active"){
+                req.session.accountID = user.AccountID;
             req.session.name = user.Name;
             req.session.role = user.Role;            
 
-            //TODO: CONDITION FOR WHEN STATUS IS TERMINATED
             return res.json({
                 message: 'Login successful',
                 role: req.session.role,
@@ -322,6 +326,8 @@ app.post('/LoginPage', (req, res) => {
                 isLoggedIn: true,
                 name: req.session.name
             });
+            }
+            
         } else {
             return res.json({ message: "Invalid credentials", isLoggedIn: false })
         }
