@@ -208,75 +208,6 @@ form{
     background-color: transparent;
 }
 
-.errorMessage{
-    color: red;
-    background-color: transparent;
-}
-
-.toast{
-    border-radius: 10px;
-    background-color: transparent;
-}
-/* MOBILE */
-@media (max-width: 768px) {
-    .PageTitle {
-        font-size: 1.8rem; 
-        margin-top: 30px;
-        margin-left: 10%;
-        margin-right: 10%;
-    }
-    .formContainer {
-        width: 80%; 
-        height: auto; 
-        padding: 1.5rem; 
-    }
-
-    .inputGroup input {
-        padding: 1rem 1rem 1rem 3.5rem;
-    }
-
-    .inputIcon {
-        top: 15px;
-        left: 25px;
-
-    }
-
-    .inputIcon img{
-        width: 20px;
-        height: 20px;
-    }
-
-    .inputGroup {
-        flex-direction: column; 
-        align-items: flex-start; 
-    }
-
-    
-
-    .inputGroup ::placeholder {
-        font-size: 14px;
-    }
-
-
-    .loginButton {
-        height: 45px; 
-        font-size: 1rem; 
-    }
-
-    .options {
-        font: 10px poppins reg;    
-    }
-
-    .createAcc p{
-        font-size: 13px;
-    }
-
-    .errorMessage{
-        font-size: 13px;
-    }
-}
-
-
 .popup {
     position: fixed; 
     top: 0;
@@ -442,3 +373,116 @@ form{
     margin: 0;
     text-align: center;
 }
+
+
+/* MOBILE */
+@media (max-width: 768px) {
+    .PageTitle {
+        font-size: 1.8rem; 
+        margin-top: 30px;
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+    .formContainer {
+        width: 80%; 
+        height: auto; 
+        padding: 1.5rem; 
+    }
+
+    .inputGroup input {
+        padding: 1rem 1rem 1rem 3.5rem;
+    }
+
+    .inputIcon {
+        top: 15px;
+        left: 25px;
+
+    }
+
+    .inputIcon img{
+        width: 20px;
+        height: 20px;
+    }
+
+    .inputGroup {
+        flex-direction: column; 
+        align-items: flex-start; 
+    }
+
+    
+
+    .inputGroup ::placeholder {
+        font-size: 14px;
+    }
+
+
+    .loginButton {
+        height: 45px; 
+        font-size: 1rem; 
+    }
+
+    .options {
+        font: 10px poppins reg;    
+    }
+
+    .createAcc p{
+        font-size: 13px;
+    }
+
+    .errorMessage{
+        font-size: 13px;
+    }
+
+    .popupContent{
+        max-height: 80vh;
+        margin-top: 10%;
+        margin-bottom: 20%;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .popupHeader {
+        margin: 10px 0 20px;
+    }
+
+    .popupHeader h2 {
+        font-size: 1.5rem; 
+    }
+
+    .popupText{
+        font-size: 14px;
+    }
+
+    .Message {
+        font-size: 1.25rem; 
+    }
+
+
+
+
+    .popupContentError{
+        max-height: 80vh;
+        margin-top: 10%;
+        margin-bottom: 20%;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .popupHeaderError {
+        margin: 10px 0 20px;
+    }
+
+    .popupHeaderError h2 {
+        font-size: 1.5rem; 
+    }
+
+    .popupTextError{
+        font-size: 14px;
+    }
+
+    .MessageError {
+        font-size: 1.25rem; 
+    }
+}
+
+
