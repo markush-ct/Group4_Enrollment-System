@@ -320,7 +320,7 @@ function CreateAcc() {
                             </select>
 
 
-                            {(values.position === 'Adviser' || values.position === 'DCS Head') && (
+                            {(values.position === 'DCS Head') && (
                                 <>
                                     <label>Program <span className={styles.required}>*</span></label>
                                     <select name='program' value={values.program} onChange={(e) => setValues({ ...values, program: e.target.value })} required >
