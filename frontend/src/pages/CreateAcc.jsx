@@ -6,8 +6,10 @@ import axios from 'axios';
 import 'aos/dist/aos.css';
 
 function CreateAcc() {
-    const [signUpPrompt, setsignUpPrompt] = useState(false);
+    const [signUpPrompt, setsignUpPrompt] = useState(false); //success
     const [signUpMsg, setsignUpMsg] = useState("");
+    const [errorPrompt, setErrorPrompt] = useState(false); //errors
+    const [errorMsg, setErrorMsg] = useState("");
     const [SideBar, setSideBar] = useState(false);
     const [programs, setPrograms] = useState('');
     const [values, setValues] = useState({
@@ -46,8 +48,8 @@ function CreateAcc() {
                 })
             })
             .catch((err) => {
-                alert("Error: " + err);
-                setsignUpPrompt(false);
+                setErrorPrompt(true);
+                setErrorMsg(err.response?.data?.message || "An unexpected error occurred.");
             })
     }
 
@@ -84,10 +86,49 @@ function CreateAcc() {
                 <h1>DEPARTMENT OF COMPUTER STUDIES</h1>
             </div>
 
+
             {/* SIGN UP PROMPT */}
-            <div id='prompt' className={`prompt ${signUpPrompt ? 'togglePrompt' : ''}`}>
-                {signUpMsg && <p className={styles.signUpMsg}>{signUpMsg}</p>}
+            {/* SUCCESS PROMPT */}
+    {signUpPrompt && (
+        <div data-aos="zoom-out" data-aos-duration="500" className={styles.popup}>
+            <div className={styles.popupContent}>
+                <button
+                    className={styles.closeButton}
+                    onClick={() => setsignUpPrompt(false)}
+                >
+                    &times;
+                </button>
+                <div className={styles.popupHeader}>
+                    <h2>Success</h2>
+                </div>
+                <div className={styles.Message}>
+                    <span>Account Created</span>
+                </div>
+                <p className={styles.popupText}>{signUpMsg}</p>
             </div>
+        </div>
+    )}
+
+    {/* ERROR PROMPT */}
+    {errorPrompt && (
+        <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupError}>
+            <div className={styles.popupContentError}>
+                <button
+                    className={styles.closeButton}
+                    onClick={() => setErrorPrompt(false)}
+                >
+                    &times;
+                </button>
+                <div className={styles.popupHeaderError}>
+                    <h2>Error</h2>
+                </div>
+                <div className={styles.MessageError} style={{ color: '#900' }}>
+                    <span>Error Occurred</span>
+                </div>
+                <p className={styles.popupTextError}>{errorMsg}</p>
+            </div>
+        </div>
+    )}
 
             {/* Create Account Form */}
             <div data-aos="fade-up" className={styles.contentSection}>

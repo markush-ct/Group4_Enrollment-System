@@ -3,21 +3,7 @@
     src: url(../assets/Poppins/Poppins-Regular.ttf);
 }
 
-#prompt{
-    width: 60%;
-    padding: 2rem;
-    text-align: center;
-    display: none;
-    background-color: red;
-}
 
-.togglePrompt{
-    display: flex;
-}
-
-.signUpMsg{
-    font-size: 3rem;
-}
 
 
 .contentSection{
@@ -220,6 +206,165 @@
 }
 
 
+.popup {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7); 
+    z-index: 2000;
+}
+
+.popupContent {
+    padding: 20px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 1000px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    text-align: left;
+    position: relative;
+}
+
+.popupContent::-webkit-scrollbar {
+    width: 20px;
+}
+
+.popupHeader {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    height: 30px;
+    color: #d0943d;;
+    margin-bottom: 50px;
+    padding-bottom: 10px;
+
+}
+
+.Message {
+    display: flex;
+    color: #3d8c4b;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    font-weight: 800;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.Message::before,
+.Message::after {
+    content: "";
+    flex: 1; 
+    border-bottom: 1px solid #3d8c4b; 
+    margin: 0 10px; 
+}
+
+.popupText{
+    font-size: 1.0rem;
+    text-align: center;
+}
+.popupHeader h2 {
+    font-size: 2.0rem;
+    margin: 0;
+    text-align: center;
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.2s;
+    position: absolute; 
+    top: 0;             
+    right: 0;          
+    padding: 10px;     
+}
+.closeButton:hover {
+    color: #900;
+}
+
+
+.popupError {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7); 
+    z-index: 2000;
+}
+
+.popupContentError {
+    padding: 20px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 1000px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    text-align: left;
+    position: relative;
+}
+
+.popupContentError::-webkit-scrollbar {
+    width: 20px;
+}
+
+.popupHeaderError {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    height: 30px;
+    color:  #FF0000;;
+    margin-bottom: 50px;
+    padding-bottom: 10px;
+
+}
+
+.MessageError {
+    display: flex;
+    color:  #FF0000;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    font-weight: 800;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.MessageError::before,
+.MessageError::after {
+    content: "";
+    flex: 1; 
+    border-bottom: 1px solid #3d8c4b; 
+    margin: 0 10px; 
+}
+
+.popupTextError{
+    font-size: 1.0rem;
+    text-align: center;
+}
+.popupHeaderError h2 {
+    font-size: 2.0rem;
+    margin: 0;
+    text-align: center;
+}
+
+
+
 
 
 
@@ -306,6 +451,69 @@
         font-size: 1rem; 
     }
     
+
+
+
+
+
+    .popupContent{
+        max-height: 80vh;
+        margin-top: 10%;
+        margin-bottom: 20%;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .popupHeader {
+        margin: 10px 0 20px;
+    }
+
+    .popupHeader h2 {
+        font-size: 1.5rem; 
+    }
+
+    .popupText{
+        font-size: 14px;
+    }
+
+    .Message {
+        font-size: 1.25rem; 
+    }
+
+
+
+
+    .popupContentError{
+        max-height: 80vh;
+        margin-top: 10%;
+        margin-bottom: 20%;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .popupHeaderError {
+        margin: 10px 0 20px;
+    }
+
+    .popupHeaderError h2 {
+        font-size: 1.5rem; 
+    }
+
+    .popupTextError{
+        font-size: 14px;
+    }
+
+    .MessageError {
+        font-size: 1.25rem; 
+    }
+
+
+
+
+
+
+
+
 
 
     .footerCopyright {
