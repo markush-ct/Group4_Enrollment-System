@@ -78,9 +78,9 @@ function LoginPage() {
                         } else {
                             navigate('/LoginPage'); // Fallback route if role is not recognized
                         }
-                } else {
+                } else if (res.data.isLoggedIn === false) {
                     setsignUpPrompt(false);
-                    setsignUpMsg(false);
+                    setsignUpMsg(res.data.message);
                     setErrorPrompt(true);
                     setErrorMsg(res.data.message);
                     setError('');
@@ -104,31 +104,7 @@ function LoginPage() {
         <>
 
             <Header SideBar={SideBar} setSideBar={setSideBar} />
-            <div className={styles.mainPage}>
-                <div data-aos="fade-up" className={styles.PageTitle}>Log In</div>
-                <div data-aos="fade-up" className={styles.formContainer}>
-                    <form onSubmit={submitLogin}>
-                        <div className={styles.inputGroup}>
-                            <div className={styles.inputIcon}>
-                                <img src="/src/assets/login-userlogo.svg" alt="User Icon" />
-                            </div>
-                            <input name='email' type="email" placeholder="Username" onChange={(e) => setValues({ ...values, email: e.target.value })} required />
-                        </div>
-                        <div className={styles.inputGroup}>
-                            <div className={styles.inputIcon}>
-                                <img src="/src/assets/login-pwlogo.svg" alt="Lock Icon" />
-                            </div>
-                            <input name='password' type={showPassword ? "text" : "password"} placeholder="Password" onChange={(e) => setValues({ ...values, password: e.target.value })} required />
-                            <div className={styles.togglePasswordIcon} onClick={togglePasswordVisibility}>
-                <img title='Show/Hide Password'
-                    src={showPassword ? "/src/assets/showPass.png" : "/src/assets/hidePass.png"} 
-                    alt={showPassword ? "Hide Password" : "Show Password"} 
-                />
-            </div>
-                        </div>
-
-
-                        {/* SIGN UP PROMPT */}
+            {/* SIGN UP PROMPT */}
             {/* SUCCESS PROMPT */}
             {signUpPrompt && (
                 <div data-aos="zoom-out" data-aos-duration="500" className={styles.popup}>
@@ -170,7 +146,32 @@ function LoginPage() {
                     </div>
                 </div>
             )}
-                        
+                   
+            <div className={styles.mainPage}>
+                <div data-aos="fade-up" className={styles.PageTitle}>Log In</div>
+                <div data-aos="fade-up" className={styles.formContainer}>
+                    <form onSubmit={submitLogin}>
+                        <div className={styles.inputGroup}>
+                            <div className={styles.inputIcon}>
+                                <img src="/src/assets/login-userlogo.svg" alt="User Icon" />
+                            </div>
+                            <input name='email' type="email" placeholder="Username" onChange={(e) => setValues({ ...values, email: e.target.value })} required />
+                        </div>
+                        <div className={styles.inputGroup}>
+                            <div className={styles.inputIcon}>
+                                <img src="/src/assets/login-pwlogo.svg" alt="Lock Icon" />
+                            </div>
+                            <input name='password' type={showPassword ? "text" : "password"} placeholder="Password" onChange={(e) => setValues({ ...values, password: e.target.value })} required />
+                            <div className={styles.togglePasswordIcon} onClick={togglePasswordVisibility}>
+                <img title='Show/Hide Password'
+                    src={showPassword ? "/src/assets/showPass.png" : "/src/assets/hidePass.png"} 
+                    alt={showPassword ? "Hide Password" : "Show Password"} 
+                />
+            </div>
+                        </div>
+
+
+                             
 
                         <div className={styles.options}>
                             <label className={styles.rememberMe}>

@@ -352,7 +352,7 @@ function FAQs() {
                   ✖
                 </button>
               </div>
-              <img src="/src/assets/academic-calendar1.jpg" alt="Academic Calendar 1" />
+              <img src="/src/assets/academic-calendar.jpg" alt="Academic Calendar 1" />
               <img src="/src/assets/academic-calendar2.jpg" alt="Academic Calendar 2" />
               <img src="/src/assets/academic-calendar3.jpg" alt="Academic Calendar 3" />
             </div>

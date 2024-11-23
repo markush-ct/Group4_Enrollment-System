@@ -209,6 +209,7 @@ form{
     color: black;
 }
 
+
 .errorMessage{
     color: red;
     background-color: transparent;
@@ -380,6 +381,7 @@ form{
     text-align: center;
 }
 
+
 /* MOBILE */
 @media (max-width: 768px) {
     .PageTitle {
@@ -437,6 +439,60 @@ form{
     .errorMessage{
         font-size: 13px;
     }
+
+
+
+    .popupContent{
+        max-height: 80vh;
+        margin-top: 10%;
+        margin-bottom: 20%;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .popupHeader {
+        margin: 10px 0 20px;
+    }
+
+    .popupHeader h2 {
+        font-size: 1.5rem; 
+    }
+
+    .popupText{
+        font-size: 14px;
+    }
+
+    .Message {
+        font-size: 1.25rem; 
+    }
+
+
+
+
+    .popupContentError{
+        max-height: 80vh;
+        margin-top: 10%;
+        margin-bottom: 20%;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .popupHeaderError {
+        margin: 10px 0 20px;
+    }
+
+    .popupHeaderError h2 {
+        font-size: 1.5rem; 
+    }
+
+    .popupTextError{
+        font-size: 14px;
+    }
+
+    .MessageError {
+        font-size: 1.25rem; 
+    }
+
 }
 
 
