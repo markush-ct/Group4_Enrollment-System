@@ -16,6 +16,8 @@ import DCSHeadDashboard from './pages/DCSHeadDashboard.jsx';
 import SchoolHeadDashboard from './pages/SchoolHeadDashboard.jsx';
 import SignUp from './pages/SignUp.jsx'
 import CreateAcc from './pages/CreateAcc.jsx'
+import AccountRequest from './pages/AccountRequest.jsx'
+
 
 function App() {
   return (
@@ -39,6 +41,7 @@ function App() {
         <Route path="/SchoolHeadDashboard" element={<SchoolHeadDashboard />} />
         <Route path="/SignUp" element={<SignUp />} />
         <Route path="/CreateAcc" element={<CreateAcc />} />
+        <Route path="/AccountRequest" element={<AccountRequest />} />
         {/* Add other routes as needed */}
       </Routes>
     </Router>

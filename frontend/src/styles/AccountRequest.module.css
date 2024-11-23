@@ -1,0 +1,243 @@
+/* Main Page Styling */
+.mainPage {
+  padding: 20px;
+}
+
+.contentSection {
+  padding: 40px 20px 10px 20px;
+  text-align: justify;
+  background-color: #f7f7f7;
+  color: #333;
+  margin-bottom: 300px;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.PageTitle {
+  margin-top: 100px;
+  font-size: 2.5rem;
+  color: #3d8c4b;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.filterSection {
+  display: flex;
+  justify-content: flex-end; 
+  align-items: center;
+  margin-bottom: 20px;
+  padding-right: 20px; 
+}
+
+.filterLabel {
+  margin-right: 10px;
+  font-size: 16px;
+}
+
+.filterDropdown {
+  padding: 5px 10px;
+  font-size: 16px;
+}
+
+
+.tableContainer {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+.requestsTable {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 8px;
+  overflow: hidden; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff; 
+  transition: all 0.3s ease-in-out;
+}
+
+.requestsTable th,
+.requestsTable td {
+  padding: 15px 20px;
+  text-align: left;
+  font-size: 16px;
+  color: #333; 
+  border-bottom: 1px solid #f1f1f1; 
+}
+
+.requestsTable th {
+  background-color: #4CAF50;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+
+.requestsTable tr:hover {
+  background-color: #e0e0e0; 
+  cursor: pointer; 
+  transform: scale(1.02); 
+}
+
+.requestsTable tr:nth-child(even) {
+  background-color: #fafafa; 
+}
+
+.requestsTable tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+.requestsTable td button {
+  border: none;
+  padding: 8px 16px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: 10px;
+}
+
+.requestsTable td button.approveButton {
+  background-color: #28a745;
+  color: white;
+}
+
+.requestsTable td button.rejectButton {
+  background-color: #dc3545;
+  color: white;
+}
+
+.requestsTable td button:hover {
+  opacity: 0.8;
+  transform: scale(1.05); 
+}
+
+.approveButton:hover {
+  background-color: #218838;
+}
+
+.rejectButton:hover {
+  background-color: #c82333;
+}
+
+.popup {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.7); 
+  z-index: 2000;
+}
+
+.popupContent {
+  padding: 20px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  text-align: left;
+  position: relative;
+}
+
+.popupContent::-webkit-scrollbar {
+  width: 20px;
+}
+
+.popupHeader {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  height: 30px;
+  color: #d0943d;;
+  margin-bottom: 50px;
+  padding-bottom: 10px;
+
+}
+
+.popupText{
+  font-size: 1.0rem;
+}
+.popupHeader h2 {
+  font-size: 2.0rem;
+  margin: 0;
+  text-align: center;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 25px;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.2s;
+  position: absolute; 
+  top: 0;             
+  right: 0;          
+  padding: 10px;     
+}
+.closeButton:hover {
+  color: #900;
+}
+
+
+
+
+.popupButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.popupButtons button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 6px;
+  border: none;
+  transition: all 0.3s ease;
+  width: 45%;
+}
+
+.approveButton {
+  background-color: #28a745;
+  color: white;
+}
+
+.rejectButton {
+  background-color: #dc3545;
+  color: white;
+}
+
+
+
+.approveButton:hover {
+  background-color: #218838;
+}
+
+.rejectButton:hover {
+  background-color: #c82333;
+}
+
+/* Close Button */
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.closeButton:hover {
+  color: #e74c3c;
+}

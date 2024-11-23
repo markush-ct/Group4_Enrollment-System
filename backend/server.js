@@ -291,6 +291,22 @@ app.post('/SignUp', (req, res) => {
     })
 })
 
+//LOGOUT
+app.post("/logoutFunction", (req, res) => {
+    if (req.session.id) {
+        req.session.destroy((err) => {
+            if (err) {
+                console.error("Error destroying session:", err);
+                return res.json({ message: "Logout failed." });
+            }
+            res.clearCookie('connect.sid');
+            return res.json({ message: "Logout successful." });
+        });
+    } else {
+        return res.json({ message: "No active session." });
+    }
+})
+
 //LOGIN
 app.get('/', (req, res) => {
     if (req.session.id) {

@@ -206,76 +206,13 @@ form{
 .createAccBtn{
     text-decoration: none;
     background-color: transparent;
+    color: black;
 }
 
 .errorMessage{
     color: red;
     background-color: transparent;
 }
-
-.toast{
-    border-radius: 10px;
-    background-color: transparent;
-}
-/* MOBILE */
-@media (max-width: 768px) {
-    .PageTitle {
-        font-size: 1.8rem; 
-        margin-top: 30px;
-        margin-left: 10%;
-        margin-right: 10%;
-    }
-    .formContainer {
-        width: 80%; 
-        height: auto; 
-        padding: 1.5rem; 
-    }
-
-    .inputGroup input {
-        padding: 1rem 1rem 1rem 3.5rem;
-    }
-
-    .inputIcon {
-        top: 15px;
-        left: 25px;
-
-    }
-
-    .inputIcon img{
-        width: 20px;
-        height: 20px;
-    }
-
-    .inputGroup {
-        flex-direction: column; 
-        align-items: flex-start; 
-    }
-
-    
-
-    .inputGroup ::placeholder {
-        font-size: 14px;
-    }
-
-
-    .loginButton {
-        height: 45px; 
-        font-size: 1rem; 
-    }
-
-    .options {
-        font: 10px poppins reg;    
-    }
-
-    .createAcc p{
-        font-size: 13px;
-    }
-
-    .errorMessage{
-        font-size: 13px;
-    }
-}
-
 
 .popup {
     position: fixed; 
@@ -442,3 +379,64 @@ form{
     margin: 0;
     text-align: center;
 }
+
+/* MOBILE */
+@media (max-width: 768px) {
+    .PageTitle {
+        font-size: 1.8rem; 
+        margin-top: 30px;
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+    .formContainer {
+        width: 80%; 
+        height: auto; 
+        padding: 1.5rem; 
+    }
+
+    .inputGroup input {
+        padding: 1rem 1rem 1rem 3.5rem;
+    }
+
+    .inputIcon {
+        top: 15px;
+        left: 25px;
+
+    }
+
+    .inputIcon img{
+        width: 20px;
+        height: 20px;
+    }
+
+    .inputGroup {
+        flex-direction: column; 
+        align-items: flex-start; 
+    }
+
+    
+
+    .inputGroup ::placeholder {
+        font-size: 14px;
+    }
+
+
+    .loginButton {
+        height: 45px; 
+        font-size: 1rem; 
+    }
+
+    .options {
+        font: 10px poppins reg;    
+    }
+
+    .createAcc p{
+        font-size: 13px;
+    }
+
+    .errorMessage{
+        font-size: 13px;
+    }
+}
+
+
