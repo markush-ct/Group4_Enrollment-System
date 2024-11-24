@@ -126,47 +126,61 @@ function AccountRequest() {
               </tr>
             </thead>
             <tbody>
-              {filteredRequests.length > 0 ? (
-                filteredRequests.map((request) => (
-                  <tr key={request.id} onClick={() => handleRowClick(request)}>
-                    <td>{request.name}</td>
-                    <td>{request.email}</td>
-                    <td>{request.type}</td>
-                    <td>
-                      <button className={styles.approveButton} onClick={(e) => { e.stopPropagation(); handleApprove(request.id); }}>
-                        Approve
-                      </button>
-                      <button className={styles.rejectButton} onClick={(e) => { e.stopPropagation(); handleReject(request.id); }}>
-                        Reject
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="4" className={styles.noData}>
-                    No account requests found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
+  {filteredRequests.length > 0 ? (
+    filteredRequests.map((request) => (
+      <tr key={request.id} onClick={() => handleRowClick(request)}>
+        <td data-label="Name">{request.name}</td>
+        <td data-label="Email">{request.email}</td>
+        <td data-label="Account Type">{request.type}</td>
+        <td>
+          <button
+            className={styles.approveButton}
+            onClick={(e) => { e.stopPropagation(); handleApprove(request.id); }}
+          >
+            Approve
+          </button>
+          <button
+            className={styles.rejectButton}
+            onClick={(e) => { e.stopPropagation(); handleReject(request.id); }}
+          >
+            Reject
+          </button>
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan="4" className={styles.noData}>
+        No account requests found.
+      </td>
+    </tr>
+  )}
+</tbody>
+
+
           </table>
         </div>
       </div>
 
       {/* PopUp */}
 {popUpVisible && selectedRequest && (
-  <div className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}>
+  <div data-aos="zoom-out" data-aos-duration="500" className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}>
     <div className={styles.popupContent}>
       <div className={styles.popupHeader}>
         <button onClick={closePopup} className={styles.closeButton}>✖</button>
-        <h2>Request Details</h2>
+        <h2>Request Account</h2>
       </div>
+      <div data-aos="fade-up" className={styles.studentType}>
+                <span>DETAILS</span>
+            </div>
+            <div className={styles.popupText}>
       <p><strong>Name:</strong> {selectedRequest.name}</p>
       <p><strong>Email:</strong> {selectedRequest.email}</p>
       <p><strong>Account Type:</strong> {selectedRequest.type}</p>
       <p><strong>Address:</strong> {selectedRequest.address}</p>
       <p><strong>Phone:</strong> {selectedRequest.phone}</p>
+      </div>
+      
 
       {/* Approve and Reject Buttons */}
       <div className={styles.popupButtons}>
@@ -190,6 +204,7 @@ function AccountRequest() {
         >
           Reject
         </button>
+  
       </div>
     </div>
   </div>

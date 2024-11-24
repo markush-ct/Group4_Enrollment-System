@@ -90,7 +90,7 @@ function EnrollmentOfficerDashboard() {
       labels: ["Alliance of Computer Science", "Information Technology Society"],
       datasets: [
         {
-          label: "Sales by Category",
+          label: "DCS CHARTS",
           data: [CScount, ITcount],
           backgroundColor: ["#d9534f", "#5cb85c"],
           hoverBackgroundColor: ["#c9302c", "#4cae4c"],
@@ -144,8 +144,40 @@ function EnrollmentOfficerDashboard() {
 
         {/* CONTENT */}
         <div className={`${styles.content} container`}>
+
+        <div className={styles.dashboardCards}>
+  <div className={styles.dashboardCard}>
+    <h3>Total Enrolled</h3>
+    <p className={styles.cardNumber}>890</p>
+    <p className={styles.cardDetails}>
+      +18% <span>+3.8k this week</span>
+    </p>
+  </div>
+  <div className={styles.dashboardCard}>
+    <h3>Visitor</h3>
+    <p className={styles.cardNumber}>1.234</p>
+    <p className={styles.cardDetails}>
+      +18% <span>+2.8k this week</span>
+    </p>
+  </div>
+  <div className={styles.dashboardCard}>
+    <h3>Pending Application</h3>
+    <p className={styles.cardNumber}>567</p>
+    <p className={styles.cardDetails}>
+      +18% <span>+7.8k this week</span>
+    </p>
+  </div>
+  <div className={styles.dashboardCard}>
+    <h3>Registered Student</h3>
+    <p className={styles.cardNumber}>123</p>
+    <p className={styles.cardDetails}>
+      +18% <span>+1.2k this week</span>
+    </p>
+  </div>
+</div>
+          
           {/* STYATS */}
-          <div className={`${styles.statCards} container`}>
+          <div className={styles.statCards}>
             <div className={`${styles.statCard} ${styles.computerScience}`}>
               <h3>Computer Science</h3>
               <p>{CScount}</p>
@@ -157,25 +189,25 @@ function EnrollmentOfficerDashboard() {
           </div>
 
           {/* CHARTS */}
-          <div className={`${styles.charts} container`}>
-            {/* LINE CHARTS */}
-            <div className={styles.chart}>
-              <h3>DCS Yearly Student Population</h3>
-              <div className={styles.chartContainer}>
-                <Line data={lineData} options={lineOptions} />
-              </div>
-            </div>
+<div className={styles.charts}>
+  {/* LINE CHART */}
+  <div className={styles.chart}>
+    <h3>DCS Yearly Student Population</h3>
+    <div className={styles.chartContainer}>
+      <Line data={lineData} options={lineOptions} />
+    </div>
+  </div>
 
-            {/* BILOG NA ANO */}
-            <div className={styles.chart}>
-              <h3>Sales by Category</h3>
-              <div className={styles.chartContainer}>
-                <Doughnut data={doughnutData} options={doughnutOptions} />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+  {/* BILOG NA ANO */}
+  <div className={styles.chart}>
+    <h3>DCS Population Per Course</h3>
+    <div className={styles.chartContainer}>
+      <Doughnut data={doughnutData} options={doughnutOptions} />
+    </div>
+  </div>
+</div>
+</div>
+</div>
     </>
   );
 }

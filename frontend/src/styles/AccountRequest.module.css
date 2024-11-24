@@ -40,7 +40,7 @@
   font-size: 16px;
 }
 
-
+/* Table Responsiveness */
 .tableContainer {
   width: 100%;
   overflow-x: auto;
@@ -63,17 +63,21 @@
   text-align: left;
   font-size: 16px;
   color: #333; 
-  border-bottom: 1px solid #f1f1f1; 
+  background-color: transparent;
 }
 
 .requestsTable th {
-  background-color: #4CAF50;
+  background-color: #3d8c4b;
   color: white;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
+.requestsTable tr {
+  transition: transform ease 0.3s;
+  background-color: transparent;
+}
 
 .requestsTable tr:hover {
   background-color: #e0e0e0; 
@@ -97,15 +101,18 @@
   cursor: pointer;
   transition: all 0.3s ease;
   margin-left: 10px;
+  margin-top: 10px;
 }
 
 .requestsTable td button.approveButton {
   background-color: #28a745;
+  width: 100px;
   color: white;
 }
 
 .requestsTable td button.rejectButton {
   background-color: #dc3545;
+  width: 100px;
   color: white;
 }
 
@@ -122,6 +129,7 @@
   background-color: #c82333;
 }
 
+/* Popup */
 .popup {
   position: fixed; 
   top: 0;
@@ -147,29 +155,77 @@
   position: relative;
 }
 
-.popupContent::-webkit-scrollbar {
-  width: 20px;
-}
-
 .popupHeader {
   display: flex;
   justify-content: center;
   text-align: center;
   height: 30px;
-  color: #d0943d;;
-  margin-bottom: 50px;
+  color: #d0943d;
+  margin-bottom: 20px;
   padding-bottom: 10px;
-
 }
 
 .popupText{
-  font-size: 1.0rem;
+  font-size: 1rem;
 }
+
+.popupText strong{
+  color: rgb(180, 0, 0);
+  font-weight: bold;
+}
+
 .popupHeader h2 {
   font-size: 2.0rem;
   margin: 0;
   text-align: center;
 }
+
+.studentType {
+  display: flex;
+  color: #3d8c4b;
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  font-weight: 800;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+.studentType::before,
+.studentType::after {
+  content: "";
+  flex: 1; 
+  border-bottom: 1px solid #3d8c4b; 
+  margin: 0 10px; 
+}
+
+.popupButtons {
+  display: flex;
+  justify-content: center; 
+  gap: 10px; 
+  margin-top: 20px; 
+}
+
+.approveButton, .rejectButton {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: #4CAF50; 
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.rejectButton {
+  background-color: #f44336; 
+}
+
+.approveButton:hover, .rejectButton:hover {
+  opacity: 0.8;
+}
+
 
 .closeButton {
   background: none;
@@ -183,61 +239,118 @@
   right: 0;          
   padding: 10px;     
 }
+
 .closeButton:hover {
   color: #900;
 }
 
+/* MOBILE */
+@media (max-width: 768px) {
+  .contentSection {
+    margin-bottom: 200px;
+    margin-left: 5%;
+    margin-right: 5%;
+  }
 
+  .PageTitle {
+    font-size: 1.5rem; 
+  }
 
+  .requestsTable {
+    display: block;
+    width: 100%;
+  }
 
-.popupButtons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+  .requestsTable thead {
+    display: none; 
+  }
+
+  .requestsTable tbody {
+    display: block;
+  }
+
+  .requestsTable tr {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #fafafa;
+    border-radius: 8px;
+  }
+
+  .requestsTable td {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .requestsTable td:last-child {
+    border-bottom: none;
+  }
+
+  .requestsTable td:last-child {
+    justify-content: flex-end;
+  }
+
+  .requestsTable td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #3d8c4b; 
+    padding-right: 10px;
+  }
+
+  .requestsTable td button {
+    margin-top: 10px;
+    gap: 10px;
+    align-self: flex-end; 
+  }
+
+  .popupContent {
+    max-height: 80vh;
+    margin-top: 10%;
+    margin-bottom: 20%;
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+
+  .popupHeader {
+    margin: 10px 0 20px;
+  }
+
+  .popupHeader h2 {
+    font-size: 1.5rem; 
+  }
+
+  .popupText {
+    font-size: 14px;
+  }
+
+  .studentType {
+    font-size: 1.25rem; 
+  }
 }
 
-.popupButtons button {
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 6px;
-  border: none;
-  transition: all 0.3s ease;
-  width: 45%;
-}
 
-.approveButton {
-  background-color: #28a745;
-  color: white;
-}
+@media (max-width: 480px) {
+  
 
-.rejectButton {
-  background-color: #dc3545;
-  color: white;
-}
+  .filterDropdown {
+    width: 100%; 
+  }
 
+  .popupContent {
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+  }
 
+  .PageTitle {
+    font-size: 1.25rem; 
+  }
 
-.approveButton:hover {
-  background-color: #218838;
-}
-
-.rejectButton:hover {
-  background-color: #c82333;
-}
-
-/* Close Button */
-.closeButton {
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #333;
-  position: absolute;
-  top: 20px;
-  right: 20px;
-}
-
-.closeButton:hover {
-  color: #e74c3c;
+  .popupHeader h2 {
+    font-size: 1.25rem; 
+  }
 }

@@ -35,15 +35,15 @@ function AdminDashHeader() {
                     <div className={style.navLeft}>
                         {/* MENU */}
                         <button className={style.menuBtn} onClick={toggleSidebar}>
-                            <img className={style.menuIcon} src="/src/assets/icons8-menu-30.png" alt="Menu" />
+                            <img className={style.menuIcon} src="/src/assets/menu-button.png" alt="Menu" />
                         </button>
 
                         {/* HEADER */}
                         <Link to="/MainPage">
                             <img className={style.cvsuLogo} src="/src/assets/cvsu-logo.png" alt="CvSU logo" />
                         </Link>
-                        <div className={style.institution}>
-                            <h2 className={style.schoolName}>{accName}</h2>
+                        <div className={style.accName}>
+                            <h2>{accName}</h2>
                         </div>
                     </div>
 
@@ -54,8 +54,7 @@ function AdminDashHeader() {
                             placeholder="Search here"
                             className={style.searchBar}
                         />
-
-                        </div>
+                    </div>
                 </header>
             </div>
 
