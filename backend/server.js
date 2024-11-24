@@ -31,6 +31,25 @@ const db = mysql.createConnection({
     database: 'cvsuenrollmentsystem'
 })
 
+app.get('/getAccountReq', (req, res) => {
+    const sql = `
+        SELECT s.Firstname, s.Middlename, s.Lastname, s.Email, r.RegStatus,
+               CASE 
+                   WHEN s.StudentType IN ('Regular', 'Irregular', 'Shiftee', 'Freshman', 'Transferee') THEN s.StudentType
+                        ELSE NULL
+                   WHEN e.EmpJobRole = 'employee' THEN 
+                       CASE 
+                           WHEN e.EmpJobRole IN ('DCS Head', 'School Head', 'Enrollment Officer', 'Adviser') THEN r.EmpJobRole
+                           ELSE NULL
+                       END
+                   ELSE NULL
+               END AS AccountRole
+        FROM student s
+        CROSS JOIN employee e
+        CROSS JOIN societyofficer so
+        WHERE di ko alam`;
+})
+
 app.get('/programs', (req, res) => {
     //GET PROGRAMS (IT & CS)
     const sql = `SELECT * FROM program`;
@@ -49,6 +68,31 @@ app.get('/programs', (req, res) => {
         }
     })
 })
+
+//COUNT NUMBER OF REGULAR STUDENTS IN CS FOR ADMIN DASHBOARD
+app.get('/getCS', (req, res) => {
+    const sql = `SELECT COUNT(*) AS CScount from student WHERE (StudentType = 'Regular' OR StudentType = 'Irregular') AND RegStatus = 'Accepted' AND ProgramID = 1`;
+    db.query(sql, (err, result) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else{
+            return res.json({ CScount: result[0].CScount });
+        }
+    })
+});
+
+//COUNT NUMBER OF REGULAR STUDENTS IN IT FOR ADMIN DASHBOARD
+app.get('/getIT', (req, res) => {
+    const sql = `SELECT COUNT(*) AS ITcount from student WHERE (StudentType = 'Regular' OR StudentType = 'Irregular') AND RegStatus = 'Accepted' AND ProgramID = 2`;
+    db.query(sql, (err, result) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else{
+            return res.json({ ITcount: result[0].ITcount });
+        }
+    })
+});
+
 
 //SIGN UP FOR REG/IRREG, SOC OFFICER, AND EMPLOYEE
 app.post('/CreateAcc', (req, res) => {

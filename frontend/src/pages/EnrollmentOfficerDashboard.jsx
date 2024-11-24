@@ -22,16 +22,19 @@ function EnrollmentOfficerDashboard() {
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const navigate = useNavigate();
+  const [CScount, setCScount] = useState(0);
+  const [ITcount, setITcount] = useState(0);
 
- 
+
   useEffect(() => {
     document.body.style.overflow = SideBar ? "hidden" : "auto";
     return () => (document.body.style.overflow = "auto");
   }, [SideBar]);
 
 
+  axios.defaults.withCredentials = true;
+  //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
-    axios.defaults.withCredentials = true;
     axios
       .get("http://localhost:8080")
       .then((res) => {
@@ -41,6 +44,7 @@ function EnrollmentOfficerDashboard() {
           navigate("/LoginPage");
         }
       })
+      //RETURNING ERROR IF NOT
       .catch((err) => {
         console.error("Error validating user session:", err);
       });
@@ -87,14 +91,14 @@ function EnrollmentOfficerDashboard() {
       datasets: [
         {
           label: "Sales by Category",
-          data: [45, 55],
+          data: [CScount, ITcount],
           backgroundColor: ["#d9534f", "#5cb85c"],
           hoverBackgroundColor: ["#c9302c", "#4cae4c"],
           borderWidth: 2,
         },
       ],
     }),
-    []
+    [CScount, ITcount]
   );
 
   const doughnutOptions = useMemo(
@@ -108,6 +112,30 @@ function EnrollmentOfficerDashboard() {
     []
   );
 
+  //GET NUMBER OF REGULAR STUDENTS ENROLLED IN BSCS
+  useEffect (() => {
+    axios.get("http://localhost:8080/getCS")
+    .then((res) => {
+      setCScount(res.data.CScount);
+    })
+    .catch((err) => {
+      alert("Error: " + err);
+      console.error("ERROR FETCHING DATA: " + err);
+    });
+  }, []);
+
+  //GET NUMBER OF REGULAR STUDENTS ENROLLED IN BSIT
+  useEffect (() => {
+    axios.get("http://localhost:8080/getIT")
+    .then((res) => {
+      setITcount(res.data.ITcount);
+    })
+    .catch((err) => {
+      alert("Error: " + err);
+      console.error("ERROR FETCHING DATA: " + err);
+    });
+  }, []);
+
   return (
     <>
       <Header SideBar={SideBar} setSideBar={setSideBar} />
@@ -120,11 +148,11 @@ function EnrollmentOfficerDashboard() {
           <div className={`${styles.statCards} container`}>
             <div className={`${styles.statCard} ${styles.computerScience}`}>
               <h3>Computer Science</h3>
-              <p>80</p>
+              <p>{CScount}</p>
             </div>
             <div className={`${styles.statCard} ${styles.informationTechnology}`}>
               <h3>Information Technology</h3>
-              <p>100</p>
+              <p>{ITcount}</p>
             </div>
           </div>
 
