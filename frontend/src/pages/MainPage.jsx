@@ -9,6 +9,12 @@ import Header from '../components/Header.jsx';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { useLocation } from "react-router-dom";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import '../styles/SwiperStyles.css'; 
+import { Navigation, Pagination } from 'swiper/modules';
 
 
 function MainPage() {
@@ -20,6 +26,8 @@ function MainPage() {
     const [email, setEmail] = useState('');
     const [subject, setSubject] = useState('');
     const [message, setMessage] = useState('');
+
+    
 
     {/* Linking contact section */ }
     const location = useLocation();
@@ -67,6 +75,8 @@ function MainPage() {
             );
     };
 
+    
+
     return (
         <>
             <Header SideBar={SideBar} setSideBar={setSideBar} />
@@ -83,21 +93,83 @@ function MainPage() {
                 </div>
 
                 <div data-aos="fade-up" className={styles.galleryContainer}>
-                    <div className={styles.galleryItem}>
-                        <img src="/src/assets/cs1.jpg" alt="Image 1" />
-                    </div>
-                    <div className={styles.galleryItem}>
-                        <img src="/src/assets/cs2.jpg" alt="Image 2" />
-                    </div>
-                    <div className={styles.galleryItem}>
-                        <img src="/src/assets/it1.jpg" alt="Image 3" />
-                    </div>
-                    <div className={styles.galleryItem}>
-                        <img src="/src/assets/it2.jpg" alt="Image 4" />
-                    </div>
-                </div>
+                
+                {/* GALLERY SWIPER */}
+<div className={styles.galleryContainer}>
+    <div className="swiper-button-prev"></div>
+    <Swiper
+        modules={[Navigation, Pagination]}
+        navigation={{
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        }}
+        pagination={{ clickable: true }}
+        spaceBetween={30}
+        slidesPerView={1}
+        loop={true}
+    >
+        <SwiperSlide>
+            <div className={styles.galleryItem}>
+                <img src="/src/assets/cl5.jpg" alt="Image 1" />
+            </div>
+        </SwiperSlide>
+        <SwiperSlide>
+            <div className={styles.galleryItem}>
+                <img src="/src/assets/cl1.jpg" alt="Image 2" />
+            </div>
+        </SwiperSlide>
+        <SwiperSlide>
+            <div className={styles.galleryItem}>
+                <img src="/src/assets/canteen.jpg" alt="Image 3" />
+            </div>
+        </SwiperSlide>
+        <SwiperSlide>
+            <div className={styles.galleryItem}>
+                <img src="/src/assets/hmlab.jpg" alt="Image 4" />
+            </div>
+        </SwiperSlide>
+        <SwiperSlide>
+            <div className={styles.galleryItem}>
+                <img src="/src/assets/hmlab2.jpg" alt="Image 5" />
+            </div>
+        </SwiperSlide>
+        <SwiperSlide>
+            <div className={styles.galleryItem}>
+                <img src="/src/assets/registrarpic.jpg" alt="Image 6" />
+            </div>
+        </SwiperSlide>
+        <SwiperSlide>
+            <div className={styles.galleryItem}>
+                <img src="/src/assets/room.jpg" alt="Image 7" />
+            </div>
+        </SwiperSlide>
+        <SwiperSlide>
+            <div className={styles.galleryItem}>
+                <img src="/src/assets/faculty.jpg" alt="Image 8" />
+            </div>
+        </SwiperSlide>
+        <SwiperSlide>
+            <div className={styles.galleryItem}>
+                <img src="/src/assets/gympic.jpg" alt="Image 9" />
+            </div>
+        </SwiperSlide>
+        <SwiperSlide>
+            <div className={styles.galleryItem}>
+                <img src="/src/assets/librarypic.jpg" alt="Image 10" />
+            </div>
+        </SwiperSlide>
+        <SwiperSlide>
+            <div className={styles.galleryItem}>
+                <img src="/src/assets/newroom.jpg" alt="Image 11" />
+            </div>
+        </SwiperSlide>
+    </Swiper>
+    <div className="swiper-button-next" ></div>
+</div>
 
-                <div data-aos="fade-up" className={`${styles.parallaxSection} ${styles.parallax2}`}>
+</div>
+
+                <div className={`${styles.parallaxSection} ${styles.parallax2}`}>
                     <h2>JOIN US NOW</h2>
                     <h3>Taking a course in Computer Studies is a great way to prepare for a career in a world that&apos;s becoming more digital every day.</h3>
                 </div>
@@ -164,7 +236,7 @@ function MainPage() {
                     </div>
                 </div>
 
-                <footer data-aos="fade-up" className={styles.parallaxFooter}>
+                <footer className={styles.parallaxFooter}>
                     <div className={styles.parallaxContent}>
                         <div className={styles.footerBranding}>
                             <img src="/src/assets/cvsu-logo.png" alt="Cavite State University Logo" className={styles.footerLogo} />

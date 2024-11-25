@@ -45,7 +45,7 @@
 }
 
 .parallax2 h2 {
-    font: 50px poppins BOLD;
+    font: 40px poppins BOLD;
     color: white;
     font-weight: 50;
     background-color: transparent;
@@ -54,7 +54,7 @@
 }
 
 .parallax2 h3 {
-    font: 25px poppins reg;
+    font: 18px poppins reg;
     color: white;
     background-color: transparent;
     margin: 0; 
@@ -91,7 +91,7 @@
     width: 200px;
     height: 50px;
     background-color: transparent;
-    border: 2px solid #f7f7f7; 
+    border: 1px solid #f7f7f7; 
     border-radius: 5px; 
     transition: color 0.3s ease, transform 0.3s ease; 
     margin-left: 50px;
@@ -102,7 +102,7 @@
 
 .mainButton span {
     position: relative;
-    font: 20px Poppins bold;
+    font: 20px Poppins 400;
     background-color: transparent;
     z-index: 2; 
 }
@@ -114,7 +114,7 @@
     left: -100%; 
     width: 100%;
     height: 100%;
-    background-color: #d0943d;
+    background-color: #3d8c4b;
     transition: left 0.3s ease; 
     z-index: 1; 
 }
@@ -173,36 +173,24 @@ h2, p {
 }
 
 .galleryContainer {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Two columns */
-    grid-template-rows: repeat(2, 1fr); /* Two rows */
-    gap: 20px;
-    width: 50%; 
-    margin: 0 auto; 
+    width: 100%;
+    max-width: 800px;
+    margin: auto;
     padding: 20px;
-    background-color: #f5f5f5; 
-    margin-bottom: 2rem;
+    transition: all ease 0.3s;
 }
 
-.galleryItem {
-    display: flex; 
-    justify-content: center; 
-    align-items: center;
-    overflow: hidden;
-    border-radius: 10px;
-    transition: transform 0.3s ease; 
-}
 
 .galleryItem img {
     width: 100%;
-    height: 100%; 
-    object-fit: cover;
-    transition: transform 0.3s ease; 
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 }
 
-.galleryItem:hover img {
-    transform: scale(1.05); 
-}
+
+
+
 
 /* MOBILE */
 @media (max-width: 768px) {
@@ -232,29 +220,34 @@ h2, p {
 
     .mainButton {
         width: 150px;
-        font-size: 15px;
         margin: 0 auto;      
     }
 
+    .mainButton span{
+        font-size: 1rem;
+      
+    }
+
     .contentSection h2{
-        font-size: 15px;
+        font-size: 18px;
     }
 
     .contentSection p{
-        font-size: 12px;
+        font-size: 14px;
     }
     
     .galleryContainer {
-        grid-template-columns: 1fr; 
-        width: 90%; 
+        width: 95%;
     }
 
     .parallax2 h2{
-        font-size: 30px;
+        font-size: 25px;
     }
 
     .parallax2 h3{
-        font-size: 15px;
+        font-size: 14px;
+        margin-left: 5%;
+        margin-right: 5%;
     }
 }
 
@@ -286,9 +279,6 @@ h2, p {
         margin: 0 auto;      
     }
 
-    .galleryContainer {
-        padding: 10px; 
-    }
 }
 
 .contactSection {
@@ -340,8 +330,14 @@ h2, p {
     margin-bottom: 10px;
 }
 
-.contactCard p {
+.contactCard a {
     font-size: 1rem;
+    color: black;
+    text-decoration: underline;
+}
+
+.contactCard a:hover {
+    color: #3d8c4b;
 }
 
 
@@ -606,7 +602,6 @@ h2, p {
 
 .footerCopyright {
     text-align: center;
-    margin-top: 20px;
     color: #fff;
     font-size: 1rem;
     background-color: #00540d;
