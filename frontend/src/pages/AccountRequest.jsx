@@ -7,13 +7,7 @@ import styles from '/src/styles/AccountRequest.module.css';
 
 function AccountRequest() {
   const [SideBar, setSideBar] = useState(false);
-  const [accountRequests, setAccountRequests] = useState([
-    
-    { id: 1, name: "Neil Yvan", email: "123adads@gmail.com", type: "Freshman", address: "Detachment", phone: "1985151" },
-    { id: 2, name: "Gerlyn ", email: "123adads@gmail.com", type: "Society Officer", address: "Detachment", phone: "1985151" },
-    { id: 3, name: "Donna", email: "123adads@gmail.com", type: "DCS Head", address: "Detachment", phone: "1985151" },
-    
-  ]);
+  const [accountRequests, setAccountRequests] = useState([]);
   const [filteredRequests, setFilteredRequests] = useState(accountRequests);
   const [filterType, setFilterType] = useState("All");
   const [selectedRequest, setSelectedRequest] = useState(null);
@@ -33,12 +27,13 @@ function AccountRequest() {
     });
   }, []);
 
+  // FETCH ACCOUNT REQUESTS
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/account-requests") 
+      .get("http://localhost:8080/getAccountReq") 
       .then((res) => {
-        setAccountRequests(res.data);
-        setFilteredRequests(res.data); 
+        setAccountRequests(res.data.accReq);
+        setFilteredRequests(res.data.accReq); 
       })
       .catch((err) => {
         console.warn("Error fetching account requests, using example data:", err);
@@ -52,7 +47,7 @@ function AccountRequest() {
       setFilteredRequests(accountRequests);
     } else {
       setFilteredRequests(
-        accountRequests.filter((request) => request.type === filterType)
+        accountRequests.filter((request) => request.AccountType === filterType)
       );
     }
   }, [filterType, accountRequests]);
@@ -104,13 +99,15 @@ function AccountRequest() {
           >
             <option value="All">All</option>
             <option value="Freshman">Freshman</option>
+            <option value="Regular">Regular</option>
+            <option value="Irregular">Irregular</option>
+            <option value="Shiftee">Shiftee</option>
+            <option value="Transferee">Transferee</option>
             <option value="Society Officer">Society Officer</option>
             <option value="DCS Head">DCS Head</option>
             <option value="Adviser">Adviser</option>
             <option value="School Head">School Head</option>
-            <option value="Enrollment Officer">Enrollment Officer</option>
-            <option value="Regular">Regular</option>
-            <option value="Irregular">Irregular</option>
+            <option value="Enrollment Officer">Enrollment Officer</option>            
           </select>
         </div>
 
@@ -129,9 +126,9 @@ function AccountRequest() {
   {filteredRequests.length > 0 ? (
     filteredRequests.map((request) => (
       <tr key={request.id} onClick={() => handleRowClick(request)}>
-        <td data-label="Name">{request.name}</td>
-        <td data-label="Email">{request.email}</td>
-        <td data-label="Account Type">{request.type}</td>
+        <td data-label="Name">{request.Name}</td>
+        <td data-label="Email">{request.Email}</td>
+        <td data-label="Account Type">{request.AccountType}</td>
         <td>
           <button
             className={styles.approveButton}
@@ -174,9 +171,9 @@ function AccountRequest() {
                 <span>DETAILS</span>
             </div>
             <div className={styles.popupText}>
-      <p><strong>Name:</strong> {selectedRequest.name}</p>
-      <p><strong>Email:</strong> {selectedRequest.email}</p>
-      <p><strong>Account Type:</strong> {selectedRequest.type}</p>
+      <p><strong>Name:</strong> {selectedRequest.Name}</p>
+      <p><strong>Email:</strong> {selectedRequest.Email}</p>
+      <p><strong>Account Type:</strong> {selectedRequest.AccountType}</p>
       <p><strong>Address:</strong> {selectedRequest.address}</p>
       <p><strong>Phone:</strong> {selectedRequest.phone}</p>
       </div>

@@ -31,23 +31,56 @@ const db = mysql.createConnection({
     database: 'cvsuenrollmentsystem'
 })
 
+// FETCH ACCOUNT REQUESTS
 app.get('/getAccountReq', (req, res) => {
     const sql = `
-        SELECT s.Firstname, s.Middlename, s.Lastname, s.Email, r.RegStatus,
-               CASE 
-                   WHEN s.StudentType IN ('Regular', 'Irregular', 'Shiftee', 'Freshman', 'Transferee') THEN s.StudentType
-                        ELSE NULL
-                   WHEN e.EmpJobRole = 'employee' THEN 
-                       CASE 
-                           WHEN e.EmpJobRole IN ('DCS Head', 'School Head', 'Enrollment Officer', 'Adviser') THEN r.EmpJobRole
-                           ELSE NULL
-                       END
-                   ELSE NULL
-               END AS AccountRole
-        FROM student s
-        CROSS JOIN employee e
-        CROSS JOIN societyofficer so
-        WHERE di ko alam`;
+        SELECT CONCAT(Firstname, ' ', Lastname) AS Name, Email, StudentType AS AccountType FROM student WHERE RegStatus = 'Pending'
+        UNION
+        SELECT CONCAT(Firstname, ' ', Lastname) AS Name, Email, EmpJobRole AS AccountType FROM employee WHERE RegStatus = 'Pending'
+        UNION
+        SELECT CONCAT(Firstname, ' ', Lastname) AS Name, Email, 'Society Officer' AS AccountType
+        FROM societyofficer WHERE RegStatus = 'Pending'`;
+
+    db.query(sql, (err, result) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else {
+            return res.json({
+                accReq: result
+            })
+        }
+    })
+})
+
+//FETCH TOTAL NUMBER OF PENDING ACCOUNT REQUESTS
+app.get('/pendingAccounts', (req, res) => {
+    const studentQuery = `SELECT COUNT(*) AS studentCount from student WHERE RegStatus = 'Pending'`;
+    const socOfficerQuery = `SELECT COUNT(*) AS socOfficerCount from societyofficer WHERE RegStatus = 'Pending'`;
+    const employeeQuery = `SELECT COUNT(*) AS employeeCount from employee WHERE RegStatus = 'Pending'`;
+
+    db.query(studentQuery, (err, studentResult) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else {
+            db.query(socOfficerQuery, (err, socOfficerResult) => {
+                if(err){
+                    return res.json({message: "Error in server: " + err});
+                } else {
+                    db.query(employeeQuery, (err, employeeResult) => {
+                        if(err){
+                            return res.json({message: "Error in server: " + err});
+                        } else {
+                            return res.json({
+                                studentCount: studentResult[0].studentCount,
+                                socOfficerCount: socOfficerResult[0].socOfficerCount,
+                                employeeCount: employeeResult[0].employeeCount
+                            })
+                        }
+                    })
+                }
+            })
+        }
+    })
 })
 
 app.get('/programs', (req, res) => {
@@ -337,23 +370,24 @@ app.post('/SignUp', (req, res) => {
 
 //LOGOUT
 app.post("/logoutFunction", (req, res) => {
-    if (req.session.id) {
+    if (req.session) {
         req.session.destroy((err) => {
             if (err) {
                 console.error("Error destroying session:", err);
-                return res.json({ message: "Logout failed." });
+                return res.json({ valid: false, message: "Logout failed." });
             }
-            res.clearCookie('connect.sid');
-            return res.json({ message: "Logout successful." });
+            res.clearCookie("connect.sid"); // Ensure session cookie is removed
+            return res.json({ valid: false, message: "Logout successful." });
         });
     } else {
-        return res.json({ message: "No active session." });
+        return res.json({ valid: false, message: "No active session." });
     }
-})
+});
+
 
 //LOGIN
 app.get('/', (req, res) => {
-    if (req.session.id) {
+    if (req.session && req.session.accountID) {
         return res.json({ valid: true, accountID: req.session.accountID , name: req.session.name, role: req.session.role })
     } else {
         return res.json({ valid: false })
@@ -381,7 +415,7 @@ app.post('/LoginPage', (req, res) => {
                 message: 'Login successful',
                 role: req.session.role,
                 email: user.Email,
-                accountID: req.session.id,
+                accountID: req.session.accountID,
                 status: user.Status,
                 isLoggedIn: true,
                 name: req.session.name

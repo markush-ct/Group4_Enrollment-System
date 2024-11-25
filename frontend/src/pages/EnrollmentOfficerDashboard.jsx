@@ -24,12 +24,25 @@ function EnrollmentOfficerDashboard() {
   const navigate = useNavigate();
   const [CScount, setCScount] = useState(0);
   const [ITcount, setITcount] = useState(0);
+  const [pendingAcc, setPendingAcc] = useState(0);
 
 
   useEffect(() => {
     document.body.style.overflow = SideBar ? "hidden" : "auto";
     return () => (document.body.style.overflow = "auto");
   }, [SideBar]);
+
+  //FETCH TOTAL NUMBER OF PENDING ACCOUNT REQUESTS
+  useEffect(() => {
+    axios.get("http://localhost:8080/pendingAccounts")
+    .then((res) => {
+      const totalPendingAcc = res.data.studentCount + res.data.socOfficerCount + res.data.employeeCount
+      setPendingAcc(totalPendingAcc);
+    })
+    .catch((err) => {
+      alert("Error occurred: " + err);
+    })
+  })
 
 
   axios.defaults.withCredentials = true;
@@ -48,7 +61,7 @@ function EnrollmentOfficerDashboard() {
       .catch((err) => {
         console.error("Error validating user session:", err);
       });
-  }, [navigate]);
+  }, []);
 
   // LINE CHART 
   const lineData = useMemo(
@@ -148,7 +161,7 @@ function EnrollmentOfficerDashboard() {
         <div className={styles.dashboardCards}>
   <div className={styles.dashboardCard}>
     <h3>Total Enrolled</h3>
-    <p className={styles.cardNumber}>890</p>
+    <p className={styles.cardNumber}>{ITcount + CScount}</p>
     <p className={styles.cardDetails}>
       +18% <span>+3.8k this week</span>
     </p>
@@ -161,8 +174,8 @@ function EnrollmentOfficerDashboard() {
     </p>
   </div>
   <div className={styles.dashboardCard}>
-    <h3>Pending Application</h3>
-    <p className={styles.cardNumber}>567</p>
+    <h3>Pending Accounts</h3>
+    <p className={styles.cardNumber}>{pendingAcc}</p>
     <p className={styles.cardDetails}>
       +18% <span>+7.8k this week</span>
     </p>

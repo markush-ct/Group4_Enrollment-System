@@ -11,19 +11,6 @@ function AdminDashHeader() {
     const navigate = useNavigate();
     const [accName, setAccName] = useState('');
 
-    axios.defaults.withCredentials = true;
-    useEffect(() => {
-        axios.get('http://localhost:8080')
-            .then(res => {
-                if (res.data.valid) {
-                    setAccName(res.data.name);
-                } else {
-                    navigate('/LoginPage');
-                }
-            })
-            .catch(err => console.log(err))
-    }, []);
-
     const toggleSidebar = () => {
         setIsSidebarOpen(prevState => !prevState);
     };
