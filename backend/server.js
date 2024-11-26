@@ -4,7 +4,12 @@ import cors from 'cors'
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+import crypto from 'crypto';
+import nodemailer from 'nodemailer';
 
+
+dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors({
@@ -31,6 +36,7 @@ const db = mysql.createConnection({
     database: 'cvsuenrollmentsystem'
 })
 
+
 // FETCH ACCOUNT REQUESTS
 app.get('/getAccountReq', (req, res) => {
     const sql = `
@@ -42,15 +48,13 @@ app.get('/getAccountReq', (req, res) => {
         FROM societyofficer WHERE RegStatus = 'Pending'`;
 
     db.query(sql, (err, result) => {
-        if(err){
-            return res.json({message: "Error in server: " + err});
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
         } else {
-            return res.json({
-                accReq: result
-            })
+            return res.json({ accReq: result });
         }
-    })
-})
+    });
+});
 
 //FETCH TOTAL NUMBER OF PENDING ACCOUNT REQUESTS
 app.get('/pendingAccounts', (req, res) => {

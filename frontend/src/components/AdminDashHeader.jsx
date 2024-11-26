@@ -11,6 +11,24 @@ function AdminDashHeader() {
     const navigate = useNavigate();
     const [accName, setAccName] = useState('');
 
+    axios.defaults.withCredentials = true;
+  //RETURNING ACCOUNT NAME IF LOGGED IN
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080")
+      .then((res) => {
+        if (res.data.valid) {
+          setAccName(res.data.name);
+        } else {
+          navigate("/LoginPage");
+        }
+      })
+      //RETURNING ERROR IF NOT
+      .catch((err) => {
+        console.error("Error validating user session:", err);
+      });
+  }, []);
+
     const toggleSidebar = () => {
         setIsSidebarOpen(prevState => !prevState);
     };

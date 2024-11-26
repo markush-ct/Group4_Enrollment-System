@@ -7,11 +7,30 @@ import styles from '/src/styles/AccountRequest.module.css';
 
 function AccountRequest() {
   const [SideBar, setSideBar] = useState(false);
+  const [accName, setAccName] = useState("");
   const [accountRequests, setAccountRequests] = useState([]);
   const [filteredRequests, setFilteredRequests] = useState(accountRequests);
   const [filterType, setFilterType] = useState("All");
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [popUpVisible, setPopUpVisible] = useState(false);
+
+  axios.defaults.withCredentials = true;
+  //RETURNING ACCOUNT NAME IF LOGGED IN
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080")
+      .then((res) => {
+        if (res.data.valid) {
+          setAccName(res.data.name);
+        } else {
+          navigate("/LoginPage");
+        }
+      })
+      //RETURNING ERROR IF NOT
+      .catch((err) => {
+        console.error("Error validating user session:", err);
+      });
+  }, []);
 
   useEffect(() => {
     document.body.style.overflow = SideBar ? "hidden" : "auto";
@@ -79,13 +98,14 @@ function AccountRequest() {
   }, [filterType, accountRequests]);
 
   //request
-  const handleApprove = (id) => {
-    const updatedRequests = accountRequests.map((request) =>
-      request.id === id ? { ...request, status: "Approved" } : request
-    );
-    setAccountRequests(updatedRequests);
-    setFilteredRequests(updatedRequests);
-  };
+const handleApprove = (id) => {
+  const updatedRequests = accountRequests.map((request) =>
+    request.id === id ? { ...request, status: "Approved" } : request
+  );
+  setAccountRequests(updatedRequests);
+  setFilteredRequests(updatedRequests);
+};
+
 
   const handleReject = (id) => {
 
@@ -105,6 +125,8 @@ function AccountRequest() {
     setPopUpVisible(false);
     setSelectedRequest(null);
   };
+
+
 
   return (
     <>
