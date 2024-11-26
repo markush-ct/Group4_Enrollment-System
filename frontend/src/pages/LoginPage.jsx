@@ -178,7 +178,7 @@ function LoginPage() {
                                 <input type="checkbox" name="remember" title='Remember my username for next time' />
                                 Remember Me
                             </label>
-                            <a href="/forgot-password" className={styles.forgotPassword}>Forgot Password?</a>
+                            <Link to='/ForgotPass' className={styles.forgotPassword}>Forgot Password?</Link>
                         </div>
 
                         {error && <p className={styles.errorMessage}>{error}</p>}

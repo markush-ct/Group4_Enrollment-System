@@ -17,6 +17,7 @@ import SchoolHeadDashboard from './pages/SchoolHeadDashboard.jsx';
 import SignUp from './pages/SignUp.jsx'
 import CreateAcc from './pages/CreateAcc.jsx'
 import AccountRequest from './pages/AccountRequest.jsx'
+import ForgotPass from './pages/ForgotPass.jsx'
 
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
         <Route path="/SignUp" element={<SignUp />} />
         <Route path="/CreateAcc" element={<CreateAcc />} />
         <Route path="/AccountRequest" element={<AccountRequest />} />
+        <Route path="/ForgotPass" element={<ForgotPass />} />
         {/* Add other routes as needed */}
       </Routes>
     </Router>

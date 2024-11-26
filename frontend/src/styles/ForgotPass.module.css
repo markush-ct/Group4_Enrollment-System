@@ -1,0 +1,175 @@
+* {
+    font-family: poppins reg;
+    src: url(../assets/Poppins/Poppins-Regular.ttf);
+}
+
+
+.mainPage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f9f9f9;
+  }
+  
+  .resetContainer {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+  }
+  
+  .lockIcon {
+    margin-bottom: 1rem;
+    background-color: transparent;
+  }
+  
+  .lockIcon img {
+    width: 60px;
+  }
+  
+  .resetContainer h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+    background-color: transparent;
+  }
+  
+  .resetContainer p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+    background-color: transparent;
+  }
+  
+  .inputField {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .resetButton {
+    position: relative; 
+    background-color: #d0943d;
+    color: white;
+    border: none;
+    padding: 0.8rem 1rem;
+    border-radius: 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    overflow: hidden; 
+    width: 100%;
+    transition: transform 0.3s ease, color 0.3s ease; 
+    z-index: 1; 
+  }
+  
+  .resetButton span {
+    position: relative;
+    z-index: 2; 
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: transparent;
+  }
+  
+  .resetButton::before {
+    content: ''; 
+    position: absolute;
+    top: 0;
+    left: -100%; 
+    width: 100%;
+    height: 100%;
+    background-color: #3d8c4b; 
+    transition: left 0.3s ease; 
+    z-index: 0; 
+  }
+  
+  .resetButton:hover::before {
+    left: 0; 
+  }
+  
+  .resetButton:hover {
+    color: white; 
+    transform: scale(1.02); 
+  }
+  
+
+  .backToLogin {
+    margin-top: 1rem;
+  }
+  
+  .backToLogin a {
+    font-size: 1rem;
+    color: #3d8c4b;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .backToLogin a:hover {
+    color: #296e35; 
+  }
+  
+/* MOBILE */
+  @media screen and (max-width: 768px) {
+    .resetContainer {
+      padding: 1.5rem;
+      max-width: 90%; 
+    }
+  
+    .lockIcon img {
+      width: 50px; 
+    }
+  
+    .resetContainer h2 {
+      font-size: 1.25rem; 
+    }
+  
+    .resetContainer p {
+      font-size: 0.85rem; 
+    }
+  
+    .inputField {
+      font-size: 0.85rem; 
+      padding: 0.7rem;
+    }
+  
+    .resetButton {
+      font-size: 1rem; 
+      padding: 0.7rem 1rem; 
+    }
+  
+    .backToLogin a {
+      font-size: 0.9rem; 
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    .resetContainer {
+      padding: 1rem;
+    }
+  
+    .resetContainer h2 {
+      font-size: 1.1rem; 
+    }
+  
+    .resetContainer p {
+      font-size: 1rem; 
+    }
+  
+    .resetButton {
+      font-size: 1rem;
+      padding: 0.6rem 0.9rem;
+    }
+  
+    .backToLogin a {
+      font-size: 1rem; 
+    }
+  }
+  
