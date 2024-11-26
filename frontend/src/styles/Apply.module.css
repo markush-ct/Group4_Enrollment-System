@@ -116,6 +116,8 @@
     height: 30px;
 }
 
+
+
 .popup {
     position: fixed; 
     top: 0;
@@ -127,6 +129,10 @@
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.7); 
     z-index: 2000;
+}
+
+.popup a{
+    color: blue;
 }
 
 .popupContent {
