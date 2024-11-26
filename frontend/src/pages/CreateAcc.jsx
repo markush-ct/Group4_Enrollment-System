@@ -189,13 +189,13 @@ function CreateAcc() {
                             <input type="text" name='lastname' value={values.lastname} onChange={(e) => setValues({ ...values, lastname: e.target.value })} required />
 
                             <label>Student ID <span className={styles.required}>*</span></label>
-                            <input type="text" name='studentID' value={values.studentID} onChange={(e) => setValues({ ...values, studentID: e.target.value })} required />
+                            <input type="tel" name='studentID' value={values.studentID} onChange={(e) => setValues({ ...values, studentID: e.target.value })} required />
 
                             <label>CvSU Email <span className={styles.required}>*</span></label>
                             <input type="email" name='email' value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} required />
 
                             <label>Phone Number <span className={styles.required}>*</span></label>
-                            <input type="text" name='contactnum' value={values.contactnum} onChange={(e) => setValues({ ...values, contactnum: e.target.value })} required />
+                            <input type="tel" name='contactnum' value={values.contactnum} onChange={(e) => setValues({ ...values, contactnum: e.target.value })} required />
 
                             <label>Program <span className={styles.required}>*</span></label>
                             <select name='program' value={values.program} onChange={(e) => setValues({ ...values, program: e.target.value })} required >
@@ -231,7 +231,7 @@ function CreateAcc() {
                             <input type="email" name='email' value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} required />
 
                             <label>Phone Number <span className={styles.required}>*</span></label>
-                            <input type="text" name='contactnum' value={values.contactnum} onChange={(e) => setValues({ ...values, contactnum: e.target.value })} required />
+                            <input type="tel" name='contactnum' value={values.contactnum} onChange={(e) => setValues({ ...values, contactnum: e.target.value })} required />
 
                             <label>Program <span className={styles.required}>*</span></label>
                             <select name='program' value={values.program} onChange={(e) => setValues({ ...values, program: e.target.value })} required >
@@ -302,13 +302,13 @@ function CreateAcc() {
                             <input type="text" name='lastname' value={values.lastname} onChange={(e) => setValues({ ...values, lastname: e.target.value })} required />
 
                             <label>Employee ID <span className={styles.required}>*</span></label>
-                            <input type="text" name='employeeID' value={values.employeeID} onChange={(e) => setValues({ ...values, employeeID: e.target.value })} required />
+                            <input type="tel" name='employeeID' value={values.employeeID} onChange={(e) => setValues({ ...values, employeeID: e.target.value })} required />
 
                             <label>CvSU Email <span className={styles.required}>*</span></label>
                             <input type="email" name='email' value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} required />
 
                             <label>Phone Number <span className={styles.required}>*</span></label>
-                            <input type="text" name='contactnum' value={values.contactnum} onChange={(e) => setValues({ ...values, contactnum: e.target.value })} required />
+                            <input type="tel" name='contactnum' value={values.contactnum} onChange={(e) => setValues({ ...values, contactnum: e.target.value })} required />
 
                             <label>Job/Role <span className={styles.required}>*</span></label>
                             <select name='position' value={values.position} onChange={(e) => setValues({ ...values, position: e.target.value })} required>

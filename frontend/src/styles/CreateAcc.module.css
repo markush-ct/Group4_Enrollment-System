@@ -114,7 +114,7 @@
     font-weight: bold;
 }
 
-.formGroup input[type="text"] {
+.formGroup input[type="text"], .formGroup input[type="tel"]{
     width: 100%;
     padding: 8px;
     margin-bottom: 10px;

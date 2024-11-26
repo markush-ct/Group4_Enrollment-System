@@ -197,7 +197,7 @@ function SignUp() {
                             <input type="email" name='email' value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} required />
 
                             <label>Contact Number <span className={styles.required}>*</span></label>
-                            <input type="text" name='contactnum' value={values.contactnum} onChange={(e) => setValues({ ...values, contactnum: e.target.value })} required />
+                            <input type="tel" name='contactnum' value={values.contactnum} onChange={(e) => setValues({ ...values, contactnum: e.target.value })} required />
 
                             <label>Academic Preference <span className={styles.required}>*</span></label>
                             <select name='preferredProgram' value={values.preferredProgram} onChange={(e) => setValues({ ...values, preferredProgram: e.target.value })} required >
@@ -229,7 +229,7 @@ function SignUp() {
                             <input type="email" name='email' value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} required />
 
                             <label>Contact Number <span className={styles.required}>*</span></label>
-                            <input type="text" name='contactnum' value={values.contactnum} onChange={(e) => setValues({ ...values, contactnum: e.target.value })} required />
+                            <input type="tel" name='contactnum' value={values.contactnum} onChange={(e) => setValues({ ...values, contactnum: e.target.value })} required />
 
                             <label>Academic Preference <span className={styles.required}>*</span></label>
                             <select name='preferredProgram' value={values.preferredProgram} onChange={(e) => setValues({ ...values, preferredProgram: e.target.value })} required >
@@ -255,7 +255,7 @@ function SignUp() {
                             <input type="text" name='lastname' value={values.lastname} onChange={(e) => setValues({ ...values, lastname: e.target.value })} required />
 
                             <label>Student ID <span className={styles.required}>*</span></label>
-                            <input type="text" value={values.studentID} onChange={(e) => setValues({ ...values, studentID: e.target.value })} required />
+                            <input type="tel" value={values.studentID} onChange={(e) => setValues({ ...values, studentID: e.target.value })} required />
 
                             <label>Previous Program <span className={styles.required}>*</span></label>
                             <select name="prevProgram" value={values.prevProgram} onChange={(e) => setValues({ ...values, prevProgram: e.target.value })} required >
@@ -279,6 +279,9 @@ function SignUp() {
 
                             <label>CvSU Email <span className={styles.required}>*</span></label>
                             <input type="email" value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} required />
+
+                            <label>Contact Number <span className={styles.required}>*</span></label>
+                            <input type="tel" name='contactnum' value={values.contactnum} onChange={(e) => setValues({ ...values, contactnum: e.target.value })} required />
 
                             <label>Academic Preference <span className={styles.required}>*</span></label>
                             <select name='preferredProgram' onChange={(e) => setValues({ ...values, preferredProgram: e.target.value })} value={values.preferredProgram} required>

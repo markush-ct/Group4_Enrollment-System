@@ -34,11 +34,11 @@ const db = mysql.createConnection({
 // FETCH ACCOUNT REQUESTS
 app.get('/getAccountReq', (req, res) => {
     const sql = `
-        SELECT CONCAT(Firstname, ' ', Lastname) AS Name, Email, StudentType AS AccountType FROM student WHERE RegStatus = 'Pending'
+        SELECT CONCAT(Firstname, ' ', Lastname) AS Name, ProgramID, CvSUStudentID as ID, Email, PhoneNo, StudentType AS AccountType FROM student WHERE RegStatus = 'Pending'
         UNION
-        SELECT CONCAT(Firstname, ' ', Lastname) AS Name, Email, EmpJobRole AS AccountType FROM employee WHERE RegStatus = 'Pending'
+        SELECT CONCAT(Firstname, ' ', Lastname) AS Name, ProgramID, EmployeeID as ID, Email, PhoneNo, EmpJobRole AS AccountType FROM employee WHERE RegStatus = 'Pending'
         UNION
-        SELECT CONCAT(Firstname, ' ', Lastname) AS Name, Email, 'Society Officer' AS AccountType
+        SELECT CONCAT(Firstname, ' ', Lastname) AS Name, ProgramID, SocietyOfficerID as ID, Email, PhoneNo, Position AS AccountType
         FROM societyofficer WHERE RegStatus = 'Pending'`;
 
     db.query(sql, (err, result) => {
@@ -338,8 +338,8 @@ app.post('/SignUp', (req, res) => {
                     if (result.length >= 1) {
                         return res.json({ message: "Student ID exists" })
                     } else {
-                        const query2 = `INSERT INTO student (StudentType, Firstname, Middlename, Lastname, CvSUStudentID, PrevProgram, Year, Email, ProgramID)
-                                        VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                        const query2 = `INSERT INTO student (StudentType, Firstname, Middlename, Lastname, CvSUStudentID, PrevProgram, Year, Email, PhoneNo, ProgramID)
+                                        VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
                         const values2 = [
                             applicantType,
                             req.body.firstname,
@@ -349,6 +349,7 @@ app.post('/SignUp', (req, res) => {
                             req.body.prevProgram,
                             req.body.year,
                             req.body.email,
+                            req.body.contactnum,
                             req.body.preferredProgram
                         ]
 

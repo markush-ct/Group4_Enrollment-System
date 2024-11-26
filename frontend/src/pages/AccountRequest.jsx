@@ -30,14 +30,14 @@ function AccountRequest() {
   // FETCH ACCOUNT REQUESTS
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getAccountReq") 
+      .get("http://localhost:8080/getAccountReq")
       .then((res) => {
         setAccountRequests(res.data.accReq);
-        setFilteredRequests(res.data.accReq); 
+        setFilteredRequests(res.data.accReq);
       })
       .catch((err) => {
         console.warn("Error fetching account requests, using example data:", err);
-        setFilteredRequests(accountRequests); 
+        setFilteredRequests(accountRequests);
       });
   }, []);
 
@@ -45,7 +45,33 @@ function AccountRequest() {
   useEffect(() => {
     if (filterType === "All") {
       setFilteredRequests(accountRequests);
-    } else {
+    } else if (filterType === "Society Officer") {
+      setFilteredRequests(
+        accountRequests.filter(
+          (request) =>
+            ["President",
+              "Vice President",
+              "Secretary",
+              "Assistant Secretary",
+              "Treasurer",
+              "Assistant Treasurer",
+              "Business Manager",
+              "Auditor",
+              "P.R.O.",
+              "Assistant P.R.O.",
+              "GAD Representative",
+              "1st Year Senator",
+              "2nd Year Senator",
+              "3rd Year Senator",
+              "4th Year Senator",
+              "1st Year Chairperson",
+              "2nd Year Chairperson",
+              "3rd Year Chairperson",
+              "4th Year Chairperson"].includes(request.AccountType)
+        )
+      );
+    }
+    else {
       setFilteredRequests(
         accountRequests.filter((request) => request.AccountType === filterType)
       );
@@ -107,7 +133,7 @@ function AccountRequest() {
             <option value="DCS Head">DCS Head</option>
             <option value="Adviser">Adviser</option>
             <option value="School Head">School Head</option>
-            <option value="Enrollment Officer">Enrollment Officer</option>            
+            <option value="Enrollment Officer">Enrollment Officer</option>
           </select>
         </div>
 
@@ -116,43 +142,43 @@ function AccountRequest() {
           <table className={styles.requestsTable}>
             <thead>
               <tr>
-                <th>Name</th> 
+                <th>Name</th>
                 <th>Email</th>
                 <th>Account Type</th>
                 <th>Options</th>
               </tr>
             </thead>
             <tbody>
-  {filteredRequests.length > 0 ? (
-    filteredRequests.map((request) => (
-      <tr key={request.id} onClick={() => handleRowClick(request)}>
-        <td data-label="Name">{request.Name}</td>
-        <td data-label="Email">{request.Email}</td>
-        <td data-label="Account Type">{request.AccountType}</td>
-        <td>
-          <button
-            className={styles.approveButton}
-            onClick={(e) => { e.stopPropagation(); handleApprove(request.id); }}
-          >
-            Approve
-          </button>
-          <button
-            className={styles.rejectButton}
-            onClick={(e) => { e.stopPropagation(); handleReject(request.id); }}
-          >
-            Reject
-          </button>
-        </td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan="4" className={styles.noData}>
-        No account requests found.
-      </td>
-    </tr>
-  )}
-</tbody>
+              {filteredRequests.length > 0 ? (
+                filteredRequests.map((request) => (
+                  <tr key={request.id} onClick={() => handleRowClick(request)}>
+                    <td data-label="Name">{request.Name}</td>
+                    <td data-label="Email">{request.Email}</td>
+                    <td data-label="Account Type">{request.AccountType}</td>
+                    <td>
+                      <button
+                        className={styles.approveButton}
+                        onClick={(e) => { e.stopPropagation(); handleApprove(request.id); }}
+                      >
+                        Approve
+                      </button>
+                      <button
+                        className={styles.rejectButton}
+                        onClick={(e) => { e.stopPropagation(); handleReject(request.id); }}
+                      >
+                        Reject
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className={styles.noData}>
+                    No account requests found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
 
 
           </table>
@@ -160,52 +186,125 @@ function AccountRequest() {
       </div>
 
       {/* PopUp */}
-{popUpVisible && selectedRequest && (
-  <div data-aos="zoom-out" data-aos-duration="500" className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}>
-    <div className={styles.popupContent}>
-      <div className={styles.popupHeader}>
-        <button onClick={closePopup} className={styles.closeButton}>✖</button>
-        <h2>Request Account</h2>
-      </div>
-      <div data-aos="fade-up" className={styles.studentType}>
-                <span>DETAILS</span>
+      {popUpVisible && selectedRequest && (
+        <div data-aos="zoom-out" data-aos-duration="500" className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}>
+          <div className={styles.popupContent}>
+            <div className={styles.popupHeader}>
+              <button onClick={closePopup} className={styles.closeButton}>✖</button>
+              <h2>Request Account</h2>
             </div>
-            <div className={styles.popupText}>
-      <p><strong>Name:</strong> {selectedRequest.Name}</p>
-      <p><strong>Email:</strong> {selectedRequest.Email}</p>
-      <p><strong>Account Type:</strong> {selectedRequest.AccountType}</p>
-      <p><strong>Address:</strong> {selectedRequest.address}</p>
-      <p><strong>Phone:</strong> {selectedRequest.phone}</p>
-      </div>
-      
+            <div data-aos="fade-up" className={styles.studentType}>
+              <span>DETAILS</span>
+            </div>
+            {(selectedRequest.AccountType === "Freshman" || selectedRequest.AccountType === "Transferee") && (
+              <div className={styles.popupText}>
+                <p><strong>Account Type:</strong> {selectedRequest.AccountType}</p>
+                <p><strong>Name:</strong> {selectedRequest.Name}</p>
+                <p><strong>Email:</strong> {selectedRequest.Email}</p>
+                <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
+              </div>
+            )}
 
-      {/* Approve and Reject Buttons */}
-      <div className={styles.popupButtons}>
-        <button
-          className={styles.approveButton}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleApprove(selectedRequest.id); // Pass selectedRequest.id
-            closePopup(); // Close the popup after action
-          }}
-        >
-          Approve
-        </button>
-        <button
-          className={styles.rejectButton}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleReject(selectedRequest.id); // Pass selectedRequest.id
-            closePopup(); // Close the popup after action
-          }}
-        >
-          Reject
-        </button>
-  
-      </div>
-    </div>
-  </div>
-)}
+            {(selectedRequest.AccountType === "Regular" || selectedRequest.AccountType === "Irregular") && (
+              <div className={styles.popupText}>
+                <p><strong>Account Type:</strong> {selectedRequest.AccountType}</p>
+                <p><strong>Student ID:</strong> {selectedRequest.ID}</p>
+                <p><strong>Program:</strong> {selectedRequest.ProgramID === 1 ? 'Bachelor of Science in Computer Science' : 'Bachelor of Science in Information Technology'}</p>
+                <p><strong>Name:</strong> {selectedRequest.Name}</p>
+                <p><strong>Email:</strong> {selectedRequest.Email}</p>
+                <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
+              </div>
+            )}
+
+            {selectedRequest.AccountType === "Shiftee" && (
+              <div className={styles.popupText}>
+                <p><strong>Account Type:</strong> {selectedRequest.AccountType}</p>
+                <p><strong>Student ID:</strong> {selectedRequest.ID}</p>
+                <p><strong>Name:</strong> {selectedRequest.Name}</p>
+                <p><strong>Email:</strong> {selectedRequest.Email}</p>
+                <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
+              </div>
+            )}
+
+            {["President",
+              "Vice President",
+              "Secretary",
+              "Assistant Secretary",
+              "Treasurer",
+              "Assistant Treasurer",
+              "Business Manager",
+              "Auditor",
+              "P.R.O.",
+              "Assistant P.R.O.",
+              "GAD Representative",
+              "1st Year Senator",
+              "2nd Year Senator",
+              "3rd Year Senator",
+              "4th Year Senator",
+              "1st Year Chairperson",
+              "2nd Year Chairperson",
+              "3rd Year Chairperson",
+              "4th Year Chairperson"].includes(selectedRequest.AccountType) && (
+              <div className={styles.popupText}>
+                <p><strong>Account Type:</strong> Society Officer</p>
+                <p><strong>Position:</strong> {selectedRequest.AccountType}</p>
+                <p><strong>Student ID:</strong> {selectedRequest.ID}</p>
+                <p><strong>Program:</strong> {selectedRequest.ProgramID === 1 ? 'Bachelor of Science in Computer Science' : 'Bachelor of Science in Information Technology'}</p>
+                <p><strong>Name:</strong> {selectedRequest.Name}</p>
+                <p><strong>Email:</strong> {selectedRequest.Email}</p>
+                <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
+              </div>
+            )}
+
+      {["Adviser", "Enrollment Officer", "School Head"].includes(selectedRequest.AccountType) && (
+              <div className={styles.popupText}>
+                <p><strong>Account Type:</strong> {selectedRequest.AccountType}</p>
+                <p><strong>Employee ID:</strong> {selectedRequest.ID}</p>
+                <p><strong>Name:</strong> {selectedRequest.Name}</p>
+                <p><strong>Email:</strong> {selectedRequest.Email}</p>
+                <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
+              </div>
+            )}
+
+{selectedRequest.AccountType === "DCS Head" && (
+              <div className={styles.popupText}>
+                <p><strong>Account Type:</strong> {selectedRequest.AccountType}</p>
+                <p><strong>Employee ID:</strong> {selectedRequest.ID}</p>
+                <p><strong>Program:</strong> {selectedRequest.ProgramID === 1 ? 'Bachelor of Science in Computer Science' : 'Bachelor of Science in Information Technology'}</p>
+                <p><strong>Name:</strong> {selectedRequest.Name}</p>
+                <p><strong>Email:</strong> {selectedRequest.Email}</p>
+                <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
+              </div>
+            )}
+
+
+            {/* Approve and Reject Buttons */}
+            <div className={styles.popupButtons}>
+              <button
+                className={styles.approveButton}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleApprove(selectedRequest.id); // Pass selectedRequest.id
+                  closePopup(); // Close the popup after action
+                }}
+              >
+                Approve
+              </button>
+              <button
+                className={styles.rejectButton}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleReject(selectedRequest.id); // Pass selectedRequest.id
+                  closePopup(); // Close the popup after action
+                }}
+              >
+                Reject
+              </button>
+
+            </div>
+          </div>
+        </div>
+      )}
 
     </>
   );
