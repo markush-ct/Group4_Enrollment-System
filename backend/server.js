@@ -7,6 +7,7 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
+import { report } from 'process';
 
 
 dotenv.config();
@@ -37,6 +38,20 @@ const db = mysql.createConnection({
 })
 
 
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'gerlyntan07@gmail.com', // Sender email
+        pass: 'sgpd rzwu zhna gbua' // Sender App Password
+    }
+    
+});
+
+//GENERATE RANDOM PASSWORD FOR TEMPORARY ACCOUNT
+function generateRandomPassword(length = 8) {
+    return crypto.randomBytes(length).toString('base64').slice(0, length);
+  }
+
 // FETCH ACCOUNT REQUESTS
 app.get('/getAccountReq', (req, res) => {
     const sql = `
@@ -55,6 +70,342 @@ app.get('/getAccountReq', (req, res) => {
         }
     });
 });
+
+//SEND ACCOUNT REJECTION
+app.post('/sendEmailRejection', async (req, res) => {
+    const { email, name } = req.body;
+
+    if (!email || !name) {
+        console.error('Missing email or name:', req.body);
+        return res.status(400).json({ message: 'Email and name are required.' });
+    }
+
+    const emailBody = `
+    Hello ${name},
+
+    Unfortunately, account request for ${email} has been rejected. 
+
+    Best regards,
+    CvSU Enrollment Officer
+  `;
+
+    const mailOptions = {
+        from: 'gerlyntan07@gmail.com',
+        to: email,
+        subject: 'Account Rejection Notification',
+        text: emailBody,
+    };
+
+
+    try {
+        console.log('Sending email to:', email);
+        await transporter.sendMail(mailOptions);
+        console.log('Email sent successfully');
+        res.json({ message: 'Email sent successfully' });
+    } catch (error) {
+        console.error('Error in /sendApprovalEmail:', error);
+        res.status(500).json({
+            message: 'Internal Server Error',
+            error: error.message,
+        });
+    }
+});
+
+//SEND ACCOUNT APPROVAL
+app.post('/sendApprovalEmail', async (req, res) => {
+    console.log('Received data:', req.body);
+
+
+    const { email, name, accountType} = req.body;
+
+    if (!email || !name || !accountType) {
+        console.error('Missing email or name:', req.body);
+        return res.status(400).json({ message: 'Email and name are required.' });
+    }
+
+    const tempPassword = generateRandomPassword(8);
+
+    const emailBody = `
+    Hello ${name},
+
+    Your account has been approved! 
+    Please use the following temporary password to log in:
+
+    Email: ${email}
+    Temporary Password: ${tempPassword}
+
+    After logging in, please change your password as soon as possible.
+
+    Best regards,
+    CvSU Enrollment Officer
+  `;
+
+    const mailOptions = {
+        from: 'gerlyntan07@gmail.com',
+        to: email,
+        subject: 'Account Approval Notification',
+        text: emailBody,
+    };
+
+
+    try {
+        console.log('Sending email to:', email, "With account type of: ", accountType);
+        await transporter.sendMail(mailOptions);
+        console.log('Email sent successfully');
+
+        //QUERY FOR CREATING THE ACCOUNT IN ACCOUNT TABLE
+        const createAcc = `INSERT INTO account (Name, Email, Password, Role, Status)
+                            VALUES (?,?,?,?,?)`;
+
+        if (["Regular", "Irregular"].includes(accountType)){
+            const updateQuery = `UPDATE student SET StdStatus = 'Active', RegStatus = 'Accepted'`;
+            db.query(updateQuery, (err, result) => {
+                if(err){
+                    return res.json({message: "Error in server" + err});
+                } else if(result.affectedRows > 0){
+                    const values = [
+                        name,
+                        email,
+                        tempPassword,
+                        "Student",
+                        "Active"
+                    ];
+                    db.query(createAcc, values, (err, result) => {
+                        if(err){
+                            return res.json({message: "Error in server" + err});
+                        } else if (result.affectedRows > 0){
+                            return res.json({message: "Account saved"});
+                        }
+                    })
+                }
+            })
+        } else if (accountType === "Freshman"){
+            const updateQuery = `UPDATE student SET StdStatus = 'Active', RegStatus = 'Accepted'`;
+            db.query(updateQuery, (err, result) => {
+                if(err){
+                    return res.json({message: "Error in server" + err});
+                } else if(result.affectedRows > 0){
+                    const values = [
+                        name,
+                        email,
+                        tempPassword,
+                        "Student",
+                        "Active"
+                    ];
+                    db.query(createAcc, values, (err, result) => {
+                        if(err){
+                            return res.json({message: "Error in server" + err});
+                        } else if (result.affectedRows > 0){
+                            const studentIDQuery = `SELECT StudentID, LastSchoolAttended FROM student WHERE Email = ?`;
+
+                            db.query(studentIDQuery, email, (err, result) => {
+                                if(err){
+                                    return res.json({message: "Error in server" + err});
+                                } else if(result.length > 0){
+                                    const studentID = result[0].StudentID;
+                                    const shsSchool = result[0].LastSchoolAttended;
+                                    const randomControlNums = Array.from({ length: 5 }, () => crypto.randomBytes(1)[0] % 10)
+                                                           .map(num => num.toString().padStart(1, '0')) 
+                                                           .join('');
+
+                                    const insertQuery = `INSERT INTO admissionform (StudentID, Branch, ExamControlNo, SHSchoolName, AdmissionStatus)
+                                                        VALUES(?,?,?,?,?)`;
+                                    const values = [
+                                        studentID,
+                                        "CvSU - Bacoor",
+                                        randomControlNums,
+                                        shsSchool,
+                                        "Pending"
+                                    ];
+                                    
+                                    db.query(insertQuery, values, (err, result) => {
+                                        if(err){
+                                            return res.json({message: "Error in server" + err});
+                                        } else if (result.affectedRows > 0){
+                                            return res.json({message: "Account saved"});
+                                        }
+                                    })
+                                }
+                            })
+
+                        }
+                    })
+                }
+            })
+        } else if(accountType === "Transferee"){
+            const updateQuery = `UPDATE student SET StdStatus = 'Active', RegStatus = 'Accepted'`;
+            db.query(updateQuery, (err, result) => {
+                if(err){
+                    return res.json({message: "Error in server" + err});
+                } else if(result.affectedRows > 0){
+                    const values = [
+                        name,
+                        email,
+                        tempPassword,
+                        "Student",
+                        "Active"
+                    ];
+                    db.query(createAcc, values, (err, result) => {
+                        if(err){
+                            return res.json({message: "Error in server" + err});
+                        } else if (result.affectedRows > 0){
+                            const studentIDQuery = `SELECT StudentID, LastSchoolAttended FROM student WHERE Email = ?`;
+
+                            db.query(studentIDQuery, email, (err, result) => {
+                                if(err){
+                                    return res.json({message: "Error in server" + err});
+                                } else if(result.length > 0){
+                                    const studentID = result[0].StudentID;
+                                    const lastSchool = result[0].LastSchoolAttended;
+                                    const randomControlNums = Array.from({ length: 5 }, () => crypto.randomBytes(1)[0] % 10)
+                                                           .map(num => num.toString().padStart(1, '0')) 
+                                                           .join('');
+
+                                    const insertQuery = `INSERT INTO admissionform (StudentID, Branch, ExamControlNo, TransfereeCollegeSchoolName, AdmissionStatus)
+                                                        VALUES(?,?,?,?,?)`;
+                                    const values = [
+                                        studentID,
+                                        "CvSU - Bacoor",
+                                        randomControlNums,
+                                        lastSchool,
+                                        "Pending"
+                                    ];
+                                    
+                                    db.query(insertQuery, values, (err, result) => {
+                                        if(err){
+                                            return res.json({message: "Error in server" + err});
+                                        } else if (result.affectedRows > 0){
+                                            return res.json({message: "Account saved"});
+                                        }
+                                    })
+                                }
+                            })
+
+                        }
+                    })
+                }
+            })
+        } else if (accountType === "Shiftee"){
+            const updateQuery = `UPDATE student SET StdStatus = 'Active', RegStatus = 'Accepted'`;
+            db.query(updateQuery, (err, result) => {
+                if(err){
+                    return res.json({message: "Error in server" + err});
+                } else if (result.affectedRows > 0) {
+                    const values = [
+                        name,
+                        email,
+                        tempPassword,
+                        "Student",
+                        "Active"
+                    ];
+                    db.query(createAcc, values, (err, result) => {
+                        if(err){
+                            return res.json({message: "Error in server" + err});
+                        } else if (result.affectedRows > 0) {
+                            const studentIDQuery = `SELECT CvSUStudentID FROM student WHERE Email = ?`;
+                            db.query(studentIDQuery, email, (err, result) => {
+                                if(err){
+                                    return res.json({message: "Error in server" + err});
+                                } else if (result.length > 0){
+                                    const studentID = result[0].CvSUStudentID;
+
+                                    const insertQuery = `INSERT INTO shiftingform (StudentID, SchoolName, ShiftingStatus)
+                                                        VALUES(?,?,?)`;
+
+                                    const values = [
+                                        studentID,
+                                        "CvSU - Bacoor",
+                                        "Pending"
+                                    ];
+
+                                    db.query(insertQuery, values, (err, result) => {
+                                        if(err){
+                                            return res.json({message: "Error in server" + err});
+                                        } else if (result.affectedRows > 0){
+                                            return res.json({message: "Account saved"});
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+        } else if(["DCS Head", "School Head", "Adviser", "Enrollment Officer"].includes(accountType)){
+            const updateQuery = `UPDATE employee SET RegStatus = 'Accepted' WHERE Email = ?`;
+            db.query(updateQuery, email, (err, result) => {
+                if(err){
+                    return res.json({message: "Error in server" + err});
+                } else if (result.affectedRows > 0) {
+                    const values = [
+                        name,
+                        email,
+                        tempPassword,
+                        accountType,
+                        "Active"
+                    ];
+
+                    db.query(createAcc, values, (err, result) => {
+                        if(err){
+                            return res.json({message: "Error in server" + err});
+                        } else if (result.affectedRows > 0 ){
+                            return res.json({message: "Account Saved"});
+                        }
+                    })
+                }
+            })
+        } else if (["President",
+              "Vice President",
+              "Secretary",
+              "Assistant Secretary",
+              "Treasurer",
+              "Assistant Treasurer",
+              "Business Manager",
+              "Auditor",
+              "P.R.O.",
+              "Assistant P.R.O.",
+              "GAD Representative",
+              "1st Year Senator",
+              "2nd Year Senator",
+              "3rd Year Senator",
+              "4th Year Senator",
+              "1st Year Chairperson",
+              "2nd Year Chairperson",
+              "3rd Year Chairperson",
+              "4th Year Chairperson"].includes(accountType)){
+                const updateQuery = `UPDATE societyofficer SET RegStatus = 'Accepted' WHERE Email = ?`;
+                db.query(updateQuery, email, (err, result) => {
+                    if(err){
+                        return res.json({message: "Error in server" + err});
+                    } else if(result.affectedRows > 0){
+                        const values = [
+                            name,
+                            email,
+                            tempPassword,
+                            "Society Officer",
+                            "Active"
+                        ];
+
+                        db.query(createAcc, values, (err, result) => {
+                            if(err){
+                                return res.json({message: "Error in server" + err});
+                            } else if (result.affectedRows > 0 ){
+                                return res.json({message: "Account Saved"});
+                            }
+                        })
+                    }
+                })
+        }
+
+    } catch (error) {
+        console.error('Error in /sendApprovalEmail:', error);
+        res.status(500).json({
+            message: 'Internal Server Error',
+            error: error.message,
+        });
+    }
+});
+
 
 //FETCH TOTAL NUMBER OF PENDING ACCOUNT REQUESTS
 app.get('/pendingAccounts', (req, res) => {

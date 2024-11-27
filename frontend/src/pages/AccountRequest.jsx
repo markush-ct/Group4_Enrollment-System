@@ -97,21 +97,50 @@ function AccountRequest() {
     }
   }, [filterType, accountRequests]);
 
+
   //request
-const handleApprove = (id) => {
-  const updatedRequests = accountRequests.map((request) =>
-    request.id === id ? { ...request, status: "Approved" } : request
-  );
-  setAccountRequests(updatedRequests);
-  setFilteredRequests(updatedRequests);
-};
+  const handleApprove = async (request) => {
+    console.log('Request received in handleApprove:', request);
+
+    if (!request?.Email || !request?.Name || !request?.AccountType) {
+      alert('Email and name are required.');
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:8080/sendApprovalEmail', {
+        email: request.Email,
+        name: request.Name,
+        accountType: request.AccountType
+      });
+      alert(`Approval email sent to ${request.Email}`); //TODO: PALITAN NG POPUP TRIGGER KAPAG SUCCESSFUL
+      window.location.reload();
+    } catch (err) {
+      console.error('Error:', err);
+      alert(`Failed to send approval email: ${err.response?.data?.message || err.message}`); //TODO: PALITAN NG POPUP TRIGGER KAPAG ERROR
+    }
+  };
 
 
-  const handleReject = (id) => {
 
-    const updatedRequests = accountRequests.filter((request) => request.id !== id);
-    setAccountRequests(updatedRequests);
-    setFilteredRequests(updatedRequests);
+  const handleReject = async (request) => {
+    console.log('Request received in handleReject:', request);
+
+    if (!request?.Email || !request?.Name) {
+      alert('Email and name are required.');
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:8080/sendEmailRejection', {
+        email: request.Email,
+        name: request.Name,
+      });
+      alert(`Rejected email sent to ${request.Email}`);
+    } catch (err) {
+      console.error('Error:', err);
+      alert(`Failed to send approval email: ${err.response?.data?.message || err.message}`);
+    }
   };
 
   //show popup
@@ -180,13 +209,22 @@ const handleApprove = (id) => {
                     <td>
                       <button
                         className={styles.approveButton}
-                        onClick={(e) => { e.stopPropagation(); handleApprove(request.id); }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          console.log('Request passed to handleApprove:', request);
+                          handleApprove(request); // Pass the entire request object
+                        }}
                       >
                         Approve
                       </button>
+
                       <button
                         className={styles.rejectButton}
-                        onClick={(e) => { e.stopPropagation(); handleReject(request.id); }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          console.log('Request passed to handleReject:', request);
+                          handleReject(request); // Pass the entire request object
+                        }}
                       >
                         Reject
                       </button>
@@ -267,10 +305,31 @@ const handleApprove = (id) => {
               "2nd Year Chairperson",
               "3rd Year Chairperson",
               "4th Year Chairperson"].includes(selectedRequest.AccountType) && (
+                <div className={styles.popupText}>
+                  <p><strong>Account Type:</strong> Society Officer</p>
+                  <p><strong>Position:</strong> {selectedRequest.AccountType}</p>
+                  <p><strong>Student ID:</strong> {selectedRequest.ID}</p>
+                  <p><strong>Program:</strong> {selectedRequest.ProgramID === 1 ? 'Bachelor of Science in Computer Science' : 'Bachelor of Science in Information Technology'}</p>
+                  <p><strong>Name:</strong> {selectedRequest.Name}</p>
+                  <p><strong>Email:</strong> {selectedRequest.Email}</p>
+                  <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
+                </div>
+              )}
+
+            {["Adviser", "Enrollment Officer", "School Head"].includes(selectedRequest.AccountType) && (
               <div className={styles.popupText}>
-                <p><strong>Account Type:</strong> Society Officer</p>
-                <p><strong>Position:</strong> {selectedRequest.AccountType}</p>
-                <p><strong>Student ID:</strong> {selectedRequest.ID}</p>
+                <p><strong>Account Type:</strong> {selectedRequest.AccountType}</p>
+                <p><strong>Employee ID:</strong> {selectedRequest.ID}</p>
+                <p><strong>Name:</strong> {selectedRequest.Name}</p>
+                <p><strong>Email:</strong> {selectedRequest.Email}</p>
+                <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
+              </div>
+            )}
+
+            {selectedRequest.AccountType === "DCS Head" && (
+              <div className={styles.popupText}>
+                <p><strong>Account Type:</strong> {selectedRequest.AccountType}</p>
+                <p><strong>Employee ID:</strong> {selectedRequest.ID}</p>
                 <p><strong>Program:</strong> {selectedRequest.ProgramID === 1 ? 'Bachelor of Science in Computer Science' : 'Bachelor of Science in Information Technology'}</p>
                 <p><strong>Name:</strong> {selectedRequest.Name}</p>
                 <p><strong>Email:</strong> {selectedRequest.Email}</p>
@@ -278,52 +337,6 @@ const handleApprove = (id) => {
               </div>
             )}
 
-      {["Adviser", "Enrollment Officer", "School Head"].includes(selectedRequest.AccountType) && (
-              <div className={styles.popupText}>
-                <p><strong>Account Type:</strong> {selectedRequest.AccountType}</p>
-                <p><strong>Employee ID:</strong> {selectedRequest.ID}</p>
-                <p><strong>Name:</strong> {selectedRequest.Name}</p>
-                <p><strong>Email:</strong> {selectedRequest.Email}</p>
-                <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
-              </div>
-            )}
-
-{selectedRequest.AccountType === "DCS Head" && (
-              <div className={styles.popupText}>
-                <p><strong>Account Type:</strong> {selectedRequest.AccountType}</p>
-                <p><strong>Employee ID:</strong> {selectedRequest.ID}</p>
-                <p><strong>Program:</strong> {selectedRequest.ProgramID === 1 ? 'Bachelor of Science in Computer Science' : 'Bachelor of Science in Information Technology'}</p>
-                <p><strong>Name:</strong> {selectedRequest.Name}</p>
-                <p><strong>Email:</strong> {selectedRequest.Email}</p>
-                <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
-              </div>
-            )}
-
-
-            {/* Approve and Reject Buttons */}
-            <div className={styles.popupButtons}>
-              <button
-                className={styles.approveButton}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleApprove(selectedRequest.id); // Pass selectedRequest.id
-                  closePopup(); // Close the popup after action
-                }}
-              >
-                Approve
-              </button>
-              <button
-                className={styles.rejectButton}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleReject(selectedRequest.id); // Pass selectedRequest.id
-                  closePopup(); // Close the popup after action
-                }}
-              >
-                Reject
-              </button>
-
-            </div>
           </div>
         </div>
       )}
