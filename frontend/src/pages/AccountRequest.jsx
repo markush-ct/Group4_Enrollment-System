@@ -136,10 +136,10 @@ function AccountRequest() {
         email: request.Email,
         name: request.Name,
       });
-      alert(`Rejected email sent to ${request.Email}`);
+      alert(`Rejected email sent to ${request.Email}`); //TODO: PALITAN NG POPUP TRIGGER KAPAG SUCCESSFUL
     } catch (err) {
       console.error('Error:', err);
-      alert(`Failed to send approval email: ${err.response?.data?.message || err.message}`);
+      alert(`Failed to send approval email: ${err.response?.data?.message || err.message}`); //TODO: PALITAN NG POPUP TRIGGER KAPAG ERROR
     }
   };
 
