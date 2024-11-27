@@ -13,6 +13,12 @@ function AccountRequest() {
   const [filterType, setFilterType] = useState("All");
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [popUpVisible, setPopUpVisible] = useState(false);
+  const [approvalPrompt, setApprovalPrompt] = useState(false);
+  const [approvalMsg, setApprovalMsg] = useState('');
+  const [rejectionPrompt, setRejectionPrompt] = useState(false);
+  const [rejectionMsg, setRejectionMsg] = useState('');
+  const [errorPrompt, setErrorPrompt] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   axios.defaults.withCredentials = true;
   //RETURNING ACCOUNT NAME IF LOGGED IN
@@ -98,50 +104,66 @@ function AccountRequest() {
   }, [filterType, accountRequests]);
 
 
-  //request
-  const handleApprove = async (request) => {
-    console.log('Request received in handleApprove:', request);
+  // Request
+const handleApprove = async (request) => {
+  console.log('Request received in handleApprove:', request);
 
-    if (!request?.Email || !request?.Name || !request?.AccountType) {
-      alert('Email and name are required.');
+  if (!request?.Email || !request?.Name || !request?.AccountType) {
+      setErrorPrompt(true);
+      setErrorMsg('Email, name, and account type are required.');
       return;
-    }
+  }
 
-    try {
+  try {
       const response = await axios.post('http://localhost:8080/sendApprovalEmail', {
-        email: request.Email,
-        name: request.Name,
-        accountType: request.AccountType
+          email: request.Email,
+          name: request.Name,
+          accountType: request.AccountType,
       });
-      alert(`Approval email sent to ${request.Email}`); //TODO: PALITAN NG POPUP TRIGGER KAPAG SUCCESSFUL
-      window.location.reload();
-    } catch (err) {
+
+      setApprovalPrompt(true);
+      setApprovalMsg(`Approval email sent to ${request.Email}`);
+      setErrorPrompt(false);
+      setPopUpVisible(false);
+      
+  } catch (err) {
       console.error('Error:', err);
-      alert(`Failed to send approval email: ${err.response?.data?.message || err.message}`); //TODO: PALITAN NG POPUP TRIGGER KAPAG ERROR
-    }
-  };
+      setErrorPrompt(true);
+      setErrorMsg(`Failed to send approval email:  ${err.response?.data?.message || err.message}`);
+  }
+};
 
+const handleReject = async (request) => {
+  console.log('Request received in handleReject:', request);
 
-
-  const handleReject = async (request) => {
-    console.log('Request received in handleReject:', request);
-
-    if (!request?.Email || !request?.Name) {
-      alert('Email and name are required.');
+  if (!request?.Email || !request?.Name) {
+      setErrorPrompt(true);
+      setErrorMsg('Email and name are required.');
       return;
-    }
+  }
 
-    try {
+  try {
       const response = await axios.post('http://localhost:8080/sendEmailRejection', {
-        email: request.Email,
-        name: request.Name,
+          email: request.Email,
+          name: request.Name,
       });
-      alert(`Rejected email sent to ${request.Email}`); //TODO: PALITAN NG POPUP TRIGGER KAPAG SUCCESSFUL
-    } catch (err) {
+
+      setRejectionPrompt(true);
+      setRejectionMsg(`Rejection email sent to ${request.Email}`);
+      setErrorPrompt(false);
+      setPopUpVisible(false);
+  } catch (err) {
       console.error('Error:', err);
-      alert(`Failed to send approval email: ${err.response?.data?.message || err.message}`); //TODO: PALITAN NG POPUP TRIGGER KAPAG ERROR
-    }
-  };
+      setErrorPrompt(true);
+      setErrorMsg(`Failed to send rejection email: ${err.response?.data?.message || err.message}`);
+  }
+};
+
+const closePrompt = () => {
+  setApprovalPrompt(false);
+  window.location.reload();
+};
+
 
   //show popup
   const handleRowClick = (request) => {
@@ -160,6 +182,92 @@ function AccountRequest() {
   return (
     <>
       <Header SideBar={SideBar} setSideBar={setSideBar} />
+{/* PROMPTS */}
+      {/* APPROVAL PROMPT */}
+{approvalPrompt && (
+    <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPrompt}>
+        <div className={styles.popupPromptContent}>
+            <button
+                className={styles.popupPromptcloseButton}
+                onClick={() => setApprovalPrompt(false)}
+            >
+                &times;
+            </button>
+            <div className={styles.popupPromptHeader}>
+                <h2>Approval Success</h2>
+            </div>
+            <div className={styles.popupPromptMessage}>
+                <img
+                    src="/src/assets/checkmark.png"
+                    alt="Success Icon"
+                    className={styles.popupPromptmessageImage}
+                />
+            </div>
+            <p className={styles.popupPromptText}>{approvalMsg}</p>
+            <div className={styles.buttonContainer}>
+            <button
+  className={styles.OKButton}
+  onClick={closePrompt} 
+>
+  <span>OK</span>
+</button>
+</div>
+
+        </div>
+    </div>
+)}
+
+{/* REJECTION PROMPT */}
+{rejectionPrompt && (
+    <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPrompt}>
+        <div className={styles.popupPromptContent}>
+            <button
+                className={styles.popupPromptcloseButton}
+                onClick={() => setRejectionPrompt(false)}
+            >
+                &times;
+            </button>
+            <div className={styles.popupPromptHeader}>
+                <h2>Rejection Success</h2>
+            </div>
+            <div className={styles.popupPromptMessage}>
+                <img
+                    src="/src/assets/checkmark.png"
+                    alt="Success Icon"
+                    className={styles.popupPromptmessageImage}
+                />
+            </div>
+            <p className={styles.popupPromptText}>{rejectionMsg}</p>
+        </div>
+    </div>
+)}
+
+{/* ERROR PROMPT */}
+{errorPrompt && (
+    <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPromptError}>
+        <div className={styles.popupPromptContentError}>
+            <button
+                className={styles.popupPromptcloseButton}
+                onClick={() => setErrorPrompt(false)}
+            >
+                &times;
+            </button>
+            <div className={styles.popupPromptHeaderError}>
+                <h2>Error</h2>
+            </div>
+            <div className={styles.popupPromptMessageError}>
+                <img
+                    src="/src/assets/errormark.png"
+                    alt="Error Icon"
+                    className={styles.popupPromptmessageImage}
+                />
+            </div>
+            <p className={styles.popupPromptTextError}>{errorMsg}</p>
+        </div>
+    </div>
+)}
+
+
       <div className={styles.contentSection}>
         <div className={styles.PageTitle} data-aos="fade-up">
           Account Requests

@@ -52,14 +52,29 @@ function AdminDashHeader() {
                         </div>
                     </div>
 
-                    <div className={style.navRight}>
-                        {/* Search Bar */}
-                        <input
-                            type="text"
-                            placeholder="Search here"
-                            className={style.searchBar}
-                        />
-                    </div>
+                     {/* Search and Profile Section */}
+      <div className={style.searchProfile}>
+        <input
+          type="text"
+          placeholder="Search here"
+          className={style.searchBar}
+        />
+        <div className={style.profile}>
+        <Link to="/AccountSettings"><img
+          src='\src\assets\sampleicon.jpg'
+            alt="Profile"
+            className={style.profileImage}
+          /></Link>
+          <div className={style.accountName}>
+            <p>LeBron James</p>  {/* CHANGE IT TO ACCNAME */}
+            <span className={style.accountType}>{accName}</span>   {/* CHANGE IT TO ROLE */}
+  
+          </div>
+        </div>
+      </div>
+
+
+                    
                 </header>
             </div>
 

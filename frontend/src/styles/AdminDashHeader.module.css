@@ -13,7 +13,7 @@
     left: 0;
 }
 
-h2{
+h2 {
     background-color: transparent;
 }
 
@@ -22,18 +22,13 @@ h2{
     align-items: center;
     gap: 20px;
     background-color: transparent;
-    
 }
-
 
 .cvsuLogo {
     width: auto;
     height: 50px;
     background-color: transparent;
 }
-
-
-
 
 .accName {
     font-size: 20px;
@@ -43,17 +38,15 @@ h2{
     margin: 0;
 }
 
-
 .menuBtn {
     border: none;
     cursor: pointer;
     padding: 0;
 }
 
-img{
+img {
     background-color: transparent;
 }
-
 
 .menuIcon {
     width: 30px;
@@ -66,53 +59,109 @@ img{
     gap: 20px;
 }
 
+.searchProfile {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background-color: transparent;
+}
 
 .searchBar {
-    background-color: transparent;
-    padding: 8px 12px;
+    padding: 5px 10px;
     border: 1px solid #ccc;
     border-radius: 20px;
     font-size: 14px;
     outline: none;
-    width: 250px;
 }
 
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: transparent;
+}
 
+.profileImage {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: transparent;
+}
 
+.accountType {
+    font-size: 12px;
+    color: #3d8c4b;
+    background-color: transparent;
+}
+
+.accountName {
+    color: black;
+    font-weight: bold;
+    margin-bottom: 15px;
+    background-color: transparent;
+}
+
+.accountName p {
+    margin-bottom: 0;
+    background-color: transparent;
+}
 
 @media (max-width: 768px) {
     .header {
-        height: 10vh;  
-    }
-
-    .searchBar {
-        display: none;
+        height: 10vh;
+        padding: 10px 15px;
     }
 
     .navLeft {
-        gap: 10px;  
+        gap: 10px;
     }
 
     .cvsuLogo {
-        height: 50px;  
+        height: 40px;
     }
 
     .accName {
-        font-size: 14px;  
+        font-size: 12px;
     }
-
 
     .menuBtn {
         padding: 0;
     }
 
     .menuIcon {
-        width: 25px;  
+        width: 25px;
         height: 25px;
     }
 
+    .searchBar {
+        display: none;
+    }
 
-    
+    .navRight {
+        gap: 10px;
+    }
+
+    .profileImage {
+        width: 35px;
+        height: 35px;
+    }
+
+    .accountName p {
+        font-size: 12px;
+    }
+
+    .accountType {
+        font-size: 10px;
+        
+    }
+}
+
+
+@media (max-width: 440px) {
+    .accountName{
+        display: none;
+    }
 }
 
 

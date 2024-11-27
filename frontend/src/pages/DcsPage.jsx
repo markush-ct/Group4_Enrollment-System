@@ -19,7 +19,7 @@ function DcsPage() {
       }, []);
 
     const Instructor = [
-        'Mikaela Arciaga', 'Stephen Bhen Bacolor', 'Steffanie Bato, MIT', 'Edan Belgica', 'Ralph Christian Bolarda',
+        'Mikaela Arciaga', 'Stephen Bacolor', 'Steffanie Bato, MIT', 'Edan Belgica', 'Ralph Christian Bolarda',
         'Jerico Castillo, LPT', 'Mariel Castillo, LPT', 'Rafael Carvajal', 'Alvin Catalo, LPT', 'Alvin Celino',
         'Rufino Dela Cruz', 'Lawrence Jimenez', 'Julios Mojas', 'Richard Ongayo', 'Aida Penson, LPT',
         'Nestor Miguel Pimentel', 'Joven Rios', 'Rachel Rodriguez', 'Clarissa Rostrollo', 'Jessica Sambrano, LPT',

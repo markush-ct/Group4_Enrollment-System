@@ -243,6 +243,10 @@
     padding: 15px 10px;  
   }
 
+  .charts{
+    width: 100%;
+    margin-top: 150px;
+  }
 
   .chartContainer {
     height: 200px;  

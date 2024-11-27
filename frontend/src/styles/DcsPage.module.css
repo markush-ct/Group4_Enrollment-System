@@ -210,11 +210,11 @@ h2, p {
 }
 
 .DcsContainer:hover {
-    transform: scale(1.05);
+    transform: scale(1.01);
 }
 
 .mainContainer:hover {
-    transform: scale(1.05);
+    transform: scale(1.01);
 }
 .mainContainer {
     display: flex;
@@ -238,12 +238,13 @@ h2, p {
 }
 
 .DcsContainer h2 {
-    font-size: 24px;
+    font-size: 18px;
     margin: 10px 0;
 }
 
 .DcsContainer p {
     font-size: 18px;
+    font-weight: bold;
     color: #3d8c4b;
     text-decoration: none;
 }
@@ -283,7 +284,7 @@ h2, p {
   }
   
   .InstructorName {
-    font-size: 20px;
+    font-size: 18px;
     color: #555;
   }
   
