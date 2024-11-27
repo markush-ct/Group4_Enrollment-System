@@ -5,11 +5,10 @@ import styles from "/src/styles/AdminDash.module.css";
 import Header from "/src/components/AdminDashHeader.jsx";
 
 
-function StudentDashboard() {
+function ShifteeDashboard() {
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const navigate = useNavigate();
-
 
 
   useEffect(() => {
@@ -40,8 +39,6 @@ function StudentDashboard() {
   
 
 
-
-
   return (
     <>
       <Header SideBar={SideBar} setSideBar={setSideBar} />
@@ -55,4 +52,4 @@ function StudentDashboard() {
   );
 }
 
-export default StudentDashboard;
+export default ShifteeDashboard;

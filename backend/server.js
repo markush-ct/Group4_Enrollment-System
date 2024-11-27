@@ -44,13 +44,13 @@ const transporter = nodemailer.createTransport({
         user: 'gerlyntan07@gmail.com', // Sender email
         pass: 'sgpd rzwu zhna gbua' // Sender App Password
     }
-    
+
 });
 
 //GENERATE RANDOM PASSWORD FOR TEMPORARY ACCOUNT
 function generateRandomPassword(length = 8) {
     return crypto.randomBytes(length).toString('base64').slice(0, length);
-  }
+}
 
 // FETCH ACCOUNT REQUESTS
 app.get('/getAccountReq', (req, res) => {
@@ -73,9 +73,9 @@ app.get('/getAccountReq', (req, res) => {
 
 //SEND ACCOUNT REJECTION
 app.post('/sendEmailRejection', async (req, res) => {
-    const { email, name } = req.body;
+    const { email, name, accountType } = req.body;
 
-    if (!email || !name) {
+    if (!email || !name || !accountType) {
         console.error('Missing email or name:', req.body);
         return res.status(400).json({ message: 'Email and name are required.' });
     }
@@ -101,7 +101,54 @@ app.post('/sendEmailRejection', async (req, res) => {
         console.log('Sending email to:', email);
         await transporter.sendMail(mailOptions);
         console.log('Email sent successfully');
-        res.json({ message: 'Email sent successfully' });
+
+        if (["Regular", "Irregular", "Freshman", "Transferee", "Shiftee"].includes(accountType)) {
+            const updateQuery = `UPDATE student SET RegStatus = 'Rejected' WHERE Email = ?`;
+            db.query(updateQuery, email, (err, result) => {
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else if (result.affectedRows > 0) {
+                    return res.json({ message: "Account request rejected" });
+                }
+            })
+        } else if (["DCS Head", "School Head", "Adviser", "Enrollment Officer"].includes(accountType)) {
+            const updateQuery = `UPDATE employee SET RegStatus = 'Rejected' WHERE Email = ?`;
+            db.query(updateQuery, email, (err, result) => {
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else if (result.affectedRows > 0) {
+                    return res.json({ message: "Account request rejected" });
+                }
+            })
+        } else if (["President",
+            "Vice President",
+            "Secretary",
+            "Assistant Secretary",
+            "Treasurer",
+            "Assistant Treasurer",
+            "Business Manager",
+            "Auditor",
+            "P.R.O.",
+            "Assistant P.R.O.",
+            "GAD Representative",
+            "1st Year Senator",
+            "2nd Year Senator",
+            "3rd Year Senator",
+            "4th Year Senator",
+            "1st Year Chairperson",
+            "2nd Year Chairperson",
+            "3rd Year Chairperson",
+            "4th Year Chairperson"].includes(accountType)) {
+            const updateQuery = `UPDATE societyofficer SET RegStatus = 'Rejected' WHERE Email = ?`;
+            db.query(updateQuery, email, (err, result) => {
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else if (result.affectedRows > 0) {
+                    return res.json({ message: "Account request rejected" });
+                }
+            })
+        }
+
     } catch (error) {
         console.error('Error in /sendApprovalEmail:', error);
         res.status(500).json({
@@ -115,8 +162,7 @@ app.post('/sendEmailRejection', async (req, res) => {
 app.post('/sendApprovalEmail', async (req, res) => {
     console.log('Received data:', req.body);
 
-
-    const { email, name, accountType} = req.body;
+    const { email, name, accountType } = req.body;
 
     if (!email || !name || !accountType) {
         console.error('Missing email or name:', req.body);
@@ -157,12 +203,12 @@ app.post('/sendApprovalEmail', async (req, res) => {
         const createAcc = `INSERT INTO account (Name, Email, Password, Role, Status)
                             VALUES (?,?,?,?,?)`;
 
-        if (["Regular", "Irregular"].includes(accountType)){
-            const updateQuery = `UPDATE student SET StdStatus = 'Active', RegStatus = 'Accepted'`;
-            db.query(updateQuery, (err, result) => {
-                if(err){
-                    return res.json({message: "Error in server" + err});
-                } else if(result.affectedRows > 0){
+        if (["Regular", "Irregular"].includes(accountType)) {
+            const updateQuery = `UPDATE student SET StdStatus = 'Active', RegStatus = 'Accepted' WHERE Email = ?`;
+            db.query(updateQuery, email, (err, result) => {
+                if (err) {
+                    return res.json({ message: "Error in server" + err });
+                } else if (result.affectedRows > 0) {
                     const values = [
                         name,
                         email,
@@ -171,20 +217,21 @@ app.post('/sendApprovalEmail', async (req, res) => {
                         "Active"
                     ];
                     db.query(createAcc, values, (err, result) => {
-                        if(err){
-                            return res.json({message: "Error in server" + err});
-                        } else if (result.affectedRows > 0){
-                            return res.json({message: "Account saved"});
+                        if (err) {
+                            return res.json({ message: "Error in server" + err });
+                        } else if (result.affectedRows > 0) {
+                            return res.json({ message: "Account saved" });
                         }
                     })
                 }
             })
-        } else if (accountType === "Freshman"){
-            const updateQuery = `UPDATE student SET StdStatus = 'Active', RegStatus = 'Accepted'`;
-            db.query(updateQuery, (err, result) => {
-                if(err){
-                    return res.json({message: "Error in server" + err});
-                } else if(result.affectedRows > 0){
+        } else if (accountType === "Freshman") {
+            const updateQuery = `UPDATE student SET StdStatus = 'Active', RegStatus = 'Accepted' WHERE Email = ?`;
+
+            db.query(updateQuery, email, (err, result) => {
+                if (err) {
+                    return res.json({ message: "Error in server" + err });
+                } else if (result.affectedRows > 0) {
                     const values = [
                         name,
                         email,
@@ -193,20 +240,20 @@ app.post('/sendApprovalEmail', async (req, res) => {
                         "Active"
                     ];
                     db.query(createAcc, values, (err, result) => {
-                        if(err){
-                            return res.json({message: "Error in server" + err});
-                        } else if (result.affectedRows > 0){
+                        if (err) {
+                            return res.json({ message: "Error in server" + err });
+                        } else if (result.affectedRows > 0) {
                             const studentIDQuery = `SELECT StudentID, LastSchoolAttended FROM student WHERE Email = ?`;
 
                             db.query(studentIDQuery, email, (err, result) => {
-                                if(err){
-                                    return res.json({message: "Error in server" + err});
-                                } else if(result.length > 0){
+                                if (err) {
+                                    return res.json({ message: "Error in server" + err });
+                                } else if (result.length > 0) {
                                     const studentID = result[0].StudentID;
                                     const shsSchool = result[0].LastSchoolAttended;
                                     const randomControlNums = Array.from({ length: 5 }, () => crypto.randomBytes(1)[0] % 10)
-                                                           .map(num => num.toString().padStart(1, '0')) 
-                                                           .join('');
+                                        .map(num => num.toString().padStart(1, '0'))
+                                        .join('');
 
                                     const insertQuery = `INSERT INTO admissionform (StudentID, Branch, ExamControlNo, SHSchoolName, AdmissionStatus)
                                                         VALUES(?,?,?,?,?)`;
@@ -217,12 +264,12 @@ app.post('/sendApprovalEmail', async (req, res) => {
                                         shsSchool,
                                         "Pending"
                                     ];
-                                    
+
                                     db.query(insertQuery, values, (err, result) => {
-                                        if(err){
-                                            return res.json({message: "Error in server" + err});
-                                        } else if (result.affectedRows > 0){
-                                            return res.json({message: "Account saved"});
+                                        if (err) {
+                                            return res.json({ message: "Error in server" + err });
+                                        } else if (result.affectedRows > 0) {
+                                            return res.json({ message: "Account saved" });
                                         }
                                     })
                                 }
@@ -232,12 +279,12 @@ app.post('/sendApprovalEmail', async (req, res) => {
                     })
                 }
             })
-        } else if(accountType === "Transferee"){
-            const updateQuery = `UPDATE student SET StdStatus = 'Active', RegStatus = 'Accepted'`;
-            db.query(updateQuery, (err, result) => {
-                if(err){
-                    return res.json({message: "Error in server" + err});
-                } else if(result.affectedRows > 0){
+        } else if (accountType === "Transferee") {
+            const updateQuery = `UPDATE student SET StdStatus = 'Active', RegStatus = 'Accepted' WHERE Email = ?`;
+            db.query(updateQuery, email, (err, result) => {
+                if (err) {
+                    return res.json({ message: "Error in server" + err });
+                } else if (result.affectedRows > 0) {
                     const values = [
                         name,
                         email,
@@ -246,20 +293,20 @@ app.post('/sendApprovalEmail', async (req, res) => {
                         "Active"
                     ];
                     db.query(createAcc, values, (err, result) => {
-                        if(err){
-                            return res.json({message: "Error in server" + err});
-                        } else if (result.affectedRows > 0){
+                        if (err) {
+                            return res.json({ message: "Error in server" + err });
+                        } else if (result.affectedRows > 0) {
                             const studentIDQuery = `SELECT StudentID, LastSchoolAttended FROM student WHERE Email = ?`;
 
                             db.query(studentIDQuery, email, (err, result) => {
-                                if(err){
-                                    return res.json({message: "Error in server" + err});
-                                } else if(result.length > 0){
+                                if (err) {
+                                    return res.json({ message: "Error in server" + err });
+                                } else if (result.length > 0) {
                                     const studentID = result[0].StudentID;
                                     const lastSchool = result[0].LastSchoolAttended;
                                     const randomControlNums = Array.from({ length: 5 }, () => crypto.randomBytes(1)[0] % 10)
-                                                           .map(num => num.toString().padStart(1, '0')) 
-                                                           .join('');
+                                        .map(num => num.toString().padStart(1, '0'))
+                                        .join('');
 
                                     const insertQuery = `INSERT INTO admissionform (StudentID, Branch, ExamControlNo, TransfereeCollegeSchoolName, AdmissionStatus)
                                                         VALUES(?,?,?,?,?)`;
@@ -270,12 +317,12 @@ app.post('/sendApprovalEmail', async (req, res) => {
                                         lastSchool,
                                         "Pending"
                                     ];
-                                    
+
                                     db.query(insertQuery, values, (err, result) => {
-                                        if(err){
-                                            return res.json({message: "Error in server" + err});
-                                        } else if (result.affectedRows > 0){
-                                            return res.json({message: "Account saved"});
+                                        if (err) {
+                                            return res.json({ message: "Error in server" + err });
+                                        } else if (result.affectedRows > 0) {
+                                            return res.json({ message: "Account saved" });
                                         }
                                     })
                                 }
@@ -285,11 +332,11 @@ app.post('/sendApprovalEmail', async (req, res) => {
                     })
                 }
             })
-        } else if (accountType === "Shiftee"){
-            const updateQuery = `UPDATE student SET StdStatus = 'Active', RegStatus = 'Accepted'`;
-            db.query(updateQuery, (err, result) => {
-                if(err){
-                    return res.json({message: "Error in server" + err});
+        } else if (accountType === "Shiftee") {
+            const updateQuery = `UPDATE student SET StdStatus = 'Active', RegStatus = 'Accepted' WHERE Email = ?`;
+            db.query(updateQuery, email, (err, result) => {
+                if (err) {
+                    return res.json({ message: "Error in server" + err });
                 } else if (result.affectedRows > 0) {
                     const values = [
                         name,
@@ -299,14 +346,14 @@ app.post('/sendApprovalEmail', async (req, res) => {
                         "Active"
                     ];
                     db.query(createAcc, values, (err, result) => {
-                        if(err){
-                            return res.json({message: "Error in server" + err});
+                        if (err) {
+                            return res.json({ message: "Error in server" + err });
                         } else if (result.affectedRows > 0) {
                             const studentIDQuery = `SELECT CvSUStudentID FROM student WHERE Email = ?`;
                             db.query(studentIDQuery, email, (err, result) => {
-                                if(err){
-                                    return res.json({message: "Error in server" + err});
-                                } else if (result.length > 0){
+                                if (err) {
+                                    return res.json({ message: "Error in server" + err });
+                                } else if (result.length > 0) {
                                     const studentID = result[0].CvSUStudentID;
 
                                     const insertQuery = `INSERT INTO shiftingform (StudentID, SchoolName, ShiftingStatus)
@@ -319,10 +366,10 @@ app.post('/sendApprovalEmail', async (req, res) => {
                                     ];
 
                                     db.query(insertQuery, values, (err, result) => {
-                                        if(err){
-                                            return res.json({message: "Error in server" + err});
-                                        } else if (result.affectedRows > 0){
-                                            return res.json({message: "Account saved"});
+                                        if (err) {
+                                            return res.json({ message: "Error in server" + err });
+                                        } else if (result.affectedRows > 0) {
+                                            return res.json({ message: "Account saved" });
                                         }
                                     })
                                 }
@@ -331,11 +378,11 @@ app.post('/sendApprovalEmail', async (req, res) => {
                     })
                 }
             })
-        } else if(["DCS Head", "School Head", "Adviser", "Enrollment Officer"].includes(accountType)){
+        } else if (["DCS Head", "School Head", "Adviser", "Enrollment Officer"].includes(accountType)) {
             const updateQuery = `UPDATE employee SET RegStatus = 'Accepted' WHERE Email = ?`;
             db.query(updateQuery, email, (err, result) => {
-                if(err){
-                    return res.json({message: "Error in server" + err});
+                if (err) {
+                    return res.json({ message: "Error in server" + err });
                 } else if (result.affectedRows > 0) {
                     const values = [
                         name,
@@ -346,55 +393,55 @@ app.post('/sendApprovalEmail', async (req, res) => {
                     ];
 
                     db.query(createAcc, values, (err, result) => {
-                        if(err){
-                            return res.json({message: "Error in server" + err});
-                        } else if (result.affectedRows > 0 ){
-                            return res.json({message: "Account Saved"});
+                        if (err) {
+                            return res.json({ message: "Error in server" + err });
+                        } else if (result.affectedRows > 0) {
+                            return res.json({ message: "Account Saved" });
                         }
                     })
                 }
             })
         } else if (["President",
-              "Vice President",
-              "Secretary",
-              "Assistant Secretary",
-              "Treasurer",
-              "Assistant Treasurer",
-              "Business Manager",
-              "Auditor",
-              "P.R.O.",
-              "Assistant P.R.O.",
-              "GAD Representative",
-              "1st Year Senator",
-              "2nd Year Senator",
-              "3rd Year Senator",
-              "4th Year Senator",
-              "1st Year Chairperson",
-              "2nd Year Chairperson",
-              "3rd Year Chairperson",
-              "4th Year Chairperson"].includes(accountType)){
-                const updateQuery = `UPDATE societyofficer SET RegStatus = 'Accepted' WHERE Email = ?`;
-                db.query(updateQuery, email, (err, result) => {
-                    if(err){
-                        return res.json({message: "Error in server" + err});
-                    } else if(result.affectedRows > 0){
-                        const values = [
-                            name,
-                            email,
-                            tempPassword,
-                            "Society Officer",
-                            "Active"
-                        ];
+            "Vice President",
+            "Secretary",
+            "Assistant Secretary",
+            "Treasurer",
+            "Assistant Treasurer",
+            "Business Manager",
+            "Auditor",
+            "P.R.O.",
+            "Assistant P.R.O.",
+            "GAD Representative",
+            "1st Year Senator",
+            "2nd Year Senator",
+            "3rd Year Senator",
+            "4th Year Senator",
+            "1st Year Chairperson",
+            "2nd Year Chairperson",
+            "3rd Year Chairperson",
+            "4th Year Chairperson"].includes(accountType)) {
+            const updateQuery = `UPDATE societyofficer SET RegStatus = 'Accepted' WHERE Email = ?`;
+            db.query(updateQuery, email, (err, result) => {
+                if (err) {
+                    return res.json({ message: "Error in server" + err });
+                } else if (result.affectedRows > 0) {
+                    const values = [
+                        name,
+                        email,
+                        tempPassword,
+                        "Society Officer",
+                        "Active"
+                    ];
 
-                        db.query(createAcc, values, (err, result) => {
-                            if(err){
-                                return res.json({message: "Error in server" + err});
-                            } else if (result.affectedRows > 0 ){
-                                return res.json({message: "Account Saved"});
-                            }
-                        })
-                    }
-                })
+                    db.query(createAcc, values, (err, result) => {
+                        if (err) {
+                            return res.json({ message: "Error in server" + err });
+                        } else if (result.affectedRows > 0) {
+                            return res.json({ message: "Account Saved" });
+                        }
+                    })
+                }
+            })
         }
 
     } catch (error) {
@@ -414,16 +461,16 @@ app.get('/pendingAccounts', (req, res) => {
     const employeeQuery = `SELECT COUNT(*) AS employeeCount from employee WHERE RegStatus = 'Pending'`;
 
     db.query(studentQuery, (err, studentResult) => {
-        if(err){
-            return res.json({message: "Error in server: " + err});
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
         } else {
             db.query(socOfficerQuery, (err, socOfficerResult) => {
-                if(err){
-                    return res.json({message: "Error in server: " + err});
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
                 } else {
                     db.query(employeeQuery, (err, employeeResult) => {
-                        if(err){
-                            return res.json({message: "Error in server: " + err});
+                        if (err) {
+                            return res.json({ message: "Error in server: " + err });
                         } else {
                             return res.json({
                                 studentCount: studentResult[0].studentCount,
@@ -461,9 +508,9 @@ app.get('/programs', (req, res) => {
 app.get('/getCS', (req, res) => {
     const sql = `SELECT COUNT(*) AS CScount from student WHERE (StudentType = 'Regular' OR StudentType = 'Irregular') AND RegStatus = 'Accepted' AND ProgramID = 1`;
     db.query(sql, (err, result) => {
-        if(err){
-            return res.json({message: "Error in server: " + err});
-        } else{
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else {
             return res.json({ CScount: result[0].CScount });
         }
     })
@@ -473,9 +520,9 @@ app.get('/getCS', (req, res) => {
 app.get('/getIT', (req, res) => {
     const sql = `SELECT COUNT(*) AS ITcount from student WHERE (StudentType = 'Regular' OR StudentType = 'Irregular') AND RegStatus = 'Accepted' AND ProgramID = 2`;
     db.query(sql, (err, result) => {
-        if(err){
-            return res.json({message: "Error in server: " + err});
-        } else{
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else {
             return res.json({ ITcount: result[0].ITcount });
         }
     })
@@ -732,7 +779,7 @@ app.post("/logoutFunction", (req, res) => {
                 console.error("Error destroying session:", err);
                 return res.json({ valid: false, message: "Logout failed." });
             }
-            res.clearCookie("connect.sid"); // Ensure session cookie is removed
+            res.clearCookie("connect.sid"); // session cookie is removed
             return res.json({ valid: false, message: "Logout successful." });
         });
     } else {
@@ -740,11 +787,55 @@ app.post("/logoutFunction", (req, res) => {
     }
 });
 
+//FORGOTPASS
+app.post('/ForgotPass', (req, res) => {
+    const email = req.body;
+    const emailQuery = `SELECT * FROM account WHERE Email = ?`;
+    db.query(emailQuery, email, (err, result) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if (result.length === 1) {
+            const randomCode = Array.from({ length: 4 }, () => crypto.randomBytes(1)[0] % 10)
+                .map(num => num.toString().padStart(1, '0'))
+                .join('');
+
+            const emailBody = `
+            We received a request to reset the password for your account
+            
+            If you didn't make the request, just ignore this message. Otherwise, you can reset your password
+            
+            CODE: ${randomCode}
+            
+            Thanks,
+            CvSU - Bacoor`;
+
+            const mailOptions = {
+                from: 'gerlyntan07@gmail.com',
+                to: email,
+                subject: 'Forgot Password Verification Code',
+                text: emailBody,
+            };
+
+            try{
+                console.log('Sending email to:', email);
+                transporter.sendMail(mailOptions);
+                console.log('Email sent successfully');
+            } catch (error) {
+                console.error('Error in /sendApprovalEmail:', error);
+                res.status(500).json({
+                    message: 'Internal Server Error',
+                    error: error.message,
+                });
+            }
+        }
+    })
+})
+
 
 //LOGIN
 app.get('/', (req, res) => {
     if (req.session && req.session.accountID) {
-        return res.json({ valid: true, accountID: req.session.accountID , name: req.session.name, role: req.session.role })
+        return res.json({ valid: true, accountID: req.session.accountID, name: req.session.name, role: req.session.role })
     } else {
         return res.json({ valid: false })
     }
@@ -756,28 +847,53 @@ app.post('/LoginPage', (req, res) => {
 
     db.query(sql, [email, password], (err, result) => {
         if (err) return res.json({ message: "Error in server" + err });
-        
 
         const user = result[0];
         if (result.length > 0) {
-            if (user.Status === "Terminated"){
-                return res.json({message : "Account is no longer active. Fill out contact form to ask for reactivation", isLoggedIn: false});
-            } else if (user.Status === "Active"){
-                req.session.accountID = user.AccountID;
-            req.session.name = user.Name;
-            req.session.role = user.Role;            
+            if (user.Status === "Terminated") {
+                return res.json({ message: "Account is no longer active. Fill out contact form to ask for reactivation", isLoggedIn: false });
+            } else if (user.Status === "Active") {
+                if (user.Role === "Student") {
+                    const studentTypeQuery = `SELECT StudentType from student WHERE Email = ?`;
+                    db.query(studentTypeQuery, email, (err, studentResult) => {
+                        if (err) {
+                            return res.json({ message: "Error in server: " + err });
+                        } else if (studentResult.length > 0) {
+                            const studentType = studentResult[0].StudentType;
 
-            return res.json({
-                message: 'Login successful',
-                role: req.session.role,
-                email: user.Email,
-                accountID: req.session.accountID,
-                status: user.Status,
-                isLoggedIn: true,
-                name: req.session.name
-            });
+                            req.session.accountID = user.AccountID;
+                            req.session.name = user.Name;
+                            req.session.role = studentType;
+
+                            return res.json({
+                                message: 'Login successful',
+                                role: studentType,
+                                email: user.Email,
+                                accountID: req.session.accountID,
+                                status: user.Status,
+                                isLoggedIn: true,
+                                name: req.session.name
+                            });
+                        }
+                    })
+                } else {
+                    req.session.accountID = user.AccountID;
+                    req.session.name = user.Name;
+                    req.session.role = user.Role;
+
+                    return res.json({
+                        message: 'Login successful',
+                        role: req.session.role,
+                        email: user.Email,
+                        accountID: req.session.accountID,
+                        status: user.Status,
+                        isLoggedIn: true,
+                        name: req.session.name
+                    });
+                }
+
             }
-            
+
         } else {
             return res.json({ message: "Invalid credentials", isLoggedIn: false })
         }

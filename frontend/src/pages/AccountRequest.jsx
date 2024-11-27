@@ -19,6 +19,7 @@ function AccountRequest() {
   const [rejectionMsg, setRejectionMsg] = useState('');
   const [errorPrompt, setErrorPrompt] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [loading, setLoading] = useState(false);
 
   axios.defaults.withCredentials = true;
   //RETURNING ACCOUNT NAME IF LOGGED IN
@@ -108,6 +109,8 @@ function AccountRequest() {
 const handleApprove = async (request) => {
   console.log('Request received in handleApprove:', request);
 
+  setLoading(true);
+
   if (!request?.Email || !request?.Name || !request?.AccountType) {
       setErrorPrompt(true);
       setErrorMsg('Email, name, and account type are required.');
@@ -125,18 +128,22 @@ const handleApprove = async (request) => {
       setApprovalMsg(`Approval email sent to ${request.Email}`);
       setErrorPrompt(false);
       setPopUpVisible(false);
+      setLoading(false);
       
   } catch (err) {
       console.error('Error:', err);
       setErrorPrompt(true);
       setErrorMsg(`Failed to send approval email:  ${err.response?.data?.message || err.message}`);
+      setLoading(false);
   }
 };
 
 const handleReject = async (request) => {
   console.log('Request received in handleReject:', request);
 
-  if (!request?.Email || !request?.Name) {
+  setLoading(true);
+
+  if (!request?.Email || !request?.Name || !request?.AccountType) {
       setErrorPrompt(true);
       setErrorMsg('Email and name are required.');
       return;
@@ -146,21 +153,25 @@ const handleReject = async (request) => {
       const response = await axios.post('http://localhost:8080/sendEmailRejection', {
           email: request.Email,
           name: request.Name,
+          accountType: request.AccountType
       });
 
       setRejectionPrompt(true);
       setRejectionMsg(`Rejection email sent to ${request.Email}`);
       setErrorPrompt(false);
       setPopUpVisible(false);
+      setLoading(false);
   } catch (err) {
       console.error('Error:', err);
       setErrorPrompt(true);
       setErrorMsg(`Failed to send rejection email: ${err.response?.data?.message || err.message}`);
+      setLoading(false);
   }
 };
 
 const closePrompt = () => {
   setApprovalPrompt(false);
+  setRejectionPrompt(false);
   window.location.reload();
 };
 
@@ -223,7 +234,7 @@ const closePrompt = () => {
         <div className={styles.popupPromptContent}>
             <button
                 className={styles.popupPromptcloseButton}
-                onClick={() => setRejectionPrompt(false)}
+                onClick={closePrompt}
             >
                 &times;
             </button>
@@ -323,7 +334,7 @@ const closePrompt = () => {
                           handleApprove(request); // Pass the entire request object
                         }}
                       >
-                        Approve
+                        {loading ? 'Loading...' : 'Approve'}
                       </button>
 
                       <button
@@ -334,7 +345,7 @@ const closePrompt = () => {
                           handleReject(request); // Pass the entire request object
                         }}
                       >
-                        Reject
+                        {loading ? 'Loading...' : 'Reject'}
                       </button>
                     </td>
                   </tr>

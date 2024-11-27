@@ -10,7 +10,6 @@ import FAQs from './pages/FAQs';
 import Undergrad from './pages/Undergrad';
 import EnrollmentOfficerDashboard from './pages/EnrollmentOfficerDashboard';
 import SocOfficerDashboard from './pages/SocOfficerDashboard';
-import StudentDashboard from './pages/StudentDashboard';
 import AdviserDashboard from './pages/AdviserDashboard.jsx';
 import DCSHeadDashboard from './pages/DCSHeadDashboard.jsx';
 import SchoolHeadDashboard from './pages/SchoolHeadDashboard.jsx';
@@ -18,7 +17,10 @@ import SignUp from './pages/SignUp.jsx'
 import CreateAcc from './pages/CreateAcc.jsx'
 import AccountRequest from './pages/AccountRequest.jsx'
 import ForgotPass from './pages/ForgotPass.jsx'
-
+import FreshmanDashboard from './pages/FreshmanDashboard.jsx';
+import TransfereeDashboard from './pages/TransfereeDashboard.jsx';
+import ShifteeDashboard from './pages/ShifteeDashboard.jsx';
+import RegIrregDashboard from './pages/RegIrregDashboard.jsx';
 
 function App() {
   return (
@@ -36,7 +38,10 @@ function App() {
         <Route path="/Undergrad" element={<Undergrad />} />
         <Route path="/EnrollmentOfficerDashboard" element={<EnrollmentOfficerDashboard />} />
         <Route path="/SocOfficerDashboard" element={<SocOfficerDashboard />} />
-        <Route path="/StudentDashboard" element={<StudentDashboard />} />
+        <Route path="/FreshmanDashboard" element={<FreshmanDashboard />} />
+        <Route path="/TransfereeDashboard" element={<TransfereeDashboard />} />
+        <Route path="/ShifteeDashboard" element={<ShifteeDashboard />} />
+        <Route path="/RegIrregDashboard" element={<RegIrregDashboard />} />
         <Route path="/AdviserDashboard" element={<AdviserDashboard />} />
         <Route path="/DCSHeadDashboard" element={<DCSHeadDashboard />} />
         <Route path="/SchoolHeadDashboard" element={<SchoolHeadDashboard />} />

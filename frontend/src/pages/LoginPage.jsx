@@ -35,8 +35,14 @@ function LoginPage() {
                 if (res.data.valid) {
                     if(res.data.role === 'Enrollment Officer'){
                         navigate('/EnrollmentOfficerDashboard');
-                    } else if (res.data.role === 'Student') {
-                        navigate('/StudentDashboard');
+                    } else if (res.data.role === 'Freshman') {
+                        navigate('/FreshmanDashboard');
+                    } else if (res.data.role === 'Transferee') {
+                        navigate('/TransfereeDashboard');
+                    } else if (res.data.role === 'Shiftee') {
+                        navigate('/ShifteeDashboard');
+                    } else if (res.data.role === 'Regular' || res.data.role === "Irregular") {
+                        navigate('/RegIrregDashboard');
                     } else if (res.data.role === 'Society Officer') {
                         navigate('/SocOfficerDashboard');
                     } else if (res.data.role === 'Adviser') {
@@ -62,11 +68,16 @@ function LoginPage() {
                 if (res.data.isLoggedIn && res.data.status === 'Active') {
                     const role = res.data.role;
 
-
                         if (role === 'Enrollment Officer') {
                             navigate('/EnrollmentOfficerDashboard');
-                        } else if (role === 'Student') {
-                            navigate('/StudentDashboard');
+                        } else if (role === 'Freshman') {
+                            navigate('/FreshmanDashboard');
+                        } else if (role === 'Transferee') {
+                            navigate('/TransfereeDashboard');
+                        } else if (role === 'Shiftee') {
+                            navigate('/ShifteeDashboard');
+                        } else if (role === 'Regular' || res.data.role === "Irregular") {
+                            navigate('/RegIrregDashboard');
                         } else if (role === 'Society Officer') {
                             navigate('/SocOfficerDashboard');
                         } else if (role === 'Adviser') {

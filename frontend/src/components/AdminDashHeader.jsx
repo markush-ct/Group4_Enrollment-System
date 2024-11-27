@@ -10,6 +10,7 @@ function AdminDashHeader() {
 
     const navigate = useNavigate();
     const [accName, setAccName] = useState('');
+    const [accRole, setAccRole] = useState('');
 
     axios.defaults.withCredentials = true;
   //RETURNING ACCOUNT NAME IF LOGGED IN
@@ -19,6 +20,7 @@ function AdminDashHeader() {
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);
+          setAccRole(res.data.role);
         } else {
           navigate("/LoginPage");
         }
@@ -66,8 +68,8 @@ function AdminDashHeader() {
             className={style.profileImage}
           /></Link>
           <div className={style.accountName}>
-            <p>LeBron James</p>  {/* CHANGE IT TO ACCNAME */}
-            <span className={style.accountType}>{accName}</span>   {/* CHANGE IT TO ROLE */}
+            <p>{accName}</p>  {/* CHANGE IT TO ACCNAME */}
+            <span className={style.accountType}>{accRole}</span>   {/* CHANGE IT TO ROLE */}
   
           </div>
         </div>

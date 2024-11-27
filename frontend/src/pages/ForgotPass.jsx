@@ -7,7 +7,10 @@ import 'aos/dist/aos.css';
 
 function ForgotPass() {
   const [SideBar, setSideBar] = useState(false);
-
+  const [values, setValues] = useState({
+    email: '',
+    password: ''
+});
 
   useEffect(() => {
     document.body.style.overflow = SideBar ? 'hidden' : 'auto';
@@ -20,6 +23,7 @@ function ForgotPass() {
       once: true,
     });
   }, []);
+
 
   return (
     <>
@@ -38,7 +42,7 @@ function ForgotPass() {
             placeholder="Email" 
             className={styles.inputField} 
           />
-          <button className={styles.resetButton}><span>Reset Password</span></button>
+          <button className={styles.resetButton}><span>Reset Password</span></button> {/* TODO: Pagkaclick nito, ppopup naman container na nag aask ng verification code */}
         </div>
         {/* BACK TO LOG IN PAGE */}
         <div data-aos="fade-up" className={styles.backToLogin}>
