@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '/src/components/Header.jsx';
 import { Stepper, Step, StepLabel } from '@mui/material';
 import styles from '/src/styles/FreshmenAdmissionForm.module.css';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 function FreshmenAdmissionForm() {
   const [activeStep, setActiveStep] = useState(0);
@@ -19,6 +21,13 @@ function FreshmenAdmissionForm() {
     fourthQuarter: '',
     idPicture: null, // For file upload
   });
+   {/* FOR ANIMATION */ }
+   useEffect(() => {
+    AOS.init({
+        duration: 1000,
+        once: true,
+    });
+}, []);
 
   const steps = [ //steps title
     'Admission Information',
@@ -898,7 +907,7 @@ function FreshmenAdmissionForm() {
         </div>
 
         {/* STEPPER */}
-        <div className={styles.container}>
+        <div data-aos="fade-up" className={styles.container}>
         <Stepper
   activeStep={activeStep}
   alternativeLabel
@@ -933,12 +942,12 @@ function FreshmenAdmissionForm() {
           </Stepper>
 
           {/* Step Content */}
-          <div className={styles.stepContent}>
+          <div data-aos="fade-up" className={styles.stepContent}>
             {renderStepContent(activeStep)}
           </div>
 
 
-          <div className={styles.buttons}>
+          <div data-aos="fade-up" className={styles.buttons}>
             <button
               onClick={handleBack}
               disabled={activeStep === 0}
