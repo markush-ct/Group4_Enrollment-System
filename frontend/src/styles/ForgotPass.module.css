@@ -74,7 +74,7 @@
   .resetButton span {
     position: relative;
     z-index: 2; 
-    font-size: 1rem;
+    font-size: 18px;
     font-weight: bold;
     background-color: transparent;
   }
@@ -116,6 +116,228 @@
     color: #296e35; 
   }
   
+
+
+  .popup {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7); 
+    z-index: 2000;
+}
+
+.popupContent {
+    padding: 20px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    text-align: left;
+    position: relative;
+}
+
+.popupContent p{
+  text-align: center;
+}
+
+.popupContent::-webkit-scrollbar {
+    width: 20px;
+}
+
+.popupHeader {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    height: 30px;
+    color: #3d8c4b;
+    margin-bottom: 50px;
+    padding-bottom: 10px;
+
+}
+
+.Message {
+    display: flex;
+    color: #3d8c4b;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    font-weight: 800;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+
+.Message::before,
+.Message::after {
+    content: "";
+    flex: 1; 
+    border-bottom: 1px solid #3d8c4b; 
+    margin: 0 10px; 
+}
+
+
+.messageImage {
+    width: 60px; 
+    vertical-align: middle; 
+}
+
+
+
+.popupText{
+    font-size: 1.0rem;
+    text-align: center;
+}
+.popupHeader h2 {
+    font-size: 2.0rem;
+    margin: 0;
+    text-align: center;
+}
+
+.popupHeader h3 {
+  font-size: 1.5rem;
+  color: #3d8c4b;
+  background-color: transparent;
+  margin: 0;
+  text-align: center;
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.2s;
+    position: absolute; 
+    top: 0;             
+    right: 0;          
+    padding: 10px;     
+}
+.closeButton:hover {
+    color: #900;
+}
+
+
+.pinContainer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.pinInput {
+  width: 50px;
+  height: 50px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 18px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.pinInput:focus {
+  border-color: #3d8c4b;
+  box-shadow: 0 0 5px rgba(54, 229, 145, 0.5);
+}
+
+.errorText {
+  color: red;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-top: 5px;
+  text-align: center;
+}
+
+
+.toggleNewPasswordIcon {
+  position: absolute;
+  margin-top: -20px;
+  right: 35px; 
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.toggleConfirmPasswordIcon {
+  position: absolute;
+  margin-top: 45px;
+  right: 35px; 
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+
+.toggleNewPasswordIcon img {
+  width: 20px; 
+  height: 20px; 
+  background-color: transparent;
+}
+
+.toggleConfirmPasswordIcon img {
+  width: 20px; 
+  height: 20px; 
+  background-color: transparent;
+}
+
+
+.popupActions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 50px; 
+  margin-top: 20px; 
+}
+
+.popupActions span{
+  background-color: transparent;
+}
+
+.confirmButtonYes{
+  position: relative; 
+  background-color: #3d8c4b;
+  color: white;
+  border: none;
+  padding: 0.8rem 1rem;
+  border-radius: 30px;
+  font-size: 1rem;
+  cursor: pointer;
+  overflow: hidden; 
+  width: 100%;
+  transition: transform 0.3s ease, color 0.3s ease; 
+  z-index: 1; 
+}
+
+.confirmButtonNo{
+  position: relative; 
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 0.8rem 1rem;
+    border-radius: 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    overflow: hidden; 
+    width: 100%;
+    transition: transform 0.3s ease, color 0.3s ease; 
+    z-index: 1; 
+}
+
+.confirmButtonYes:hover, .confirmButtonNo:hover {
+  transform: scale(1.05);
+}
+
+
+
+
 /* MOBILE */
   @media screen and (max-width: 768px) {
     .resetContainer {
@@ -148,6 +370,43 @@
     .backToLogin a {
       font-size: 0.9rem; 
     }
+
+    .popupContent{
+      max-height: 80vh;
+      margin-top: 10%;
+      margin-bottom: 20%;
+      margin-left: 5%;
+      margin-right: 5%;
+  }
+
+  .popupHeader {
+      margin: 10px 0 20px;
+  }
+
+  .popupHeader h2 {
+      font-size: 1.5rem; 
+  }
+
+  .popupText{
+      font-size: 14px;
+  }
+
+  .Message {
+      font-size: 1.25rem; 
+  }
+
+  .toggleNewPasswordIcon {
+    margin-top: -30px;
+    
+  }
+  
+  .toggleConfirmPasswordIcon {
+    margin-top: 35px;
+    
+  }
+
+  
+
   }
   
   @media screen and (max-width: 480px) {
