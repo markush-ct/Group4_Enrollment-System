@@ -787,46 +787,70 @@ app.post("/logoutFunction", (req, res) => {
     }
 });
 
-//FORGOTPASS
-app.post('/ForgotPass', (req, res) => {
-    const email = req.body;
+let verificationPins = {};
+//SEND VERIFICATION CODE
+app.post('/sendPin', (req, res) => {
+    const email = req.body.email;
+
     const emailQuery = `SELECT * FROM account WHERE Email = ?`;
-    db.query(emailQuery, email, (err, result) => {
-        if (err) {
-            return res.json({ message: "Error in server: " + err });
-        } else if (result.length === 1) {
-            const randomCode = Array.from({ length: 4 }, () => crypto.randomBytes(1)[0] % 10)
-                .map(num => num.toString().padStart(1, '0'))
-                .join('');
+    db.query(emailQuery, [email], (err, result) => {
+        if(err){
+            console.log("Error in server: " + err);
+            return res.json({message: "Error in server: "} + err);
+        } else if (result.length === 0){
+            console.log("Email doesn't exist");
+            return res.json({message: "Email doesn't exist"});
+        } else if (result.length > 0){
+            const randomPin = Array.from({ length: 4 }, () => Math.floor(Math.random() * 10)).join('');
+            verificationPins[email] = randomPin;
 
             const emailBody = `
-            We received a request to reset the password for your account
-            
-            If you didn't make the request, just ignore this message. Otherwise, you can reset your password
-            
-            CODE: ${randomCode}
-            
-            Thanks,
-            CvSU - Bacoor`;
+            We received a request to reset the password for your account.
+
+            CODE: ${randomPin}
+
+            If you didn't make the request, ignore this email. Otherwise, you can reset your password.`;
 
             const mailOptions = {
                 from: 'gerlyntan07@gmail.com',
                 to: email,
-                subject: 'Forgot Password Verification Code',
+                subject: 'Password Reset Verification Code',
                 text: emailBody,
             };
 
             try{
-                console.log('Sending email to:', email);
                 transporter.sendMail(mailOptions);
-                console.log('Email sent successfully');
-            } catch (error) {
-                console.error('Error in /sendApprovalEmail:', error);
-                res.status(500).json({
-                    message: 'Internal Server Error',
-                    error: error.message,
-                });
+                console.log("Verification code sent");
+                return res.json({ message: "Verification code sent" });
+            } catch (emailError){
+                return res.json({ message: "Error sending email", error: emailError.message });
             }
+        }
+    })
+})
+
+app.post('/verifyPin', (req, res) => {
+    const email = req.body.email;
+    const pin = req.body.pin;
+
+    if (verificationPins[email] && verificationPins[email] === pin) {
+        delete verificationPins[email];
+        return res.json({ message: "Verified" });
+    } else {
+        return res.json({ message: "Incorrect or expired PIN" });
+    }
+})
+
+
+app.post('/resetPass', (req, res) => {
+    const {email, newPassword} = req.body;
+
+    const updateQuery = `UPDATE account SET Password = ? WHERE Email = ?`;
+    db.query(updateQuery, [newPassword, email], (err, result) => {
+        if(err){
+            return res.json({message: "Error updating password: " + err});
+        } else if(result.affectedRows > 0){
+            return res.json({message: "Password updated successfully"});
         }
     })
 })

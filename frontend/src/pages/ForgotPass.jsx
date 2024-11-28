@@ -4,6 +4,7 @@ import styles from '/src/styles/ForgotPass.module.css';
 import Header from '/src/components/Header.jsx';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import axios from 'axios';
 
 function ForgotPass() {
     const [SideBar, setSideBar] = useState(false);
@@ -34,12 +35,22 @@ function ForgotPass() {
     }, []);
 
     const handleResetClick = () => {
-        if (!values.email) {
+        if (!values.email || values.email === "") {
             setErrorMessage('Email is required.');
+            setShowErrorPopup(true);
             return;
         }
-        setErrorMessage('');
-        setVerificationPrompt(true);
+        axios.post("http://localhost:8080/sendPin", {email: values.email})
+        .then((res) => {
+            if(res.data.message === "Verification code sent"){
+                setErrorMessage('');
+                setVerificationPrompt(true);
+                return;
+            } else if(res.data.message === "Email doesn't exist"){
+                setErrorMessage(res.data.message);
+                setShowErrorPopup(true);
+            }
+        })
     };
 
     const handlePinChange = (index, value) => {
@@ -56,11 +67,21 @@ function ForgotPass() {
     const handlePinSubmit = () => {
         if (values.pin.some((digit) => digit === '') || values.pin.join('').length !== 4) {
             setErrorMessage('Please enter all 4 digits of the PIN.');
+            setShowErrorPopup(true);
             return;
         }
-        setErrorMessage('');
-        setVerificationPrompt(false);
-        setPasswordResetPrompt(true);
+
+        axios.post("http://localhost:8080/verifyPin", {email: values.email, pin: values.pin.join('')})
+        .then((res) => {
+            if(res.data.message === "Verified"){
+                setErrorMessage('');
+                setVerificationPrompt(false);
+                setPasswordResetPrompt(true);
+            } else{
+                setShowErrorPopup(true);
+                setErrorMessage(res.data.message);
+            }
+        })
     };
 
     const handlePasswordSubmit = () => { // error popup
@@ -76,10 +97,12 @@ function ForgotPass() {
             return;
         }
 
-        setErrorMessage('');
-        setShowSuccessPopup(true); // Show success popup
-        setShowConfirmationPopup(true); //  confirmation popup
-        setPasswordResetPrompt(false);
+        if(values.newPassword === values.confirmPassword){
+            setErrorMessage('');
+            setShowConfirmationPopup(true); //  confirmation popup
+            setPasswordResetPrompt(false);
+        }
+        
     };
 
     const togglePasswordVisibility = () => {
@@ -94,13 +117,22 @@ function ForgotPass() {
       
       setShowConfirmationPopup(false); // close
       setShowSuccessPopup(true); 
-   
-      setValues({
-          email: '',
-          pin: ['', '', '', ''],
-          newPassword: '',
-          confirmPassword: '',
-      });
+
+      axios.post("http://localhost:8080/resetPass", {email: values.email, newPassword: values.newPassword})
+        .then((res) => {
+            if(res.data.message === "Password updated successfully"){
+
+                setValues({
+                    email: '',
+                    pin: ['', '', '', ''],
+                    newPassword: '',
+                    confirmPassword: '',
+                });
+            } else{
+                setErrorMessage(res.data.message);
+                setShowErrorPopup(true); 
+            }
+        })
   };
   
 
@@ -146,7 +178,7 @@ function ForgotPass() {
                             <img src="/src/assets/verify-icon.png" alt="Verification Icon" className={styles.messageImage} />
                         </div>
                         <div className={styles.popupHeader}>
-                            <h2>Enter Verification Code</h2>
+                            <h3>Enter Verification Code sent to your Email</h3>
                         </div>
 
                         <div className={styles.pinContainer}>
@@ -265,7 +297,15 @@ function ForgotPass() {
                             <h2>Success</h2>
                         </div>
                         <p className={styles.successText}>Your password has been successfully reset!</p>
-                        <button className={styles.resetButton} onClick={() => setShowSuccessPopup(false)}>
+                        <button className={styles.resetButton} onClick={() => {
+                            setShowSuccessPopup(false);
+                            setValues({
+                                email: '',
+                                pin: ['', '', '', ''],
+                                newPassword: '',
+                                confirmPassword: '',
+                            });
+                            }}>
                             <span>Close</span>
                         </button>
                     </div>
