@@ -1,0 +1,259 @@
+.contentSection {
+    padding: 40px 20px 10px 20px;
+    text-align: justify;
+    background-color: #f7f7f7;
+    color: #333;
+    margin-top: 100px;
+    margin-bottom: 300px;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+  
+
+  .stepper {
+    margin-bottom: 30px;
+    background-color: transparent;
+
+  }
+  
+  .content{
+    background-color: transparent;
+  }
+
+  .stepContent {
+    margin-top: 20px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+
+  .PageTitle {
+    font-size: 3rem;
+    text-transform: uppercase;
+    margin-top: 0px;
+    margin-bottom: 50px;
+    font-weight: 800;
+    color: #3d8c4b;
+    text-align: center;
+  }
+  
+
+  .PageTitle h4{
+      font-size: 1rem;
+      text-transform: none;
+      color: black;
+
+  }
+
+
+
+  .stepTitle {
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+    gap: 10px; 
+    text-align: center;
+    color: #3d8c4b;
+    font-size: 2rem;
+    margin-bottom: 50px; 
+  }
+  
+  .icon {
+    width: 40px; 
+    height: 40px;
+  }
+  
+  
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .formGroup {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    background-color: transparent;
+  }
+  
+  .formGroup label {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #3d8c4b;
+    background-color: transparent;
+  }
+  
+  .formGroup input,
+  .formGroup select, .formGroup textarea {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+  
+  .formGroup input:focus,
+  .formGroup select:focus {
+    border-color: #3d8c4b;
+  }
+  
+  .formGroup input[type="file"] {
+    padding: 5px;
+    font-size: 14px;
+  }
+
+  .formGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    background-color: transparent;
+  }
+  
+  .formGroup {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .downloadButton {
+    position: relative; 
+    background-color: #d0943d;
+    color: white;
+    border: none;
+    padding: 0.8rem 1rem;
+    border-radius: 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    overflow: hidden; 
+    width: 100%;
+    transition: transform 0.3s ease, color 0.3s ease; 
+    z-index: 1; 
+  }
+  
+  .downloadButton span {
+    position: relative;
+    z-index: 2; 
+    font-size: 18px;
+    font-weight: bold;
+    background-color: transparent;
+  }
+  
+  .downloadButton::before {
+    content: ''; 
+    position: absolute;
+    top: 0;
+    left: -100%; 
+    width: 100%;
+    height: 100%;
+    background-color: #3d8c4b; 
+    transition: left 0.3s ease; 
+    z-index: 0; 
+  }
+  
+  .downloadButton:hover::before {
+    left: 0; 
+  }
+  
+  .downloadButton:hover {
+    color: white; 
+    transform: scale(1.01); 
+  }
+  
+  
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.nextButton,
+.backButton {
+  position: relative; 
+  padding: 10px 50px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  overflow: hidden; 
+  transition: transform 0.3s ease, color 0.3s ease;
+  z-index: 1; 
+}
+
+.nextButton span,
+.backButton span {
+  position: relative;
+  z-index: 2; 
+  background-color: transparent;
+}
+
+.nextButton::before,
+.backButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%; 
+  width: 100%;
+  height: 100%;
+  background-color: #3d8c4b; 
+  transition: left 0.3s ease; 
+  z-index: 1;
+}
+
+.nextButton:hover::before,
+.backButton:hover::before {
+  left: 0; 
+}
+
+.nextButton:hover,
+.backButton:hover {
+  transform: scale(1.01); 
+  color: white; 
+}
+
+.backButton {
+  background-color: #d0943d;
+}
+
+.nextButton {
+  background-color: #d0943d;
+}
+
+.nextButton:disabled,
+.backButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+  
+  /* MOBILE */
+  @media (max-width: 768px) {
+    .contentSection {
+      margin-left: 5%;
+      margin-right: 5%;
+    }
+  
+    .PageTitle {
+      font-size: 1.5rem;
+    }
+  
+    .stepContent {
+      padding: 15px;
+    }
+  
+    .formGroup {
+      margin-bottom: 15px;
+    }
+  
+    .buttons {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+  
