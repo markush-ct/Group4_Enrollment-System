@@ -1,0 +1,415 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 0;
+    height: 12vh;
+    z-index: 1000;
+    width: 100%;
+    left: 0;
+}
+
+h2 {
+    background-color: transparent;
+}
+
+.navLeft {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background-color: transparent;
+}
+
+.cvsuLogo {
+    width: auto;
+    height: 50px;
+    background-color: transparent;
+}
+
+.accName {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    background-color: transparent;
+    margin: 0;
+}
+
+.menuBtn {
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+img {
+    background-color: transparent;
+}
+
+.menuIcon {
+    width: 30px;
+    height: 30px;
+}
+
+.navRight {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.searchProfile {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background-color: transparent;
+}
+
+.searchBar {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 14px;
+    outline: none;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: transparent;
+}
+
+.profileImage {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: transparent;
+}
+
+.accountType {
+    font-size: 12px;
+    color: #3d8c4b;
+    background-color: transparent;
+}
+
+.accountName {
+    color: black;
+    font-weight: bold;
+    margin-bottom: 15px;
+    background-color: transparent;
+}
+
+.accountName p {
+    margin-bottom: 0;
+    background-color: transparent;
+}
+
+@media (max-width: 768px) {
+    .header {
+        height: 10vh;
+        padding: 10px 15px;
+    }
+
+    .navLeft {
+        gap: 10px;
+    }
+
+    .cvsuLogo {
+        height: 40px;
+    }
+
+    .accName {
+        font-size: 12px;
+    }
+
+    .menuBtn {
+        padding: 0;
+    }
+
+    .menuIcon {
+        width: 25px;
+        height: 25px;
+    }
+
+    .searchBar {
+        display: none;
+    }
+
+    .navRight {
+        gap: 10px;
+    }
+
+    .profileImage {
+        width: 35px;
+        height: 35px;
+    }
+
+    .accountName p {
+        font-size: 12px;
+    }
+
+    .accountType {
+        font-size: 10px;
+        
+    }
+}
+
+
+@media (max-width: 440px) {
+    .accountName{
+        display: none;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+/* SIDEBAR */
+.sidebar {
+    position: fixed;
+    top: 0;
+    width: 350px;
+    left: -350px; 
+    height: 100%;
+    background-color: black;
+    transition: left 0.3s ease;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.sidebar.open {
+    left: 0; 
+}
+
+
+
+.TopSection {
+    padding-left: 10px;
+    padding-top: 10px;
+    margin-top: 10px;
+    top: 0;
+    background-color: black;
+    color: white;
+    display: grid;  
+    grid-template-columns: auto auto; 
+    grid-template-rows: auto;  
+    align-items: center; 
+    gap: -10px;  
+}
+
+.TopSection img {
+    width: 65px;
+    background-color: transparent;
+}
+
+.TopSection h2 {
+    background-color: transparent;
+    font-size: 18px;
+    margin: 0;  
+    grid-column: 2;  
+}
+
+
+.TopSection2 {
+    margin-top: -20px;
+    padding-left: 10px;
+    padding-top: 10px;
+    top: 0;
+    background-color: black;
+    color: white;
+    align-items: center;
+}
+
+.TopSection2 p {
+    background-color: black;
+    color: white;
+    margin-bottom: 0px;
+    text-align: center;
+}
+
+.nav {
+    background-color: black;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    height: 100%; 
+}
+
+.nav li {
+    background-color: black;
+    color: white;
+    font-size: 1.25rem;
+}
+
+.nav .active {
+    background-color: green; 
+    color: white; 
+    font-weight: bold; 
+}
+
+a {
+    color: white;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+button{
+    background-color: transparent;
+    color: white;
+    font-size: 1.25rem;
+    border: none;
+}
+
+.sidebarHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #004d1f;
+}
+
+
+.sidebarLogo {
+    width: 50px;
+    height: auto;
+}
+
+.menuItemsBot {
+    display: flex;
+    flex-direction: column;
+    position: absolute; 
+    bottom: 0; 
+    width: 100%; 
+    margin-top: auto; 
+}
+
+
+.menuItem {
+    display: flex; 
+    align-items: center; 
+    color: white;
+    padding: 10px 20px; 
+    padding-left: 40px; 
+    cursor: pointer;
+    font-size: 14px;
+    transition: transform 0.3s ease;
+    text-decoration: none; 
+}
+
+.menuItemsTop {
+
+    flex-direction: column;
+    height: 100%; 
+    margin-top: 100px; 
+}
+
+
+
+.menuItem img {
+    height: 30px; 
+    width: auto; 
+    margin-right: 15px; 
+    background-color: transparent;
+}
+
+
+.menuItem a {
+    text-decoration: none;
+    color: inherit; 
+    font-weight: 500; 
+}
+
+
+
+.menuItem:hover {
+    transform: scale(1.02);  
+}
+
+
+
+.closeBtn {
+    background: none;
+    border: none;
+    position: absolute;
+    top: 30px;
+    right: 20px;
+    cursor: pointer;
+  }
+  
+  .closeIcon {
+    background-color: transparent;
+    width: 20px; 
+    height: 20px; 
+  }
+
+
+  
+
+  /* MOBILE */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 0%;  
+    }
+
+    .sidebar.open {
+        width: 100%; 
+    }
+
+
+    .sidebar.open {
+        left: 0;  
+    }
+
+    .TopSection img {
+        margin-left: 20px;
+        width: 60px;  
+    }
+
+    .TopSection h2 {
+        font-size: 16px; 
+        margin-left: 5%;
+        margin-right: 10%;
+        text-align: center;
+        
+    }
+
+
+    .TopSection2 p {
+        font-size: 16px;  
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .menuItemsTop {
+        margin-top: 100px;
+        font-size: 16px; 
+    }
+
+    .menuItem {
+        font-size: 16px;  
+        padding: 10px 15px; 
+    }
+
+    .menuItem img {
+        height: 25px; 
+    }
+
+    .closeBtn {
+        top: 20px;
+        right: 10px;  
+    }
+
+    .closeIcon {
+        width: 20px;
+        height: auto;
+    }
+}

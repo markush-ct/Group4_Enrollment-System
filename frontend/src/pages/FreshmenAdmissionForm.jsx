@@ -13,7 +13,6 @@ function FreshmenAdmissionForm() {
     preferredCampus: 'CvSU - Bacoor',
     strand: '',
     preferredProgram: '',
-    lrn: '',
     finalAverage: '',
     firstQuarter: '',
     secondQuarter: '',
@@ -150,18 +149,7 @@ function FreshmenAdmissionForm() {
                   </select>
                 </div>
   
-                <div className={styles.formGroup}>
-                  <label htmlFor="lrn">LRN:</label>
-                  <input
-                    id="lrn"
-                    name="lrn"
-                    value={formData.lrn}
-                    onChange={handleInputChange}
-                    type="number"
-                    required
-                  />
-                </div>
-   
+              
   
               {/* 1 1 */}
               <div className={styles.formGroup}>

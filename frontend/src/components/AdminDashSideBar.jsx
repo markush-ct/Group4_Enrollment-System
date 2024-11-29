@@ -112,13 +112,14 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
 
                     {/* Log Out and Settings */}
                     <ul className={style.menuItemsBot}>
-                        <li className={`${style.menuItem} ${isActive('/settings') ? style.active : ''}`}>
+                        <li className={`${style.menuItem} ${isActive('/AccountSettings') ? style.active : ''}`}>
                             <img src={settingsIcon} alt="Account Settings" className={style.icon} />
-                            <Link to="/settings">Account Settings</Link>
+                            <Link to="/AccountSettings">Account Settings</Link>
                         </li>
-                        <li className={`${style.menuItem} ${isActive('/logout') ? style.active : ''}`}>
+                        <li className={`${style.menuItem} ${isActive('/logout') ? style.active : ''}`}
+                        onClick={handleLogout}>
                             <img src={logoutIcon} alt="Log Out" className={style.icon} />
-                            <button onClick={handleLogout}>Log Out</button>
+                            Log Out
                         </li>
                     </ul>
                 </nav>

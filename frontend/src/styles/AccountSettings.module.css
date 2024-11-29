@@ -1,0 +1,245 @@
+.contentSection {
+    padding: 40px 20px 10px 20px;
+    text-align: justify;
+    background-color: #f7f7f7;
+    color: #333;
+    margin-bottom: 300px;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.PageTitle {
+    margin-top: 100px;
+    font-size: 2.5rem;
+    color: #3d8c4b;
+    background-color: transparent;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.profileSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.profilePhoto {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profileImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.uploadButton {
+    background-color: transparent;
+    color: #3d8c4b;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    box-shadow: 1px 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    text-align: center;
+    transition: all ease 0.3s;
+}
+
+.uploadButton:hover {
+    background-color: #d0943d;
+    transform:scale(1.01);
+    color: white;
+}
+
+.fileInput {
+    display: none;
+}
+
+.accountDetails {
+    font-size: 18px;
+    color: black;
+    font-weight: bold;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.accountDetails h3 {
+    font-size: 1.5rem;
+    color: black;
+    background-color: transparent;
+}
+
+.accountDetails p {
+    font-size: 1rem;
+    color: #3d8c4b;
+    background-color: transparent;
+}
+
+.sectionHeading {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center; 
+}
+
+.subHeading {
+    font-size: 20px;
+    color: #555;
+    margin-bottom: 30px;
+    text-align: center; 
+}
+
+.changePasswordSection {
+    padding: 20px;
+    background-color: #f9f9f9;
+    width: 50%;
+    margin: 0 auto; 
+    display: flex; 
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center; 
+    box-shadow: 1px 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+}
+
+.passwordForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.formGroup input{
+    background-color: #f7f7f7;
+}
+
+.formLabel {
+    color: #3d8c4b;
+    font-weight: 800;
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.inputContainer {
+    position: relative;
+}
+
+.formInput {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.togglePasswordIcon {
+    position: absolute;
+    top: 45%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.togglePasswordIcon img {
+    width: 20px;
+    height: 20px;
+}
+
+.submitButton {
+    position: relative; 
+    background-color: #d0943d;
+    color: white;
+    border: none;
+    padding: 0.8rem 1rem;
+    border-radius: 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    overflow: hidden; 
+    width: 100%;
+    transition: transform 0.3s ease, color 0.3s ease; 
+    z-index: 1; 
+}
+
+.submitButton span {
+    position: relative;
+    z-index: 2; 
+    font-size: 18px;
+    font-weight: bold;
+    background-color: transparent;
+}
+
+.submitButton::before {
+    content: ''; 
+    position: absolute;
+    top: 0;
+    left: -100%; 
+    width: 100%;
+    height: 100%;
+    background-color: #3d8c4b; 
+    transition: left 0.3s ease; 
+    z-index: 0; 
+}
+
+.submitButton:hover::before {
+    left: 0; 
+}
+
+.submitButton:hover {
+    color: white; 
+    transform: scale(1.02); 
+}
+
+@media (max-width: 768px) {
+    .contentSection {
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .PageTitle {
+        font-size: 2rem;
+    }
+
+    .changePasswordSection {
+        width: 90%;
+    }
+
+    .formLabel {
+        font-size: 12px;
+    }
+
+    .formInput {
+        font-size: 12px;
+    }
+
+    .submitButton {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    .accountDetails h3 {
+        font-size: 1.3rem;
+    }
+
+    .accountDetails p {
+        font-size: 0.9rem;
+    }
+
+    .sectionHeading {
+        font-size: 20px;
+    }
+
+    .subHeading {
+        font-size: 18px;
+    }
+}

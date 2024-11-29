@@ -22,6 +22,7 @@ import TransfereeDashboard from './pages/TransfereeDashboard.jsx';
 import ShifteeDashboard from './pages/ShifteeDashboard.jsx';
 import RegIrregDashboard from './pages/RegIrregDashboard.jsx';
 import FreshmenAdmissionForm from './pages/FreshmenAdmissionForm.jsx';
+import AccountSettings from './components/AccountSettings.jsx';
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
         <Route path="/AccountRequest" element={<AccountRequest />} />
         <Route path="/ForgotPass" element={<ForgotPass />} />
         <Route path="/FreshmenAdmissionForm" element={<FreshmenAdmissionForm />} />
+        <Route path="/AccountSettings" element={<AccountSettings />} />
         {/* Add other routes as needed */}
       </Routes>
     </Router>

@@ -2,24 +2,25 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styles from "/src/styles/AdminDash.module.css";
-import Header from "/src/components/AdminDashHeader.jsx";
+import Header from "/src/components/StudentDashHeader.jsx";
 
+// Set axios defaults globally if not done elsewhere
+axios.defaults.withCredentials = true;
 
 function RegIrregDashboard() {
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const navigate = useNavigate();
 
-
+  // Manage body overflow when sidebar is toggled
   useEffect(() => {
     document.body.style.overflow = SideBar ? "hidden" : "auto";
-    return () => (document.body.style.overflow = "auto");
+    return () => {
+      document.body.style.overflow = "auto";
+    };
   }, [SideBar]);
 
-
-
-  axios.defaults.withCredentials = true;
-  //RETURNING ACCOUNT NAME IF LOGGED IN
+  // Fetch account name if logged in
   useEffect(() => {
     axios
       .get("http://localhost:8080")
@@ -30,24 +31,22 @@ function RegIrregDashboard() {
           navigate("/LoginPage");
         }
       })
-      //RETURNING ERROR IF NOT
       .catch((err) => {
-        console.error("Error validating user session:", err);
+        console.error("Error fetching account name or validating session:", err.message);
       });
-  }, []);
-
-  
-
+  }, [navigate]);
 
   return (
     <>
+      {/* Header with Sidebar Toggle */}
       <Header SideBar={SideBar} setSideBar={setSideBar} />
-      <div className={`${styles.dashboard} container`}>
-        <h1 className={styles.greeting}>Hi {accName || "Loading..."}</h1>
 
-        {/* CONTENT */}
+      {/* Dashboard Content */}
+      <div className={`${styles.dashboard} container`}>
+        <h1 className={styles.greeting}>Hi {accName || "there"}!</h1>
+
+        {/* Add additional dashboard content here */}
       </div>
-   
     </>
   );
 }
