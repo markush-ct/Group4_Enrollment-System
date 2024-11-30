@@ -48,16 +48,42 @@ function AccountSettings() {
   const handleCurrentPasswordSubmit = (event) => {
     event.preventDefault();
 
-    axios.post('http://localhost:8080/matchPass', currentPassword)
-    .then((res) => {
-      if(res.data.message === "Account found"){
-        setIsCurrentPasswordValid(true);
-      } else{
-        setIsCurrentPasswordValid(false);
-        alert("Account not found");
-      }
-    })
+    axios.post('http://localhost:8080/matchPass', { currentPassword })
+      .then((res) => {
+        if (res.data.message === "Account found") {
+          setIsCurrentPasswordValid(true);
+        } else {
+          setIsCurrentPasswordValid(false);
+          alert(res.data.message);
+        }
+      })
+      .catch((err) => {
+        alert("Error: " + err);
+      })
   };
+
+  const submitNewPassword = (event) => {
+    event.preventDefault();
+
+    if (newPassword !== confirmPassword) {
+      alert("Passwords do not match");
+    } else {
+
+      axios.post('http://localhost:8080/changePass', { newPassword, confirmPassword })
+        .then((res) => {
+          if (res.data.message === "Password changed successfully") {
+            alert(res.data.message);
+            window.location.reload();
+          } else {
+            setIsCurrentPasswordValid(false);
+            alert(res.data.message);
+          }
+        })
+        .catch((err) => {
+          alert("Error: " + err);
+        })        
+    }
+  }
 
   return (
     <>
@@ -136,7 +162,7 @@ function AccountSettings() {
                 </button>
               </form>
             ) : (
-              <form className={styles.passwordForm}>
+              <form className={styles.passwordForm} onSubmit={submitNewPassword}>
                 {/* New Password */}
                 <div className={styles.formGroup}>
                   <label htmlFor="newPassword" className={styles.formLabel}>

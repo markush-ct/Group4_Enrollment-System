@@ -10,9 +10,8 @@ axios.defaults.withCredentials = true;
 function RegIrregDashboard() {
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
-  const navigate = useNavigate();
 
-d
+
   useEffect(() => {
     document.body.style.overflow = SideBar ? "hidden" : "auto";
     return () => {
@@ -21,20 +20,26 @@ d
   }, [SideBar]);
 
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:8080")
-      .then((res) => {
-        if (res.data.valid) {
-          setAccName(res.data.name);
-        } else {
-          navigate("/LoginPage");
-        }
-      })
-      .catch((err) => {
-        console.error("Error validating user session:", err);
-      });
-  }, [navigate]);
+//Reuse in other pages that requires logging in
+const navigate = useNavigate();
+axios.defaults.withCredentials = true;
+//RETURNING ACCOUNT NAME IF LOGGED IN
+useEffect(() => {
+  axios
+    .get("http://localhost:8080")
+    .then((res) => {
+      if (res.data.valid) {
+        setAccName(res.data.name);
+      } else {
+        navigate("/LoginPage");
+      }
+    })
+    //RETURNING ERROR IF NOT
+    .catch((err) => {
+      console.error("Error validating user session:", err);
+    });
+}, []);
+//Reuse in other pages that requires logging in
 
   return (
     <>
