@@ -75,7 +75,7 @@ function CreateAcc() {
                 setPrograms(res.data);
             })
             .catch(err => {
-                setError('Error: ' + err);
+                setErrorMsg('Error: ' + err);
             });
     }, []);
 
@@ -189,19 +189,19 @@ function CreateAcc() {
                             <input type="text" name='lastname' value={values.lastname} onChange={(e) => setValues({ ...values, lastname: e.target.value })} required />
 
                             <label>Student ID <span className={styles.required}>*</span></label>
-                            <input type="tel" name='studentID' value={values.studentID} onChange={(e) => setValues({ ...values, studentID: e.target.value })} required />
+                            <input type="text" name='studentID' value={values.studentID} onChange={(e) => setValues({ ...values, studentID: e.target.value })} required />
 
                             <label>CvSU Email <span className={styles.required}>*</span></label>
                             <input type="email" name='email' value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} required />
 
                             <label>Phone Number <span className={styles.required}>*</span></label>
-                            <input type="tel" name='contactnum' value={values.contactnum} onChange={(e) => setValues({ ...values, contactnum: e.target.value })} required />
+                            <input type="text" name='contactnum' value={values.contactnum} onChange={(e) => setValues({ ...values, contactnum: e.target.value })} required />
 
                             <label>Program <span className={styles.required}>*</span></label>
                             <select name='program' value={values.program} onChange={(e) => setValues({ ...values, program: e.target.value })} required >
                                 <option value="" selected disabled>Select your program</option>
                                 {programs.length > 0 ? (
-                                    programs.map((row) => (
+                                    programs.map((row) => ( 
                                         <option key={row.programID} value={row.programID}>{row.programName}</option>
                                     ))
                                 ) : ''}

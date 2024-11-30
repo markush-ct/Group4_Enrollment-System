@@ -27,6 +27,10 @@ function StudentDashSideBar({ isOpen, toggleSidebar }) {
                         { name: "Enrollment Announcement", icon: preEnrollmentIcon, path: "/enrollment-announcement" },
                         { name: "Class Schedule", icon: accountRequestsIcon, path: "/ClassSchedule" },
                     ]);
+                } else if(res.data.valid && res.data.role === "Freshman"){
+                    setNavBtn([
+                        { name: "Dashboard", icon: dashboardIcon, path: "/FreshmanDashboard" }
+                    ]);
                 } else {
                     navigate("/LoginPage");
                 }

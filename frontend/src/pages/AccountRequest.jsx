@@ -4,6 +4,7 @@ import 'aos/dist/aos.css';
 import axios from 'axios';
 import Header from '/src/components/AdminDashHeader.jsx';
 import styles from '/src/styles/AccountRequest.module.css';
+import { useNavigate } from 'react-router-dom';
 
 function AccountRequest() {
   const [SideBar, setSideBar] = useState(false);
@@ -22,6 +23,7 @@ function AccountRequest() {
   const [loading, setLoading] = useState(false);
 
   axios.defaults.withCredentials = true;
+  const navigate = useNavigate();
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
@@ -118,7 +120,7 @@ const handleApprove = async (request) => {
   }
 
   try {
-      const response = await axios.post('http://localhost:8080/sendApprovalEmail', {
+      await axios.post('http://localhost:8080/sendApprovalEmail', {
           email: request.Email,
           name: request.Name,
           accountType: request.AccountType,
@@ -150,7 +152,7 @@ const handleReject = async (request) => {
   }
 
   try {
-      const response = await axios.post('http://localhost:8080/sendEmailRejection', {
+      await axios.post('http://localhost:8080/sendEmailRejection', {
           email: request.Email,
           name: request.Name,
           accountType: request.AccountType

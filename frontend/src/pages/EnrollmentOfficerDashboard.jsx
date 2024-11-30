@@ -21,7 +21,6 @@ ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointE
 function EnrollmentOfficerDashboard() {
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
-  const navigate = useNavigate();
   const [CScount, setCScount] = useState(0);
   const [ITcount, setITcount] = useState(0);
   const [pendingAcc, setPendingAcc] = useState(0);
@@ -44,7 +43,8 @@ function EnrollmentOfficerDashboard() {
     })
   })
 
-
+  //Reuse in other pages that requires logging in
+  const navigate = useNavigate();
   axios.defaults.withCredentials = true;
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
@@ -62,6 +62,7 @@ function EnrollmentOfficerDashboard() {
         console.error("Error validating user session:", err);
       });
   }, []);
+  //Reuse in other pages that requires logging in
 
   // LINE CHART 
   const lineData = useMemo(

@@ -4,8 +4,11 @@ import { Stepper, Step, StepLabel } from '@mui/material';
 import styles from '/src/styles/AdmissionForm.module.css';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function FreshmenAdmissionForm() {
+  const [accName, setAccName] = useState("");
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState({
     applyingFor: '',
@@ -27,6 +30,27 @@ function FreshmenAdmissionForm() {
         once: true,
     });
 }, []);
+
+//Reuse in other pages that requires logging in
+const navigate = useNavigate();
+axios.defaults.withCredentials = true;
+//RETURNING ACCOUNT NAME IF LOGGED IN
+useEffect(() => {
+  axios
+    .get("http://localhost:8080")
+    .then((res) => {
+      if (res.data.valid) {
+        setAccName(res.data.name);
+      } else {
+        navigate("/LoginPage");
+      }
+    })
+    //RETURNING ERROR IF NOT
+    .catch((err) => {
+      console.error("Error validating user session:", err);
+    });
+}, []);
+//Reuse in other pages that requires logging in
 
   const steps = [ //steps title
     'Admission Information',

@@ -47,6 +47,7 @@ const transporter = nodemailer.createTransport({
 
 });
 
+
 //GENERATE RANDOM PASSWORD FOR TEMPORARY ACCOUNT
 function generateRandomPassword(length = 8) {
     return crypto.randomBytes(length).toString('base64').slice(0, length);
@@ -55,7 +56,7 @@ function generateRandomPassword(length = 8) {
 // FETCH ACCOUNT REQUESTS
 app.get('/getAccountReq', (req, res) => {
     const sql = `
-        SELECT CONCAT(Firstname, ' ', Lastname) AS Name, ProgramID, CvSUStudentID as ID, Email, PhoneNo, StudentType AS AccountType FROM student WHERE RegStatus = 'Pending'
+        SELECT CONCAT(Firstname, ' ', Lastname) AS Name, ProgramID, CvSUStudentID as ID, Email, PhoneNo, StudentType AS AccountType FROM student WHERE RegStatus = 'Pending' AND StudentType NOT IN ('Regular', 'Irregular')
         UNION
         SELECT CONCAT(Firstname, ' ', Lastname) AS Name, ProgramID, EmployeeID as ID, Email, PhoneNo, EmpJobRole AS AccountType FROM employee WHERE RegStatus = 'Pending'
         UNION
@@ -150,8 +151,8 @@ app.post('/sendEmailRejection', async (req, res) => {
         }
 
     } catch (error) {
-        console.error('Error in /sendApprovalEmail:', error);
-        res.status(500).json({
+        console.error('Error in /sendEmailRejection:', error);
+        res.json({
             message: 'Internal Server Error',
             error: error.message,
         });
@@ -160,6 +161,7 @@ app.post('/sendEmailRejection', async (req, res) => {
 
 //SEND ACCOUNT APPROVAL
 app.post('/sendApprovalEmail', async (req, res) => {
+
     console.log('Received data:', req.body);
 
     const { email, name, accountType } = req.body;
@@ -446,7 +448,7 @@ app.post('/sendApprovalEmail', async (req, res) => {
 
     } catch (error) {
         console.error('Error in /sendApprovalEmail:', error);
-        res.status(500).json({
+        res.json({
             message: 'Internal Server Error',
             error: error.message,
         });
@@ -544,46 +546,121 @@ app.post('/CreateAcc', (req, res) => {
             const applicantType = req.body.applicantCategory;
 
             if (applicantType === "Regular/Irregular") {
-                //CHECK STUDENT ID TO AVOID DUPLICATION
-                const studentIDQuery = `SELECT * FROM student WHERE CvSUStudentID = ?`;
-                db.query(studentIDQuery, req.body.studentID, (err, result) => {
-                    if (err) return res.json({ message: "Error in server: " + err });
+                //CHECK IF STUDENT EXISTS IN THE REGISTRAR'S DATABASE
+                const checkStudent = `SELECT * FROM student WHERE ProgramID = ? AND CvSUStudentID = ? AND Email = ? AND StudentType = ?`;
 
-                    if (result.length >= 1) {
-                        return res.json({ message: "Student ID exists" });
-                    } else {
-                        //AVOID EMAIL DUPLICATION IN STUDENT TABLE
-                        const cvsuEmailQuery = `SELECT * FROM student WHERE Email = ?`;
-                        db.query(cvsuEmailQuery, req.body.email, (err, result) => {
-                            if (err) return res.json({ message: "Error in server: " + err });
+                const studentValues = [
+                    req.body.program,
+                    req.body.studentID,
+                    req.body.email,
+                    req.body.regIrreg
+                ];
 
-                            if (result.length >= 1) {
-                                return res.json({ message: "Email exists" });
-                            } else {
-                                const regIrregQuery = `INSERT INTO student (Firstname, Middlename, Lastname, CvSUStudentID, Email, PhoneNo, ProgramID, StudentType)
-                                                        VALUES(?, ?, ?, ?, ?, ?, ?, ?)`;
-                                const regIrregValues = [
-                                    req.body.firstname,
-                                    req.body.middlename,
-                                    req.body.lastname,
-                                    req.body.studentID,
-                                    req.body.email,
-                                    req.body.contactnum,
-                                    req.body.program,
-                                    req.body.regIrreg
-                                ]
+                db.query(checkStudent, studentValues, (err, oldStudentResult) => {
 
-                                db.query(regIrregQuery, regIrregValues, (err, result) => {
-                                    if (err) {
-                                        return res.json({ message: "Error in server: " + err });
-                                    } else if (result.affectedRows > 0) {
-                                        return res.json({ message: "Sign up successful. Wait for your temporary account to be sent through your email." });
-                                    } else {
-                                        return res.json({ message: "Sign up failed. No rows affected" });
+                    if (err) {
+                        return res.json({ message: "Error: " + err });
+                    } else if (oldStudentResult.length === 0) {
+                        return res.json({ message: "No matching record found. Please verify your inputs and try again." });
+                    } else if (oldStudentResult.length > 0) {
+                        const student = oldStudentResult[0];
+
+                        const inputProgramID = Number(req.body.program);
+                        const inputStudentID = Number(req.body.studentID);
+
+                        const trimmedEmail = student.Email.trim().toLowerCase();
+                        const trimmedStudentType = student.StudentType.trim().toLowerCase();
+                        const inputEmail = req.body.email.trim().toLowerCase();
+                        const inputRegIrreg = req.body.regIrreg.trim().toLowerCase();
+
+
+                        if (student.RegStatus === "Accepted") {
+                            return res.json({ message: "You already have an active account in our record." });
+                        } else if (student.RegStatus === "Pending") {
+                            if (req.body.email !== student.Email) {
+                                return res.json({ message: "Please use your CvSU Email" });
+
+                                //AUTOMATE SIGN UP IF STUDENT EXISTS IN THE REGISTRAR'S DATABASE
+                            } else if (inputProgramID === student.ProgramID &&
+                                inputStudentID === student.CvSUStudentID &&
+                                inputEmail === trimmedEmail &&
+                                inputRegIrreg === trimmedStudentType) {
+
+                                const tempPassword = generateRandomPassword(8);
+
+                                const nameConcat = student.Firstname + " " + student.Lastname;
+                                const emailBody = `
+                                Hello ${nameConcat},
+                                
+                                Your account has been approved! Please use the following temporary password to log in:
+    
+                                Email: ${req.body.email}
+                                Temporary Password: ${tempPassword}
+    
+                                After logging in, please change your password as soon as possible.
+                                
+                                Best regards,
+                                CvSU Enrollment Officer
+                                `;
+
+                                const mailOptions = {
+                                    from: 'gerlyntan07@gmail.com',
+                                    to: req.body.email,
+                                    subject: 'Account Approval Notification',
+                                    text: emailBody,
+                                };
+
+                                transporter.sendMail(mailOptions, (emailErr) => {
+                                    if (emailErr) {
+                                        console.error('Error sending email:', emailErr);
+                                        return res.json({ message: 'Error sending email' });
                                     }
-                                })
+
+                                    console.log('Email sent successfully');
+
+                                    const updateStudent = `UPDATE student SET PhoneNo = ?, RegStatus = 'Accepted' WHERE Email = ?`;
+                                    const createOldStudentAcc = `INSERT INTO account (Name, Email, Password, Role) 
+                                                                VALUES(?,?,?,?)`;
+
+                                    db.query(updateStudent, [req.body.contactnum, req.body.email], (err, updateOldStudent) => {
+                                        if (err) {
+                                            return res.json({ message: "Error in server: " + err });
+                                        } else if (updateOldStudent.affectedRows > 0) {
+
+                                            const insertValues = [
+                                                nameConcat,
+                                                req.body.email,
+                                                tempPassword,
+                                                "Student"
+                                            ];
+
+                                            db.query(createOldStudentAcc, insertValues, (err, insertResult) => {
+                                                if (err) {
+                                                    return res.json({ message: "Error in server: " + err });
+                                                } else if (insertResult.affectedRows > 0) {
+                                                    return res.json({ message: "Sign up successful. Wait for your temporary account to be sent through your email." });
+                                                }
+                                            })
+                                        }
+                                    })
+                                });
+                            } else {
+                                console.log(oldStudentResult[0].ProgramID + "\n" + oldStudentResult[0].CvSUStudentID + "\n" + oldStudentResult[0].Email + "\n" + oldStudentResult[0].StudentType);
+                                console.log(req.body.program + "\n" + req.body.studentID + "\n" + req.body.email + "\n" + req.body.regIrreg);
+
+                                console.log("Frontend input types:");
+                                console.log(typeof req.body.program, typeof req.body.studentID, typeof req.body.email, typeof req.body.regIrreg);
+
+                                console.log("Database result types:");
+                                console.log(
+                                    typeof student.ProgramID,
+                                    typeof student.CvSUStudentID,
+                                    typeof student.Email,
+                                    typeof student.StudentType
+                                );
+                                return res.json({ message: "Error: " + err });
                             }
-                        })
+                        }
                     }
                 })
 
@@ -794,13 +871,13 @@ app.post('/sendPin', (req, res) => {
 
     const emailQuery = `SELECT * FROM account WHERE Email = ?`;
     db.query(emailQuery, [email], (err, result) => {
-        if(err){
+        if (err) {
             console.log("Error in server: " + err);
-            return res.json({message: "Error in server: "} + err);
-        } else if (result.length === 0){
+            return res.json({ message: "Error in server: " } + err);
+        } else if (result.length === 0) {
             console.log("Email doesn't exist");
-            return res.json({message: "Email doesn't exist"});
-        } else if (result.length > 0){
+            return res.json({ message: "Email doesn't exist" });
+        } else if (result.length > 0) {
             const randomPin = Array.from({ length: 4 }, () => Math.floor(Math.random() * 10)).join('');
             verificationPins[email] = randomPin;
 
@@ -818,11 +895,11 @@ app.post('/sendPin', (req, res) => {
                 text: emailBody,
             };
 
-            try{
+            try {
                 transporter.sendMail(mailOptions);
                 console.log("Verification code sent");
                 return res.json({ message: "Verification code sent" });
-            } catch (emailError){
+            } catch (emailError) {
                 return res.json({ message: "Error sending email", error: emailError.message });
             }
         }
@@ -843,23 +920,59 @@ app.post('/verifyPin', (req, res) => {
 
 
 app.post('/resetPass', (req, res) => {
-    const {email, newPassword} = req.body;
+    const { email, newPassword } = req.body;
 
     const updateQuery = `UPDATE account SET Password = ? WHERE Email = ?`;
     db.query(updateQuery, [newPassword, email], (err, result) => {
-        if(err){
-            return res.json({message: "Error updating password: " + err});
-        } else if(result.affectedRows > 0){
-            return res.json({message: "Password updated successfully"});
+        if (err) {
+            return res.json({ message: "Error updating password: " + err });
+        } else if (result.affectedRows > 0) {
+            return res.json({ message: "Password updated successfully" });
         }
     })
 })
 
+//ACCOUNT SETTINGS MATCH CURRENT PASS
+app.post('/matchPass', (req, res) => {
+    
+    const sql = `SELECT * FROM account WHERE Email = ? AND Password = ?`;
+
+    db.query(sql, [req.session.email, req.body.currentPassword], (err, result) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else if(result.length > 0){
+            return res.json({ message: "Account found", accountData: result[0] });       
+        } else if (result.length === 0){
+            return res.json({ message: "Incorrect password"});     
+        } else {
+            return res.json({ message: "Account not found"});
+        }
+    })
+})
+
+//CHANGE PASS (ACCOUNT SETTINGS)
+app.post('/changePass', (req, res) => {
+    const values = [
+        req.body.confirmPassword,
+        req.session.email
+    ];
+
+    const changePassQuery = `UPDATE account SET Password = ? WHERE Email = ?`;
+    db.query(changePassQuery, values, (err, result) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else if(result.affectedRows === 1){
+            return res.json({message: "Password changed successfully"});
+        } else{
+            return res.json({message: "Error changing password"});
+        }
+    })
+})
 
 //LOGIN
 app.get('/', (req, res) => {
     if (req.session && req.session.accountID) {
-        return res.json({ valid: true, accountID: req.session.accountID, name: req.session.name, role: req.session.role })
+        return res.json({ valid: true, accountID: req.session.accountID, name: req.session.name, role: req.session.role, email: req.session.email})
     } else {
         return res.json({ valid: false })
     }
@@ -888,11 +1001,12 @@ app.post('/LoginPage', (req, res) => {
                             req.session.accountID = user.AccountID;
                             req.session.name = user.Name;
                             req.session.role = studentType;
+                            req.session.email = user.Email;
 
                             return res.json({
                                 message: 'Login successful',
                                 role: studentType,
-                                email: user.Email,
+                                email: req.session.email,
                                 accountID: req.session.accountID,
                                 status: user.Status,
                                 isLoggedIn: true,
@@ -904,11 +1018,12 @@ app.post('/LoginPage', (req, res) => {
                     req.session.accountID = user.AccountID;
                     req.session.name = user.Name;
                     req.session.role = user.Role;
+                    req.session.email = user.Email;
 
                     return res.json({
                         message: 'Login successful',
                         role: req.session.role,
-                        email: user.Email,
+                        email: req.session.email,
                         accountID: req.session.accountID,
                         status: user.Status,
                         isLoggedIn: true,

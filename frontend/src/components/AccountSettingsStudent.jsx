@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import styles from "/src/styles/AccountSettings.module.css";
 import Header from "/src/components/StudentDashHeader.jsx";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function AccountSettings() {
   const [SideBar, setSideBar] = useState(false);
+  const [accName, setAccName] = useState("");
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -11,6 +14,27 @@ function AccountSettings() {
   const [isCurrentPasswordValid, setIsCurrentPasswordValid] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  //Reuse in other pages that requires logging in
+  const navigate = useNavigate();
+  axios.defaults.withCredentials = true;
+  //RETURNING ACCOUNT NAME IF LOGGED IN
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080")
+      .then((res) => {
+        if (res.data.valid) {
+          setAccName(res.data.name);
+        } else {
+          navigate("/LoginPage");
+        }
+      })
+      //RETURNING ERROR IF NOT
+      .catch((err) => {
+        console.error("Error validating user session:", err);
+      });
+  }, []);
+  //Reuse in other pages that requires logging in
 
   // Prevent body scroll when sidebar is active
   useEffect(() => {
@@ -23,13 +47,16 @@ function AccountSettings() {
   // Handle current password submission
   const handleCurrentPasswordSubmit = (event) => {
     event.preventDefault();
-    // Simple check for demonstration purposes (use more secure methods in real apps)
-    if (currentPassword === "123") {
-      setIsCurrentPasswordValid(true);
-    } else {
-      alert("Current password is incorrect.");
-      setIsCurrentPasswordValid(false);
-    }
+
+    axios.post('http://localhost:8080/matchPass', currentPassword)
+    .then((res) => {
+      if(res.data.message === "Account found"){
+        setIsCurrentPasswordValid(true);
+      } else{
+        setIsCurrentPasswordValid(false);
+        alert("Account not found");
+      }
+    })
   };
 
   return (
@@ -74,7 +101,7 @@ function AccountSettings() {
           <div className={styles.changePasswordSection}>
             <h3 className={styles.subHeading}>Change Password</h3>
             {!isCurrentPasswordValid ? (
-              <form onSubmit={handleCurrentPasswordSubmit} className={styles.passwordForm}>
+              <form className={styles.passwordForm}>
                 {/* Current Password */}
                 <div className={styles.formGroup}>
                   <label htmlFor="currentPassword" className={styles.formLabel}>
@@ -104,7 +131,7 @@ function AccountSettings() {
                 </div>
 
                 {/* Submit Button */}
-                <button type="submit" className={styles.submitButton}>
+                <button type="submit" className={styles.submitButton} onClick={handleCurrentPasswordSubmit}>
                   <span>Confirm Current Password</span>
                 </button>
               </form>
