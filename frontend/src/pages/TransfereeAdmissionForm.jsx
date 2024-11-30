@@ -5,7 +5,7 @@ import styles from '/src/styles/AdmissionForm.module.css';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-function FreshmenAdmissionForm() {
+function TransfereeAdmissionForm() {
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState({
     applyingFor: '',
@@ -102,7 +102,7 @@ function FreshmenAdmissionForm() {
                 />
               </div>
   
-              {/* 1 2 */}
+         
            
                 <div className={styles.formGroup}>
                   <label htmlFor="preferredCampus">Preferred Campus:</label>
@@ -115,23 +115,7 @@ function FreshmenAdmissionForm() {
                   />
                 </div>
   
-                <div className={styles.formGroup}>
-                  <label htmlFor="strand">Strand:</label>
-                  <select
-                    id="strand"
-                    name="strand"
-                    value={formData.strand}
-                    onChange={handleInputChange}
-                    required
-                  >
-                    <option value="" disabled>
-                      Select Strand
-                    </option>
-                    <option value="STEM">STEM</option>
-                    <option value="ICIT">ICIT</option>
-                  </select>
-                </div>
-  
+              
                 <div className={styles.formGroup}>
                   <label htmlFor="preferredProgram">Preferred Program:</label>
                   <select
@@ -148,77 +132,6 @@ function FreshmenAdmissionForm() {
                     <option value="BSIT">BSIT</option>
                   </select>
                 </div>
-  
-              
-  
-              {/* 1 1 */}
-              <div className={styles.formGroup}>
-                <label htmlFor="finalAverage">Final Average:</label>
-                <input
-                  id="finalAverage"
-                  name="finalAverage"
-                  value={formData.finalAverage}
-                  onChange={handleInputChange}
-                  type="number"
-                  step="0.01"
-                  required
-                />
-              </div>
-  
-              {/* 1 2 */}
-              <div className={styles.formGrid}>
-                <div className={styles.formGroup}>
-                  <label htmlFor="firstQuarter">1st Quarter:</label>
-                  <input
-                    id="firstQuarter"
-                    name="firstQuarter"
-                    value={formData.firstQuarter}
-                    onChange={handleInputChange}
-                    type="number"
-                    step="0.01"
-                    required
-                  />
-                </div>
-  
-                <div className={styles.formGroup}>
-                  <label htmlFor="secondQuarter">2nd Quarter:</label>
-                  <input
-                    id="secondQuarter"
-                    name="secondQuarter"
-                    value={formData.secondQuarter}
-                    onChange={handleInputChange}
-                    type="number"
-                    step="0.01"
-                    required
-                  />
-                </div>
-  
-                <div className={styles.formGroup}>
-                  <label htmlFor="thirdQuarter">3rd Quarter:</label>
-                  <input
-                    id="thirdQuarter"
-                    name="thirdQuarter"
-                    value={formData.thirdQuarter}
-                    onChange={handleInputChange}
-                    type="number"
-                    step="0.01"
-                    required
-                  />
-                </div>
-  
-                <div className={styles.formGroup}>
-                  <label htmlFor="fourthQuarter">4th Quarter:</label>
-                  <input
-                    id="fourthQuarter"
-                    name="fourthQuarter"
-                    value={formData.fourthQuarter}
-                    onChange={handleInputChange}
-                    type="number"
-                    step="0.01"
-                    required
-                  />
-                </div>
-              </div>
   
               {/* ID */}
               <div className={styles.formGroup}>
@@ -294,6 +207,18 @@ function FreshmenAdmissionForm() {
             required
           />
         </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="email">Email:</label>
+          <input
+            id="email"
+            name="email"
+            value={formData.email || ''}
+            onChange={handleInputChange}
+            type="email"
+            required
+          />
+        </div>
+
 
         <div className={styles.formGroup}>
           <label htmlFor="zipCode">Zip Code:</label>
@@ -308,18 +233,7 @@ function FreshmenAdmissionForm() {
         </div>
         </div>
 
-        <div className={styles.formGroup}>
-          <label htmlFor="email">Email:</label>
-          <input
-            id="email"
-            name="email"
-            value={formData.email || ''}
-            onChange={handleInputChange}
-            type="email"
-            required
-          />
-        </div>
-
+        
         
 
         <div className={styles.formGroup}>
@@ -959,4 +873,4 @@ function FreshmenAdmissionForm() {
   );
 }
 
-export default FreshmenAdmissionForm;
+export default TransfereeAdmissionForm;

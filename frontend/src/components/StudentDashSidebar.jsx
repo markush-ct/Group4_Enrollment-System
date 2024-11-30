@@ -21,11 +21,11 @@ function StudentDashSideBar({ isOpen, toggleSidebar }) {
     useEffect(() => {
         axios.get("http://localhost:8080")
             .then((res) => {
-                if (res.data.valid && res.data.role === "Student") {
+                if (res.data.valid && res.data.role === "Regular" || res.data.role === "Irregular") {
                     setNavBtn([
-                        { name: "Dashboard", icon: dashboardIcon, path: "/student-dashboard" },
+                        { name: "Dashboard", icon: dashboardIcon, path: "/RegIrregDashboard" },
                         { name: "Enrollment Announcement", icon: preEnrollmentIcon, path: "/enrollment-announcement" },
-                        { name: "Class Schedule", icon: accountRequestsIcon, path: "/class-schedule" },
+                        { name: "Class Schedule", icon: accountRequestsIcon, path: "/ClassSchedule" },
                     ]);
                 } else {
                     navigate("/LoginPage");
@@ -74,7 +74,7 @@ function StudentDashSideBar({ isOpen, toggleSidebar }) {
                     <ul className={style.menuItemsBot}>
                         <li className={`${style.menuItem} ${isActive("/settings") ? style.active : ""}`}>
                             <img src={settingsIcon} alt="Account Settings" className={style.icon} />
-                            <Link to="/settings">Account Settings</Link>
+                            <Link to="/AccountSettingsStudent">Account Settings</Link>
                         </li>
                         <li className={`${style.menuItem}`}>
                             <img src={logoutIcon} alt="Log Out" className={style.icon} />

@@ -1,0 +1,146 @@
+.contentSection {
+    padding: 40px 20px 10px 20px;
+    text-align: justify;
+    background-color: #f7f7f7;
+    color: #333;
+    margin-bottom: 300px;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.PageTitle {
+    margin-top: 100px;
+    font-size: 2.5rem;
+    color: #3d8c4b;
+    background-color: transparent;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.classSchedule {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 900px; 
+}
+
+.classSchedule abbr{
+    background-color: transparent;
+    color: black;
+}
+
+.classSchedule button{
+    background-color: transparent;
+    color: black;
+}
+
+.classSchedule button:hover{
+    background-color: transparent;
+    color: black;
+}
+
+.classSchedule span{
+    background-color: transparent;
+    color: black;
+}
+
+.addScheduleBtn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.addScheduleBtn:hover {
+    background-color: #45a049;
+}
+
+.scheduleDetails {
+    margin-top: 20px;
+}
+
+.scheduleDetails h3{
+    color: black;
+    background-color: transparent;
+}
+
+.scheduleList {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    color: #007bff;
+}
+
+.scheduleList li {
+    font-size: 0.9rem;
+    background-color: transparent;
+}
+
+.react-calendar {
+    width: 100%;
+    max-width: 1000px;
+    height: auto;
+    background-color: #ffffff; 
+    border-radius: 15px; 
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    margin: 20px 0; 
+    padding: 20px;
+    font-size: 1.25rem;
+}
+
+.react-calendar__navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.5rem; 
+    color: #3d8c4b;
+    margin-bottom: 20px; 
+}
+
+.react-calendar__tile {
+    background-color: #f9f9f9 !important; 
+    color: #333 !important; 
+    font-size: 1.5rem; 
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+.react-calendar__tile:hover {
+    background-color: #e6f7e9 !important; 
+    transform: scale(1.05); 
+    cursor: pointer;
+}
+
+.react-calendar__tile--active:enabled:hover {
+    background-color: #3d8c4b !important; 
+    color: #fff !important; 
+    transform: scale(1.1); 
+}
+
+.react-calendar__tile--now {
+    border: 2px solid #3d8c4b !important; 
+    font-weight: bold;
+}
+
+.react-calendar__tile--weekend {
+    color: #ff4500 !important; 
+}
+
+@media (max-width: 768px) {
+    .react-calendar {
+        width: 100%;
+        max-width: 100%;
+    }
+}
