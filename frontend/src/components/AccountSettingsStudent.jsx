@@ -4,7 +4,7 @@ import Header from "/src/components/StudentDashHeader.jsx";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function AccountSettings() {
+function AccountSettingsStudent() {
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
@@ -14,6 +14,10 @@ function AccountSettings() {
   const [isCurrentPasswordValid, setIsCurrentPasswordValid] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [successPrompt, setsuccessPrompt] = useState(false); //success
+    const [successMsg, setsuccessMsg] = useState("");
+    const [errorPrompt, setErrorPrompt] = useState(false); //errors
+    const [errorMsg, setErrorMsg] = useState("");
 
   //Reuse in other pages that requires logging in
   const navigate = useNavigate();
@@ -53,8 +57,12 @@ function AccountSettings() {
         if (res.data.message === "Account found") {
           setIsCurrentPasswordValid(true);
         } else {
+          setsuccessPrompt(false);
+                    setsuccessMsg(res.data.message);
+                    setErrorPrompt(true);
+                    setErrorMsg(res.data.message);
           setIsCurrentPasswordValid(false);
-          alert(res.data.message);
+          
         }
       })
       .catch((err) => {
@@ -66,13 +74,20 @@ function AccountSettings() {
     event.preventDefault();
 
     if (newPassword !== confirmPassword) {
-      alert("Passwords do not match");
+      setsuccessPrompt(false);
+                    setsuccessMsg(false);
+                    setErrorPrompt(true);
+                    setErrorMsg("Password do not match");
     } else {
 
       axios.post('http://localhost:8080/changePass', { newPassword, confirmPassword })
         .then((res) => {
           if (res.data.message === "Password changed successfully") {
-            alert(res.data.message);
+            setsuccessPrompt(true);
+                    setsuccessMsg(res.data.message);
+                    setErrorPrompt(false);
+                    setErrorMsg(false);
+          setIsCurrentPasswordValid(false);
             window.location.reload();
           } else {
             setIsCurrentPasswordValid(false);
@@ -115,11 +130,53 @@ function AccountSettings() {
           />
         </div>
 
+         {/* SUCCESS PROMPT */}
+         {successPrompt && (
+                <div data-aos="zoom-out" data-aos-duration="500" className={styles.popup}>
+                    <div className={styles.popupContent}>
+                        <button
+                            className={styles.closeButton}
+                            onClick={() => setsuccessPrompt(false)}
+                        >
+                            &times;
+                        </button>
+                        <div className={styles.popupHeader}>
+                            <h2>Success</h2>
+                        </div>
+                        <div className={styles.Message}>
+                        <img src="/src/assets/checkmark.png" alt="Success Icon" className={styles.messageImage} />
+                        </div>
+                        <p className={styles.popupText}>{successMsg}</p>
+                    </div>
+                </div>
+            )}
+
+            {/* ERROR PROMPT */}
+            {errorPrompt && (
+                <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupError}>
+                    <div className={styles.popupContentError}>
+                        <button
+                            className={styles.closeButton}
+                            onClick={() => setErrorPrompt(false)}
+                        >
+                            &times;
+                        </button>
+                        <div className={styles.popupHeaderError}>
+                            <h2>Error</h2>
+                        </div>
+                        <div className={styles.MessageError} >
+                            <img src="/src/assets/errormark.png" alt="Error Icon" className={styles.messageImage} />
+                        </div>
+                        <p className={styles.popupTextError}>{errorMsg}</p>
+                    </div>
+                </div>
+            )}
+
 
 
           {/* Account Details */}
           <div className={styles.accountDetails}>
-            <h3>LeBron James</h3>           {/* Account Name */}
+            <h3>{accName}</h3>           {/* Account Name */}
             <p>Enrollment Officer</p>       {/* Account Role */}
           </div>
 
@@ -232,4 +289,4 @@ function AccountSettings() {
   );
 }
 
-export default AccountSettings;
+export default AccountSettingsStudent;

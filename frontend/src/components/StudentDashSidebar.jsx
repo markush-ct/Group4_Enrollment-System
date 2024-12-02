@@ -29,7 +29,11 @@ function StudentDashSideBar({ isOpen, toggleSidebar }) {
                     ]);
                 } else if(res.data.valid && res.data.role === "Freshman"){
                     setNavBtn([
-                        { name: "Dashboard", icon: dashboardIcon, path: "/FreshmanDashboard" }
+                        { name: "Admission Form", icon: dashboardIcon, path: "/FreshmenAdmissionForm" }
+                    ]);
+                } else if(res.data.valid && res.data.role === "Transferee"){
+                    setNavBtn([
+                        { name: "Admission Form", icon: dashboardIcon, path: "/TransfereeAdmissionForm" }
                     ]);
                 } else {
                     navigate("/LoginPage");

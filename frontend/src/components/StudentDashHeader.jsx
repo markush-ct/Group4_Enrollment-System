@@ -49,9 +49,7 @@ function StudentDashHeader() {
                         <Link to="/MainPage">
                             <img className={style.cvsuLogo} src="/src/assets/cvsu-logo.png" alt="CvSU logo" />
                         </Link>
-                        <div className={style.accName}>
-                            <h2>{accName}</h2>
-                        </div>
+                
                     </div>
 
                      {/* Search and Profile Section */}

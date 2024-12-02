@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Header from '/src/components/Header.jsx';
+import Header from '/src/components/StudentDashHeader.jsx';
 import { Stepper, Step, StepLabel } from '@mui/material';
 import styles from '/src/styles/AdmissionForm.module.css';
 import AOS from 'aos';
@@ -455,26 +455,77 @@ useEffect(() => {
         </div>
 
         <div className={styles.formGroup}>
-          <label htmlFor="pwd">PWD (If yes, specify):</label>
-          <input
-            id="pwd"
-            name="pwd"
-            value={formData.pwd || ''}
-            onChange={handleInputChange}
-            type="text"
-          />
-        </div>
+  <label>PWD (If yes, specify):</label>
+  <div className={styles.radiobutton}>
+    <label>
+      <input
+        type="radio"
+        name="isPWD"
+        value="yes"
+        checked={formData.isPWD === 'yes'}
+        onChange={handleInputChange}
+      />
+      Yes
+    </label>
+    <label>
+      <input
+        type="radio"
+        name="isPWD"
+        value="no"
+        checked={formData.isPWD === 'no'}
+        onChange={handleInputChange}
+      />
+      No
+    </label>
+  </div>
+  {formData.isPWD === 'yes' && (
+    <input
+      id="pwd"
+      name="pwd"
+      value={formData.pwd || ''}
+      onChange={handleInputChange}
+      type="text"
+      placeholder="Please specify"
+    />
+  )}
+</div>
 
-        <div className={styles.formGroup}>
-          <label htmlFor="indigenous">Indigenous (If yes, specify):</label>
-          <input
-            id="indigenous"
-            name="indigenous"
-            value={formData.indigenous || ''}
-            onChange={handleInputChange}
-            type="text"
-          />
-        </div>
+<div className={styles.formGroup}>
+  <label>Indigenous (If yes, specify):</label>
+  <div className={styles.radiobutton}>
+    <label>
+      <input
+        type="radio"
+        name="isIndigenous"
+        value="yes"
+        checked={formData.isIndigenous === 'yes'}
+        onChange={handleInputChange}
+      />
+      Yes
+    </label>
+    <label>
+      <input
+        type="radio"
+        name="isIndigenous"
+        value="no"
+        checked={formData.isIndigenous === 'no'}
+        onChange={handleInputChange}
+      />
+      No
+    </label>
+  </div>
+  {formData.isIndigenous === 'yes' && (
+    <input
+      id="indigenous"
+      name="indigenous"
+      value={formData.indigenous || ''}
+      onChange={handleInputChange}
+      type="text"
+      placeholder="Please specify"
+    />
+  )}
+</div>
+
       </form>
     </div>
   );

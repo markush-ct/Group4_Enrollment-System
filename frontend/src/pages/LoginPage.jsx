@@ -71,9 +71,9 @@ function LoginPage() {
                         if (role === 'Enrollment Officer') {
                             navigate('/EnrollmentOfficerDashboard');
                         } else if (role === 'Freshman') {
-                            navigate('/FreshmanDashboard');
+                            navigate('/FreshmenAdmissionForm');
                         } else if (role === 'Transferee') {
-                            navigate('/TransfereeDashboard');
+                            navigate('/TransfereeAdmissionForm');
                         } else if (role === 'Shiftee') {
                             navigate('/ShifteeDashboard');
                         } else if (role === 'Regular' || res.data.role === "Irregular") {

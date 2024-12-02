@@ -21,7 +21,7 @@ function SocOff() {
       {/* FOR SOCIETY LIST HAHAHAHA */}
       const socData = [
         {
-            name: 'ACS',
+            name: 'Alliance of Computer Scientist',
             logo: '/src/assets/ACS-logo.svg',
             officers: [
               { name: 'Jelixces Cajontoy', position: 'President' },
@@ -40,7 +40,7 @@ function SocOff() {
             ],
           },
           {
-            name: 'ITS',
+            name: 'Information Technology Society',
             logo: '/src/assets/ITS-logo.svg',
             officers: [
               { name: 'Rheena Bellera', position: 'President' },
