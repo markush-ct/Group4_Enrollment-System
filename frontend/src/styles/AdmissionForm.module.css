@@ -13,7 +13,6 @@
   .stepper {
     margin-bottom: 30px;
     background-color: transparent;
-
   }
   
   .content{
@@ -47,7 +46,7 @@
 
   }
 
-
+  
 
   .stepTitle {
     display: flex;
@@ -251,6 +250,33 @@
   cursor: not-allowed;
 }
 
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: black; 
+  background-color: transparent;
+}
+
+.checkbox {
+  margin-right: 8px; 
+  width: 16px;
+  height: 16px;
+  accent-color: #3d8c4b; 
+  cursor: pointer;
+  color: black;
+}
+
+.checkbox:focus {
+  outline: 2px solid #3d8c4b; 
+  outline-offset: 2px;
+}
+
+.checkboxLabel:hover .checkbox {
+  accent-color: #d0943d; 
+}
+
   
   /* MOBILE */
   @media (max-width: 768px) {
@@ -262,18 +288,38 @@
     .PageTitle {
       font-size: 1.5rem;
     }
+
+    .stepTitle{
+      font-size: 1rem;
+    }
   
     .stepContent {
       padding: 15px;
     }
   
     .formGroup {
-      margin-bottom: 15px;
+      margin-bottom: 5px;
+    }
+
+    .formGroup label {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .formGroup input,
+    .formGroup select, .formGroup textarea {
+      font-size: 14px;
+    }
+
+    .formGrid {
+      grid-template-columns: 1fr; 
+    }
+
+    .downloadButton span{
+      font-size: 14px;
     }
   
-    .buttons {
-      flex-direction: column;
-      gap: 10px;
-    }
   }
+  
+
   

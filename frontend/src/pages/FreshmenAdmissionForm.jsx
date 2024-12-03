@@ -949,6 +949,14 @@ useEffect(() => {
                 Download Application Form</span>
               </button>
             </div>
+
+
+            <div className={styles.formGroup}>
+  <label className={styles.checkboxLabel}>
+    <input type="checkbox" className={styles.checkbox} name="certify" id="certify" />
+    I hereby certify that the information provided is accurate and true.
+  </label>
+</div>
           </form>
         </div>
       );
@@ -1010,7 +1018,7 @@ useEffect(() => {
           </div>
 
 
-          <div data-aos="fade-up" className={styles.buttons}>
+          <div className={styles.buttons}>
             <button
               onClick={handleBack}
               disabled={activeStep === 0}

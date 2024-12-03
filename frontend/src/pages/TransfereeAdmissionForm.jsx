@@ -37,6 +37,8 @@ function TransfereeAdmissionForm() {
     'Schedule Appointment',
   ];
 
+
+  
   const handleNext = () => setActiveStep((prevStep) => prevStep + 1);
   const handleBack = () => setActiveStep((prevStep) => prevStep - 1);
 
@@ -839,6 +841,14 @@ function TransfereeAdmissionForm() {
                 Download Application Form</span>
               </button>
             </div>
+
+            
+            <div className={styles.formGroup}>
+  <label className={styles.checkboxLabel}>
+    <input type="checkbox" className={styles.checkbox} name="certify" id="certify" />
+    I hereby certify that the information provided is accurate and true.
+  </label>
+</div>
           </form>
         </div>
       );
@@ -866,27 +876,31 @@ function TransfereeAdmissionForm() {
   alternativeLabel
   sx={{
     '& .MuiStepIcon-root': {
-      color: 'gray', 
+      color: 'gray',
     },
     '& .MuiStepIcon-root.Mui-active': {
-      color: '#d0943d', 
+      color: '#d0943d',
     },
     '& .MuiStepIcon-root.Mui-completed': {
-      color: '#3d8c4b', 
+      color: '#3d8c4b',
     },
     '& .MuiStepLabel-label': {
-      color: 'rgba(0, 0, 0, 0.6)', 
+      color: 'rgba(0, 0, 0, 0.6)',
+      display: { xs: 'none', sm: 'block' }, // Hide labels on mobile, show on larger screens
     },
     '& .MuiStepLabel-label.Mui-active': {
-      color: '#d0943d', 
+      color: '#d0943d',
       fontWeight: 'bold',
+      display: { xs: 'none', sm: 'block' }, 
     },
     '& .MuiStepLabel-label.Mui-completed': {
       color: '#3d8c4b',
-      fontWeight: 'bold', 
+      fontWeight: 'bold',
+      display: { xs: 'none', sm: 'block' }, 
     },
   }}
 >
+
             {steps.map((label, index) => (
               <Step key={index}>
                 <StepLabel>{label}</StepLabel>
@@ -900,7 +914,7 @@ function TransfereeAdmissionForm() {
           </div>
 
 
-          <div data-aos="fade-up" className={styles.buttons}>
+          <div className={styles.buttons}>
             <button
               onClick={handleBack}
               disabled={activeStep === 0}
