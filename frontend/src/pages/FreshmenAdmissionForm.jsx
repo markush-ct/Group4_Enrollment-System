@@ -984,24 +984,27 @@ useEffect(() => {
   alternativeLabel
   sx={{
     '& .MuiStepIcon-root': {
-      color: 'gray', 
+      color: 'gray',
     },
     '& .MuiStepIcon-root.Mui-active': {
-      color: '#d0943d', 
+      color: '#d0943d',
     },
     '& .MuiStepIcon-root.Mui-completed': {
-      color: '#3d8c4b', 
+      color: '#3d8c4b',
     },
     '& .MuiStepLabel-label': {
-      color: 'rgba(0, 0, 0, 0.6)', 
+      color: 'rgba(0, 0, 0, 0.6)',
+      display: { xs: 'none', sm: 'block' }, // Hide labels on mobile, show on larger screens
     },
     '& .MuiStepLabel-label.Mui-active': {
-      color: '#d0943d', 
+      color: '#d0943d',
       fontWeight: 'bold',
+      display: { xs: 'none', sm: 'block' }, 
     },
     '& .MuiStepLabel-label.Mui-completed': {
       color: '#3d8c4b',
-      fontWeight: 'bold', 
+      fontWeight: 'bold',
+      display: { xs: 'none', sm: 'block' }, 
     },
   }}
 >
