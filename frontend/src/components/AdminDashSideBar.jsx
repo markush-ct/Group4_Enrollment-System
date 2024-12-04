@@ -46,7 +46,7 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
                     "Enrollment Officer": [
                         { name: 'Dashboard', icon: dashboardIcon, path: '/EnrollmentOfficerDashboard' },
                         { name: 'Account Requests', icon: accountRequestsIcon, path: '/AccountRequest' },
-                        { name: 'Pre-enrollment', icon: preEnrollmentIcon, path: '/pre-enrollment' },
+                        { name: 'Pre-enrollment', icon: preEnrollmentIcon, path: '/AdminPreEnrollment' },
                     ],
                     "Society Officer": [
                         { name: 'Dashboard', icon: dashboardIcon, path: '/dashboard' },

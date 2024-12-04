@@ -26,6 +26,7 @@ import TransfereeAdmissionForm from './pages/TransfereeAdmissionForm.jsx';
 import AccountSettings from './components/AccountSettings.jsx';
 import AccountSettingsStudent from './components/AccountSettingsStudent.jsx';
 import ClassSchedule from './pages/ClassSchedule.jsx';
+import AdminPreEnrollment from './pages/AdminPreEnrollment.jsx';
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
         <Route path="/AccountSettings" element={<AccountSettings />} />
         <Route path="/AccountSettingsStudent" element={<AccountSettingsStudent />} />
         <Route path="/ClassSchedule" element={<ClassSchedule />} />
+        <Route path="/AdminPreEnrollment" element={<AdminPreEnrollment />} />
         {/* Add other routes as needed */}
       </Routes>
     </Router>

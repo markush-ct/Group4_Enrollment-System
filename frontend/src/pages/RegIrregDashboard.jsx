@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "/src/styles/StudentDash.module.css";
 import Header from "/src/components/StudentDashHeader.jsx";
 
@@ -97,9 +97,7 @@ useEffect(() => {
   
           <div className={styles.linksSection}>
   <img src="\src\assets\calendar-icon.png" alt="Calendar" />
-  <a href="/class-schedule" className={styles.link}>
-    View Class Schedule
-  </a>
+  <Link to="/ClassSchedule">View Schedule</Link>
 </div>
 
         </div>

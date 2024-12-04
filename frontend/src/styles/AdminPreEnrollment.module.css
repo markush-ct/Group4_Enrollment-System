@@ -1,0 +1,581 @@
+/* Main Page Styling */
+.mainPage {
+    padding: 20px;
+  }
+  
+  .contentSection {
+    padding: 40px 20px 10px 20px;
+    text-align: justify;
+    background-color: #f7f7f7;
+    color: #333;
+    margin-bottom: 300px;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+  
+  .PageTitle {
+    margin-top: 100px;
+    font-size: 2.5rem;
+    color: #3d8c4b;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .filterSection {
+    display: flex;
+    justify-content: flex-end; 
+    align-items: center;
+    margin-bottom: 20px;
+    padding-right: 20px; 
+  }
+  
+  .filterLabel {
+    margin-right: 10px;
+    font-size: 16px;
+  }
+  
+  .filterDropdown {
+    padding: 5px 10px;
+    font-size: 16px;
+  }
+  
+  /* Table Responsiveness */
+  .tableContainer {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 20px;
+  }
+  
+  .requestsTable {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff; 
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .requestsTable th,
+  .requestsTable td {
+    padding: 15px 20px;
+    text-align: left;
+    font-size: 16px;
+    color: #333; 
+    background-color: transparent;
+  }
+  
+  .requestsTable th {
+    background-color: #3d8c4b;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .requestsTable tr {
+    transition: transform ease 0.3s;
+    background-color: transparent;
+  }
+  
+  .requestsTable tr:hover {
+    background-color: #e0e0e0; 
+    cursor: pointer; 
+    transform: scale(1.02); 
+  }
+  
+  .requestsTable tr:nth-child(even) {
+    background-color: #fafafa; 
+  }
+  
+  .requestsTable tr:nth-child(odd) {
+    background-color: #ffffff;
+  }
+  
+  .requestsTable td button {
+    border: none;
+    padding: 8px 16px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 10px;
+    margin-top: 10px;
+  }
+  
+  .requestsTable td button.approveButton {
+    background-color: #28a745;
+    width: 100px;
+    color: white;
+  }
+  
+  .requestsTable td button.rejectButton {
+    background-color: #dc3545;
+    width: 100px;
+    color: white;
+  }
+  
+  .requestsTable td button:hover {
+    opacity: 0.8;
+    transform: scale(1.05); 
+  }
+  
+  .approveButton:hover {
+    background-color: #218838;
+  }
+  
+  .rejectButton:hover {
+    background-color: #c82333;
+  }
+  
+  /* Popup */
+  .popup {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7); 
+    z-index: 2000;
+  }
+  
+  .popupContent {
+    padding: 20px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    text-align: left;
+    position: relative;
+  }
+  
+  .popupHeader {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    height: 30px;
+    color: #d0943d;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+  }
+  
+  .popupText{
+    font-size: 1rem;
+  }
+  
+  .popupText strong{
+    color: rgb(180, 0, 0);
+    font-weight: bold;
+  }
+  
+  .popupHeader h2 {
+    font-size: 2.0rem;
+    margin: 0;
+    text-align: center;
+  }
+  
+  .studentType {
+    display: flex;
+    color: #3d8c4b;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    font-weight: 800;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+  }
+  
+  .studentType::before,
+  .studentType::after {
+    content: "";
+    flex: 1; 
+    border-bottom: 1px solid #3d8c4b; 
+    margin: 0 10px; 
+  }
+  
+  .popupButtons {
+    display: flex;
+    justify-content: center; 
+    gap: 10px; 
+    margin-top: 20px; 
+  }
+  
+  .approveButton, .rejectButton {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #4CAF50; 
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .rejectButton {
+    background-color: #f44336; 
+  }
+  
+  .approveButton:hover, .rejectButton:hover {
+    opacity: 0.8;
+  }
+  
+  
+  .closeButton {
+    background: none;
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.2s;
+    position: absolute; 
+    top: 0;             
+    right: 0;          
+    padding: 10px;     
+  }
+  
+  .closeButton:hover {
+    color: #900;
+  }
+  
+  .popupPrompt {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7); 
+    z-index: 2000;
+  }
+  
+  .popupPromptContent {
+    padding: 20px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    text-align: left;
+    position: relative;
+  }
+  
+  .popupPromptContent::-webkit-scrollbar {
+    width: 20px;
+  }
+  
+  .popupPromptHeader {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    height: 30px;
+    color: #d0943d;;
+    margin-bottom: 50px;
+    padding-bottom: 10px;
+  
+  }
+  
+  .popupPromptMessage {
+    display: flex;
+    color: #3d8c4b;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    font-weight: 800;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+  }
+  
+  
+  .popupPromptMessage::before,
+  .popupPromptMessage::after {
+    content: "";
+    flex: 1; 
+    border-bottom: 1px solid #3d8c4b; 
+    margin: 0 10px; 
+  }
+  
+  
+  .popupPromptmessageImage {
+    width: 60px; 
+    vertical-align: middle; 
+  }
+  
+  
+  
+  .popupPromptText{
+    font-size: 1.0rem;
+    text-align: center;
+  }
+  .popupPromptHeader h2 {
+    font-size: 2.0rem;
+    margin: 0;
+    text-align: center;
+  }
+  
+  .popupPromptcloseButton {
+    background: none;
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.2s;
+    position: absolute; 
+    top: 0;             
+    right: 0;          
+    padding: 10px;     
+  }
+  .popupPromptcloseButton:hover {
+    color: #900;
+  }
+  
+  
+  .popupPromptError {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7); 
+    z-index: 2000;
+  }
+  
+  .popupPromptpContentError {
+    padding: 20px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    text-align: left;
+    position: relative;
+  }
+  
+  .popupPromptContentError::-webkit-scrollbar {
+    width: 20px;
+  }
+  
+  .popupPromptHeaderError {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    height: 30px;
+    color:  #FF0000;;
+    margin-bottom: 50px;
+    padding-bottom: 10px;
+  
+  }
+  
+  .popupPromptMessageError {
+    display: flex;
+    color:  #FF0000;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    font-weight: 800;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+  }
+  
+  .popupPromptMessageError::before,
+  .popupPromptMessageError::after {
+    content: "";
+    flex: 1; 
+    border-bottom: 1px solid #3d8c4b; 
+    margin: 0 10px; 
+  }
+  
+  .popupPromptTextError{
+    font-size: 1.0rem;
+    text-align: center;
+  }
+  .popupPromptHeaderError h2 {
+    font-size: 2.0rem;
+    margin: 0;
+    text-align: center;
+  }
+  
+  
+  .buttonContainer {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+  .OKButton {
+    padding: 12px 24px; 
+    font-size: 1rem;
+    width: 70%;
+    background-color: #3d8c4b;
+    color: white;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden; 
+    transition: transform 0.3s ease, background-color 0.2s ease; 
+  }
+  
+  .OKButton span {
+    position: relative;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    background-color: transparent;
+    z-index: 2;
+  }
+  
+  .OKButton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: #d0943d;
+    transition: left 0.3s ease;
+    z-index: 0;
+  }
+  
+  .OKButton:hover::before {
+    left: 0;
+  }
+  
+  .OKButton:hover {
+    color: #ffffff;
+    transform: scale(1.01); 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+  }
+  
+  
+  
+  
+  
+  /* MOBILE */
+  @media (max-width: 768px) {
+    .contentSection {
+      margin-bottom: 200px;
+      margin-left: 5%;
+      margin-right: 5%;
+    }
+  
+    .PageTitle {
+      font-size: 1.5rem; 
+    }
+  
+    .requestsTable {
+      display: block;
+      width: 100%;
+    }
+  
+    .requestsTable thead {
+      display: none; 
+    }
+  
+    .requestsTable tbody {
+      display: block;
+    }
+  
+    .requestsTable tr {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #ddd;
+      margin-bottom: 15px;
+      padding: 10px;
+      background-color: #fafafa;
+      border-radius: 8px;
+    }
+  
+    .requestsTable td {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+  
+    .requestsTable td:last-child {
+      border-bottom: none;
+    }
+  
+    .requestsTable td:last-child {
+      justify-content: flex-end;
+    }
+  
+    .requestsTable td::before {
+      content: attr(data-label);
+      font-weight: bold;
+      color: #3d8c4b; 
+      padding-right: 10px;
+    }
+  
+    .requestsTable td button {
+      margin-top: 10px;
+      gap: 10px;
+      align-self: flex-end; 
+    }
+  
+    .popupContent {
+      max-height: 80vh;
+      margin-top: 10%;
+      margin-bottom: 20%;
+      margin-left: 5%;
+      margin-right: 5%;
+    }
+  
+    .popupHeader {
+      margin: 10px 0 20px;
+    }
+  
+    .popupHeader h2 {
+      font-size: 1.5rem; 
+    }
+  
+    .popupText {
+      font-size: 14px;
+    }
+  
+    .studentType {
+      font-size: 1.25rem; 
+    }
+  }
+  
+  
+  @media (max-width: 480px) {
+    
+  
+    .filterDropdown {
+      width: 100%; 
+    }
+  
+    .popupContent {
+      width: 90%;
+      margin-left: 5%;
+      margin-right: 5%;
+    }
+  
+    .PageTitle {
+      font-size: 1.25rem; 
+    }
+  
+    .popupHeader h2 {
+      font-size: 1.25rem; 
+    }
+  }
+  
