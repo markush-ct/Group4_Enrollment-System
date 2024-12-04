@@ -8,6 +8,7 @@ import dotenv from 'dotenv';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import { report } from 'process';
+import { devNull } from 'os';
 
 
 dotenv.config();
@@ -48,15 +49,44 @@ const transporter = nodemailer.createTransport({
 });
 
 //FETCH PREFERRED PROGRAM OF FRESHMEN, TRANSFEREE, AND SHIFTEE
-app.get('/getPrefferedProgram', (req,res) => {
-    const readProgram = `SELECT * FROM student WHERE Email = ?`;
-    db.query(readProgram, req.session.email, (err, programRes) => {
+app.get('/getFormData', (req,res) => {
+    const readStudent = `SELECT * FROM student WHERE Email = ?`;
+    const readForm = `SELECT * FROM admissionform WHERE StudentID = ?`;
+
+    db.query(readStudent, req.session.email, (err, studentResult) => {
         if(err){
             return res.json({message: "Error in server: " + err});
-        } else if(programRes.length > 0){
-            const getProgramID = programRes[0].ProgramID;
-            console.log(getProgramID);
-            return res.json({preferredProgram: getProgramID});
+        } else if(studentResult.length > 0){
+            const student = studentResult[0];
+
+            db.query(readForm, student.StudentID, (err, formResult) => {
+                const form = formResult[0];
+                if(err){
+                    return res.json({message: "Error in server: " + err});
+                } else if (formResult.length > 0){
+                    console.log()
+
+                    return res.json({
+                        preferredProgram: student.ProgramID,
+                        studentID: student.StudentID,
+                        IDPicture: form.IDPicture,
+                        branch: form.Branch,
+                        applyingFor: form.ApplyingFor,
+                        controlNo: form.ExamControlNo,
+                        lrn: form.LRN,
+                        strand: form.SHSStrand,
+                        finalAve: form.FinalAverage,
+                        firstQuarter: form.FirstQuarterAve,
+                        secondQuarter: form.SecondQuarterAve,
+                        thirdQuarter: form.ThirdQuarterAve,
+                        fourthQuarter: form.FourthQuarterAve
+                    });
+                } else {
+                    return res.json({message: "Can't fetch form data"});
+                }
+                
+            })
+
         } else {
             return res.json({message: "Error fetching preferred program"});
         }
@@ -75,16 +105,24 @@ app.post('/freshmenAdmissionForm', (req, res) => {
             console.log(getID);
             
             //UPDATE ADMISSION FORM
-            const updateQuery = `UPDATE admission form
+            const updateQuery = `UPDATE admissionform
             SET IDPicture = ?,
             SHSStrand = ?,
-            FinalAverage = ?
+            FinalAverage = ?,
+            FirstQuarterAve = ?,
+            SecondQuarterAve = ?,
+            ThirdQuarterAve = ?,
+            FourthQuarterAve = ?
             WHERE StudentID = ?`;
             
             const values = [
                 req.body.idPicture,
                 req.body.strand,
                 req.body.finalAverage,
+                req.body.firstQuarter,
+                req.body.secondQuarter,
+                req.body.thirdQuarter,
+                req.body.fourthQuarter,
                 getID
             ];
 
@@ -92,9 +130,9 @@ app.post('/freshmenAdmissionForm', (req, res) => {
                 if(err){
                     return res.json({message: "Error in server: " + err});
                 } else if(updateRes.affectedRows > 0){
-                    return res.message({message: "Update success"});
+                    return res.json({message: "Update success"});
                 } else{
-                    return res.message({message: "Update failed"});
+                    return res.json({message: "Update failed"});
                 }
             })
         } else {

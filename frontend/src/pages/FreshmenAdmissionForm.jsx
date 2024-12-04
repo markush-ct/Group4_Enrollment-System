@@ -72,27 +72,53 @@ useEffect(() => {
 
   //GET PREFERRED PROGRAM
   useEffect(() => {
-    axios.get("http://localhost:8080/getPrefferedProgram")
+    axios.get("http://localhost:8080/getFormData")
     .then((res) => {
       console.log(res.data.preferredProgram);
       if(res.data.preferredProgram === 1){
         setPrefProgram("Bachelor of Science in Computer Science");
+        setFormData({
+          applyingFor: res.data.applyingFor || '',
+          applicantType: 'Freshman',
+          preferredCampus: 'CvSU - Bacoor',
+          strand: res.data.strand || '',
+          finalAverage: res.data.finalAve || '',
+          firstQuarter: res.data.firstQuarter || '',
+          secondQuarter: res.data.secondQuarter || '',
+          thirdQuarter: res.data.thirdQuarter || '',
+          fourthQuarter: res.data.fourthQuarter || '',
+          idPicture: res.data.IDPicture || null,
+        });
       } else if(res.data.preferredProgram === 2){
         setPrefProgram("Bachelor of Science in Information Technology");
+        setFormData({
+          applyingFor: res.data.applyingFor || '',
+          applicantType: 'Freshman',
+          preferredCampus: 'CvSU - Bacoor',
+          strand: res.data.strand || '',
+          finalAverage: res.data.finalAve || '',
+          firstQuarter: res.data.firstQuarter || '',
+          secondQuarter: res.data.secondQuarter || '',
+          thirdQuarter: res.data.thirdQuarter || '',
+          fourthQuarter: res.data.fourthQuarter || '',
+          idPicture: res.data.IDPicture || null,
+        });
       }
     })
     .catch((err) => {
       alert("Error fetching preferred program: " + err);
-    })
-  })
+    });
+  }, [])
 
   //AUTOSAVE INPUT IN TEXTFIELDS AFTER 1 SECOND OF CHANGES
   useEffect(() => {
     const timer = setTimeout(() => {
       autoSave();
     }, 1000);
+  
     return () => clearTimeout(timer);
   }, [formData]);
+  
 
   const autoSave = () => {
     setIsSaving(true);
@@ -103,6 +129,7 @@ useEffect(() => {
     })
     .catch((err) => {
       console.log("Error: " + err);
+      alert("Failed to save data");
     })
     .finally(() => {
       setIsSaving(false);
