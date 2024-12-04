@@ -85,7 +85,7 @@ function MainPage() {
                 <div className={`${styles.parallaxSection} ${styles.parallax1}`}>
                     <h2>STEP INTO THE FUTURE WITH</h2>
                     <h1>CAVITE STATE UNIVERSITY</h1>
-                    <Link to="/FreshmenAdmissionForm"><button className={styles.mainButton}><span>ENROLL NOW</span></button></Link>
+                    <Link to="/Apply"><button className={styles.mainButton}><span>ENROLL NOW</span></button></Link>
                 </div>
 
                 <div data-aos="fade-up" className={styles.contentSection}>

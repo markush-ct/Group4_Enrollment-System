@@ -10,12 +10,13 @@ import axios from 'axios';
 function FreshmenAdmissionForm() {
   const [accName, setAccName] = useState("");
   const [activeStep, setActiveStep] = useState(0);
+  const [isSaving, setIsSaving] = useState(false);
+  const [prefProgram, setPrefProgram] = useState("");
   const [formData, setFormData] = useState({
     applyingFor: '',
     applicantType: 'Freshman',
     preferredCampus: 'CvSU - Bacoor',
     strand: '',
-    preferredProgram: '',
     finalAverage: '',
     firstQuarter: '',
     secondQuarter: '',
@@ -68,6 +69,46 @@ useEffect(() => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
+  //GET PREFERRED PROGRAM
+  useEffect(() => {
+    axios.get("http://localhost:8080/getPrefferedProgram")
+    .then((res) => {
+      console.log(res.data.preferredProgram);
+      if(res.data.preferredProgram === 1){
+        setPrefProgram("Bachelor of Science in Computer Science");
+      } else if(res.data.preferredProgram === 2){
+        setPrefProgram("Bachelor of Science in Information Technology");
+      }
+    })
+    .catch((err) => {
+      alert("Error fetching preferred program: " + err);
+    })
+  })
+
+  //AUTOSAVE INPUT IN TEXTFIELDS AFTER 1 SECOND OF CHANGES
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      autoSave();
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [formData]);
+
+  const autoSave = () => {
+    setIsSaving(true);
+
+    axios.post("http://localhost:8080/freshmenAdmissionForm", formData)
+    .then((res) => {
+      console.log("Form saved successfully" + res.data);
+    })
+    .catch((err) => {
+      console.log("Error: " + err);
+    })
+    .finally(() => {
+      setIsSaving(false);
+    })
+  }
+
 
   const handleFileUpload = (e) => {
     setFormData({ ...formData, idPicture: e.target.files[0] });
@@ -158,19 +199,7 @@ useEffect(() => {
   
                 <div className={styles.formGroup}>
                   <label htmlFor="preferredProgram">Preferred Program:</label>
-                  <select
-                    id="preferredProgram"
-                    name="preferredProgram"
-                    value={formData.preferredProgram}
-                    onChange={handleInputChange}
-                    required
-                  >
-                    <option value="" disabled>
-                      Select Program
-                    </option>
-                    <option value="BSCS">BSCS</option>
-                    <option value="BSIT">BSIT</option>
-                  </select>
+                  <input type="text" value={prefProgram} readOnly disabled />
                 </div>
   
               

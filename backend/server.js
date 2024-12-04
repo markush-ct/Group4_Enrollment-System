@@ -47,6 +47,62 @@ const transporter = nodemailer.createTransport({
 
 });
 
+//FETCH PREFERRED PROGRAM OF FRESHMEN, TRANSFEREE, AND SHIFTEE
+app.get('/getPrefferedProgram', (req,res) => {
+    const readProgram = `SELECT * FROM student WHERE Email = ?`;
+    db.query(readProgram, req.session.email, (err, programRes) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else if(programRes.length > 0){
+            const getProgramID = programRes[0].ProgramID;
+            console.log(getProgramID);
+            return res.json({preferredProgram: getProgramID});
+        } else {
+            return res.json({message: "Error fetching preferred program"});
+        }
+    })
+})
+
+//ADMISSION FORM AUTO SAVE EVERY INPUT CHANGES
+app.post('/freshmenAdmissionForm', (req, res) => {
+    //READ FOR STUDENTID COLUMN FIRST
+    const readID = `SELECT * FROM student WHERE Email = ?`;
+    db.query(readID, req.session.email, (err, idResult) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else if (idResult.length > 0){
+            const getID = idResult[0].StudentID;
+            console.log(getID);
+            
+            //UPDATE ADMISSION FORM
+            const updateQuery = `UPDATE admission form
+            SET IDPicture = ?,
+            SHSStrand = ?,
+            FinalAverage = ?
+            WHERE StudentID = ?`;
+            
+            const values = [
+                req.body.idPicture,
+                req.body.strand,
+                req.body.finalAverage,
+                getID
+            ];
+
+            db.query(updateQuery, values, (err, updateRes) => {
+                if(err){
+                    return res.json({message: "Error in server: " + err});
+                } else if(updateRes.affectedRows > 0){
+                    return res.message({message: "Update success"});
+                } else{
+                    return res.message({message: "Update failed"});
+                }
+            })
+        } else {
+            return res.json({message: "Error retrieving Student ID"});
+        }
+    })
+})
+
 
 //GENERATE RANDOM PASSWORD FOR TEMPORARY ACCOUNT
 function generateRandomPassword(length = 8) {
@@ -1002,6 +1058,7 @@ app.post('/LoginPage', (req, res) => {
                             req.session.name = user.Name;
                             req.session.role = studentType;
                             req.session.email = user.Email;
+                            req.session.studentID = user.StudentID;
 
                             return res.json({
                                 message: 'Login successful',
@@ -1010,6 +1067,7 @@ app.post('/LoginPage', (req, res) => {
                                 accountID: req.session.accountID,
                                 status: user.Status,
                                 isLoggedIn: true,
+                                studentID: req.session.studentID,
                                 name: req.session.name
                             });
                         }
