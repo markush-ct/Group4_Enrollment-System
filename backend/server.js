@@ -9,6 +9,9 @@ import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import { report } from 'process';
 import { devNull } from 'os';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
 
 
 dotenv.config();
@@ -48,22 +51,23 @@ const transporter = nodemailer.createTransport({
 
 });
 
+
 //FETCH PREFERRED PROGRAM OF FRESHMEN, TRANSFEREE, AND SHIFTEE
-app.get('/getFormData', (req,res) => {
+app.get('/getFormData', (req, res) => {
     const readStudent = `SELECT * FROM student WHERE Email = ?`;
     const readForm = `SELECT * FROM admissionform WHERE StudentID = ?`;
 
     db.query(readStudent, req.session.email, (err, studentResult) => {
-        if(err){
-            return res.json({message: "Error in server: " + err});
-        } else if(studentResult.length > 0){
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if (studentResult.length > 0) {
             const student = studentResult[0];
 
             db.query(readForm, student.StudentID, (err, formResult) => {
                 const form = formResult[0];
-                if(err){
-                    return res.json({message: "Error in server: " + err});
-                } else if (formResult.length > 0){
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else if (formResult.length > 0) {
                     console.log()
 
                     return res.json({
@@ -73,37 +77,82 @@ app.get('/getFormData', (req,res) => {
                         branch: form.Branch,
                         applyingFor: form.ApplyingFor,
                         controlNo: form.ExamControlNo,
-                        lrn: form.LRN,
                         strand: form.SHSStrand,
                         finalAve: form.FinalAverage,
                         firstQuarter: form.FirstQuarterAve,
                         secondQuarter: form.SecondQuarterAve,
                         thirdQuarter: form.ThirdQuarterAve,
-                        fourthQuarter: form.FourthQuarterAve
+                        fourthQuarter: form.FourthQuarterAve,
+                        firstname: student.Firstname,
+                        middlename: student.Middlename,
+                        lastname: student.Lastname,
+                        zipCode: form.ZipCode,
+                        permanentAddress: student.Address,
+                        email: student.Email,
+                        lrn: form.LRN,
+                        contactnum: student.PhoneNo,
+                        sex: student.Gender,
+                        age: student.Age,
+                        dob: student.DOB,
+                        religion: form.Religion,
+                        nationality: form.Nationality,
+                        civilStatus: form.CivilStatus,
+                        isPWD: form.PWD,
+                        pwd: form.PWDSpecification,
+                        isIndigenous: form.Indigenous,
+                        indigenous: form.IndigenousSpecification,
+                        fatherName: form.FatherName,
+                        motherName: form.MotherName,
+                        guardianName: form.GuardianName,
+                        fatherContact: form.FatherContactNo,
+                        motherContact: form.MotherContactNo,
+                        guardianContact: form.GuardianContactNo,
+                        fatherOccupation: form.FatherOccupation,
+                        motherOccupation: form.MotherOccupation,
+                        guardianOccupation: form.GuardianOccupation,
+                        siblings: form.NoOfSiblings,
+                        birthOrder: form.BirthOrder,
+                        familyIncome: form.MonthlyFamilyIncome,
+                        guardianRelationship: form.GuardianRelationship,
+                        elementarySchool: form.ElemSchoolName,
+                        elementaryAddress: form.ElemSchoolAddress	,
+                        elementaryYearGraduated: form.ElemYearGraduated,                        
+                        elementarySchoolType: form.ElemSchoolType,
+                        seniorHighSchool: form.SHSchoolName,
+                        seniorHighAddress: form.SHSchoolAddress,
+                        seniorHighYearGraduated: form.SHYearGraduated,
+                        seniorHighSchoolType: form.SHSchoolType,
+                        vocationalSchool: form.VocationalSchoolName,
+                        vocationalAddress: form.VocationalSchoolAddress,
+                        vocationalYearGraduated: form.VocationalYearGraduated,
+                        vocationalSchoolType: form.VocationalSchooltype,
+                        medicalConditions: form.MedicalHistory,
+                        medications: form.Medication,
+                        controlNo: form.ExamControlNo,
+                        applicationStatus: form.AdmissionStatus
                     });
                 } else {
-                    return res.json({message: "Can't fetch form data"});
+                    return res.json({ message: "Can't fetch form data" });
                 }
-                
+
             })
 
         } else {
-            return res.json({message: "Error fetching preferred program"});
+            return res.json({ message: "Error fetching preferred program" });
         }
     })
 })
 
-//ADMISSION FORM AUTO SAVE EVERY INPUT CHANGES
-app.post('/freshmenAdmissionForm', (req, res) => {
+//ADMISSION FORM TABLE AUTO SAVE EVERY INPUT CHANGES
+app.post('/admissionFormTable', (req, res) => {
     //READ FOR STUDENTID COLUMN FIRST
     const readID = `SELECT * FROM student WHERE Email = ?`;
     db.query(readID, req.session.email, (err, idResult) => {
-        if(err){
-            return res.json({message: "Error in server: " + err});
-        } else if (idResult.length > 0){
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if (idResult.length > 0) {
             const getID = idResult[0].StudentID;
-            console.log(getID);
-            
+            console.log(req.body.medicalConditions, req.body.medications);
             //UPDATE ADMISSION FORM
             const updateQuery = `UPDATE admissionform
             SET IDPicture = ?,
@@ -112,9 +161,45 @@ app.post('/freshmenAdmissionForm', (req, res) => {
             FirstQuarterAve = ?,
             SecondQuarterAve = ?,
             ThirdQuarterAve = ?,
-            FourthQuarterAve = ?
+            FourthQuarterAve = ?,
+            ZipCode = ?,
+            LRN = ?,
+            Religion = ?,
+            Nationality = ?,
+            CivilStatus = ?,
+            PWD = ?,
+            PWDSpecification = ?,
+            Indigenous = ?,
+            IndigenousSpecification = ?,
+            FatherName = ?,
+            MotherName = ?,
+            GuardianName = ?,
+            FatherContactNo = ?,
+            MotherContactNo = ?,
+            GuardianContactNo = ?,
+            FatherOccupation = ?,
+            MotherOccupation = ?,
+            GuardianOccupation = ?,
+            GuardianRelationship = ?,
+            NoOfSiblings = ?,
+            BirthOrder = ?,
+            MonthlyFamilyIncome = ?,            
+            ElemSchoolName = ?,
+            ElemSchoolAddress = ?,
+            ElemYearGraduated = ?,
+            ElemSchoolType = ?,
+            SHSchoolName = ?,
+            SHSchoolAddress = ?,
+            SHYearGraduated = ?,
+            SHSchoolType = ?,
+            VocationalSchoolName = ?,
+            VocationalSchoolAddress = ?,
+            VocationalYearGraduated = ?,
+            VocationalSchooltype = ?,
+            MedicalHistory = ?,
+            Medication = ?
             WHERE StudentID = ?`;
-            
+
             const values = [
                 req.body.idPicture,
                 req.body.strand,
@@ -123,20 +208,102 @@ app.post('/freshmenAdmissionForm', (req, res) => {
                 req.body.secondQuarter,
                 req.body.thirdQuarter,
                 req.body.fourthQuarter,
+                req.body.zipCode,
+                req.body.lrn,
+                req.body.religion,
+                req.body.nationality,
+                req.body.civilStatus,
+                req.body.isPWD,
+                req.body.pwd,
+                req.body.isIndigenous,
+                req.body.indigenous,
+                req.body.fatherName,
+                req.body.motherName,
+                req.body.guardianName,
+                req.body.fatherContact,
+                req.body.motherContact,
+                req.body.guardianContact,
+                req.body.fatherOccupation,
+                req.body.motherOccupation,
+                req.body.guardianOccupation,
+                req.body.guardianRelationship,
+                req.body.siblings,
+                req.body.birthOrder,
+                req.body.familyIncome,
+                req.body.elementarySchool,
+                req.body.elementaryAddress,
+                req.body.elementaryYearGraduated,
+                req.body.elementarySchoolType,
+                req.body.seniorHighSchool,
+                req.body.seniorHighAddress,
+                req.body.seniorHighYearGraduated,
+                req.body.seniorHighSchoolType,
+                req.body.vocationalSchool,
+                req.body.vocationalAddress,
+                req.body.vocationalYearGraduated,
+                req.body.vocationalSchoolType,
+                req.body.medicalConditions,
+                req.body.medications,
                 getID
             ];
 
             db.query(updateQuery, values, (err, updateRes) => {
-                if(err){
-                    return res.json({message: "Error in server: " + err});
-                } else if(updateRes.affectedRows > 0){
-                    return res.json({message: "Update success"});
-                } else{
-                    return res.json({message: "Update failed"});
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else if (updateRes.affectedRows > 0) {
+                    return res.json({ message: "Update success" });
+                } else {
+                    return res.json({ message: "Update failed" });
                 }
             })
         } else {
-            return res.json({message: "Error retrieving Student ID"});
+            return res.json({ message: "Error retrieving Student ID" });
+        }
+    })
+})
+
+
+//STUDENT TABLE AUTO SAVE EVERY INPUT CHANGES
+app.post('/studentTable', (req, res) => {
+    //READ FOR STUDENTID COLUMN FIRST
+    const readID = `SELECT * FROM student WHERE Email = ?`;
+    db.query(readID, req.session.email, (err, idResult) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if (idResult.length > 0) {
+            const getID = idResult[0].StudentID;
+
+            const updateStudentTbl = `UPDATE student
+            SET Firstname = ?,
+            Middlename = ?,
+            Lastname = ?,
+            Gender = ?,
+            Age = ?,
+            Address = ?,
+            DOB = ?
+            WHERE Email = ?
+            `;
+
+            const studentTblValues = [
+                req.body.firstName,
+                req.body.middleName,
+                req.body.lastName,
+                req.body.sex,
+                req.body.age,
+                req.body.permanentAddress,
+                req.body.dateOfBirth,
+                req.session.email
+            ];
+
+            db.query(updateStudentTbl, studentTblValues, (err, studentTblRes) => {
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else if (studentTblRes.affectedRows > 0) {
+                    return res.json({ message: "Update success" });
+                }
+            })
+        } else {
+            return res.json({ message: "Error retrieving Student ID" });
         }
     })
 })
@@ -1028,18 +1195,18 @@ app.post('/resetPass', (req, res) => {
 
 //ACCOUNT SETTINGS MATCH CURRENT PASS
 app.post('/matchPass', (req, res) => {
-    
+
     const sql = `SELECT * FROM account WHERE Email = ? AND Password = ?`;
 
     db.query(sql, [req.session.email, req.body.currentPassword], (err, result) => {
-        if(err){
-            return res.json({message: "Error in server: " + err});
-        } else if(result.length > 0){
-            return res.json({ message: "Account found", accountData: result[0] });       
-        } else if (result.length === 0){
-            return res.json({ message: "Incorrect password"});     
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if (result.length > 0) {
+            return res.json({ message: "Account found", accountData: result[0] });
+        } else if (result.length === 0) {
+            return res.json({ message: "Incorrect password" });
         } else {
-            return res.json({ message: "Account not found"});
+            return res.json({ message: "Account not found" });
         }
     })
 })
@@ -1053,12 +1220,12 @@ app.post('/changePass', (req, res) => {
 
     const changePassQuery = `UPDATE account SET Password = ? WHERE Email = ?`;
     db.query(changePassQuery, values, (err, result) => {
-        if(err){
-            return res.json({message: "Error in server: " + err});
-        } else if(result.affectedRows === 1){
-            return res.json({message: "Password changed successfully"});
-        } else{
-            return res.json({message: "Error changing password"});
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if (result.affectedRows === 1) {
+            return res.json({ message: "Password changed successfully" });
+        } else {
+            return res.json({ message: "Error changing password" });
         }
     })
 })
@@ -1066,7 +1233,7 @@ app.post('/changePass', (req, res) => {
 //LOGIN
 app.get('/', (req, res) => {
     if (req.session && req.session.accountID) {
-        return res.json({ valid: true, accountID: req.session.accountID, name: req.session.name, role: req.session.role, email: req.session.email})
+        return res.json({ valid: true, accountID: req.session.accountID, name: req.session.name, role: req.session.role, email: req.session.email })
     } else {
         return res.json({ valid: false })
     }

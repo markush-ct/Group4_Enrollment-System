@@ -18,6 +18,7 @@ function AccountSettingsStudent() {
   const [successMsg, setsuccessMsg] = useState("");
   const [errorPrompt, setErrorPrompt] = useState(false); //errors
   const [errorMsg, setErrorMsg] = useState("");
+  const [accRole, setAccRole] = useState('');
 
   //Reuse in other pages that requires logging in
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ function AccountSettingsStudent() {
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);
+          setAccRole(res.data.role);
         } else {
           navigate("/LoginPage");
         }
@@ -181,7 +183,7 @@ function AccountSettingsStudent() {
         {/* Account Details */}
         <div className={styles.accountDetails}>
           <h3>{accName}</h3>           {/* Account Name */}
-          <p>Enrollment Officer</p>       {/* Account Role */}
+          <p>{accRole}</p>       {/* Account Role */}
         </div>
 
         {/* Change Password Section */}
