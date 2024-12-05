@@ -24,7 +24,7 @@ function StudentDashSideBar({ isOpen, toggleSidebar }) {
                 if (res.data.valid && res.data.role === "Regular" || res.data.role === "Irregular") {
                     setNavBtn([
                         { name: "Dashboard", icon: dashboardIcon, path: "/RegIrregDashboard" },
-                        { name: "Enrollment", icon: preEnrollmentIcon, path: "/enrollment-announcement" },
+                        { name: "Enrollment", icon: preEnrollmentIcon, path: "/EnrollmentSidebar" },
                   
                     ]);
                 } else if(res.data.valid && res.data.role === "Freshman"){

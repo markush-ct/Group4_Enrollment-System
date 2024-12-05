@@ -27,6 +27,7 @@ import AccountSettings from './components/AccountSettings.jsx';
 import AccountSettingsStudent from './components/AccountSettingsStudent.jsx';
 import ClassSchedule from './pages/ClassSchedule.jsx';
 import AdminPreEnrollment from './pages/AdminPreEnrollment.jsx';
+import EnrollmentSidebar from './pages/EnrollmentSidebar.jsx';
 
 function App() {
   return (
@@ -61,6 +62,7 @@ function App() {
         <Route path="/AccountSettingsStudent" element={<AccountSettingsStudent />} />
         <Route path="/ClassSchedule" element={<ClassSchedule />} />
         <Route path="/AdminPreEnrollment" element={<AdminPreEnrollment />} />
+        <Route path="/EnrollmentSidebar" element={<EnrollmentSidebar />} />
         {/* Add other routes as needed */}
       </Routes>
     </Router>
