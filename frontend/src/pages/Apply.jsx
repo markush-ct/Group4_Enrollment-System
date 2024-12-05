@@ -107,9 +107,7 @@ function Apply() {
             setSelectedType(null);
         };
     
-
       
-
 
 
 

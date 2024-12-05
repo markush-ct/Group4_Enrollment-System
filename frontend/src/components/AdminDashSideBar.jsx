@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import logoutFunction from '/src/components/logoutFunction.jsx';
 
 function AdminDashSideBar({ isOpen, toggleSidebar }) {
+    const [accName, setAccName] = useState("");
     const navigate = useNavigate();
     const location = useLocation(); // to track current URL
     const [navBtn, setNavBtn] = useState([]);
