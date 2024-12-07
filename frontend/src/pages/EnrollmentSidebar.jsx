@@ -7,55 +7,154 @@ function EnrollmentSidebar() {
   const [activeContainer, setActiveContainer] = useState(null);
   const [uploadedImage, setUploadedImage] = useState(null);
 
-  // CHECKLIST
+// INITIALIZER
+  const studentProgram = "CS"; 
+
+
   const [digitalChecklist, setDigitalChecklist] = useState({
-    "1st Year": {
-      "First Semester": [
-        { code: "GNED 02", courseTitle: "Ethics", units: "3", grade: "", instructor: "" },
-        { code: "GNED 05", courseTitle: "Purposive Communication", units: "3", grade: "", instructor: "" },
-        { code: "GNED 11", courseTitle: "Konteskwalisadong Komunikasyon sa Filipino", units: "3", grade: "", instructor: "" },
-        { code: "COSC 50", courseTitle: "Discrete Structures I", units: "3", grade: "", instructor: "" },
-        { code: "DCIT 21", courseTitle: "Introduction to Computing", units: "3", grade: "", instructor: "" },
-        { code: "DCIT 22", courseTitle: "Computer Programming I", units: "3", grade: "", instructor: "" },
-        { code: "FITT 1", courseTitle: "Movement Enhancement", units: "2", grade: "", instructor: "" },
-        { code: "NSTP 1", courseTitle: "National Service Training Program I", units: "3", grade: "", instructor: "" },
-        { code: "CvSU 101", courseTitle: "Institutional Orientation", units: "1", grade: "", instructor: "" },
-      ],
-      "Second Semester": [
-        { code: "GNED 01", courseTitle: "Art Appreciation", units: "3", grade: "", instructor: "" },
-        { code: "GNED 03", courseTitle: "Mathematics in the Modern World", units: "3", grade: "", instructor: "" },
-        { code: "GNED 06", courseTitle: "Science, Technology and Society", units: "3", grade: "", instructor: "" },
-        { code: "GNED 12", courseTitle: "Dalumat Ng/Sa Filipino", units: "3", grade: "", instructor: "" },
-        { code: "DCIT 23", courseTitle: "Computer Programming II", units: "3", grade: "", instructor: "" },
-        { code: "ITEC 50", courseTitle: "Web Systems and Technologies", units: "3", grade: "", instructor: "" },
-        { code: "FITT 2", courseTitle: "Fitness Exercise", units: "2", grade: "", instructor: "" },
-        { code: "NSTP 2", courseTitle: "National Service Training Program 2", units: "3", grade: "", instructor: "" },
-       
-      ],
+    CS: {
+      "1st Year": {
+        "First Semester": [
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+
+
+        ],
+        "Second Semester": [
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+        ],
+      },
+
+      "2nd Year": {
+        "First Semester": [
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+
+
+        ],
+        "Second Semester": [
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+        ],
+      },
+
+      "3rd Year": {
+        "First Semester": [
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+
+
+        ],
+        "Second Semester": [
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+        ],
+      },
+      "Mid Year": {
+        "First Semester": [
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+         
+
+        ],
+        "Second Semester": [
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+        ],
+      },
+
+      "4TH Year": {
+        "First Semester": [
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+
+
+        ],
+        "Second Semester": [
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+        ],
+      },
+      
     },
-    "2nd Year": {
+    IT: {
+      "1st Year": {
+        "First Semester": [
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+
+
+        ],
+        "Second Semester": [
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+        ],
+      },
+
+      "2nd Year": {
+        "First Semester": [
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+
+
+        ],
+        "Second Semester": [
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+        ],
+      },
+    },
+    "Mid Year": {
       "First Semester": [
-        { code: "GNED 02", courseTitle: "Ethics", units: "3", grade: "", instructor: "" },
-        { code: "GNED 05", courseTitle: "Purposive Communication", units: "3", grade: "", instructor: "" },
-        { code: "GNED 11", courseTitle: "Konteskwalisadong Komunikasyon sa Filipino", units: "3", grade: "", instructor: "" },
-        { code: "COSC 50", courseTitle: "Discrete Structures I", units: "3", grade: "", instructor: "" },
-        { code: "DCIT 21", courseTitle: "Introduction to Computing", units: "3", grade: "", instructor: "" },
-        { code: "DCIT 22", courseTitle: "Computer Programming I", units: "3", grade: "", instructor: "" },
-        { code: "FITT 1", courseTitle: "Movement Enhancement", units: "2", grade: "", instructor: "" },
-        { code: "NSTP 1", courseTitle: "National Service Training Program I", units: "3", grade: "", instructor: "" },
-        { code: "CvSU 101", courseTitle: "Institutional Orientation", units: "1", grade: "", instructor: "" },
-      ],
-      "Second Semester": [
-        { code: "GNED 01", courseTitle: "Art Appreciation", units: "3", grade: "", instructor: "" },
-        { code: "GNED 03", courseTitle: "Mathematics in the Modern World", units: "3", grade: "", instructor: "" },
-        { code: "GNED 06", courseTitle: "Science, Technology and Society", units: "3", grade: "", instructor: "" },
-        { code: "GNED 12", courseTitle: "Dalumat Ng/Sa Filipino", units: "3", grade: "", instructor: "" },
-        { code: "DCIT 23", courseTitle: "Computer Programming II", units: "3", grade: "", instructor: "" },
-        { code: "ITEC 50", courseTitle: "Web Systems and Technologies", units: "3", grade: "", instructor: "" },
-        { code: "FITT 2", courseTitle: "Fitness Exercise", units: "2", grade: "", instructor: "" },
-        { code: "NSTP 2", courseTitle: "National Service Training Program 2", units: "3", grade: "", instructor: "" },
+        { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
        
+
       ],
+
+      "3rd Year": {
+        "First Semester": [
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+
+
+        ],
+        "Second Semester": [
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+        ],
+      },
+      
+
+      "4TH Year": {
+        "First Semester": [
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+
+
+        ],
+        "Second Semester": [
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+        ],
+      },
+      
     },
   });
 
@@ -66,18 +165,11 @@ function EnrollmentSidebar() {
     };
   }, [SideBar]);
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => setUploadedImage(reader.result);
-      reader.readAsDataURL(file);
-    }
-  };
+  
 
-  const updateChecklistField = (year, semester, index, field, value) => {
+  const updateChecklistField = (program, year, semester, index, field, value) => {
     const updatedChecklist = { ...digitalChecklist };
-    updatedChecklist[year][semester][index][field] = value;
+    updatedChecklist[program][year][semester][index][field] = value;
     setDigitalChecklist(updatedChecklist);
   };
 
@@ -91,7 +183,9 @@ function EnrollmentSidebar() {
       <div className={styles.contentSection}>
         <div className={styles.PageTitle}>Enrollment</div>
 
-        {/* Horizontal Row of Containers */}
+      
+
+        {/* BUTTONS */}
         <div className={styles.containers}>
           <div
             className={styles.container}
@@ -129,7 +223,7 @@ function EnrollmentSidebar() {
           </div>
         </div>
 
-        {/* Super Container */}
+        {/* CONTENTS */}
         <div className={styles.superContainer}>
           {activeContainer ? (
             <>
@@ -138,28 +232,11 @@ function EnrollmentSidebar() {
                 {activeContainer === "Requirements Submission" && (
                   <>
                     <div className={styles.Contentt}>
-                      <p className={styles.Title}>Certification of Grades (COG)</p>
-                      <label className={styles.uploadLabel}>
-                        Upload COG:
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageUpload}
-                        />
-                      </label>
-                      {uploadedImage && (
-                        <img
-                          src={uploadedImage}
-                          alt="Uploaded"
-                          className={styles.uploadedImage}
-                        />
-                      )}
-
                       <p className={styles.Title}>Digital Checklist</p>
-                      {Object.keys(digitalChecklist).map((year) => (
+                      {Object.keys(digitalChecklist[studentProgram]).map((year) => (
                         <div className={styles.Contentt} key={year}>
                           <h4 className={styles.yearTitle}>{year}</h4>
-                          {Object.keys(digitalChecklist[year]).map((semester) => (
+                          {Object.keys(digitalChecklist[studentProgram][year]).map((semester) => (
                             <div className={styles.Contentt} key={semester}>
                               <h5 className={styles.semesterTitle}>{semester}</h5>
                               <table className={styles.checklistTable}>
@@ -173,7 +250,7 @@ function EnrollmentSidebar() {
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  {digitalChecklist[year][semester].map((item, index) => (
+                                  {digitalChecklist[studentProgram][year][semester].map((item, index) => (
                                     <tr key={index}>
                                       <td>{item.code}</td>
                                       <td>{item.courseTitle}</td>
@@ -183,7 +260,14 @@ function EnrollmentSidebar() {
                                           type="text"
                                           value={item.grade}
                                           onChange={(e) =>
-                                            updateChecklistField(year, semester, index, "grade", e.target.value)
+                                            updateChecklistField(
+                                              studentProgram,
+                                              year,
+                                              semester,
+                                              index,
+                                              "grade",
+                                              e.target.value
+                                            )
                                           }
                                           className={styles.tableInput}
                                         />
@@ -193,7 +277,14 @@ function EnrollmentSidebar() {
                                           type="text"
                                           value={item.instructor}
                                           onChange={(e) =>
-                                            updateChecklistField(year, semester, index, "instructor", e.target.value)
+                                            updateChecklistField(
+                                              studentProgram,
+                                              year,
+                                              semester,
+                                              index,
+                                              "instructor",
+                                              e.target.value
+                                            )
                                           }
                                           className={styles.tableInput}
                                         />
@@ -208,18 +299,6 @@ function EnrollmentSidebar() {
                       ))}
                     </div>
                   </>
-                )}
-                {activeContainer === "Society Fee Status" && (
-                  <p className={styles.Text}>DI KAPA BAYAD TOL</p>
-                )}
-                {activeContainer === "Advising" && (
-                  <p className={styles.Text}>Get advising details here.</p>
-                )}
-                {activeContainer === "Pre-Enrollment Form" && (
-                  <p className={styles.Text}>CONTENT</p>
-                )}
-                {activeContainer === "Enrollment Status" && (
-                  <p className={styles.Text}>CONTENT</p>
                 )}
               </div>
             </>
