@@ -9,6 +9,7 @@ import axios from 'axios';
 
 function FreshmenAdmissionForm() {
   const [accName, setAccName] = useState("");
+  const [uploadedImage, setUploadedImage] = useState(null);
   const [activeStep, setActiveStep] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
   const [prefProgram, setPrefProgram] = useState("");
@@ -23,6 +24,7 @@ function FreshmenAdmissionForm() {
     thirdQuarter: '',
     fourthQuarter: '',
     idPicture: null, // For file upload
+    idPictureUrl: '',
     firstName: '',
     middleName: '',
     lastName: '',
@@ -66,7 +68,6 @@ function FreshmenAdmissionForm() {
     vocationalAddress: '',
     vocationalYearGraduated: '',
     vocationalSchoolType: '',
-
     medicalConditions: '',
     medications: '',
     controlNo: '',
@@ -113,11 +114,6 @@ function FreshmenAdmissionForm() {
   const handleNext = () => setActiveStep((prevStep) => prevStep + 1);
   const handleBack = () => setActiveStep((prevStep) => prevStep - 1);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
   //GET PREFERRED PROGRAM
   useEffect(() => {
     axios.get("http://localhost:8080/getFormData")
@@ -125,6 +121,8 @@ function FreshmenAdmissionForm() {
         console.log(res.data.preferredProgram);
         if (res.data.preferredProgram === 1) {
           setPrefProgram("Bachelor of Science in Computer Science");
+          setUploadedImage(res.data.idPictureUrl);
+
           setFormData({
             applyingFor: res.data.applyingFor || '',
             applicantType: 'Freshman',
@@ -136,6 +134,7 @@ function FreshmenAdmissionForm() {
             thirdQuarter: res.data.thirdQuarter || '',
             fourthQuarter: res.data.fourthQuarter || '',
             idPicture: res.data.IDPicture || null,
+            idPictureUrl: res.data.idPictureUrl || '',
             firstName: res.data.firstname || '',
             middleName: res.data.middlename || '',
             lastName: res.data.lastname || '',
@@ -179,14 +178,16 @@ function FreshmenAdmissionForm() {
             vocationalAddress: res.data.vocationalAddress || '',
             vocationalYearGraduated: res.data.vocationalYearGraduated || '',
             vocationalSchoolType: res.data.vocationalSchoolType || '',
-
             medicalConditions: res.data.medicalConditions || '',
             medications: res.data.medications || '',
             controlNo: res.data.controlNo || '',
             applicationStatus: res.data.applicationStatus || '',
           });
+          
         } else if (res.data.preferredProgram === 2) {
           setPrefProgram("Bachelor of Science in Information Technology");
+          setUploadedImage(res.data.idPictureUrl);
+
           setFormData({
             applyingFor: res.data.applyingFor || '',
             applicantType: 'Freshman',
@@ -198,6 +199,7 @@ function FreshmenAdmissionForm() {
             thirdQuarter: res.data.thirdQuarter || '',
             fourthQuarter: res.data.fourthQuarter || '',
             idPicture: res.data.IDPicture || null,
+            idPictureUrl: res.data.idPictureUrl || '',
             firstName: res.data.firstname || '',
             middleName: res.data.middlename || '',
             lastName: res.data.lastname || '',
@@ -241,7 +243,6 @@ function FreshmenAdmissionForm() {
             vocationalAddress: res.data.vocationalAddress || '',
             vocationalYearGraduated: res.data.vocationalYearGraduated || '',
             vocationalSchoolType: res.data.vocationalSchoolType || '',
-
             medicalConditions: res.data.medicalConditions || '',
             medications: res.data.medications || '',
             controlNo: res.data.controlNo || '',
@@ -257,13 +258,81 @@ function FreshmenAdmissionForm() {
   const autoSave = () => {
     setIsSaving(true);
 
+      // Create a FormData object to include the file
+    const data = new FormData();
+    data.append("applyingFor", formData.applyingFor);
+    data.append("applicantType", formData.applicantType);
+    data.append("preferredCampus", formData.preferredCampus);
+    data.append("strand", formData.strand);
+    data.append("finalAverage", formData.finalAverage);
+    data.append("firstQuarter", formData.firstQuarter);
+    data.append("secondQuarter", formData.secondQuarter);
+    data.append("thirdQuarter", formData.thirdQuarter);
+    data.append("fourthQuarter", formData.fourthQuarter);
+    if (formData.idPicture) {
+      data.append("idPicture", formData.idPicture);
+    }
+    data.append("idPictureUrl", formData.idPictureUrl);
+    data.append("firstName", formData.firstName);
+    data.append("middleName", formData.middleName);
+    data.append("lastName", formData.lastName);
+    data.append("zipCode", formData.zipCode);
+    data.append("permanentAddress", formData.permanentAddress);
+    data.append("email", formData.email);
+    data.append("lrn", formData.lrn);
+    data.append("contactNumber", formData.contactNumber);
+    data.append("sex", formData.sex);
+    data.append("age", formData.age);
+    data.append("dateOfBirth", formData.dateOfBirth);
+    data.append("religion", formData.religion);
+    data.append("nationality", formData.nationality);
+    data.append("civilStatus", formData.civilStatus);
+    data.append("isPWD", formData.isPWD);
+    data.append("pwd", formData.pwd);
+    data.append("isIndigenous", formData.isIndigenous);
+    data.append("indigenous", formData.indigenous);
+    data.append("fatherName", formData.fatherName);
+    data.append("motherName", formData.motherName);
+    data.append("guardianName", formData.guardianName);
+    data.append("fatherContact", formData.fatherContact);
+    data.append("motherContact", formData.motherContact);
+    data.append("guardianContact", formData.guardianContact);
+    data.append("fatherOccupation", formData.fatherOccupation);
+    data.append("motherOccupation", formData.motherOccupation);
+    data.append("guardianOccupation", formData.guardianOccupation);
+    data.append("guardianRelationship", formData.guardianRelationship);
+    data.append("siblings", formData.siblings);
+    data.append("birthOrder", formData.birthOrder);
+    data.append("familyIncome", formData.familyIncome);
+    data.append("elementarySchool", formData.elementarySchool);
+    data.append("elementaryAddress", formData.elementaryAddress);
+    data.append("elementaryYearGraduated", formData.elementaryYearGraduated);
+    data.append("elementarySchoolType", formData.elementarySchoolType);
+    data.append("seniorHighSchool", formData.seniorHighSchool);
+    data.append("seniorHighAddress", formData.seniorHighAddress);
+    data.append("seniorHighYearGraduated", formData.seniorHighYearGraduated);
+    data.append("seniorHighSchoolType", formData.seniorHighSchoolType);
+    data.append("vocationalSchool", formData.vocationalSchool);
+    data.append("vocationalAddress", formData.vocationalAddress);
+    data.append("vocationalYearGraduated", formData.vocationalYearGraduated);
+    data.append("vocationalSchoolType", formData.vocationalSchoolType);
+    data.append("medicalConditions", formData.medicalConditions);
+    data.append("medications", formData.medications);
+    data.append("controlNo", formData.controlNo);
+    data.append("applicationStatus", formData.applicationStatus);
+
+
     Promise.all([
-      axios.post("http://localhost:8080/admissionFormTable", formData),
+      axios.post("http://localhost:8080/admissionFormTable", data, {
+        headers: { "Content-Type": "multipart/form-data", },
+      }),
       axios.post("http://localhost:8080/studentTable", formData)
     ])
       .then((responses) => {
         console.log("Form saved successfully:", responses[0].data);
         console.log("Student saved successfully:", responses[1].data);
+
+        setUploadedImage(`http://localhost:8080/${responses[0].data.idPictureUrl}`);
       })
       .catch((err) => {
         console.log("Error:", err);
@@ -283,6 +352,10 @@ function FreshmenAdmissionForm() {
     return () => clearTimeout(timer);
   }, [formData]);
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   const handleFileUpload = (e) => {
     setFormData({ ...formData, idPicture: e.target.files[0] });
@@ -448,14 +521,25 @@ function FreshmenAdmissionForm() {
               {/* ID */}
               <div className={styles.formGroup}>
                 <label htmlFor="idPicture">Upload ID 1x1 Picture:</label>
-                <input
-                  id="idPicture"
-                  name="idPicture"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileUpload}
-                  required
-                />
+                {formData.idPicture ? (
+  <div className={styles.imagePreview}>
+    <img
+      src={uploadedImage}
+      alt="Uploaded ID"
+      style={{ maxWidth: "150px", maxHeight: "150px" }}
+    />
+  </div>
+) : (
+  ''
+)}
+  <input
+    id="idPicture"
+    name="idPicture"
+    type="file"
+    accept="image/*"
+    onChange={handleFileUpload}
+    required
+  />
               </div>
             </form>
           </div>

@@ -51,6 +51,20 @@ const transporter = nodemailer.createTransport({
 
 });
 
+// Configure Multer for file uploads
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, "uploads/"); // Folder to store uploaded files
+    },
+    filename: (req, file, cb) => {
+      cb(null, Date.now() + path.extname(file.originalname)); // Use unique filenames
+    },
+});
+
+const upload = multer({ storage });
+
+app.use("/uploads", express.static("uploads"));
+
 
 //FETCH PREFERRED PROGRAM OF FRESHMEN, TRANSFEREE, AND SHIFTEE
 app.get('/getFormData', (req, res) => {
@@ -74,6 +88,7 @@ app.get('/getFormData', (req, res) => {
                         preferredProgram: student.ProgramID,
                         studentID: student.StudentID,
                         IDPicture: form.IDPicture,
+                        idPictureUrl: form.IDPicture,
                         branch: form.Branch,
                         applyingFor: form.ApplyingFor,
                         controlNo: form.ExamControlNo,
@@ -144,7 +159,7 @@ app.get('/getFormData', (req, res) => {
 })
 
 //ADMISSION FORM TABLE AUTO SAVE EVERY INPUT CHANGES
-app.post('/admissionFormTable', (req, res) => {
+app.post('/admissionFormTable', upload.single("idPicture"), (req, res) => {
     //READ FOR STUDENTID COLUMN FIRST
     const readID = `SELECT * FROM student WHERE Email = ?`;
     db.query(readID, req.session.email, (err, idResult) => {
@@ -152,7 +167,10 @@ app.post('/admissionFormTable', (req, res) => {
             return res.json({ message: "Error in server: " + err });
         } else if (idResult.length > 0) {
             const getID = idResult[0].StudentID;
-            console.log(req.body.medicalConditions, req.body.medications);
+            
+            // File path for the uploaded ID picture
+            const idPicturePath = req.file ? req.file.path : req.body.idPictureUrl;
+
             //UPDATE ADMISSION FORM
             const updateQuery = `UPDATE admissionform
             SET IDPicture = ?,
@@ -201,7 +219,7 @@ app.post('/admissionFormTable', (req, res) => {
             WHERE StudentID = ?`;
 
             const values = [
-                req.body.idPicture,
+                idPicturePath,
                 req.body.strand,
                 req.body.finalAverage,
                 req.body.firstQuarter,
@@ -249,9 +267,9 @@ app.post('/admissionFormTable', (req, res) => {
 
             db.query(updateQuery, values, (err, updateRes) => {
                 if (err) {
-                    return res.json({ message: "Error in server: " + err });
+                    return res.json({ message: "Error in server: " + err , });
                 } else if (updateRes.affectedRows > 0) {
-                    return res.json({ message: "Update success" });
+                    return res.json({ message: "Update success" , idPictureUrl: idPicturePath});
                 } else {
                     return res.json({ message: "Update failed" });
                 }
