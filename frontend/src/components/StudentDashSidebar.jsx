@@ -3,7 +3,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import style from "/src/styles/AdminDashHeader.module.css";
 import closeIcon from "/src/assets/close-button.png";
 import dashboardIcon from "/src/assets/dashboardicon.png";
-import accountRequestsIcon from "/src/assets/accrequest-icon.png";
 import preEnrollmentIcon from "/src/assets/applicationreq-icon.png";
 import settingsIcon from "/src/assets/settingsicon.png";
 import logoutIcon from "/src/assets/logouticon.png";

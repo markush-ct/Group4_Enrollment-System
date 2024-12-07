@@ -1,0 +1,173 @@
+
+.contentSection {
+  text-align: justify;
+  background-color: #f7f7f7;
+  color: #333;
+  margin: 150px auto 300px auto;
+  max-width: 80%;
+  border-radius: 8px;
+  transition: box-shadow 0.3s ease;
+}
+
+
+.PageTitle {
+  margin-top: 20px;
+  font-size: 2.5rem;
+  color: #3d8c4b;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+
+.containers {
+  display: flex;
+  justify-content: center;
+  gap: 10px; 
+  overflow-x: auto; 
+  padding: 10px 0; 
+  white-space: nowrap;
+  align-items: center;
+}
+
+.container {
+  flex: 0 0 auto; 
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  color: #3d8c4b;
+  padding: 20px;
+  min-width: 150px; 
+  text-align: center; 
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease; 
+}
+
+.container:hover {
+  transform: translateY(-5px); 
+}
+
+.containerTitle {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.superContainer {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.superContainerTitle {
+  font-size: 20px;
+  color: #3d8c4b;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.superContainerContent {
+  font-size: 16px;
+  color: #555;
+  background-color: transparent;
+}
+
+.superContainerContent label{
+  background-color: transparent;
+}
+
+.superContainerPlaceholder {
+  font-size: 16px;
+  color: #aaa;
+  text-align: center;
+}
+
+.Contentt {
+  background-color: transparent;
+}
+
+.Text {
+  background-color: transparent;
+}
+
+.uploadLabel {
+  display: block;
+  margin: 10px 0;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+input[type="file"] {
+  margin-top: 5px;
+  background-color: transparent;
+}
+
+.uploadedImage {
+  display: block;
+  margin-top: 10px;
+  max-width: 100%;
+  max-height: 200px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: transparent;
+}
+
+.Title {
+  color: #3d8c4b;
+  font-weight: bold;
+  background-color: transparent;
+}
+
+
+.checklistTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background-color: transparent;
+}
+
+.checklistTable th,
+.checklistTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+  width: 20%;
+}
+
+.checklistTable th {
+  color: #ffffff;
+  background-color: #3d8c4b;
+}
+
+.checklistTable td{
+  background-color: white;
+}
+
+.tableInput {
+  width: 100%;
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.uploadedImage {
+  max-width: 100%;
+  height: auto;
+  margin: 10px 0;
+}
+
+.yearTitle{
+  color: #3d8c4b;
+  margin-top: 50px;
+  text-align: center;
+  background-color: transparent;
+}
+
+.semesterTitle{
+  background-color: transparent;
+}
