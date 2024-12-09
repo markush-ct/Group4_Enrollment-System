@@ -31,16 +31,13 @@
 }
 
 .container {
-  flex: 0 0 auto; 
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  flex: 0 0 auto;
   color: #3d8c4b;
   padding: 20px;
   min-width: 150px; 
   text-align: center; 
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
   transition: transform 0.2s ease; 
 }
 
@@ -87,6 +84,28 @@
 
 .Contentt {
   background-color: transparent;
+}
+
+
+.Contentt h3{
+  background-color: transparent;
+  color: #333;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.Contentt p{
+  background-color: transparent;
+  color: #333;
+}
+
+.Contentt h4, h5{
+  background-color: transparent;
+}
+
+.Contentt h3 span{
+  background-color: transparent;
+  color: #3d8c4b;
 }
 
 .Text {
@@ -171,3 +190,121 @@ input[type="file"] {
 .semesterTitle{
   background-color: transparent;
 }
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.nextButton,
+.backButton {
+  position: relative; 
+  padding: 10px 50px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  overflow: hidden; 
+  transition: transform 0.3s ease, color 0.3s ease;
+  z-index: 1; 
+}
+
+.nextButton span,
+.backButton span {
+  position: relative;
+  z-index: 2; 
+  background-color: transparent;
+}
+
+.nextButton::before,
+.backButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%; 
+  width: 100%;
+  height: 100%;
+  background-color: #3d8c4b; 
+  transition: left 0.3s ease; 
+  z-index: 1;
+}
+
+.nextButton:hover::before,
+.backButton:hover::before {
+  left: 0; 
+}
+
+.nextButton:hover,
+.backButton:hover {
+  transform: scale(1.01); 
+  color: white; 
+}
+
+.backButton {
+  background-color: #d0943d;
+}
+
+.nextButton {
+  background-color: #d0943d;
+}
+
+.nextButton:disabled,
+.backButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.uploadContainer {
+  width: 100%;
+  margin: auto;
+  text-align: center;
+  padding: 20px;
+  margin-bottom: 50px;
+  border: 1px solid #d3d3d3;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.uploadTitle {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.uploadBox {
+  width: 50%;
+  height: 200px;
+  margin: auto;
+  border: 2px dashed #4caf50;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+  background-color: #ffffff;
+}
+
+.uploadIcon {
+  width: 100px;
+  height: 100px;
+  opacity: 0.7;
+}
+
+.browseButton {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.browseButton:hover {
+  background-color: #45a049;
+}
+

@@ -1,15 +1,36 @@
 import { useEffect, useState } from "react";
+import { Stepper, Step, StepLabel } from "@mui/material";
 import styles from "/src/styles/Enrollment.module.css";
 import Header from "/src/components/StudentDashHeader.jsx";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 function EnrollmentSidebar() {
   const [SideBar, setSideBar] = useState(false);
-  const [activeContainer, setActiveContainer] = useState(null);
+  const [activeStep, setActiveStep] = useState(0); 
   const [uploadedImage, setUploadedImage] = useState(null);
+  const [SocFeestatus, setSocFeeStatus] = useState("Unpaid"); //value ng socfee
+  const [Advisingstatus, setAdvisingStatus] = useState("Approved"); //value ng advising
+  const [Enrollmentstatus, setEnrollmentStatus] = useState("Enrolled"); //value ng enrollmentstatus
 
-// INITIALIZER
-  const studentProgram = "CS"; 
+  {/* FOR ANIMATION */ }
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true,
+    });
+  }, []);
 
+  // INITIALIZER
+  const studentProgram = "CS";
+
+  const steps = [
+    "Society Fee Status",
+    "Requirements Submission",
+    "Advising",
+    "Pre-Enrollment Form",
+    "Enrollment Status",
+  ];
 
   const [digitalChecklist, setDigitalChecklist] = useState({
     CS: {
@@ -18,8 +39,6 @@ function EnrollmentSidebar() {
           { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
           { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
           { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-
-
         ],
         "Second Semester": [
           { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
@@ -27,131 +46,18 @@ function EnrollmentSidebar() {
           { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
         ],
       },
-
-      "2nd Year": {
-        "First Semester": [
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-
-
-        ],
-        "Second Semester": [
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-        ],
-      },
-
-      "3rd Year": {
-        "First Semester": [
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-
-
-        ],
-        "Second Semester": [
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-        ],
-      },
-      "Mid Year": {
-        "First Semester": [
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-         
-
-        ],
-        "Second Semester": [
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-        ],
-      },
-
-      "4TH Year": {
-        "First Semester": [
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-
-
-        ],
-        "Second Semester": [
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-        ],
-      },
-      
     },
     IT: {
       "1st Year": {
         "First Semester": [
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-
-
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
         ],
         "Second Semester": [
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-        ],
-      },
-
-      "2nd Year": {
-        "First Semester": [
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-
-
-        ],
-        "Second Semester": [
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-        ],
-      },
-    },
-    "Mid Year": {
-      "First Semester": [
-        { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-       
-
-      ],
-
-      "3rd Year": {
-        "First Semester": [
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-
-
-        ],
-        "Second Semester": [
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-        ],
-      },
-      
-
-      "4TH Year": {
-        "First Semester": [
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-
-
-        ],
-        "Second Semester": [
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "IT", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
+          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
         ],
       },
       
@@ -165,16 +71,142 @@ function EnrollmentSidebar() {
     };
   }, [SideBar]);
 
-  
+  const handleNext = () => setActiveStep((prevStep) => Math.min(prevStep + 1, steps.length - 1));
+  const handleBack = () => setActiveStep((prevStep) => Math.max(prevStep - 1, 0));
 
-  const updateChecklistField = (program, year, semester, index, field, value) => {
-    const updatedChecklist = { ...digitalChecklist };
-    updatedChecklist[program][year][semester][index][field] = value;
-    setDigitalChecklist(updatedChecklist);
-  };
+  const renderContent = () => {
+    switch (steps[activeStep]) {
+      case "Requirements Submission":
+        return (
+          <div className={styles.Contentt}>
+             
+    <div className={styles.uploadContainer}>
+      <p className={styles.uploadTitle}>Upload your COG</p>
+      <div className={styles.uploadBox}>
+        <img
+          src='src/assets/upload-image-icon.png' 
+          alt="Upload Icon"
+          className={styles.uploadIcon}
+        />
+      </div>
+      <button className={styles.nextButton}><span>Browse File</span></button>
+    </div>
 
-  const handleContainerClick = (containerName) => {
-    setActiveContainer(containerName);
+
+            <h3>Digital Checklist</h3>
+            {Object.keys(digitalChecklist[studentProgram]).map((year) => (
+              <div className={styles.Contentt} key={year}>
+                <h4>{year}</h4>
+                {Object.keys(digitalChecklist[studentProgram][year]).map((semester) => (
+                  <div className={styles.Contentt} key={semester}>
+                    <h5>{semester}</h5>
+                    <table className={styles.checklistTable}>
+                      <thead>
+                        <tr>
+                          <th>COURSE CODE</th>
+                          <th>COURSE TITLE</th>
+                          <th>UNITS</th>
+                          <th>FINAL GRADE</th>
+                          <th>INSTRUCTOR</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {digitalChecklist[studentProgram][year][semester].map((item, index) => (
+                          <tr key={index}>
+                            <td>{item.code}</td>
+                            <td>{item.courseTitle}</td>
+                            <td>{item.units}</td>
+                            <td>
+                              <input
+                                type="text"
+                                value={item.grade}
+                                onChange={(e) =>
+                                  updateChecklistField(studentProgram, year, semester, index, "grade", e.target.value)
+                                }
+                                className={styles.tableInput}
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="text"
+                                value={item.instructor}
+                                onChange={(e) =>
+                                  updateChecklistField(studentProgram, year, semester, index, "instructor", e.target.value)
+                                }
+                                className={styles.tableInput}
+                              />
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        );
+        case "Society Fee Status":
+          return (
+            <div className={styles.Contentt}>
+              <img
+                src={
+                  SocFeestatus === "Paid"
+                    ? "src/assets/paid-icon.png"
+                    : SocFeestatus === "Pending"
+                    ? "src/assets/pending-icon.png"
+                    : "src/assets/unpaid-icon.png"
+                }
+                alt="Fee Status Icon"
+                className={styles.uploadIcon}
+              />
+              <h3>Society Fee Status: <span>{SocFeestatus}</span></h3>
+              
+            </div>
+          );
+        
+      case "Advising":
+        return  (
+          <div className={styles.Contentt}>
+            <img
+              src={
+                Advisingstatus === "Approved"
+                  ? "src/assets/paid-icon.png"
+                  : SocFeestatus === "Pending"
+                  ? "src/assets/pending-icon.png"
+                  : "src/assets/unpaid-icon.png"
+              }
+              alt="Fee Status Icon"
+              className={styles.uploadIcon}
+            />
+            <h3>Advising Status: <span>{Advisingstatus}</span></h3>
+            <p>Kindly check your gmail for my course recommendations blah blah</p>
+            
+          </div>)
+      case "Pre-Enrollment Form":
+        return <p>Pre-Enrollment Form content goes here.</p>;
+      case "Enrollment Status":
+        return (
+        <div className={styles.Contentt}>
+        <img
+          src={
+            Enrollmentstatus === "Enrolled"
+              ? "src/assets/paid-icon.png"
+              : SocFeestatus === "Pending"
+              ? "src/assets/pending-icon.png"
+              : "src/assets/unpaid-icon.png"
+          }
+          alt="Fee Status Icon"
+          className={styles.uploadIcon}
+        />
+        <h3>Enrollment Status: <span>{Enrollmentstatus}</span></h3>
+        <p>Kindly go to Registrar’s Office to claim your Certificate of Registration</p>
+        
+      </div>)
+      default:
+        return <p>Select a step to view content.</p>;
+    }
+
   };
 
   return (
@@ -183,131 +215,71 @@ function EnrollmentSidebar() {
       <div className={styles.contentSection}>
         <div className={styles.PageTitle}>Enrollment</div>
 
-      
-
-        {/* BUTTONS */}
-        <div className={styles.containers}>
-          <div
-            className={styles.container}
-            onClick={() => handleContainerClick("Society Fee Status")}
+        {/* STEPPER */}
+        <div data-aos="fade-up" className={styles.container}>
+          <Stepper
+            activeStep={activeStep}
+            alternativeLabel
+            sx={{
+              '& .MuiStepIcon-root': {
+                color: 'gray',
+              },
+              '& .MuiStepIcon-root.Mui-active': {
+                color: '#d0943d',
+              },
+              '& .MuiStepIcon-root.Mui-completed': {
+                color: '#3d8c4b',
+              },
+              '& .MuiStepLabel-label': {
+                color: 'rgba(0, 0, 0, 0.6)',
+                display: { xs: 'none', sm: 'block' }, 
+              },
+              '& .MuiStepLabel-label.Mui-active': {
+                color: '#d0943d',
+                fontWeight: 'bold',
+                display: { xs: 'none', sm: 'block' },
+              },
+              '& .MuiStepLabel-label.Mui-completed': {
+                color: '#3d8c4b',
+                fontWeight: 'bold',
+                display: { xs: 'none', sm: 'block' },
+              },
+            }}
           >
-            <div className={styles.containerTitle}>Society Fee Status</div>
-          </div>
+            {steps.map((label, index) => (
+              <Step key={index}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
 
-          <div
-            className={styles.container}
-            onClick={() => handleContainerClick("Requirements Submission")}
-          >
-            <div className={styles.containerTitle}>Requirements Submission</div>
-          </div>
+        
+          
 
-          <div
-            className={styles.container}
-            onClick={() => handleContainerClick("Advising")}
-          >
-            <div className={styles.containerTitle}>Advising</div>
-          </div>
-
-          <div
-            className={styles.container}
-            onClick={() => handleContainerClick("Pre-Enrollment Form")}
-          >
-            <div className={styles.containerTitle}>Pre-Enrollment Form</div>
-          </div>
-
-          <div
-            className={styles.container}
-            onClick={() => handleContainerClick("Enrollment Status")}
-          >
-            <div className={styles.containerTitle}>Enrollment Status</div>
-          </div>
-        </div>
-
-        {/* CONTENTS */}
+        {/* Content */}
         <div className={styles.superContainer}>
-          {activeContainer ? (
-            <>
-              <h3 className={styles.superContainerTitle}>{activeContainer}</h3>
-              <div className={styles.superContainerContent}>
-                {activeContainer === "Requirements Submission" && (
-                  <>
-                    <div className={styles.Contentt}>
-                      <p className={styles.Title}>Digital Checklist</p>
-                      {Object.keys(digitalChecklist[studentProgram]).map((year) => (
-                        <div className={styles.Contentt} key={year}>
-                          <h4 className={styles.yearTitle}>{year}</h4>
-                          {Object.keys(digitalChecklist[studentProgram][year]).map((semester) => (
-                            <div className={styles.Contentt} key={semester}>
-                              <h5 className={styles.semesterTitle}>{semester}</h5>
-                              <table className={styles.checklistTable}>
-                                <thead>
-                                  <tr>
-                                    <th>COURSE CODE</th>
-                                    <th>COURSE TITLE</th>
-                                    <th>UNITS</th>
-                                    <th>FINAL GRADE</th>
-                                    <th>INSTRUCTOR</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {digitalChecklist[studentProgram][year][semester].map((item, index) => (
-                                    <tr key={index}>
-                                      <td>{item.code}</td>
-                                      <td>{item.courseTitle}</td>
-                                      <td>{item.units}</td>
-                                      <td>
-                                        <input
-                                          type="text"
-                                          value={item.grade}
-                                          onChange={(e) =>
-                                            updateChecklistField(
-                                              studentProgram,
-                                              year,
-                                              semester,
-                                              index,
-                                              "grade",
-                                              e.target.value
-                                            )
-                                          }
-                                          className={styles.tableInput}
-                                        />
-                                      </td>
-                                      <td>
-                                        <input
-                                          type="text"
-                                          value={item.instructor}
-                                          onChange={(e) =>
-                                            updateChecklistField(
-                                              studentProgram,
-                                              year,
-                                              semester,
-                                              index,
-                                              "instructor",
-                                              e.target.value
-                                            )
-                                          }
-                                          className={styles.tableInput}
-                                        />
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            </div>
-                          ))}
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                )}
-              </div>
-            </>
-          ) : (
-            <p className={styles.superContainerPlaceholder}>
-              Click a section above to view details.
-            </p>
-          )}
+          {renderContent()}
         </div>
+
+        <div className={styles.buttons}>
+            <button
+              onClick={handleBack}
+              disabled={activeStep === 0}
+              className={`${styles.button} ${styles.backButton}`}
+              aria-label="Go to the previous step"
+            >
+              <span>Back</span>
+            </button>
+            <button
+              onClick={handleNext}
+              disabled={activeStep === steps.length - 1}
+              className={`${styles.button} ${styles.nextButton}`}
+              aria-label="Go to the next step"
+            ><span>
+                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}</span>
+            </button>
+        </div>
+      </div>
       </div>
     </>
   );
