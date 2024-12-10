@@ -7,6 +7,7 @@ import 'aos/dist/aos.css';
 
 function TransfereeAdmissionForm() {
   const [activeStep, setActiveStep] = useState(0);
+  const [errorPrompt, setErrorPrompt] = useState(false); //errors
   const [formData, setFormData] = useState({
     applyingFor: '',
     applicantType: 'Transferee',
@@ -38,9 +39,48 @@ function TransfereeAdmissionForm() {
   ];
 
 
+  const requiredFields = {
+    admissionInfo: ['strand', 'finalAverage', 'firstQuarter', 'secondQuarter', 'idPicture'],
+    personalInfo: ['firstName', 'lastName', 'zipCode', 'permanentAddress', 'email', 'lrn', 'contactNumber', 'sex', 'age', 'dateOfBirth', 'religion', 'nationality', 'civilStatus', 'isPWD', 'pwd', 'isIndigenous', 'indigenous'],
+    familyBackground: ['fatherName', 'motherName', 'guardianName', 'guardianContact', 'fatherOccupation', 'motherOccupation', 'guardianOccupation', 'guardianRelationship', 'siblings', 'birthOrder', 'familyIncome'],
+    educationalBackground: ['elementarySchool', 'elementaryAddress', 'elementaryYearGraduated', 'elementarySchoolType', 'seniorHighSchool', 'seniorHighAddress', 'seniorHighYearGraduated', 'seniorHighSchoolType'],
+    medicalHistory: [],
+    scheduleAppointment: ['certify'],
+  };
   
-  const handleNext = () => setActiveStep((prevStep) => prevStep + 1);
-  const handleBack = () => setActiveStep((prevStep) => prevStep - 1);
+  
+
+  
+  const handleNext = () => {
+    const stepKeys = Object.keys(requiredFields);
+    const currentStepFields = requiredFields[stepKeys[activeStep]];
+  
+    const missingFields = currentStepFields.filter((field) => {
+      const value = formData[field];
+  
+      
+      if (field === 'pwd' && formData.isPWD === 'No') {
+        return false; 
+      }
+      if (field === 'indigenous' && formData.isIndigenous === 'No') {
+        return false; 
+      }
+  
+   
+      return value === undefined || value === null || value === '';
+    });
+  
+    if (missingFields.length > 0) {
+      setErrorPrompt(true); 
+      return;
+    }
+  
+    setActiveStep((prevStep) => prevStep + 1);
+  };
+  
+  const handleBack = () => {
+    setActiveStep((prevStep) => Math.max(prevStep - 1, 0));
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -915,25 +955,56 @@ function TransfereeAdmissionForm() {
 
 
           <div className={styles.buttons}>
+  <button
+    onClick={handleBack}
+    disabled={activeStep === 0}
+    className={`${styles.button} ${styles.backButton}`}
+    aria-label="Go to the previous step"
+  >
+    <span>Back</span>
+  </button>
+  <button
+    onClick={(event) => {
+      event.preventDefault();
+      handleNext();
+    }}
+    disabled={activeStep === steps.length - 1}
+    className={`${styles.button} ${styles.nextButton}`}
+    aria-label={
+      activeStep === steps.length - 1 ? "Finish the form" : "Go to the next step"
+    }
+  >
+    <span>{activeStep === steps.length - 1 ? "Finish" : "Next"}</span>
+  </button>
+</div>
+
+        </div>
+        {/* ERROR PROMPT */}
+      {errorPrompt && (
+        <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupError}>
+          <div className={styles.popupContentError}>
             <button
-              onClick={handleBack}
-              disabled={activeStep === 0}
-              className={`${styles.button} ${styles.backButton}`}
-              aria-label="Go to the previous step"
+              className={styles.closeButton}
+              onClick={() => setErrorPrompt(false)}
             >
-              <span>Back</span>
+              &times;
             </button>
-            <button
-              onClick={handleNext}
-              disabled={activeStep === steps.length - 1}
-              className={`${styles.button} ${styles.nextButton}`}
-              aria-label="Go to the next step"
-            ><span>
-              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}</span>
-            </button>
+            <div className={styles.popupHeaderError}>
+              <h2>Error</h2>
+            </div>
+            <div className={styles.MessageError}>
+              <img
+                src="/src/assets/errormark.png"
+                alt="Error Icon"
+                className={styles.messageImage}
+              />
+            </div>
+            <p className={styles.popupTextError}>Please fill out all fields.</p>
           </div>
         </div>
+      )}
       </div>
+
     </>
   );
 }

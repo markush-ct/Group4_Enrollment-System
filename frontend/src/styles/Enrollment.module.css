@@ -1,12 +1,13 @@
 
 .contentSection {
+  padding: 40px 20px 10px 20px;
   text-align: justify;
   background-color: #f7f7f7;
   color: #333;
-  margin: 150px auto 300px auto;
-  max-width: 80%;
-  border-radius: 8px;
-  transition: box-shadow 0.3s ease;
+  margin-top: 100px;
+  margin-bottom: 300px;
+  margin-left: 10%;
+  margin-right: 10%;
 }
 
 
@@ -153,7 +154,7 @@ input[type="file"] {
 .checklistTable td {
   border: 1px solid #ddd;
   padding: 8px;
-  text-align: left;
+  text-align: center;
   width: 20%;
 }
 
@@ -257,6 +258,7 @@ input[type="file"] {
   cursor: not-allowed;
 }
 
+
 .uploadContainer {
   width: 100%;
   margin: auto;
@@ -308,3 +310,318 @@ input[type="file"] {
   background-color: #45a049;
 }
 
+.formContainer {
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
+  background-color: transparent;
+ 
+}
+
+
+.dropdownContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+
+.dropdownLabel {
+  font-size: 1rem;
+  color: #333;
+}
+
+
+.subjectDropdown {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+}
+
+
+.btn {
+  padding: 8px 15px;
+  border-radius: 50px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.addBtn {
+  background-color: #4caf50;
+  width: 100px;
+  transition: 0.5 ease;
+}
+
+.addBtn:hover {
+
+  transform: scale(1.05);
+  
+}
+
+.removeBtn {
+  background-color: #cb1103;
+  width: 100px;
+  transition: 0.5 ease;
+}
+
+.removeBtn:hover {
+
+  transform: scale(1.05);
+}
+
+/* Submit Button */
+.submitBtn  {
+    position: relative; 
+    width: 50%;
+    padding: 0.5rem;
+    height: 50px;
+    font: 20px Poppins bold;
+    color: #ffffff;
+    background-color: #3d8c4b;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    margin-top: 1rem;
+    overflow: hidden; 
+    transition: transform 0.3s ease;
+    z-index: 1; 
+}
+
+.submitBtn span {
+    position: relative;
+    font: 20px Poppins bold;
+    background-color: transparent;
+    z-index: 2; 
+}
+
+.submitBtn::before {
+    content: ''; 
+    position: absolute;
+    top: 0;
+    left: -100%; 
+    width: 100%;
+    height: 100%;
+    background-color: #d0943d;
+    transition: left 0.3s ease; 
+    z-index: 0; 
+}
+
+.submitBtn:hover::before {
+    left: 0; 
+}
+
+.submitBtn:hover {
+    color: #ffffff; 
+    transform: scale(1.01); 
+}
+
+.popup {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7); 
+    z-index: 2000;
+}
+
+.popupContent {
+    padding: 20px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    text-align: left;
+    position: relative;
+}
+
+.popupContent::-webkit-scrollbar {
+    width: 20px;
+}
+
+.popupHeader {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    height: 30px;
+    color: #d0943d;;
+    margin-bottom: 50px;
+    padding-bottom: 10px;
+
+}
+
+.Message {
+    display: flex;
+    color: #3d8c4b;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    font-weight: 800;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+
+.Message::before,
+.Message::after {
+    content: "";
+    flex: 1; 
+    border-bottom: 1px solid #3d8c4b; 
+    margin: 0 10px; 
+}
+
+
+.messageImage {
+    width: 60px; 
+    vertical-align: middle; 
+}
+
+
+
+.popupText{
+    font-size: 1.0rem;
+    text-align: center;
+}
+.popupHeader h2 {
+    font-size: 2.0rem;
+    margin: 0;
+    text-align: center;
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.2s;
+    position: absolute; 
+    top: 0;             
+    right: 0;          
+    padding: 10px;     
+}
+.closeButton:hover {
+    color: #900;
+}
+
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .contentSection {
+    margin: 50px auto; 
+  }
+
+  .PageTitle {
+    margin-top: ;
+    font-size: 1.5rem;
+  }
+  
+  .containers {
+    flex-direction: column; 
+    align-items: center;
+  }
+
+  .container {
+    min-width: 100%; 
+    padding: 10px; 
+    font-size: 14px; 
+  }
+
+  .superContainer {
+    padding: 15px; 
+  }
+
+  .superContainerTitle {
+    font-size: 18px; 
+  }
+
+  .superContainerContent {
+    font-size: 14px; 
+  }
+
+  .Contentt h3 {
+    font-size: 1rem; 
+  }
+
+  .Contentt p{
+    font-size: 14px;
+  }
+
+  .uploadBox {
+    width: 90%; 
+  }
+
+  
+  .uploadTitle {
+    font-size: 14px; 
+  }
+
+  .checklistTable {
+    width: 100%; 
+    border-collapse: collapse; 
+  }
+
+  .checklistTable th,
+  .checklistTable td {
+    border: 1px solid #ddd;
+    font-size: 14px;
+    padding: 8px; 
+    width: auto; 
+  }
+
+  .popupContent{
+    max-height: 80vh;
+    margin-top: 10%;
+    margin-bottom: 20%;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.popupHeader {
+    margin: 10px 0 20px;
+}
+
+.popupHeader h2 {
+    font-size: 1.5rem; 
+}
+
+.popupText{
+    font-size: 14px;
+}
+
+.Message {
+    font-size: 1.25rem; 
+}
+
+.submitBtn span {
+  width: 100%; 
+  font-size: 14px; 
+}
+
+
+}
+
+@media (max-width: 500px) {
+
+  .checklistTable th,
+  .checklistTable td {
+   
+    font-size: 10px;
+    padding: 5px; 
+  }
+
+
+
+
+}
