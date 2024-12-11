@@ -71,13 +71,24 @@ useEffect(() => {
           </div>
   
 
-          <div className={styles.societySection}>
-            <div className={styles.profilePic}>
-              <img src="\src\assets\ACS-logo.svg" alt="Society Logo" />
-            </div>
-            <h3>{program}</h3>
-          </div>
-        </div>
+          {program === "BSCS" ? (
+  <div className={styles.societySection}>
+    <div className={styles.profilePic}>
+      <img src="\src\assets\ACS-logo.svg" alt="Society Logo" />
+    </div>
+    <h3>Alliance of Computer Scientist</h3>
+  </div>
+) : (
+  <div className={styles.societySection}>
+    <div className={styles.profilePic}>
+      <img src="\src\assets\ITS-logo.svg" alt="Society Logo" />
+    </div>
+    <h3>Information Technology Society</h3>
+  </div>
+)}
+
+</div>
+
   
  
         <div className={styles.dashboardGrid}>

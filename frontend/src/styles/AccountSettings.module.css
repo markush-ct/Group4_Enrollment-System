@@ -18,68 +18,195 @@
     margin-bottom: 50px;
 }
 
-.profileSection {
+
+.accountContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+
+  .leftColumn {
+    flex: 1;
+    max-width: 300px;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    background-color: transparent;
+    height: 400px;
+  }
+  
+  .profileSection {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
-}
-
-.profilePhoto {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.profileImage {
+  }
+  
+  .profilePhoto {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 10px;
+  }
+  
+  .profileImage {
     width: 100%;
     height: 100%;
+    border-radius: 50%;
     object-fit: cover;
+    border: 2px solid #ccc;
+  }
+  
+  .uploadButton {
+    margin: 10px 0;
+    padding: 8px 15px;
+    background-color: #d0943d;
+    color: white;
+    font-size: 14px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    overflow: hidden; 
+    transition: transform 0.3s ease, color 0.3s ease; 
+    z-index: 1; 
 }
 
-.uploadButton {
+.uploadButton span {
+    position: relative;
+    z-index: 2; 
+    font-size: 1rem;
     background-color: transparent;
-    color: #3d8c4b;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    box-shadow: 1px 4px 8px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    text-align: center;
-    transition: all ease 0.3s;
+}
+
+.uploadButton::before {
+    content: ''; 
+    position: absolute;
+    top: 0;
+    left: -100%; 
+    width: 100%;
+    height: 100%;
+    background-color: #3d8c4b; 
+    transition: left 0.3s ease; 
+    z-index: 0; 
+}
+
+.uploadButton:hover::before {
+    left: 0; 
 }
 
 .uploadButton:hover {
-    background-color: #d0943d;
-    transform:scale(1.01);
-    color: white;
+    color: white; 
+    transform: scale(1.02); 
 }
 
-.fileInput {
+  
+  .fileInput {
     display: none;
-}
-
-.accountDetails {
-    font-size: 18px;
-    color: black;
-    font-weight: bold;
-    margin-top: 30px;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.accountDetails h3 {
-    font-size: 1.5rem;
-    color: black;
-    background-color: transparent;
-}
-
-.accountDetails p {
-    font-size: 1rem;
+  }
+  
+  .leftColumn h3 {
+    margin-top: 10px;
     color: #3d8c4b;
+    font-size: 25px;
+    font-weight: bold;
     background-color: transparent;
-}
+  }
+  
+  .leftColumn p {
+    color: #d0943d;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+  
+  .leftColumn button {
+    color: #3d8c4b;
+    font-size: 14px;
+    text-decoration: underline;
+  }
+
+
+  .rightColumn {
+    flex: 2;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profileEditSection {
+    margin-bottom: 20px;
+  }
+  
+  .subHeading {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .editButtonContainer {
+    text-align: right;
+    margin-bottom: 15px;
+  }
+  
+  .editButton {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+  
+  .editButton img {
+    width: 18px;
+    height: 18px;
+    margin-right: 5px;
+  }
+  
+  .editButton:hover {
+    background-color: #0056b3;
+  }
+  
+  .profileEditSection {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .profileInfo {
+    margin-bottom: 20px;
+    background-color: transparent;
+  }
+  
+  .infoRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    background-color: transparent;
+  }
+  
+  .infoLabel {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #3d8c4b;
+    margin-left: 5px;
+    background-color: transparent;
+    flex: 1;
+  }
+  
+  
+
+  .infoValue {
+    font-size: 1rem;
+    color: #555;
+    background-color: transparent;
+    flex: 2;
+  }
+  
+  
 
 .sectionHeading {
     font-size: 24px;
@@ -89,23 +216,24 @@
 }
 
 .subHeading {
-    font-size: 20px;
-    color: #555;
+    font-size: 1.5rem;
+    color: #3d8c4b;
     margin-bottom: 30px;
     text-align: center; 
 }
 
 .changePasswordSection {
     padding: 20px;
-    background-color: #f9f9f9;
-    width: 50%;
-    margin: 0 auto; 
+    background-color: transparent;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px; 
     display: flex; 
     flex-direction: column;
     align-items: center; 
     justify-content: center; 
     box-shadow: 1px 4px 8px rgba(0, 0, 0, 0.2);
-    border-radius: 20px;
 }
 
 .passwordForm {
@@ -117,6 +245,7 @@
 .formGroup {
     display: flex;
     flex-direction: column;
+    background-color: transparent;
 }
 
 .formGroup input{
@@ -126,12 +255,14 @@
 .formLabel {
     color: #3d8c4b;
     font-weight: 800;
-    margin-bottom: 8px;
+    margin-bottom: 1rem;
     font-size: 1rem;
+    background-color: transparent;
 }
 
 .inputContainer {
     position: relative;
+    background-color: transparent;
 }
 
 .formInput {
@@ -140,7 +271,7 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-bottom: 1rem;
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 
 .togglePasswordIcon {
@@ -200,8 +331,67 @@
     transform: scale(1.02); 
 }
 
+  .editInput {
+    flex: 2;
+    padding: 8px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .editButtonContainer {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px; 
+    background-color: transparent;
+  }
+  
+  .editButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: #f9f9f9;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  
+  .editButton:hover {
+    background-color: #f0f0f0;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
+  }
+  
+  .editIcon {
+    width: 25px;
+    height: 25px;
+  }
 
-.popup {
+
+  .changePasswordToggle {
+    margin-top: 10px;
+    color: #007bff;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .changePasswordToggle:hover {
+    text-decoration: none;
+    color: #0056b3;
+  }
+  
+  .popup {
     position: fixed; 
     top: 0;
     left: 0;
@@ -368,6 +558,12 @@
 }
 
 
+  
+  
+
+
+
+
 
 @media (max-width: 768px) {
     .contentSection {
@@ -383,6 +579,13 @@
         width: 90%;
     }
 
+    .accountContainer {
+        flex-direction: column;
+        align-items: center;
+        padding: 10px; 
+        gap: 15px; 
+    }
+
     .formLabel {
         font-size: 12px;
     }
@@ -391,13 +594,26 @@
         font-size: 12px;
     }
 
+    .leftColumn, .rightColumn{
+        width: 100%;
+        margin: 0 0px;
+    }
+
     .submitButton {
         padding: 0.6rem 0.8rem;
         font-size: 0.9rem;
     }
 
+    .infoLabel {
+        margin-left: 0px;
+    }
+
     .accountDetails h3 {
         font-size: 1.3rem;
+    }
+
+    .submitButton {
+        font-size: 14px;
     }
 
     .accountDetails p {
@@ -410,5 +626,50 @@
 
     .subHeading {
         font-size: 18px;
+    }
+
+
+
+    .popupHeader {
+        margin: 10px 0 20px;
+    }
+
+    .popupHeader h2 {
+        font-size: 1.5rem; 
+    }
+
+    .popupText{
+        font-size: 14px;
+    }
+
+    .Message {
+        font-size: 1.25rem; 
+    }
+
+
+
+
+    .popupContentError{
+        max-height: 80vh;
+        margin-top: 10%;
+        margin-bottom: 20%;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .popupHeaderError {
+        margin: 10px 0 20px;
+    }
+
+    .popupHeaderError h2 {
+        font-size: 1.5rem; 
+    }
+
+    .popupTextError{
+        font-size: 14px;
+    }
+
+    .MessageError {
+        font-size: 1.25rem; 
     }
 }

@@ -60,7 +60,7 @@ function StudentDashHeader() {
           className={style.searchBar}
         />
         <div className={style.profile}>
-        <Link to="/AccountSettings"><img
+        <Link to="/AccountSettingsStudent"><img
           src='\src\assets\sampleicon.jpg'
             alt="Profile"
             className={style.profileImage}
