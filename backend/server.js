@@ -66,6 +66,24 @@ const upload = multer({ storage });
 app.use("/uploads", express.static("uploads"));
 
 
+//READ STUDENT PROGRAM TO DISPLAY PROGRAM IN DASHBOARD
+app.get('/getStudentProgram', (req, res) => {
+    const getProgramQuery = `SELECT * FROM student WHERE Email = ?`;
+
+    db.query(getProgramQuery, req.session.email, (err, result) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else if (result.length > 0) {
+            return res.json({
+                message: "Program fetched successfully",
+                program: result[0].ProgramID
+            })
+        } else {
+            return res.json({message: "Error fetching program"});
+        }
+    })
+})
+
 //FETCH PREFERRED PROGRAM OF FRESHMEN, TRANSFEREE, AND SHIFTEE
 app.get('/getFormData', (req, res) => {
     const readStudent = `SELECT * FROM student WHERE Email = ?`;

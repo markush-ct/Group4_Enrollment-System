@@ -5,11 +5,24 @@ import styles from "/src/styles/StudentDash.module.css";
 import Header from "/src/components/StudentDashHeader.jsx";
 
 
-axios.defaults.withCredentials = true;
-
 function RegIrregDashboard() {
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
+  const [program, setProgram] = useState("");
+  //TODO: CONDITION SA FRONTEND. IF PROGRAM === 1, ACS LOGO AND TEXT LALABAS. IF PROGRAM === 2, ITS LOGO AND TEXT LALABAS SA DASHBOARD
+  useEffect(() => {
+    axios.get("http://localhost:8080/getStudentProgram")
+    .then((res) => {
+      if(res.data.program === 1){
+        setProgram("BSCS");
+      } else if(res.data.program === 2){
+        setProgram("BSIT");
+      }
+    })
+    .catch((err) => {
+      alert("Error fetching program: " + err);
+    })
+  }, [])
 
 
   useEffect(() => {
@@ -62,7 +75,7 @@ useEffect(() => {
             <div className={styles.profilePic}>
               <img src="\src\assets\ACS-logo.svg" alt="Society Logo" />
             </div>
-            <h3>Alliance of Computer Scientist</h3>
+            <h3>{program}</h3>
           </div>
         </div>
   
