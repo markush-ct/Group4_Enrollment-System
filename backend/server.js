@@ -1229,9 +1229,21 @@ app.post('/resetPass', (req, res) => {
     })
 })
 
+//GET PFP
+app.get('/getPFP', (req, res) => {
+    const getPFPQuery = `SELECT * FROM account WHERE Email = ?`;
+    db.query(getPFPQuery, req.session.email, (err, result) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if(result.length > 0){
+            return res.json({pfpPath: result[0].ProfilePicture});
+        }
+    })
+})
+
 //GET ACCOUNT INFO
 app.get('/getAccInfo', (req, res) => {
-    if (["Regular, Irregular, Transferee, Shiftee, Freshman".includes(res.session.role)]) {
+    if (["Regular", "Irregular", "Transferee", "Shiftee", "Freshman"].includes(req.session.role)) {
         const getStudent = `SELECT * FROM student WHERE Email = ?`;
         db.query(getStudent, req.session.email, (err, studentRes) => {
             if (err) {
@@ -1239,15 +1251,13 @@ app.get('/getAccInfo', (req, res) => {
             } else if (studentRes.length > 0) {
                 const stdInfo = studentRes[0];
 
-                const gender = stdInfo.Gender === "F" ? "Female" : stdInfo.Gender === "M" ? "Male" : "Other";
-
                 return res.json({
                     message: "Fetch successful",
                     firstName: stdInfo.Firstname,
                     middleName: stdInfo.Middlename,
                     lastName: stdInfo.Lastname,
                     email: req.session.email,
-                    gender: gender,
+                    gender: stdInfo.Gender,
                     age: stdInfo.Age,
                     phoneNo: stdInfo.PhoneNo,
                     address: stdInfo.Address,
@@ -1257,6 +1267,44 @@ app.get('/getAccInfo', (req, res) => {
                 return res.json({ message: "Error fetching account information: " });
             }
         })
+    }
+})
+
+//SAVE ACCOUNT INFO CHANGES
+app.post('/saveAccInfo', (req, res) => {
+    const values = [
+        req.body.firstName,
+        req.body.middleName,
+        req.body.lastName,
+        req.body.gender === "Female" ? "F" : "M",
+        req.body.age,
+        req.body.phoneNo,
+        req.body.address,
+        req.body.dob,
+        req.session.email
+    ];
+
+    if(["Regular", "Irregular", "Transferee", "Shiftee", "Freshman"].includes(req.session.role)){
+        const updateStudent = `UPDATE student
+        SET Firstname = ?,
+            Middlename = ?,
+            Lastname = ?,
+            Gender = ?,
+            Age = ?,
+            PhoneNo = ?,
+            Address = ?,
+            DOB = ?
+        WHERE Email = ?`;
+
+        db.query(updateStudent, values, (err, studentRes) => {
+            if (err) {
+                return res.json({ message: "Error in server: " + err });
+            } else if (studentRes.affectedRows > 0) {
+                return res.json({ message: "Account updated successfully" });
+            } else {
+                return res.json({ message: "Unable to update account" });
+            }
+        });
     }
 })
 

@@ -72,7 +72,7 @@ function AccountSettings() {
 
   //FETCH ACCOUNT INFO
   useEffect(() => {
-    axios.get('http://localhost:8080/getAccInfo')
+    axios.post('http://localhost:8080/getAccInfo', accRole)
     .then((res) => {
       if(res.data.message === "Fetch successful"){
         setAccInfo({
