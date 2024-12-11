@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styles from "/src/styles/AccountSettings.module.css";
-import Header from "/src/components/StudentDashHeader.jsx";
+import Header from "/src/components/AdminDashHeader.jsx";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -489,4 +489,4 @@ const [isChangePasswordView, setIsChangePasswordView] = useState(false);
 );
 }
 export default AccountSettings;
-  ;
+  
