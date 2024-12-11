@@ -54,10 +54,10 @@ const transporter = nodemailer.createTransport({
 // Configure Multer for file uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, "uploads/"); // Folder to store uploaded files
+        cb(null, "uploads/"); // Folder to store uploaded files
     },
     filename: (req, file, cb) => {
-      cb(null, Date.now() + path.extname(file.originalname)); // Use unique filenames
+        cb(null, Date.now() + path.extname(file.originalname)); // Use unique filenames
     },
 });
 
@@ -71,15 +71,15 @@ app.get('/getStudentProgram', (req, res) => {
     const getProgramQuery = `SELECT * FROM student WHERE Email = ?`;
 
     db.query(getProgramQuery, req.session.email, (err, result) => {
-        if(err){
-            return res.json({message: "Error in server: " + err});
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
         } else if (result.length > 0) {
             return res.json({
                 message: "Program fetched successfully",
                 program: result[0].ProgramID
             })
         } else {
-            return res.json({message: "Error fetching program"});
+            return res.json({ message: "Error fetching program" });
         }
     })
 })
@@ -148,8 +148,8 @@ app.get('/getFormData', (req, res) => {
                         familyIncome: form.MonthlyFamilyIncome,
                         guardianRelationship: form.GuardianRelationship,
                         elementarySchool: form.ElemSchoolName,
-                        elementaryAddress: form.ElemSchoolAddress	,
-                        elementaryYearGraduated: form.ElemYearGraduated,                        
+                        elementaryAddress: form.ElemSchoolAddress,
+                        elementaryYearGraduated: form.ElemYearGraduated,
                         elementarySchoolType: form.ElemSchoolType,
                         seniorHighSchool: form.SHSchoolName,
                         seniorHighAddress: form.SHSchoolAddress,
@@ -185,7 +185,7 @@ app.post('/admissionFormTable', upload.single("idPicture"), (req, res) => {
             return res.json({ message: "Error in server: " + err });
         } else if (idResult.length > 0) {
             const getID = idResult[0].StudentID;
-            
+
             // File path for the uploaded ID picture
             const idPicturePath = req.file ? req.file.path : req.body.idPictureUrl;
 
@@ -285,9 +285,9 @@ app.post('/admissionFormTable', upload.single("idPicture"), (req, res) => {
 
             db.query(updateQuery, values, (err, updateRes) => {
                 if (err) {
-                    return res.json({ message: "Error in server: " + err , });
+                    return res.json({ message: "Error in server: " + err, });
                 } else if (updateRes.affectedRows > 0) {
-                    return res.json({ message: "Update success" , idPictureUrl: idPicturePath});
+                    return res.json({ message: "Update success", idPictureUrl: idPicturePath });
                 } else {
                     return res.json({ message: "Update failed" });
                 }
@@ -1227,6 +1227,37 @@ app.post('/resetPass', (req, res) => {
             return res.json({ message: "Password updated successfully" });
         }
     })
+})
+
+//GET ACCOUNT INFO
+app.get('/getAccInfo', (req, res) => {
+    if (["Regular, Irregular, Transferee, Shiftee, Freshman".includes(res.session.role)]) {
+        const getStudent = `SELECT * FROM student WHERE Email = ?`;
+        db.query(getStudent, req.session.email, (err, studentRes) => {
+            if (err) {
+                return res.json({ message: "Error in server: " + err });
+            } else if (studentRes.length > 0) {
+                const stdInfo = studentRes[0];
+
+                const gender = stdInfo.Gender === "F" ? "Female" : stdInfo.Gender === "M" ? "Male" : "Other";
+
+                return res.json({
+                    message: "Fetch successful",
+                    firstName: stdInfo.Firstname,
+                    middleName: stdInfo.Middlename,
+                    lastName: stdInfo.Lastname,
+                    email: req.session.email,
+                    gender: gender,
+                    age: stdInfo.Age,
+                    phoneNo: stdInfo.PhoneNo,
+                    address: stdInfo.Address,
+                    dob: stdInfo.DOB
+                })
+            } else {
+                return res.json({ message: "Error fetching account information: " });
+            }
+        })
+    }
 })
 
 //ACCOUNT SETTINGS MATCH CURRENT PASS
