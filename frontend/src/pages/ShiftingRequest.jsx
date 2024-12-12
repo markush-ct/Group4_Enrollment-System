@@ -206,7 +206,7 @@ const closePrompt = () => {
 
             {/* Date Input and Send Button */}
             <div data-aos="fade-up" className={styles.studentType}>
-              <h5>Date of SUbmission</h5>
+              <h5>Date of Submission</h5>
           
                 <input
                     type="date"
@@ -320,9 +320,9 @@ const closePrompt = () => {
               {filteredRequests.length > 0 ? (
                 filteredRequests.map((request) => (
                   <tr key={request.id} onClick={() => handleRowClick(request)}>
-                    <td data-label="Name">{request.Name}</td>
-                    <td data-label="Email">{request.Email}</td>
-                    <td data-label="Account Type">{request.AccountType}</td>
+                    <td data-label="Student ID">{request.Name}</td>
+                    <td data-label="Name">{request.Email}</td>
+                    <td data-label="Previous Program">{request.AccountType}</td>
                     <td>
                       <button
                         className={styles.approveButton}
@@ -368,30 +368,25 @@ const closePrompt = () => {
           <div className={styles.popupContent}>
             <div className={styles.popupHeader}>
               <button onClick={closePopup} className={styles.closeButton}>✖</button>
-              <h2>Set  Account</h2>
+              <h2>Shifting  Request</h2>
             </div>
             <div data-aos="fade-up" className={styles.studentType}>
               <span>DETAILS</span>
             </div>
-            {(selectedRequest.AccountType === "Freshman" || selectedRequest.AccountType === "Transferee") && (
+           
               <div className={styles.popupText}>
-                <p><strong>Account Type:</strong> {selectedRequest.AccountType}</p>
-                <p><strong>Name:</strong> {selectedRequest.Name}</p>
-                <p><strong>Email:</strong> {selectedRequest.Email}</p>
-                <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
+                <p><strong>Student ID:</strong> {selectedRequest.AccountType}</p>
+                <p><strong>First Name:</strong> {selectedRequest.Name}</p>
+                <p><strong>Middle Name:</strong> {selectedRequest.Email}</p>
+                <p><strong>Last Name:</strong> {selectedRequest.PhoneNo}</p>
+                <p><strong>Previous Program:</strong> {selectedRequest.PhoneNo}</p>
+                <p><strong>Current Academic Year:</strong> {selectedRequest.PhoneNo}</p>
+                <p><strong>Reasons:</strong> {selectedRequest.PhoneNo}</p>
+                <p><strong>Submitted on:</strong> {selectedRequest.PhoneNo}</p>
               </div>
-            )}
+      
 
-            {(selectedRequest.AccountType === "Regular" || selectedRequest.AccountType === "Irregular") && (
-              <div className={styles.popupText}>
-                <p><strong>Account Type:</strong> {selectedRequest.AccountType}</p>
-                <p><strong>Student ID:</strong> {selectedRequest.ID}</p>
-                <p><strong>Program:</strong> {selectedRequest.ProgramID === 1 ? 'Bachelor of Science in Computer Science' : 'Bachelor of Science in Information Technology'}</p>
-                <p><strong>Name:</strong> {selectedRequest.Name}</p>
-                <p><strong>Email:</strong> {selectedRequest.Email}</p>
-                <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
-              </div>
-            )}
+          
 
             
 
