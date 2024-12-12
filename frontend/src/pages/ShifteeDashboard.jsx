@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styles from "/src/styles/AdminDash.module.css";
-import Header from "/src/components/AdminDashHeader.jsx";
+import Header from "/src/components/StudentDashHeader.jsx";
 
 
 function ShifteeDashboard() {

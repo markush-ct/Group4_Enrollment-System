@@ -20,20 +20,30 @@ function StudentDashSideBar({ isOpen, toggleSidebar }) {
     useEffect(() => {
         axios.get("http://localhost:8080")
             .then((res) => {
-                if (res.data.valid && res.data.role === "Regular" || res.data.role === "Irregular") {
+                if (res.data.valid && res.data.role === "Regular") {
                     setNavBtn([
                         { name: "Dashboard", icon: dashboardIcon, path: "/RegIrregDashboard" },
-                        { name: "Enrollment", icon: preEnrollmentIcon, path: "/EnrollmentSidebar" },
+                        { name: "Enrollment", icon: preEnrollmentIcon, path: "/EnrollmentRegular" },
                   
                     ]);
+                }  else if(res.data.valid && res.data.role === "Irregular"){
+                        setNavBtn([
+                        { name: "Dashboard", icon: dashboardIcon, path: "/RegIrregDashboard" },
+                        { name: "Enrollment", icon: preEnrollmentIcon, path: "/EnrollmentIrregular" },
+                        ]);
                 } else if(res.data.valid && res.data.role === "Freshman"){
                     setNavBtn([
                         { name: "Admission Form", icon: dashboardIcon, path: "/FreshmenAdmissionForm" }
+                    ]);
+                } else if(res.data.valid && res.data.role === "Shiftee"){
+                    setNavBtn([
+                        { name: "Shiftee Form", icon: dashboardIcon, path: "/ShifteeForm" }
                     ]);
                 } else if(res.data.valid && res.data.role === "Transferee"){
                     setNavBtn([
                         { name: "Admission Form", icon: dashboardIcon, path: "/TransfereeAdmissionForm" }
                     ]);
+                
                 } else {
                     navigate("/LoginPage");
                 }

@@ -60,8 +60,8 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
                         { name: 'Requirements Submission', icon: requirementsIcon, path: '/requirements-submission' },
                     ],
                     "DCS Head": [
-                        { name: 'Dashboard', icon: dashboardIcon, path: '/dashboard' },
-                        { name: 'Society Fee', icon: societyFeeIcon, path: '/society-fee' },
+                        { name: 'Dashboard', icon: dashboardIcon, path: '/DCSHeadDashboard' },
+                        { name: 'Shifting Request', icon: accountRequestsIcon, path: '/ShiftingRequest' },
                         { name: 'Requirements Submission', icon: requirementsIcon, path: '/requirements-submission' },
                     ],
                     "School Head": [

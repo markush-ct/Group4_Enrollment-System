@@ -27,7 +27,10 @@ import AccountSettings from './components/AccountSettings.jsx';
 import AccountSettingsStudent from './components/AccountSettingsStudent.jsx';
 import ClassSchedule from './pages/ClassSchedule.jsx';
 import AdminPreEnrollment from './pages/AdminPreEnrollment.jsx';
-import EnrollmentSidebar from './pages/EnrollmentSidebar.jsx';
+import EnrollmentRegular from './pages/EnrollmentRegular.jsx';
+import EnrollmentIrregular from './pages/EnrollmentIrregular.jsx';
+import ShiftingRequest from './pages/ShiftingRequest.jsx';
+import ShifteeForm from './pages/ShifteeForm.jsx';
 
 function App() {
   return (
@@ -62,7 +65,10 @@ function App() {
         <Route path="/AccountSettingsStudent" element={<AccountSettingsStudent />} />
         <Route path="/ClassSchedule" element={<ClassSchedule />} />
         <Route path="/AdminPreEnrollment" element={<AdminPreEnrollment />} />
-        <Route path="/EnrollmentSidebar" element={<EnrollmentSidebar />} />
+        <Route path="/EnrollmentRegular" element={<EnrollmentRegular />} />
+        <Route path="/EnrollmentIrregular" element={<EnrollmentIrregular />} />
+        <Route path="/ShiftingRequest" element={<ShiftingRequest />} />
+        <Route path="/ShifteeForm" element={<ShifteeForm />} />
         {/* Add other routes as needed */}
       </Routes>
     </Router>

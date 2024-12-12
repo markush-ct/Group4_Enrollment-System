@@ -180,6 +180,16 @@
   text-align: center;
 }
 
+.popupHeader h3 {
+  font-size: 18px;
+  margin: 0;
+  color: #d0943d;
+  background-color: transparent;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+
 .studentType {
   display: flex;
   color: #3d8c4b;
@@ -191,6 +201,16 @@
   padding-bottom: 5px;
   margin-bottom: 10px;
 }
+
+.studentType h5{
+  
+  color: #3d8c4b;
+  font-size: 1rem;
+
+
+}
+
+
 
 .studentType::before,
 .studentType::after {
@@ -323,6 +343,9 @@
   text-align: center;
 }
 
+
+
+
 .popupPromptcloseButton {
   background: none;
   border: none;
@@ -337,6 +360,22 @@
 }
 .popupPromptcloseButton:hover {
   color: #900;
+}
+
+.popupPromptInput {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.popupPromptLabel2 {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: #333;
 }
 
 

@@ -5,7 +5,7 @@ import Header from "/src/components/StudentDashHeader.jsx";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-function EnrollmentSidebar() {
+function EnrollmentRegular() {
   const [SideBar, setSideBar] = useState(false);
   const [activeStep, setActiveStep] = useState(0); 
   const [uploadedImage, setUploadedImage] = useState(null);
@@ -453,4 +453,4 @@ function EnrollmentSidebar() {
   );
 }
 
-export default EnrollmentSidebar;
+export default EnrollmentRegular;
