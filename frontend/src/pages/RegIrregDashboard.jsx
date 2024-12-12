@@ -9,6 +9,7 @@ function RegIrregDashboard() {
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const [program, setProgram] = useState("");
+  const [pfp, setPFP] = useState("");
   //TODO: CONDITION SA FRONTEND. IF PROGRAM === 1, ACS LOGO AND TEXT LALABAS. IF PROGRAM === 2, ITS LOGO AND TEXT LALABAS SA DASHBOARD
   useEffect(() => {
     axios.get("http://localhost:8080/getStudentProgram")
@@ -51,6 +52,15 @@ useEffect(() => {
     .catch((err) => {
       console.error("Error validating user session:", err);
     });
+
+
+    axios.get('http://localhost:8080/getPFP')
+      .then((res) => {
+        setPFP(`http://localhost:8080/${res.data.pfpURL}`);
+      })
+      .catch((err) => {
+        alert("Error: " + err);
+      })
 }, []);
 //Reuse in other pages that requires logging in
 
@@ -65,7 +75,7 @@ useEffect(() => {
  
           <div className={styles.welcomeSection}>
             <div className={styles.profilePic}>
-              <img src="\src\assets\sampleicon.jpg" alt="Student" />
+              <img src={pfp} alt="Student" />
             </div>
             <h3>Welcome, {accName || "Student"}!</h3>
           </div>

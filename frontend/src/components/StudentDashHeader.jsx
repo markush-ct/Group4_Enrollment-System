@@ -11,6 +11,7 @@ function StudentDashHeader() {
     const navigate = useNavigate();
     const [accName, setAccName] = useState('');
     const [accRole, setAccRole] = useState('');
+    const [pfp, setPFP] = useState("");
 
     axios.defaults.withCredentials = true;
   //RETURNING ACCOUNT NAME IF LOGGED IN
@@ -29,6 +30,14 @@ function StudentDashHeader() {
       .catch((err) => {
         console.error("Error validating user session:", err);
       });
+
+      axios.get('http://localhost:8080/getPFP')
+      .then((res) => {
+        setPFP(`http://localhost:8080/${res.data.uploadPFP}`);        
+      })
+      .catch((err) => {
+        alert("Error: " + err);
+      })
   }, []);
 
     const toggleSidebar = () => {
@@ -61,7 +70,7 @@ function StudentDashHeader() {
         />
         <div className={style.profile}>
         <Link to="/AccountSettingsStudent"><img
-          src='\src\assets\sampleicon.jpg'
+          src={pfp}
             alt="Profile"
             className={style.profileImage}
           /></Link>

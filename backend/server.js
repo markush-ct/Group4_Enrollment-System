@@ -54,10 +54,10 @@ const transporter = nodemailer.createTransport({
 // Configure Multer for file uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, "uploads/"); // Folder to store uploaded files
+        cb(null, "uploads/"); // Folder to store uploaded files
     },
     filename: (req, file, cb) => {
-      cb(null, Date.now() + path.extname(file.originalname)); // Use unique filenames
+        cb(null, Date.now() + path.extname(file.originalname)); // Use unique filenames
     },
 });
 
@@ -71,15 +71,15 @@ app.get('/getStudentProgram', (req, res) => {
     const getProgramQuery = `SELECT * FROM student WHERE Email = ?`;
 
     db.query(getProgramQuery, req.session.email, (err, result) => {
-        if(err){
-            return res.json({message: "Error in server: " + err});
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
         } else if (result.length > 0) {
             return res.json({
                 message: "Program fetched successfully",
                 program: result[0].ProgramID
             })
         } else {
-            return res.json({message: "Error fetching program"});
+            return res.json({ message: "Error fetching program" });
         }
     })
 })
@@ -100,7 +100,7 @@ app.get('/getFormData', (req, res) => {
                 if (err) {
                     return res.json({ message: "Error in server: " + err });
                 } else if (formResult.length > 0) {
-                    console.log()
+                    
 
                     return res.json({
                         preferredProgram: student.ProgramID,
@@ -148,8 +148,8 @@ app.get('/getFormData', (req, res) => {
                         familyIncome: form.MonthlyFamilyIncome,
                         guardianRelationship: form.GuardianRelationship,
                         elementarySchool: form.ElemSchoolName,
-                        elementaryAddress: form.ElemSchoolAddress	,
-                        elementaryYearGraduated: form.ElemYearGraduated,                        
+                        elementaryAddress: form.ElemSchoolAddress,
+                        elementaryYearGraduated: form.ElemYearGraduated,
                         elementarySchoolType: form.ElemSchoolType,
                         seniorHighSchool: form.SHSchoolName,
                         seniorHighAddress: form.SHSchoolAddress,
@@ -185,7 +185,7 @@ app.post('/admissionFormTable', upload.single("idPicture"), (req, res) => {
             return res.json({ message: "Error in server: " + err });
         } else if (idResult.length > 0) {
             const getID = idResult[0].StudentID;
-            
+
             // File path for the uploaded ID picture
             const idPicturePath = req.file ? req.file.path : req.body.idPictureUrl;
 
@@ -285,9 +285,9 @@ app.post('/admissionFormTable', upload.single("idPicture"), (req, res) => {
 
             db.query(updateQuery, values, (err, updateRes) => {
                 if (err) {
-                    return res.json({ message: "Error in server: " + err , });
+                    return res.json({ message: "Error in server: " + err, });
                 } else if (updateRes.affectedRows > 0) {
-                    return res.json({ message: "Update success" , idPictureUrl: idPicturePath});
+                    return res.json({ message: "Update success", idPictureUrl: idPicturePath });
                 } else {
                     return res.json({ message: "Update failed" });
                 }
@@ -1227,6 +1227,117 @@ app.post('/resetPass', (req, res) => {
             return res.json({ message: "Password updated successfully" });
         }
     })
+})
+
+//CHANGE PFP
+app.post('/changePFP', upload.single("uploadPFP"), (req, res) => {
+    const getAcc = `SELECT * FROM account WHERE Email = ?`;
+    db.query(getAcc, req.session.email, (err, accResult) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else if(accResult.length > 0){
+            // File path for the uploaded PFP
+            const pfpPath = req.file ? req.file.path : req.body.pfpURL;
+
+            const updatePFP = `UPDATE account SET ProfilePicture = ? WHERE Email = ?`;
+            const values = [
+                pfpPath,
+                req.session.email
+            ]
+            db.query(updatePFP, values, (err, pfpResult) => {
+                if(err){
+                    return res.json({message: "Error in server: " + err});
+                } else if (pfpResult.affectedRows > 0){
+                    return res.json({
+                        message: "Successfully changed Profile Picture",
+                        pfpURL: pfpPath 
+                    })
+                }
+            })
+        }
+    })
+})
+
+//GET PFP
+app.get('/getPFP', (req, res) => {
+    const getPFPQuery = `SELECT * FROM account WHERE Email = ?`;
+    db.query(getPFPQuery, req.session.email, (err, result) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if(result.length > 0){
+            return res.json({
+                uploadPFP: result[0].ProfilePicture,
+                pfpURL: result[0].ProfilePicture
+            });
+        }
+    })
+})
+
+//GET ACCOUNT INFO
+app.get('/getAccInfo', (req, res) => {
+    if (["Regular", "Irregular", "Transferee", "Shiftee", "Freshman"].includes(req.session.role)) {
+        const getStudent = `SELECT * FROM student WHERE Email = ?`;
+        db.query(getStudent, req.session.email, (err, studentRes) => {
+            if (err) {
+                return res.json({ message: "Error in server: " + err });
+            } else if (studentRes.length > 0) {
+                const stdInfo = studentRes[0];
+
+                return res.json({
+                    message: "Fetch successful",
+                    firstName: stdInfo.Firstname,
+                    middleName: stdInfo.Middlename,
+                    lastName: stdInfo.Lastname,
+                    email: req.session.email,
+                    gender: stdInfo.Gender,
+                    age: stdInfo.Age,
+                    phoneNo: stdInfo.PhoneNo,
+                    address: stdInfo.Address,
+                    dob: stdInfo.DOB
+                })
+            } else {
+                return res.json({ message: "Error fetching account information: " });
+            }
+        })
+    }
+})
+
+//SAVE ACCOUNT INFO CHANGES
+app.post('/saveAccInfo', (req, res) => {
+    const values = [
+        req.body.firstName,
+        req.body.middleName,
+        req.body.lastName,
+        req.body.gender === "Female" ? "F" : "M",
+        req.body.age,
+        req.body.phoneNo,
+        req.body.address,
+        req.body.dob,
+        req.session.email
+    ];
+
+    if(["Regular", "Irregular", "Transferee", "Shiftee", "Freshman"].includes(req.session.role)){
+        const updateStudent = `UPDATE student
+        SET Firstname = ?,
+            Middlename = ?,
+            Lastname = ?,
+            Gender = ?,
+            Age = ?,
+            PhoneNo = ?,
+            Address = ?,
+            DOB = ?
+        WHERE Email = ?`;
+
+        db.query(updateStudent, values, (err, studentRes) => {
+            if (err) {
+                return res.json({ message: "Error in server: " + err });
+            } else if (studentRes.affectedRows > 0) {
+                return res.json({ message: "Account updated successfully" });
+            } else {
+                return res.json({ message: "Unable to update account" });
+            }
+        });
+    }
 })
 
 //ACCOUNT SETTINGS MATCH CURRENT PASS

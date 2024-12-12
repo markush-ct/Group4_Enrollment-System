@@ -20,16 +20,19 @@ function AccountSettings() {
   const [errorMsg, setErrorMsg] = useState("");
   const [accRole, setAccRole] = useState('');
   const [isEditing, setIsEditing] = useState(false);
-  const [firstName, setFirstName] = useState("Kai");
-const [middleName, setMiddleName] = useState("S.");
-const [lastName, setLastName] = useState("Sotto");
-const [email, setEmail] = useState("kai@gmail.com");
-const [gender, setGender] = useState("Male");
-const [age, setAge] = useState("21");
-const [phoneNo, setPhoneNo] = useState("123456789");
-const [address, setAddress] = useState("Las");
-const [dob, setDob] = useState("March 1, 2000");
-const [isChangePasswordView, setIsChangePasswordView] = useState(false);
+  const [isChangePasswordView, setIsChangePasswordView] = useState(false);
+
+  const [accInfo, setAccInfo] = useState({
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    email: '',
+    gender: '',
+    age: '',
+    phoneNo: '',
+    address: '',
+    dob: '',
+  });
 
 
   //Reuse in other pages that requires logging in
@@ -65,6 +68,33 @@ const [isChangePasswordView, setIsChangePasswordView] = useState(false);
 
   const handleToggleView = () => {
     setIsChangePasswordView(!isChangePasswordView);
+  };
+
+  //FETCH ACCOUNT INFO
+  useEffect(() => {
+    axios.post('http://localhost:8080/getAccInfo', accRole)
+    .then((res) => {
+      if(res.data.message === "Fetch successful"){
+        setAccInfo({
+          firstName: res.data.firstName,
+          middleName: res.data.middleName,
+          lastName: res.data.lastName,
+          email: res.data.email,
+          gender: res.data.gender,
+          age: res.data.age,
+          phoneNo: res.data.phoneNo,
+          address: res.data.address,
+          dob: res.data.dob,
+        });
+      } else{
+        alert("Error fetching account info");
+      }
+    })
+  }, [])
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setAccInfo({ ...setAccInfo, [name]: value });
   };
 
   // Handle current password submission
@@ -238,11 +268,11 @@ const [isChangePasswordView, setIsChangePasswordView] = useState(false);
                         type="text"
                         className={styles.editInput}
                         placeholder="Enter First Name"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
+                        value={accInfo.firstName}
+                        onChange={handleInputChange}
                       />
                     ) : (
-                      <span className={styles.infoValue}>{firstName}</span>
+                      <span className={styles.infoValue}>{accInfo.firstName}</span>
                     )}
                   </div>
   
@@ -254,11 +284,11 @@ const [isChangePasswordView, setIsChangePasswordView] = useState(false);
                         type="text"
                         className={styles.editInput}
                         placeholder="Enter Middle Name"
-                        value={middleName}
-                        onChange={(e) => setMiddleName(e.target.value)}
+                        value={accInfo.middleName}
+                        onChange={handleInputChange}
                       />
                     ) : (
-                      <span className={styles.infoValue}>{middleName}</span>
+                      <span className={styles.infoValue}>{accInfo.middleName}</span>
                     )}
                   </div>
   
@@ -270,11 +300,11 @@ const [isChangePasswordView, setIsChangePasswordView] = useState(false);
                         type="text"
                         className={styles.editInput}
                         placeholder="Enter Last Name"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
+                        value={accInfo.lastName}
+                        onChange={handleInputChange}
                       />
                     ) : (
-                      <span className={styles.infoValue}>{lastName}</span>
+                      <span className={styles.infoValue}>{accInfo.lastName}</span>
                     )}
                   </div>
   
@@ -285,12 +315,12 @@ const [isChangePasswordView, setIsChangePasswordView] = useState(false);
                       <input
                         type="email"
                         className={styles.editInput}
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={accInfo.email}
+                        onChange={handleInputChange}
                         disabled
                       />
                     ) : (
-                      <span className={styles.infoValue}>{email}</span>
+                      <span className={styles.infoValue}>{accInfo.email}</span>
                     )}
                   </div>
   
@@ -300,16 +330,15 @@ const [isChangePasswordView, setIsChangePasswordView] = useState(false);
                     {isEditing ? (
                       <select
                         className={styles.editInput}
-                        value={gender}
-                        onChange={(e) => setGender(e.target.value)}
+                        value={accInfo.gender}
+                        onChange={handleInputChange}
                       >
                         <option value="">Select Gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Other">Other</option>
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
                       </select>
                     ) : (
-                      <span className={styles.infoValue}>{gender}</span>
+                      <span className={styles.infoValue}>{accInfo.gender}</span>
                     )}
                   </div>
   
@@ -321,11 +350,11 @@ const [isChangePasswordView, setIsChangePasswordView] = useState(false);
                         type="number"
                         className={styles.editInput}
                         placeholder="Enter Age"
-                        value={age}
-                        onChange={(e) => setAge(e.target.value)}
+                        value={accInfo.age}
+                        onChange={handleInputChange}
                       />
                     ) : (
-                      <span className={styles.infoValue}>{age}</span>
+                      <span className={styles.infoValue}>{accInfo.age}</span>
                     )}
                   </div>
   
@@ -336,11 +365,11 @@ const [isChangePasswordView, setIsChangePasswordView] = useState(false);
                         type="tel"
                         className={styles.editInput}
                         placeholder="Enter Phone Number"
-                        value={phoneNo}
-                        onChange={(e) => setPhoneNo(e.target.value)}
+                        value={accInfo.phoneNo}
+                        onChange={handleInputChange}
                       />
                     ) : (
-                      <span className={styles.infoValue}>{phoneNo}</span>
+                      <span className={styles.infoValue}>{accInfo.phoneNo}</span>
                     )}
                   </div>
   
@@ -352,11 +381,11 @@ const [isChangePasswordView, setIsChangePasswordView] = useState(false);
                         type="text"
                         className={styles.editInput}
                         placeholder="Enter Address"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
+                        value={accInfo.address}
+                        onChange={handleInputChange}
                       />
                     ) : (
-                      <span className={styles.infoValue}>{address}</span>
+                      <span className={styles.infoValue}>{accInfo.address}</span>
                     )}
                   </div>
   
@@ -367,11 +396,11 @@ const [isChangePasswordView, setIsChangePasswordView] = useState(false);
                       <input
                         type="date"
                         className={styles.editInput}
-                        value={dob}
-                        onChange={(e) => setDob(e.target.value)}
+                        value={accInfo.dob}
+                        onChange={handleInputChange}
                       />
                     ) : (
-                      <span className={styles.infoValue}>{dob}</span>
+                      <span className={styles.infoValue}>{accInfo.dob}</span>
                     )}
                   </div>
                 </div>
