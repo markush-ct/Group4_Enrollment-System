@@ -1,72 +1,221 @@
-import { useState, useEffect } from "react";
-
+import { useState, useEffect, useMemo } from "react";
 import styles from "/src/styles/DCSHeadDash.module.css";
+import axios from "axios";
 import Header from "/src/components/AdminDashHeader.jsx";
+import { Doughnut } from "react-chartjs-2";
+
+
+
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+} from "chart.js";
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement);
 
 
 
 function DCSHeadDashboard() {
-  const [announcements, setAnnouncements] = useState([]);
-  const [announcement, setAnnouncement] = useState("");
   const [SideBar, setSideBar] = useState(false);
+  const [CScount, setCScount] = useState(0);
+  const [ITcount, setITcount] = useState(0);
+  const [announcementText, setAnnouncementText] = useState(""); // Announcement 
+  const [announcements, setAnnouncements] = useState([]); // List of announcements
+  
 
   
+
+ 
+
+ 
+
   useEffect(() => {
     document.body.style.overflow = SideBar ? "hidden" : "auto";
     return () => (document.body.style.overflow = "auto");
   }, [SideBar]);
 
-  const handleAddAnnouncement = () => {
-    if (announcement.trim()) {
-      setAnnouncements([...announcements, announcement]);
-      setAnnouncement("");
+
+
+  const handlePostAnnouncement = () => {
+    if (announcementText.trim()) {
+      setAnnouncements([...announcements, announcementText]); 
+      setAnnouncementText(''); 
     }
   };
 
-  const handleDeleteAnnouncement = (index) => {
-    const updatedAnnouncements = announcements.filter((_, i) => i !== index);
-    setAnnouncements(updatedAnnouncements);
-  };
+
+
+  // BILOG NA ANO
+  const doughnutData = useMemo(
+    () => ({
+      labels: ["Alliance of Computer Science", "Information Technology Society"],
+      datasets: [
+        {
+          label: "DCS CHARTS",
+          data: [CScount, ITcount],
+          backgroundColor: ["#d9534f", "#5cb85c"],
+          hoverBackgroundColor: ["#c9302c", "#4cae4c"],
+          borderWidth: 2,
+        },
+      ],
+    }),
+    [CScount, ITcount]
+  );
+
+  const doughnutOptions = useMemo(
+    () => ({
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: "bottom" },
+      },
+    }),
+    []
+  );
+
+  //GET NUMBER OF REGULAR STUDENTS ENROLLED IN BSCS
+  useEffect (() => {
+    axios.get("http://localhost:8080/getCS")
+    .then((res) => {
+      setCScount(res.data.CScount);
+    })
+    .catch((err) => {
+      alert("Error: " + err);
+      console.error("ERROR FETCHING DATA: " + err);
+    });
+  }, []);
+
+  //GET NUMBER OF REGULAR STUDENTS ENROLLED IN BSIT
+  useEffect (() => {
+    axios.get("http://localhost:8080/getIT")
+    .then((res) => {
+      setITcount(res.data.ITcount);
+    })
+    .catch((err) => {
+      alert("Error: " + err);
+      console.error("ERROR FETCHING DATA: " + err);
+    });
+  }, []);
+
+
 
   return (
     <>
       <Header SideBar={SideBar} setSideBar={setSideBar} />
-      <div className={`${styles.dashboard} container`}>
-     
+      <div className={styles.contentSection}>
+        <div className={styles.gridContainer}>
 
-        {/* CONTENT */}
-        <div className={`${styles.content} container`}>
 
-        <div className={styles.inputSection}>
-        <textarea
-          className={styles.textarea}
-          value={announcement}
-          onChange={(e) => setAnnouncement(e.target.value)}
-          placeholder="Write your announcement here..."
-        />
-        <button className={styles.addButton} onClick={handleAddAnnouncement}>
-          Add Announcement
-        </button>
-      </div>
-
-      <div className={styles.announcementList}>
-        {announcements.map((item, index) => (
-          <div key={index} className={styles.announcementItem}>
-            <p>{item}</p>
-            <button
-              className={styles.deleteButton}
-              onClick={() => handleDeleteAnnouncement(index)}
-            >
-              Delete
-            </button>
-          </div>
-        ))}
-      </div>
+        <div className={styles.container1}>
+  <div className={styles.GreetingContainer}>
+    <div className={styles.HiContainer}>
+      <h2 className={styles.GreetingTitle}>Hi DCS HEAD</h2>
     </div>
+    <div className={styles.announcementContainer}>
+      <div className={styles.announcementHeader}>
+        <h2 className={styles.announcementTitle}>Post an announcement</h2>
+
+        {/* AUDINECE */}
+        <select className={styles.audienceDropdown}>
+          <option value="everyone">Everyone</option>
+          <option value="students">Students</option>
+          <option value="teachers">Admin</option>
+          <option value="teachers">Regular</option>
+          <option value="teachers">Irregular</option>
+          <option value="teachers">Transferee</option>
+          <option value="teachers">Shiftee</option>
+          <option value="teachers">Freshmen</option>
+    
+        </select>
+      </div>
+
+      <textarea
+            className={styles.announcementInput}
+            placeholder="Write your announcement here..."
+            value={announcementText}
+            onChange={(e) => setAnnouncementText(e.target.value)} 
+          ></textarea>
+          <button className={styles.postButton} onClick={handlePostAnnouncement}>
+            <span>POST</span>
+          </button>
+    </div>
+  </div>
 </div>
 
+
+
+
+
+
+
+
+
+          <div className={styles.container2}>
+          {/* STATS */}
+            <div className={styles.Stats}>
+              <div className={styles.DCScount}>
+              <h3>Total DCS Students</h3>
+              <p>70</p>
+              </div>
+              <div className={styles.CsStats}>
+              <h3>Computer Science</h3>
+              <p>35</p>
+              </div>
+              <div className={styles.ItStats}>
+              <h3>Information Technology</h3>
+              <p>35</p>
+              </div>
+            </div>
+          </div>
+
+
+
+
+
+          <div className={styles.container3}>
+      <div className={styles.row1}>
+        <div className={styles.headerContainer}>
+          <h2 className={styles.announcementHeader}>View Announcements</h2>
+          
+        </div>
+        <div className={styles.announcementList}>
+          {announcements.slice(0, 3).map((announcement, index) => (
+            <div key={index} className={styles.announcementItem}>
+              {announcement}
+            </div>
+          ))}
+        </div>
+        </div>
+
+      <div className={styles.row2}>Row 2 Content</div>
+      </div>
+    
+  
+     
+
+    
+
+          {/* DONUT  */}
+          <div className={styles.container4}>
+            <div className={styles.DonutContainer}>
+              <div className={styles.DonutText}>
+                <h3>DCS Population Per Course</h3>
+              </div>
+              <div className={styles.Donut}>
+                <Doughnut data={doughnutData} options={doughnutOptions} />
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+   
     </>
   );
-}
+};
 
 export default DCSHeadDashboard;
