@@ -1299,24 +1299,69 @@ app.get('/getAccInfo', (req, res) => {
                 return res.json({ message: "Error fetching account information: " });
             }
         })
+    } else if (["Adviser", "DCS Head", "School Head", "Enrollment Officer"].includes(req.session.role)){
+        const getEmployee = `SELECT * FROM employee WHERE Email = ?`;
+        db.query(getEmployee, req.session.email, (err, empResult) => {
+            if (err) {
+                return res.json({ message: "Error in server: " + err });
+            } else if (empResult.length > 0){
+                const empInfo = empResult[0];
+
+                return res.json({
+                    message: "Fetch successful",
+                    firstName: empInfo.Firstname,
+                    middleName: empInfo.Middlename,
+                    lastName: empInfo.Lastname,
+                    email: req.session.email,
+                    gender: empInfo.Gender,
+                    phoneNo: empInfo.PhoneNo,
+                    address: empInfo.Address,
+                    dob: empInfo.DOB,
+                    position: empInfo.EmpJobRole
+                })
+            }
+        })
+    } else if (req.session.role === "Society Officer"){
+        const getSoc = `SELECT * FROM societyofficer WHERE Email = ?`;
+        db.query(getSoc, req.session.email, (err, socResult) => {
+            if (err) {
+                return res.json({ message: "Error in server: " + err });
+            } else if (socResult.length > 0){
+                const socInfo = socResult[0];
+
+                return res.json({
+                    message: "Fetch successful",
+                    firstName: socInfo.Firstname,
+                    middleName: socInfo.Middlename,
+                    lastName: socInfo.Lastname,
+                    email: req.session.email,
+                    gender: socInfo.Gender,
+                    phoneNo: socInfo.PhoneNo,
+                    address: socInfo.Address,
+                    dob: socInfo.DOB,
+                    position: socInfo.Position
+                })
+            }
+        })
     }
 })
 
 //SAVE ACCOUNT INFO CHANGES
 app.post('/saveAccInfo', (req, res) => {
-    const values = [
-        req.body.firstName,
-        req.body.middleName,
-        req.body.lastName,
-        req.body.gender === "Female" ? "F" : "M",
-        req.body.age,
-        req.body.phoneNo,
-        req.body.address,
-        req.body.dob,
-        req.session.email
-    ];
 
     if(["Regular", "Irregular", "Transferee", "Shiftee", "Freshman"].includes(req.session.role)){
+        const values = [
+            req.body.firstName,
+            req.body.middleName,
+            req.body.lastName,
+            req.body.gender === "Female" ? "F" : "M",
+            req.body.age,
+            req.body.phoneNo,
+            req.body.address,
+            req.body.dob,
+            req.session.email
+        ];
+
         const updateStudent = `UPDATE student
         SET Firstname = ?,
             Middlename = ?,
@@ -1332,7 +1377,94 @@ app.post('/saveAccInfo', (req, res) => {
             if (err) {
                 return res.json({ message: "Error in server: " + err });
             } else if (studentRes.affectedRows > 0) {
-                return res.json({ message: "Account updated successfully" });
+
+                const updateAccName = `UPDATE account SET Name = ? WHERE Email = ?`;
+                const nameConcat = req.body.firstName + " " + req.body.lastName;
+                db.query(updateAccName, [nameConcat, req.session.email], (err, accNameUpdateRes) => {
+                    if (err) {
+                        return res.json({ message: "Error in server: " + err });
+                    } else if (accNameUpdateRes.affectedRows > 0){
+                        return res.json({ message: "Account updated successfully"});
+                    }
+                })
+            } else {
+                return res.json({ message: "Unable to update account" });
+            }
+        });
+    } else if (["Adviser", "DCS Head", "School Head", "Enrollment Officer"].includes(req.session.role)) {
+        const values1 = [
+            req.body.firstName,
+            req.body.middleName,
+            req.body.lastName,
+            req.body.gender === "Female" ? "F" : "M",
+            req.body.phoneNo,
+            req.body.address,
+            req.body.dob,
+            req.session.email
+        ];
+
+        const updateEmp = `UPDATE employee
+        SET Firstname = ?,
+            Middlename = ?,
+            Lastname = ?,
+            Gender = ?,
+            PhoneNo = ?,
+            Address = ?,
+            DOB = ?
+        WHERE Email = ?`;
+
+        db.query(updateEmp, values1, (err, empRes) => {
+            if (err) {
+                return res.json({ message: "Error in server: " + err });
+            } else if (empRes.affectedRows > 0) {
+                const updateAccName = `UPDATE account SET Name = ? WHERE Email = ?`;
+                const nameConcat = req.body.firstName + " " + req.body.lastName;
+                db.query(updateAccName, [nameConcat, req.session.email], (err, accNameUpdateRes) => {
+                    if (err) {
+                        return res.json({ message: "Error in server: " + err });
+                    } else if (accNameUpdateRes.affectedRows > 0){
+                        return res.json({ message: "Account updated successfully" });
+                    }
+                })
+            } else {
+                return res.json({ message: "Unable to update account" });
+            }
+        });
+    } else if(req.session.role === "Society Officer"){
+        const values2 = [
+            req.body.firstName,
+            req.body.middleName,
+            req.body.lastName,
+            req.body.gender === "Female" ? "F" : "M",
+            req.body.phoneNo,
+            req.body.address,
+            req.body.dob,
+            req.session.email
+        ];
+
+        const updateSoc = `UPDATE societyofficer
+        SET Firstname = ?,
+            Middlename = ?,
+            Lastname = ?,
+            Gender = ?,
+            PhoneNo = ?,
+            Address = ?,
+            DOB = ?
+        WHERE Email = ?`;
+
+        db.query(updateSoc, values2, (err, empRes) => {
+            if (err) {
+                return res.json({ message: "Error in server: " + err });
+            } else if (empRes.affectedRows > 0) {
+                const updateAccName = `UPDATE account SET Name = ? WHERE Email = ?`;
+                const nameConcat = req.body.firstName + " " + req.body.lastName;
+                db.query(updateAccName, [nameConcat, req.session.email], (err, accNameUpdateRes) => {
+                    if (err) {
+                        return res.json({ message: "Error in server: " + err });
+                    } else if (accNameUpdateRes.affectedRows > 0){
+                        return res.json({ message: "Account updated successfully" });
+                    }
+                })
             } else {
                 return res.json({ message: "Unable to update account" });
             }
@@ -1380,7 +1512,19 @@ app.post('/changePass', (req, res) => {
 //LOGIN
 app.get('/', (req, res) => {
     if (req.session && req.session.accountID) {
-        return res.json({ valid: true, accountID: req.session.accountID, name: req.session.name, role: req.session.role, email: req.session.email })
+        const getName = `SELECT * FROM account WHERE Email = ?`;
+        db.query(getName, req.session.email, (err, result) => {
+            if(err){
+                return res.json({valid: false});
+            } else if (result.length > 0){
+                return res.json({ 
+                    valid: true, 
+                    accountID: req.session.accountID, 
+                    role: req.session.role, 
+                    name: result[0].Name,
+                    email: req.session.email })
+            }
+        })
     } else {
         return res.json({ valid: false })
     }
@@ -1407,7 +1551,6 @@ app.post('/LoginPage', (req, res) => {
                             const studentType = studentResult[0].StudentType;
 
                             req.session.accountID = user.AccountID;
-                            req.session.name = user.Name;
                             req.session.role = studentType;
                             req.session.email = user.Email;
                             req.session.studentID = user.StudentID;
@@ -1420,13 +1563,11 @@ app.post('/LoginPage', (req, res) => {
                                 status: user.Status,
                                 isLoggedIn: true,
                                 studentID: req.session.studentID,
-                                name: req.session.name
                             });
                         }
                     })
                 } else {
                     req.session.accountID = user.AccountID;
-                    req.session.name = user.Name;
                     req.session.role = user.Role;
                     req.session.email = user.Email;
 
@@ -1436,8 +1577,7 @@ app.post('/LoginPage', (req, res) => {
                         email: req.session.email,
                         accountID: req.session.accountID,
                         status: user.Status,
-                        isLoggedIn: true,
-                        name: req.session.name
+                        isLoggedIn: true
                     });
                 }
 

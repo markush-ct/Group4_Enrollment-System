@@ -123,47 +123,40 @@ function FreshmenAdmissionForm() {
     medicalHistory: [],
     scheduleAppointment: ['certify'],
   };
-  
-  
 
-  
+
+
+
   const handleNext = () => {
     const stepKeys = Object.keys(requiredFields);
     const currentStepFields = requiredFields[stepKeys[activeStep]];
-  
+
     const missingFields = currentStepFields.filter((field) => {
       const value = formData[field];
-  
-      
+
+
       if (field === 'pwd' && formData.isPWD === 'No') {
-        return false; 
+        return false;
       }
       if (field === 'indigenous' && formData.isIndigenous === 'No') {
-        return false; 
+        return false;
       }
-  
-   
+
+
       return value === undefined || value === null || value === '';
     });
-  
+
     if (missingFields.length > 0) {
-      setErrorPrompt(true); 
+      setErrorPrompt(true);
       return;
     }
-  
+
     setActiveStep((prevStep) => prevStep + 1);
   };
-  
+
   const handleBack = () => {
     setActiveStep((prevStep) => Math.max(prevStep - 1, 0));
   };
-  
-  
-  
-  
-  
-
-  
 
   //GET PREFERRED PROGRAM
   useEffect(() => {
@@ -234,7 +227,7 @@ function FreshmenAdmissionForm() {
             controlNo: res.data.controlNo || '',
             applicationStatus: res.data.applicationStatus || '',
           });
-          
+
         } else if (res.data.preferredProgram === 2) {
           setPrefProgram("Bachelor of Science in Information Technology");
           setUploadedImage(res.data.idPictureUrl);
@@ -309,7 +302,7 @@ function FreshmenAdmissionForm() {
   const autoSave = () => {
     setIsSaving(true);
 
-      // Create a FormData object to include the file
+    // Create a FormData object to include the file
     const data = new FormData();
     data.append("applyingFor", formData.applyingFor);
     data.append("applicantType", formData.applicantType);
@@ -460,7 +453,7 @@ function FreshmenAdmissionForm() {
                   id="applicantType"
                   name="applicantType"
                   value={formData.applicantType}
-                  readOnly                  
+                  readOnly
                 />
               </div>
 
@@ -573,24 +566,24 @@ function FreshmenAdmissionForm() {
               <div className={styles.formGroup}>
                 <label htmlFor="idPicture">Upload ID 1x1 Picture:</label>
                 {formData.idPicture ? (
-  <div className={styles.imagePreview}>
-    <img
-      src={uploadedImage}
-      alt="Uploaded ID"
-      style={{ maxWidth: "150px", maxHeight: "150px" }}
-    />
-  </div>
-) : (
-  ''
-)}
-  <input
-    id="idPicture"
-    name="idPicture"
-    type="file"
-    accept="image/*"
-    onChange={handleFileUpload}
-    required
-  />
+                  <div className={styles.imagePreview}>
+                    <img
+                      src={uploadedImage}
+                      alt="Uploaded ID"
+                      style={{ maxWidth: "150px", maxHeight: "150px" }}
+                    />
+                  </div>
+                ) : (
+                  ''
+                )}
+                <input
+                  id="idPicture"
+                  name="idPicture"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileUpload}
+                  required
+                />
               </div>
             </form>
           </div>
@@ -644,30 +637,30 @@ function FreshmenAdmissionForm() {
 
 
 
-                <div className={styles.formGroup}>
-                  <label htmlFor="permanentAddress">Permanent Address:</label>
-                  <input
-                    id="permanentAddress"
-                    name="permanentAddress"
-                    value={formData.permanentAddress}
-                    onChange={handleInputChange}
-                    type="text"
-                    placeholder='House No. & Street, Barangay, City or Municipality, Province'
-                    required
-                  />
-                </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="permanentAddress">Permanent Address:</label>
+                <input
+                  id="permanentAddress"
+                  name="permanentAddress"
+                  value={formData.permanentAddress}
+                  onChange={handleInputChange}
+                  type="text"
+                  placeholder='House No. & Street, Barangay, City or Municipality, Province'
+                  required
+                />
+              </div>
 
-                <div className={styles.formGroup}>
-                  <label htmlFor="zipCode">Zip Code:</label>
-                  <input
-                    id="zipCode"
-                    name="zipCode"
-                    value={formData.zipCode}
-                    onChange={handleInputChange}
-                    type="number"
-                    required
-                  />
-                </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="zipCode">Zip Code:</label>
+                <input
+                  id="zipCode"
+                  name="zipCode"
+                  value={formData.zipCode}
+                  onChange={handleInputChange}
+                  type="number"
+                  required
+                />
+              </div>
 
               <div className={styles.formGroup}>
                 <label htmlFor="email">Email:</label>
@@ -711,45 +704,45 @@ function FreshmenAdmissionForm() {
               </div>
 
               <div className={styles.formGroup}>
-                  <label htmlFor="sex">Sex:</label>
-                  <select
-                    id="sex"
-                    name="sex"
-                    value={formData.sex}
+                <label htmlFor="sex">Sex:</label>
+                <select
+                  id="sex"
+                  name="sex"
+                  value={formData.sex}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="" disabled>Select</option>
+                  <option value="M">Male</option>
+                  <option value="F">Female</option>
+                </select>
+              </div>
+
+              <div className={styles.formGrid}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="age">Age:</label>
+                  <input
+                    id="age"
+                    name="age"
+                    value={formData.age}
                     onChange={handleInputChange}
+                    type="number"
                     required
-                  >
-                    <option value="" disabled>Select</option>
-                    <option value="M">Male</option>
-                    <option value="F">Female</option>
-                  </select>
+                  />
                 </div>
 
-                <div className={styles.formGrid}>
-        <div className={styles.formGroup}>
-          <label htmlFor="age">Age:</label>
-          <input
-            id="age"
-            name="age"
-            value={formData.age}
-            onChange={handleInputChange}
-            type="number"
-            required
-          />
-        </div>
-
-        <div className={styles.formGroup}>
-          <label htmlFor="dateOfBirth">Date of Birth:</label>
-          <input
-            id="dateOfBirth"
-            name="dateOfBirth"
-            value={formData.dateOfBirth}
-            onChange={handleInputChange}
-            type="date"
-            required
-          />
-        </div>
-        </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="dateOfBirth">Date of Birth:</label>
+                  <input
+                    id="dateOfBirth"
+                    name="dateOfBirth"
+                    value={formData.dateOfBirth}
+                    onChange={handleInputChange}
+                    type="date"
+                    required
+                  />
+                </div>
+              </div>
 
               <div className={styles.formGroup}>
                 <label htmlFor="religion">Religion:</label>
@@ -1097,35 +1090,35 @@ function FreshmenAdmissionForm() {
               </div>
 
               <div className={styles.formGrid}>
-              <div className={styles.formGroup}>
-                <label htmlFor="elementaryYearGraduated">Year Graduated:</label>
-                <input
-                  id="elementaryYearGraduated"
-                  name="elementaryYearGraduated"
-                  value={formData.elementaryYearGraduated}
-                  onChange={handleInputChange}
-                  type="tel"
-                  placeholder='YYYY'
-                  required
-                />
-              </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="elementaryYearGraduated">Year Graduated:</label>
+                  <input
+                    id="elementaryYearGraduated"
+                    name="elementaryYearGraduated"
+                    value={formData.elementaryYearGraduated}
+                    onChange={handleInputChange}
+                    type="tel"
+                    placeholder='YYYY'
+                    required
+                  />
+                </div>
 
-              <div className={styles.formGroup}>
-                <label htmlFor="elementarySchoolType">School Type:</label>
-                <select
-                  id="elementarySchoolType"
-                  name="elementarySchoolType"
-                  value={formData.elementarySchoolType}
-                  onChange={handleInputChange}
-                  required
-                >
-                  <option value="" disabled>
-                    Select Type
-                  </option>
-                  <option value="Public">Public</option>
-                  <option value="Private">Private</option>
-                </select>
-              </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="elementarySchoolType">School Type:</label>
+                  <select
+                    id="elementarySchoolType"
+                    name="elementarySchoolType"
+                    value={formData.elementarySchoolType}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="" disabled>
+                      Select Type
+                    </option>
+                    <option value="Public">Public</option>
+                    <option value="Private">Private</option>
+                  </select>
+                </div>
               </div>
 
               <br />
@@ -1155,38 +1148,38 @@ function FreshmenAdmissionForm() {
               </div>
 
               <div className={styles.formGrid}>
-<div className={styles.formGroup}>
-                <label htmlFor="seniorHighYearGraduated">Year Graduated (or expected graduation):</label>
-                <input
-                  id="seniorHighYearGraduated"
-                  name="seniorHighYearGraduated"
-                  value={formData.seniorHighYearGraduated}
-                  onChange={handleInputChange}
-                  type="tel"
-                  placeholder='YYYY'
-                  required
-                />
+                <div className={styles.formGroup}>
+                  <label htmlFor="seniorHighYearGraduated">Year Graduated (or expected graduation):</label>
+                  <input
+                    id="seniorHighYearGraduated"
+                    name="seniorHighYearGraduated"
+                    value={formData.seniorHighYearGraduated}
+                    onChange={handleInputChange}
+                    type="tel"
+                    placeholder='YYYY'
+                    required
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="seniorHighSchoolType">School Type:</label>
+                  <select
+                    id="seniorHighSchoolType"
+                    name="seniorHighSchoolType"
+                    value={formData.seniorHighSchoolType}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="" disabled>
+                      Select Type
+                    </option>
+                    <option value="Public">Public</option>
+                    <option value="Private">Private</option>
+                  </select>
+                </div>
+
               </div>
 
-              <div className={styles.formGroup}>
-                <label htmlFor="seniorHighSchoolType">School Type:</label>
-                <select
-                  id="seniorHighSchoolType"
-                  name="seniorHighSchoolType"
-                  value={formData.seniorHighSchoolType}
-                  onChange={handleInputChange}
-                  required
-                >
-                  <option value="" disabled>
-                    Select Type
-                  </option>
-                  <option value="Public">Public</option>
-                  <option value="Private">Private</option>
-                </select>
-              </div>
-
-              </div>
-              
 
               <br />
 
@@ -1213,38 +1206,38 @@ function FreshmenAdmissionForm() {
                 />
               </div>
 
-            
+
               <div className={styles.formGrid}>
                 <div className={styles.formGroup}>
-                <label htmlFor="vocationalYearGraduated">Year Graduated:</label>
-                <input
-                  id="vocationalYearGraduated"
-                  name="vocationalYearGraduated"
-                  value={formData.vocationalYearGraduated}
-                  onChange={handleInputChange}
-                  type="tel"
-                  placeholder='YYYY'
-                />
+                  <label htmlFor="vocationalYearGraduated">Year Graduated:</label>
+                  <input
+                    id="vocationalYearGraduated"
+                    name="vocationalYearGraduated"
+                    value={formData.vocationalYearGraduated}
+                    onChange={handleInputChange}
+                    type="tel"
+                    placeholder='YYYY'
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="vocationalSchoolType">School Type:</label>
+                  <select
+                    id="vocationalSchoolType"
+                    name="vocationalSchoolType"
+                    value={formData.vocationalSchoolType}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="" disabled>
+                      Select Type
+                    </option>
+                    <option value="Public">Public</option>
+                    <option value="Private">Private</option>
+                  </select>
+                </div>
               </div>
 
-              <div className={styles.formGroup}>
-                <label htmlFor="vocationalSchoolType">School Type:</label>
-                <select
-                  id="vocationalSchoolType"
-                  name="vocationalSchoolType"
-                  value={formData.vocationalSchoolType}
-                  onChange={handleInputChange}
-                  required
-                >
-                  <option value="" disabled>
-                    Select Type
-                  </option>
-                  <option value="Public">Public</option>
-                  <option value="Private">Private</option>
-                </select>
-              </div>              
-              </div>
-              
 
             </form>
           </div>
@@ -1417,59 +1410,59 @@ function FreshmenAdmissionForm() {
 
 
           <div className={styles.buttons}>
-  <button
-    onClick={handleBack}
-    disabled={activeStep === 0}
-    className={`${styles.button} ${styles.backButton}`}
-    aria-label="Go to the previous step"
-  >
-    <span>Back</span>
-  </button>
-  <button
-    onClick={(event) => {
-      event.preventDefault();
-      handleNext();
-    }}
-    disabled={activeStep === steps.length - 1}
-    className={`${styles.button} ${styles.nextButton}`}
-    aria-label={
-      activeStep === steps.length - 1 ? "Finish the form" : "Go to the next step"
-    }
-  >
-    <span>{activeStep === steps.length - 1 ? "Finish" : "Next"}</span>
-  </button>
-</div>
+            <button
+              onClick={handleBack}
+              disabled={activeStep === 0}
+              className={`${styles.button} ${styles.backButton}`}
+              aria-label="Go to the previous step"
+            >
+              <span>Back</span>
+            </button>
+            <button
+              onClick={(event) => {
+                event.preventDefault();
+                handleNext();
+              }}
+              disabled={activeStep === steps.length - 1}
+              className={`${styles.button} ${styles.nextButton}`}
+              aria-label={
+                activeStep === steps.length - 1 ? "Finish the form" : "Go to the next step"
+              }
+            >
+              <span>{activeStep === steps.length - 1 ? "Finish" : "Next"}</span>
+            </button>
+          </div>
 
         </div>
         {/* ERROR PROMPT */}
-      {errorPrompt && (
-        <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupError}>
-          <div className={styles.popupContentError}>
-            <button
-              className={styles.closeButton}
-              onClick={() => setErrorPrompt(false)}
-            >
-              &times;
-            </button>
-            <div className={styles.popupHeaderError}>
-              <h2>Error</h2>
+        {errorPrompt && (
+          <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupError}>
+            <div className={styles.popupContentError}>
+              <button
+                className={styles.closeButton}
+                onClick={() => setErrorPrompt(false)}
+              >
+                &times;
+              </button>
+              <div className={styles.popupHeaderError}>
+                <h2>Error</h2>
+              </div>
+              <div className={styles.MessageError}>
+                <img
+                  src="/src/assets/errormark.png"
+                  alt="Error Icon"
+                  className={styles.messageImage}
+                />
+              </div>
+              <p className={styles.popupTextError}>Please fill out all fields.</p>
             </div>
-            <div className={styles.MessageError}>
-              <img
-                src="/src/assets/errormark.png"
-                alt="Error Icon"
-                className={styles.messageImage}
-              />
-            </div>
-            <p className={styles.popupTextError}>Please fill out all fields.</p>
           </div>
-        </div>
-      )}
+        )}
       </div>
 
 
 
-     
+
 
     </>
   );

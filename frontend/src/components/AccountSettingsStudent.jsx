@@ -164,11 +164,10 @@ function AccountSettingsStudent() {
     axios.post('http://localhost:8080/saveAccInfo', accInfo)
       .then((res) => {
         if (res.data.message === "Account updated successfully") {
-          setErrorMsg("");
-          setErrorPrompt(false);
-          setsuccessMsg(res.data.message);
-          setsuccessPrompt(true);
           console.log(res.data);
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         } else {
           setErrorMsg(res.data.message);
           setErrorPrompt(true);
@@ -198,7 +197,9 @@ function AccountSettingsStudent() {
           setErrorPrompt(true);
           setErrorMsg(res.data.message);
           setIsCurrentPasswordValid(false);
-
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         }
       })
       .catch((err) => {
@@ -224,7 +225,6 @@ function AccountSettingsStudent() {
             setErrorPrompt(false);
             setErrorMsg(false);
             setIsCurrentPasswordValid(false);
-            window.location.reload();
           } else {
             setIsCurrentPasswordValid(false);
             alert(res.data.message);
