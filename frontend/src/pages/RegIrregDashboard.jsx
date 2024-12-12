@@ -56,7 +56,7 @@ useEffect(() => {
 
     axios.get('http://localhost:8080/getPFP')
       .then((res) => {
-        setPFP(`http://localhost:8080/${res.data.pfpPath}`);
+        setPFP(`http://localhost:8080/${res.data.pfpURL}`);
       })
       .catch((err) => {
         alert("Error: " + err);

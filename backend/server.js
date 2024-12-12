@@ -100,7 +100,7 @@ app.get('/getFormData', (req, res) => {
                 if (err) {
                     return res.json({ message: "Error in server: " + err });
                 } else if (formResult.length > 0) {
-                    console.log()
+                    
 
                     return res.json({
                         preferredProgram: student.ProgramID,
@@ -1229,6 +1229,35 @@ app.post('/resetPass', (req, res) => {
     })
 })
 
+//CHANGE PFP
+app.post('/changePFP', upload.single("uploadPFP"), (req, res) => {
+    const getAcc = `SELECT * FROM account WHERE Email = ?`;
+    db.query(getAcc, req.session.email, (err, accResult) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else if(accResult.length > 0){
+            // File path for the uploaded PFP
+            const pfpPath = req.file ? req.file.path : req.body.pfpURL;
+
+            const updatePFP = `UPDATE account SET ProfilePicture = ? WHERE Email = ?`;
+            const values = [
+                pfpPath,
+                req.session.email
+            ]
+            db.query(updatePFP, values, (err, pfpResult) => {
+                if(err){
+                    return res.json({message: "Error in server: " + err});
+                } else if (pfpResult.affectedRows > 0){
+                    return res.json({
+                        message: "Successfully changed Profile Picture",
+                        pfpURL: pfpPath 
+                    })
+                }
+            })
+        }
+    })
+})
+
 //GET PFP
 app.get('/getPFP', (req, res) => {
     const getPFPQuery = `SELECT * FROM account WHERE Email = ?`;
@@ -1236,7 +1265,10 @@ app.get('/getPFP', (req, res) => {
         if (err) {
             return res.json({ message: "Error in server: " + err });
         } else if(result.length > 0){
-            return res.json({pfpPath: result[0].ProfilePicture});
+            return res.json({
+                uploadPFP: result[0].ProfilePicture,
+                pfpURL: result[0].ProfilePicture
+            });
         }
     })
 })

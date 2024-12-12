@@ -21,8 +21,13 @@ function AccountSettingsStudent() {
   const [accRole, setAccRole] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [isChangePasswordView, setIsChangePasswordView] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const [pfp, setPFP] = useState("");
+  const [pfp, setPFP] = useState({
+    uploadPFP: null,
+    pfpURL: '',
+  });
+  const [uploadedPFP, setUploadedPFP] = useState(null);
   const [accInfo, setAccInfo] = useState({
     firstName: '',
     middleName: '',
@@ -99,12 +104,52 @@ function AccountSettingsStudent() {
 
       axios.get('http://localhost:8080/getPFP')
       .then((res) => {
-        setPFP(`http://localhost:8080/${res.data.pfpPath}`);
+        setUploadedPFP(res.data.pfpURL);
+        setPFP({
+          uploadPFP: res.data.uploadPFP || null,
+          pfpURL: res.data.pfpURL || '',
+        });
       })
       .catch((err) => {
         alert("Error: " + err);
       })
   }, [])
+
+    //AUTOSAVE PFP
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        autoSave();
+      }, 1000);
+  
+      return () => clearTimeout(timer);
+    }, [pfp]);
+
+    const autoSave = () => {
+      setIsSaving(true);
+
+      const data = new FormData();
+      if (pfp.uploadPFP) {
+        data.append("uploadPFP", pfp.uploadPFP);
+      }
+      data.append("pfpURL", pfp.pfpURL);
+
+
+      axios.post("http://localhost:8080/changePFP", data, {
+        headers: { "Content-Type": "multipart/form-data", },
+      })
+      .then((res) => {
+        console.log("Student saved successfully:", res.data);
+
+        setUploadedPFP(`http://localhost:8080/${res.data.pfpURL}`);
+      })
+      .catch((err) => {
+        alert("Error: " + err)
+      })
+    }
+  
+    const handleUploadChange = (e) => {
+      setPFP({ ...pfp, uploadPFP: e.target.files[0] });
+    };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -206,13 +251,13 @@ function AccountSettingsStudent() {
             <div className={styles.profileSection}>
               <div className={styles.profilePhoto}>
                 <img
-                  src={pfp}
+                  src={uploadedPFP}
                   alt="Profile"
                   className={styles.profileImage}
                 />
               </div>
               <label
-                htmlFor="uploadPhoto"
+                htmlFor="uploadPFP"
                 className={styles.uploadButton}
                 aria-label="Upload Profile Picture"
               >
@@ -220,9 +265,11 @@ function AccountSettingsStudent() {
               </label>
               <input
                 type="file"
-                id="uploadPhoto"
+                id="uploadPFP"
+                name="uploadPFP"
                 className={styles.fileInput}
                 accept="image/*"
+                onChange={handleUploadChange}
               />
               <h3>{accName}</h3>
               <p>{accRole}</p>
