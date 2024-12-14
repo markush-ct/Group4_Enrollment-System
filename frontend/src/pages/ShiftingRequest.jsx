@@ -72,8 +72,14 @@ function ShiftingRequest() {
   }, []);
 
 
-  useEffect(() => {
+  useEffect(() => { // dropwdonw function
+    if (!accountRequests || accountRequests.length === 0) {
+      setFilteredRequests([]);
+      return;
+    }
+  
     if (filterType === "All") {
+      
       setFilteredRequests(accountRequests);
     } else {
       setFilteredRequests(
@@ -81,6 +87,7 @@ function ShiftingRequest() {
       );
     }
   }, [filterType, accountRequests]);
+
 
 
   const handleApprove = async (request) => {
@@ -167,6 +174,12 @@ const closePrompt = () => {
     setSelectedRequest(null);
   };
 
+  
+
+  
+  
+
+  
 
 
   return (
@@ -268,7 +281,7 @@ const closePrompt = () => {
 
         {/* Dropdown  */}
         <div className={styles.filterSection} data-aos="fade-up">
-          <label htmlFor="filter" className={styles.filterLabel}>Filter by Type:</label>
+          <label htmlFor="filter" className={styles.filterLabel}>Filter by Program:</label>
           <select
             id="filter"
             className={styles.filterDropdown}
@@ -297,46 +310,44 @@ const closePrompt = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredRequests.length > 0 ? (
-                filteredRequests.map((request) => (
-                  <tr key={request.CvSUStudentID} onClick={() => handleRowClick(request)}>
-                    <td data-label="Student ID">{request.CvSUStudentID}</td>
-                    <td data-label="Name">{request.Firstname} {request.Lastname}</td>
-                    <td data-label="Previous Program">{request.PrevProgram}</td>
-                    <td>
-                      <button
-                        className={styles.approveButton}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          console.log('Request passed to handleApprove:', request);
-                          setSelectedRequest(request);
-                          setApprovalPrompt(true); // Pass the entire request object
-                        }}
-                      >
-                        {loading ? 'Loading...' : 'Approve'}
-                      </button>
+  {filteredRequests && filteredRequests.length > 0 ? (
+    filteredRequests.map((request) => (
+      <tr key={request.CvSUStudentID} onClick={() => handleRowClick(request)}>
+        <td>{request.CvSUStudentID}</td>
+        <td>{request.Firstname} {request.Lastname}</td>
+        <td>{request.PrevProgram}</td>
+        <td>
+          <button
+            className={styles.approveButton}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleApprove(request);
+            }}
+          >
+            Approve
+          </button>
+          <button
+                                  className={styles.rejectButton}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    console.log('Request passed to handleReject:', request);
+                                    handleReject(request); // Pass the entire request object
+                                  }}
+                                >
+                                  {loading ? 'Loading...' : 'Reject'}
+                                </button>
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan="4" className={styles.noData}>
+        No shifting requests found.
+      </td>
+    </tr>
+  )}
+</tbody>
 
-                      <button
-                        className={styles.rejectButton}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          console.log('Request passed to handleReject:', request);
-                          handleReject(request); 
-                        }}
-                      >
-                        {loading ? 'Loading...' : 'Reject'}
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="4" className={styles.noData}>
-                    No account requests found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
 
 
           </table>

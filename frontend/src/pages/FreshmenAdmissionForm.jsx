@@ -1280,6 +1280,9 @@ function FreshmenAdmissionForm() {
                   placeholder="List any medications you are currently taking"
                 />
               </div>
+              <button type="submit" className={styles.submitButton}>
+                              <span>Submit</span>
+                            </button>
             </form>
           </div>
         );
