@@ -1,6 +1,7 @@
+import React from 'react'; 
 import { Link } from 'react-router-dom';
-import { useState } from "react"
-import style from '/src/styles/header.module.css'
+import { useState } from 'react';
+import style from "/src/styles/header.module.css";
 
 function SidebarMenu({ SideBar, setSideBar }) {
     const [about, setAbout] = useState(false);

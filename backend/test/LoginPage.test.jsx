@@ -152,7 +152,7 @@ describe('POST /LoginPage', () => {
             if (email === 'jenniekim@bp.com' && password === 'rubyjane') {
                 callback(null, [{
                     AccountID: 2,
-                    Name: 'Jane Doe',
+                    Name: 'Jennie Kim',
                     Role: 'Student',
                     Status: 'Terminated',
                     Email: 'jenniekim@bp.com'

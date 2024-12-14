@@ -1,6 +1,7 @@
+import React from 'react'; 
 import { Link } from 'react-router-dom'; // FOR LINKING PAGE
-import SidebarMenu from '/src/components/SidebarMenu'
-import style from '/src/styles/Header.module.css';
+import SidebarMenu from '/src/components/SidebarMenu';
+import style from "/src/styles/header.module.css";
 
 function Header({SideBar, setSideBar}) {
 
@@ -14,7 +15,7 @@ function Header({SideBar, setSideBar}) {
     return (
         <>
             <div className={style.nav}>
-                <header className={style.header}>
+                <header className={style.header} data-testid="mock-header">
                     <div className={style.navLeft}>
                     <Link to="/MainPage"><img className={style.cvsuLogo} src="/src/assets/cvsu-logo.png" alt="cvsu logo" /></Link>
                         <div className={style.institution}>
@@ -24,7 +25,7 @@ function Header({SideBar, setSideBar}) {
                         </div>
 
                         <button className={style.menuBtn}>
-                            <img className={style.menuIcon} src="/src/assets/icons8-menu-30.png" alt="" onClick={toggleSideBar} />
+                            <img className={style.menuIcon} src="/src/assets/icons8-menu-30.png" alt="menu-icon" onClick={toggleSideBar} />
                         </button>
                     </div>
 
