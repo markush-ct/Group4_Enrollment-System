@@ -24,6 +24,7 @@ function ShifteeForm() {
     currentAcadYear: '',
     reasons: '',
     dateSubmitted: '',
+    submissionDate: '',
   })
 
   const handleInputChange = (e) => {
@@ -44,6 +45,7 @@ function ShifteeForm() {
             currentAcadYear: res.data.currentAcadYear || '',
             reasons: res.data.reasons || '',
             dateSubmitted: res.data.dateSubmitted,
+            submissionDate: res.data.submissionDate,
           });
         } else {
           setErrorMsg(res.data.message);
@@ -246,14 +248,24 @@ const autoSave = () => {
             day: 'numeric',
           });
 
+          const formattedDate1 = formValues.submissionDate === "0000-00-00" || !formValues.submissionDate
+          ? "No schedule available"
+          : new Date(formValues.submissionDate).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            });
+
         return (
           <div className={styles.Contentt}>
             <img
               src={
-                formValues.shiftingStatus === "Accepted"
-                  ? "src/assets/paid-icon.png"
-                  : formValues.shiftingStatus === "Pending"
-                    ? "src/assets/paid-icon.png"
+                formValues.shiftingStatus === "Approved" ? 
+                "src/assets/paid-icon.png"
+                  : formValues.shiftingStatus === "Pending" ? 
+                  "src/assets/paid-icon.png"
+                    : formValues.shiftingStatus === "Rejected" ?
+                    "src/assets/paid-icon.png"
                     : "src/assets/paid-icon.png"
               }
               alt="Fee Status Icon"
@@ -282,7 +294,7 @@ const autoSave = () => {
                 <input
                   id="requirementsSchedule"
                   name="requirementsSchedule"
-                  value="No schedule available"
+                  value={formattedDate1}
                   type="text"
                   readOnly
                 />

@@ -21,6 +21,7 @@ function ShiftingRequest() {
   const [errorPrompt, setErrorPrompt] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
+  const [submissionDate, setSubmissionDate] = useState('');
 
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -55,13 +56,14 @@ function ShiftingRequest() {
     });
   }, []);
 
-  // FETCH ACCOUNT REQUESTS
+  // FETCH SHIFTING REQUESTS
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getAccountReq")
+      .get("http://localhost:8080/shiftingRequests")
       .then((res) => {
-        setAccountRequests(res.data.accReq);
-        setFilteredRequests(res.data.accReq);
+        setAccountRequests(res.data.records);
+        setFilteredRequests(res.data.records);
+        setLoading(false);
       })
       .catch((err) => {
         console.warn("Error fetching account requests, using example data:", err);
@@ -73,72 +75,46 @@ function ShiftingRequest() {
   useEffect(() => {
     if (filterType === "All") {
       setFilteredRequests(accountRequests);
-    } else if (filterType === "Society Officer") {
+    } else {
       setFilteredRequests(
-        accountRequests.filter(
-          (request) =>
-            ["President",
-              "Vice President",
-              "Secretary",
-              "Assistant Secretary",
-              "Treasurer",
-              "Assistant Treasurer",
-              "Business Manager",
-              "Auditor",
-              "P.R.O.",
-              "Assistant P.R.O.",
-              "GAD Representative",
-              "1st Year Senator",
-              "2nd Year Senator",
-              "3rd Year Senator",
-              "4th Year Senator",
-              "1st Year Chairperson",
-              "2nd Year Chairperson",
-              "3rd Year Chairperson",
-              "4th Year Chairperson"].includes(request.AccountType)
-        )
-      );
-    }
-    else {
-      setFilteredRequests(
-        accountRequests.filter((request) => request.AccountType === filterType)
+        accountRequests.filter((request) => request.PrevProgram === filterType)
       );
     }
   }, [filterType, accountRequests]);
 
 
-  // Request
-const handleApprove = async (request) => {
-  console.log('Request received in handleApprove:', request);
+  const handleApprove = async (request) => {
 
-  setLoading(true);
-
-  if (!request?.Email || !request?.Name || !request?.AccountType) {
-      setErrorPrompt(true);
-      setErrorMsg('Email, name, and account type are required.');
-      return;
-  }
-
-  try {
-      await axios.post('http://localhost:8080/sendApprovalEmail', {
-          email: request.Email,
-          name: request.Name,
-          accountType: request.AccountType,
+    console.log('Request received in handleApprove:', request);
+    console.log('Submission Date:', submissionDate);
+    setLoading(true);
+  
+    try {
+      const response = await axios.post('http://localhost:8080/approveShiftingReq', {
+        email: request.Email,
+        name: request.Firstname + " " + request.Lastname,
+        studentID: request.CvSUStudentID,
+        submissionDate: submissionDate, // Ensure this is passed correctly
       });
-
-      setApprovalPrompt(true);
-      setApprovalMsg(`Approval email sent to ${request.Email}`);
-      setErrorPrompt(false);
-      setPopUpVisible(false);
-      setLoading(false);
-      
-  } catch (err) {
+  
+      if (response.data.message === "Shifting Request approval sent") {
+        setApprovalPrompt(true);
+        setApprovalMsg(`Approval email sent to ${request.Email}`);
+        setErrorPrompt(false);
+        setPopUpVisible(false);
+      } else {
+        console.error(response.data.message);
+        setErrorPrompt(true);
+        setErrorMsg('Failed to send approval email');
+      }
+    } catch (err) {
       console.error('Error:', err);
       setErrorPrompt(true);
-      setErrorMsg(`Failed to send approval email:  ${err.response?.data?.message || err.message}`);
+      setErrorMsg(`Failed to send approval email: ${err.response?.data?.message || err.message}`);
+    } finally {
       setLoading(false);
-  }
-};
+    }
+  };
 
 const handleReject = async (request) => {
   console.log('Request received in handleReject:', request);
@@ -187,6 +163,7 @@ const closePrompt = () => {
   //close popup
   const closePopup = () => {
     setPopUpVisible(false);
+    setApprovalPrompt(false)
     setSelectedRequest(null);
   };
 
@@ -211,6 +188,9 @@ const closePrompt = () => {
                 <input
                     type="date"
                     id="submissionDate"
+                    name='submissionDate'                    
+                    value={submissionDate}
+                    onChange={(e) => setSubmissionDate(e.target.value)}
                     className={styles.popupPromptInput}
                 />
             </div>
@@ -219,7 +199,7 @@ const closePrompt = () => {
             <div className={styles.buttonContainer}>
                 <button
                     className={styles.OKButton}
-                    
+                    onClick={() => handleApprove(selectedRequest)}
                 >
                     <span>Send</span>
                 </button>
@@ -319,17 +299,18 @@ const closePrompt = () => {
             <tbody>
               {filteredRequests.length > 0 ? (
                 filteredRequests.map((request) => (
-                  <tr key={request.id} onClick={() => handleRowClick(request)}>
-                    <td data-label="Student ID">{request.Name}</td>
-                    <td data-label="Name">{request.Email}</td>
-                    <td data-label="Previous Program">{request.AccountType}</td>
+                  <tr key={request.CvSUStudentID} onClick={() => handleRowClick(request)}>
+                    <td data-label="Student ID">{request.CvSUStudentID}</td>
+                    <td data-label="Name">{request.Firstname} {request.Lastname}</td>
+                    <td data-label="Previous Program">{request.PrevProgram}</td>
                     <td>
                       <button
                         className={styles.approveButton}
                         onClick={(e) => {
                           e.stopPropagation();
                           console.log('Request passed to handleApprove:', request);
-                          handleApprove(request); // Pass the entire request object
+                          setSelectedRequest(request);
+                          setApprovalPrompt(true); // Pass the entire request object
                         }}
                       >
                         {loading ? 'Loading...' : 'Approve'}
@@ -375,21 +356,28 @@ const closePrompt = () => {
             </div>
            
               <div className={styles.popupText}>
-                <p><strong>Student ID:</strong> {selectedRequest.AccountType}</p>
-                <p><strong>First Name:</strong> {selectedRequest.Name}</p>
-                <p><strong>Middle Name:</strong> {selectedRequest.Email}</p>
-                <p><strong>Last Name:</strong> {selectedRequest.PhoneNo}</p>
-                <p><strong>Previous Program:</strong> {selectedRequest.PhoneNo}</p>
-                <p><strong>Current Academic Year:</strong> {selectedRequest.PhoneNo}</p>
-                <p><strong>Reasons:</strong> {selectedRequest.PhoneNo}</p>
-                <p><strong>Submitted on:</strong> {selectedRequest.PhoneNo}</p>
+              <p><strong>Student ID:</strong> {selectedRequest.CvSUStudentID}</p>
+                <p><strong>Email:</strong> {selectedRequest.Email}</p>
+                <p><strong>First Name:</strong> {selectedRequest.Firstname}</p>
+                <p><strong>Middle Name:</strong> {selectedRequest.Middlename}</p>
+                <p><strong>Last Name:</strong> {selectedRequest.Lastname}</p>
+                <p><strong>Previous Program:</strong> {selectedRequest.PrevProgram}</p>
+                <p><strong>Current Academic Year:</strong> {selectedRequest.AcadYear}</p>
+                <p><strong>Reasons:</strong> {selectedRequest.Reasons}</p>
+                <p><strong>Submitted on: </strong> 
+                {selectedRequest.Date === "0000-00-00" || !selectedRequest.Date ? 
+                          "" : 
+                          new Date(selectedRequest.Date).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                        })
+                        }
+                </p>
               </div>
       
 
-          
-
-            
-
+    
           </div>
         </div>
       )}

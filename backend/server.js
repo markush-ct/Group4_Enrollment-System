@@ -65,13 +65,113 @@ const upload = multer({ storage });
 
 app.use("/uploads", express.static("uploads"));
 
+app.post('/approveShiftingReq', (req, res) => {
+    const getEmpID = `SELECT * FROM employee where Email = ?`;
+
+    db.query(getEmpID, req.session.email, (err, idRes) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if (idRes.length > 0) {
+            const empID = idRes[0].EmployeeID;
+            console.log('Request Body:', req.body);
+
+            const { email, name, studentID, submissionDate } = req.body;
+
+            const formattedDate = new Date(submissionDate).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              });
+
+            const updateSubmissionSched = `UPDATE shiftingform
+            SET EmployeeID = ?,
+                SubmissionSchedule = ?,
+                ShiftingStatus = ?
+            WHERE StudentID = ?
+            `;
+
+            const updateValues = [
+                empID,
+                submissionDate,
+                "Approved",
+                studentID
+            ];
+
+            db.query(updateSubmissionSched, updateValues, (err, updateRes) => {
+                if(err){
+                    return res.json({message: "Error in server: " + err});
+                } else if(updateRes.affectedRows > 0){
+
+                    const emailBody = `
+                    Hello ${name},
+                    Student ID: ${studentID}
+
+                    Your shifting request has been approved!
+                    Please come to the department by ${formattedDate} and bring the follwong requirements:
+                    1. Accomplished Shifting Form
+                
+                    Best regards,
+                    ${idRes[0].Firstname + " " + idRes[0].Lastname}
+                    `;
+
+                    const mailOptions = {
+                        from: 'gerlyntan07@gmail.com',
+                        to: email,
+                        subject: 'Account Approval Notification',
+                        text: emailBody,
+                    };
+
+                    try {
+                        console.log("Sending email with options:", mailOptions);
+                        transporter.sendMail(mailOptions);
+                        console.log("Email sent successfully.");
+                        return res.json({ message: "Shifting Request approval sent" });
+                    } catch (emailError) {
+                        console.error('Error sending email:', emailError);
+                        return res.json({ message: "Error sending email", error: emailError.message });
+                    }
+                } else{
+                    console.log('Request Body:', req.body);
+                    return res.json({message: "Failed to approve shifting request"});
+                }
+            })
+        }
+    })
+})
+
+app.get('/shiftingRequests', (req, res) => {
+    const query = `
+        SELECT 
+            s.CvSUStudentID, s.Email, s.Firstname, s.Middlename, s.Lastname, s.PrevProgram, 
+            sf.PrevProgramAdviser, sf.AcadYear, sf.Reasons, sf.Date 
+        FROM student s
+        JOIN shiftingform sf ON s.CvSUStudentID = sf.StudentID
+        WHERE sf.ShiftingStatus = ?`;
+
+    db.query(query, ["Submitted"], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: "Error in server: " + err });
+        }
+
+        if (results.length > 0) {
+            return res.json({
+                message: "Fetched records successfully",
+                records: results,
+            });
+        } else {
+            return res.json({ message: "No records found" });
+        }
+    });
+});
+
+
 //SUBMIT SHIFTING FORM
-app.post('/submitShiftingForm', (req,res) =>{
+app.post('/submitShiftingForm', (req, res) => {
     const getID = `SELECT * FROM student WHERE Email = ?`;
-    db.query(getID, req.session.email, (err, idRes)=>{
-        if(err){
-            return res.json({message: "Error in server: " + err});
-        } else if(idRes.length > 0) {
+    db.query(getID, req.session.email, (err, idRes) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if (idRes.length > 0) {
             const submitQuery = `UPDATE shiftingform
             SET ShiftingStatus = ?,
                 Date = ?
@@ -84,12 +184,12 @@ app.post('/submitShiftingForm', (req,res) =>{
             ];
 
             db.query(submitQuery, values, (err, submitRes) => {
-                if(err){
-                    return res.json({message: "Error in server: " + err});
-                } else if(submitRes.affectedRows > 0){
-                    return res.json({message: "Form submitted successfully"});
-                } else{
-                    return res.json({message: "Unable to submit form"});
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else if (submitRes.affectedRows > 0) {
+                    return res.json({ message: "Form submitted successfully" });
+                } else {
+                    return res.json({ message: "Unable to submit form" });
                 }
             })
         }
@@ -97,13 +197,13 @@ app.post('/submitShiftingForm', (req,res) =>{
 })
 
 //AUTOSAVING SHIFTING FORM INFO
-app.post('/saveShiftingInfo', (req,res)=>{
+app.post('/saveShiftingInfo', (req, res) => {
     const getID = `SELECT * FROM student WHERE Email = ?`;
 
-    db.query(getID, req.session.email, (err, idRes)=>{
-        if(err){
-            return res.json({message: "Error in server: " + err});
-        } else if(idRes.length > 0){
+    db.query(getID, req.session.email, (err, idRes) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if (idRes.length > 0) {
 
             const updateShiftingForm = `UPDATE shiftingform
             SET PrevProgramAdviser = ?,
@@ -120,12 +220,12 @@ app.post('/saveShiftingInfo', (req,res)=>{
             ];
 
             db.query(updateShiftingForm, values, (err, updateRes) => {
-                if(err){
-                    return res.json({message: "Error in server: " + err});
-                } else if(updateRes.affectedRows > 0){
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else if (updateRes.affectedRows > 0) {
                     return res.json({ message: "Record updated successfully" });
-                } else{
-                    return res.json({ message: "Failed to updated record "});
+                } else {
+                    return res.json({ message: "Failed to updated record " });
                 }
             })
         }
@@ -133,14 +233,14 @@ app.post('/saveShiftingInfo', (req,res)=>{
 })
 
 //READ SHIFTEE INFO
-app.get('/getShifteeInfo', (req,res) => {
+app.get('/getShifteeInfo', (req, res) => {
     const getStudentInfo = `SELECT * FROM student WHERE Email = ?`;
     const getShiftingInfo = `SELECT *FROM shiftingform WHERE StudentID = ?`;
 
     db.query(getStudentInfo, req.session.email, (err, studentRes) => {
-        if(err){
-            return res.json({message: "Error in server: " + err});
-        } else if(studentRes.length > 0){
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if (studentRes.length > 0) {
             const studentInfo = studentRes[0];
 
             db.query(getShiftingInfo, studentInfo.CvSUStudentID, (err, shiftingRes) => {
@@ -154,11 +254,12 @@ app.get('/getShifteeInfo', (req,res) => {
                     studentID: studentInfo.CvSUStudentID,
                     currentAcadYear: shiftingInfo.AcadYear,
                     reasons: shiftingInfo.Reasons,
-                    dateSubmitted: shiftingInfo.Date
+                    dateSubmitted: shiftingInfo.Date,
+                    submissionDate: shiftingInfo.SubmissionSchedule
                 })
             })
         } else {
-            return res.json({message: "Error fetching records"});
+            return res.json({ message: "Error fetching records" });
         }
     })
 })
@@ -198,7 +299,7 @@ app.get('/getFormData', (req, res) => {
                 if (err) {
                     return res.json({ message: "Error in server: " + err });
                 } else if (formResult.length > 0) {
-                    
+
 
                     return res.json({
                         preferredProgram: student.ProgramID,
@@ -1316,9 +1417,9 @@ app.post('/resetPass', (req, res) => {
 app.post('/changePFP', upload.single("uploadPFP"), (req, res) => {
     const getAcc = `SELECT * FROM account WHERE Email = ?`;
     db.query(getAcc, req.session.email, (err, accResult) => {
-        if(err){
-            return res.json({message: "Error in server: " + err});
-        } else if(accResult.length > 0){
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if (accResult.length > 0) {
             // File path for the uploaded PFP
             const pfpPath = req.file ? req.file.path : req.body.pfpURL;
 
@@ -1328,12 +1429,12 @@ app.post('/changePFP', upload.single("uploadPFP"), (req, res) => {
                 req.session.email
             ]
             db.query(updatePFP, values, (err, pfpResult) => {
-                if(err){
-                    return res.json({message: "Error in server: " + err});
-                } else if (pfpResult.affectedRows > 0){
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else if (pfpResult.affectedRows > 0) {
                     return res.json({
                         message: "Successfully changed Profile Picture",
-                        pfpURL: pfpPath 
+                        pfpURL: pfpPath
                     })
                 }
             })
@@ -1347,7 +1448,7 @@ app.get('/getPFP', (req, res) => {
     db.query(getPFPQuery, req.session.email, (err, result) => {
         if (err) {
             return res.json({ message: "Error in server: " + err });
-        } else if(result.length > 0){
+        } else if (result.length > 0) {
             return res.json({
                 uploadPFP: result[0].ProfilePicture,
                 pfpURL: result[0].ProfilePicture
@@ -1382,12 +1483,12 @@ app.get('/getAccInfo', (req, res) => {
                 return res.json({ message: "Error fetching account information: " });
             }
         })
-    } else if (["Adviser", "DCS Head", "School Head", "Enrollment Officer"].includes(req.session.role)){
+    } else if (["Adviser", "DCS Head", "School Head", "Enrollment Officer"].includes(req.session.role)) {
         const getEmployee = `SELECT * FROM employee WHERE Email = ?`;
         db.query(getEmployee, req.session.email, (err, empResult) => {
             if (err) {
                 return res.json({ message: "Error in server: " + err });
-            } else if (empResult.length > 0){
+            } else if (empResult.length > 0) {
                 const empInfo = empResult[0];
 
                 return res.json({
@@ -1404,12 +1505,12 @@ app.get('/getAccInfo', (req, res) => {
                 })
             }
         })
-    } else if (req.session.role === "Society Officer"){
+    } else if (req.session.role === "Society Officer") {
         const getSoc = `SELECT * FROM societyofficer WHERE Email = ?`;
         db.query(getSoc, req.session.email, (err, socResult) => {
             if (err) {
                 return res.json({ message: "Error in server: " + err });
-            } else if (socResult.length > 0){
+            } else if (socResult.length > 0) {
                 const socInfo = socResult[0];
 
                 return res.json({
@@ -1432,7 +1533,7 @@ app.get('/getAccInfo', (req, res) => {
 //SAVE ACCOUNT INFO CHANGES
 app.post('/saveAccInfo', (req, res) => {
 
-    if(["Regular", "Irregular", "Transferee", "Shiftee", "Freshman"].includes(req.session.role)){
+    if (["Regular", "Irregular", "Transferee", "Shiftee", "Freshman"].includes(req.session.role)) {
         const values = [
             req.body.firstName,
             req.body.middleName,
@@ -1466,8 +1567,8 @@ app.post('/saveAccInfo', (req, res) => {
                 db.query(updateAccName, [nameConcat, req.session.email], (err, accNameUpdateRes) => {
                     if (err) {
                         return res.json({ message: "Error in server: " + err });
-                    } else if (accNameUpdateRes.affectedRows > 0){
-                        return res.json({ message: "Account updated successfully"});
+                    } else if (accNameUpdateRes.affectedRows > 0) {
+                        return res.json({ message: "Account updated successfully" });
                     }
                 })
             } else {
@@ -1505,7 +1606,7 @@ app.post('/saveAccInfo', (req, res) => {
                 db.query(updateAccName, [nameConcat, req.session.email], (err, accNameUpdateRes) => {
                     if (err) {
                         return res.json({ message: "Error in server: " + err });
-                    } else if (accNameUpdateRes.affectedRows > 0){
+                    } else if (accNameUpdateRes.affectedRows > 0) {
                         return res.json({ message: "Account updated successfully" });
                     }
                 })
@@ -1513,7 +1614,7 @@ app.post('/saveAccInfo', (req, res) => {
                 return res.json({ message: "Unable to update account" });
             }
         });
-    } else if(req.session.role === "Society Officer"){
+    } else if (req.session.role === "Society Officer") {
         const values2 = [
             req.body.firstName,
             req.body.middleName,
@@ -1544,7 +1645,7 @@ app.post('/saveAccInfo', (req, res) => {
                 db.query(updateAccName, [nameConcat, req.session.email], (err, accNameUpdateRes) => {
                     if (err) {
                         return res.json({ message: "Error in server: " + err });
-                    } else if (accNameUpdateRes.affectedRows > 0){
+                    } else if (accNameUpdateRes.affectedRows > 0) {
                         return res.json({ message: "Account updated successfully" });
                     }
                 })
@@ -1614,15 +1715,16 @@ app.get('/', (req, res) => {
     if (req.session && req.session.accountID) {
         const getName = `SELECT * FROM account WHERE Email = ?`;
         db.query(getName, req.session.email, (err, result) => {
-            if(err){
-                return res.json({valid: false});
-            } else if (result.length > 0){
-                return res.json({ 
-                    valid: true, 
-                    accountID: req.session.accountID, 
-                    role: req.session.role, 
+            if (err) {
+                return res.json({ valid: false });
+            } else if (result.length > 0) {
+                return res.json({
+                    valid: true,
+                    accountID: req.session.accountID,
+                    role: req.session.role,
                     name: result[0].Name,
-                    email: req.session.email })
+                    email: req.session.email
+                })
             }
         })
     } else if (req.cookies.rememberMe) {
@@ -1654,7 +1756,7 @@ app.get('/', (req, res) => {
 
 app.post('/LoginPage', (req, res) => {
     const sql = `SELECT * FROM account WHERE Email = ? AND Password = ?`;
-    const { email, password , rememberMe } = req.body;
+    const { email, password, rememberMe } = req.body;
 
     db.query(sql, [email, password], (err, result) => {
         if (err) return res.json({ message: "Error in server" + err });
@@ -1665,7 +1767,7 @@ app.post('/LoginPage', (req, res) => {
                 return res.json({ message: "Account is no longer active. Fill out contact form to ask for reactivation", isLoggedIn: false });
             } else if (user.Status === "Active") {
                 if (user.Role === "Student") {
-                    
+
                     const studentTypeQuery = `SELECT StudentType from student WHERE Email = ?`;
                     db.query(studentTypeQuery, email, (err, studentResult) => {
                         if (err) {
