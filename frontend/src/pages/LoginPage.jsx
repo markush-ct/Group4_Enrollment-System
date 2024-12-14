@@ -40,7 +40,7 @@ function LoginPage() {
                     } else if (res.data.role === 'Transferee') {
                         navigate('/TransfereeDashboard');
                     } else if (res.data.role === 'Shiftee') {
-                        navigate('/ShifteeDashboard');
+                        navigate('/ShifteeForm');
                     } else if (res.data.role === 'Regular' || res.data.role === "Irregular") {
                         navigate('/RegIrregDashboard');
                     } else if (res.data.role === 'Society Officer') {
@@ -75,7 +75,7 @@ function LoginPage() {
                         } else if (role === 'Transferee') {
                             navigate('/TransfereeAdmissionForm');
                         } else if (role === 'Shiftee') {
-                            navigate('/ShifteeDashboard');
+                            navigate('/ShifteeForm');
                         } else if (role === 'Regular' || res.data.role === "Irregular") {
                             navigate('/RegIrregDashboard');
                         } else if (role === 'Society Officer') {

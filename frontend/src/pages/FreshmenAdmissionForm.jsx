@@ -563,19 +563,9 @@ function FreshmenAdmissionForm() {
               </div>
 
               {/* ID */}
+              {uploadedImage ? (
               <div className={styles.formGroup}>
                 <label htmlFor="idPicture">Upload ID 1x1 Picture:</label>
-                {formData.idPicture ? (
-                  <div className={styles.imagePreview}>
-                    <img
-                      src={uploadedImage}
-                      alt="Uploaded ID"
-                      style={{ maxWidth: "150px", maxHeight: "150px" }}
-                    />
-                  </div>
-                ) : (
-                  ''
-                )}
                 <input
                   id="idPicture"
                   name="idPicture"
@@ -584,7 +574,20 @@ function FreshmenAdmissionForm() {
                   onChange={handleFileUpload}
                   required
                 />
-              </div>
+
+                {formData.idPicture ? (
+                  <div className={styles.imagePreview}>
+                    <img
+                      src={uploadedImage}
+                      alt="Uploaded ID"
+                      style={{ maxWidth: "150px", maxHeight: "150px", textAlign: "center" }}
+                    />
+                  </div>
+                ) : (
+                  ''
+                )}
+              </div>)
+              : ('')}
             </form>
           </div>
         );

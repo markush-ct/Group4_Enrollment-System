@@ -65,6 +65,104 @@ const upload = multer({ storage });
 
 app.use("/uploads", express.static("uploads"));
 
+//SUBMIT SHIFTING FORM
+app.post('/submitShiftingForm', (req,res) =>{
+    const getID = `SELECT * FROM student WHERE Email = ?`;
+    db.query(getID, req.session.email, (err, idRes)=>{
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else if(idRes.length > 0) {
+            const submitQuery = `UPDATE shiftingform
+            SET ShiftingStatus = ?,
+                Date = ?
+            WHERE StudentID = ?`;
+
+            const values = [
+                "Submitted",
+                req.body.dateSubmitted,
+                idRes[0].CvSUStudentID
+            ];
+
+            db.query(submitQuery, values, (err, submitRes) => {
+                if(err){
+                    return res.json({message: "Error in server: " + err});
+                } else if(submitRes.affectedRows > 0){
+                    return res.json({message: "Form submitted successfully"});
+                } else{
+                    return res.json({message: "Unable to submit form"});
+                }
+            })
+        }
+    })
+})
+
+//AUTOSAVING SHIFTING FORM INFO
+app.post('/saveShiftingInfo', (req,res)=>{
+    const getID = `SELECT * FROM student WHERE Email = ?`;
+
+    db.query(getID, req.session.email, (err, idRes)=>{
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else if(idRes.length > 0){
+
+            const updateShiftingForm = `UPDATE shiftingform
+            SET PrevProgramAdviser = ?,
+                AcadYear = ?,
+                Reasons =?
+            WHERE StudentID = ?;
+            `;
+
+            const values = [
+                req.body.prevProgramAdviser,
+                req.body.currentAcadYear,
+                req.body.reasons,
+                idRes[0].CvSUStudentID
+            ];
+
+            db.query(updateShiftingForm, values, (err, updateRes) => {
+                if(err){
+                    return res.json({message: "Error in server: " + err});
+                } else if(updateRes.affectedRows > 0){
+                    return res.json({ message: "Record updated successfully" });
+                } else{
+                    return res.json({ message: "Failed to updated record "});
+                }
+            })
+        }
+    })
+})
+
+//READ SHIFTEE INFO
+app.get('/getShifteeInfo', (req,res) => {
+    const getStudentInfo = `SELECT * FROM student WHERE Email = ?`;
+    const getShiftingInfo = `SELECT *FROM shiftingform WHERE StudentID = ?`;
+
+    db.query(getStudentInfo, req.session.email, (err, studentRes) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else if(studentRes.length > 0){
+            const studentInfo = studentRes[0];
+
+            db.query(getShiftingInfo, studentInfo.CvSUStudentID, (err, shiftingRes) => {
+                const shiftingInfo = shiftingRes[0];
+
+                return res.json({
+                    message: "Fetched records successfully",
+                    shiftingStatus: shiftingInfo.ShiftingStatus,
+                    prevProgram: studentInfo.PrevProgram,
+                    prevProgramAdviser: shiftingInfo.PrevProgramAdviser,
+                    studentID: studentInfo.CvSUStudentID,
+                    currentAcadYear: shiftingInfo.AcadYear,
+                    reasons: shiftingInfo.Reasons,
+                    dateSubmitted: shiftingInfo.Date
+                })
+            })
+        } else {
+            return res.json({message: "Error fetching records"});
+        }
+    })
+})
+
 
 //READ STUDENT PROGRAM TO DISPLAY PROGRAM IN DASHBOARD
 app.get('/getStudentProgram', (req, res) => {
@@ -1145,21 +1243,6 @@ app.post('/SignUp', (req, res) => {
     })
 })
 
-//LOGOUT
-app.post("/logoutFunction", (req, res) => {
-    if (req.session) {
-        req.session.destroy((err) => {
-            if (err) {
-                console.error("Error destroying session:", err);
-                return res.json({ valid: false, message: "Logout failed." });
-            }
-            res.clearCookie("connect.sid"); // session cookie is removed
-            return res.json({ valid: false, message: "Logout successful." });
-        });
-    } else {
-        return res.json({ valid: false, message: "No active session." });
-    }
-});
 
 let verificationPins = {};
 //SEND VERIFICATION CODE
@@ -1509,6 +1592,23 @@ app.post('/changePass', (req, res) => {
     })
 })
 
+//LOGOUT
+app.post("/logoutFunction", (req, res) => {
+    if (req.session) {
+        req.session.destroy((err) => {
+            if (err) {
+                console.error("Error destroying session:", err);
+                return res.json({ valid: false, message: "Logout failed." });
+            }
+            res.clearCookie("connect.sid"); // Session cookie
+            res.clearCookie("rememberMe"); // Clear Remember Me cookie
+            return res.json({ valid: false, message: "Logout successful." });
+        });
+    } else {
+        return res.json({ valid: false, message: "No active session." });
+    }
+});
+
 //LOGIN
 app.get('/', (req, res) => {
     if (req.session && req.session.accountID) {
@@ -1525,6 +1625,28 @@ app.get('/', (req, res) => {
                     email: req.session.email })
             }
         })
+    } else if (req.cookies.rememberMe) {
+        const rememberedData = JSON.parse(req.cookies.rememberMe);
+
+        // Validate and auto-login the user based on cookie data
+        const validateQuery = `SELECT * FROM account WHERE AccountID = ? AND Email = ?`;
+        db.query(validateQuery, [rememberedData.accountID, rememberedData.email], (err, result) => {
+            if (err || result.length === 0) {
+                return res.json({ valid: false });
+            }
+
+            const user = result[0];
+            req.session.accountID = rememberedData.accountID;
+            req.session.role = rememberedData.role;
+            req.session.email = rememberedData.email;
+
+            return res.json({
+                valid: true,
+                accountID: req.session.accountID,
+                role: req.session.role,
+                email: req.session.email
+            });
+        });
     } else {
         return res.json({ valid: false })
     }
@@ -1532,7 +1654,7 @@ app.get('/', (req, res) => {
 
 app.post('/LoginPage', (req, res) => {
     const sql = `SELECT * FROM account WHERE Email = ? AND Password = ?`;
-    const { email, password } = req.body;
+    const { email, password , rememberMe } = req.body;
 
     db.query(sql, [email, password], (err, result) => {
         if (err) return res.json({ message: "Error in server" + err });
@@ -1543,6 +1665,7 @@ app.post('/LoginPage', (req, res) => {
                 return res.json({ message: "Account is no longer active. Fill out contact form to ask for reactivation", isLoggedIn: false });
             } else if (user.Status === "Active") {
                 if (user.Role === "Student") {
+                    
                     const studentTypeQuery = `SELECT StudentType from student WHERE Email = ?`;
                     db.query(studentTypeQuery, email, (err, studentResult) => {
                         if (err) {
@@ -1554,6 +1677,18 @@ app.post('/LoginPage', (req, res) => {
                             req.session.role = studentType;
                             req.session.email = user.Email;
                             req.session.studentID = user.StudentID;
+
+                            if (rememberMe) {
+                                // Set a cookie to remember the email
+                                res.cookie('rememberedEmail', email, {
+                                    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+                                    httpOnly: false, // Allows client-side access for pre-filling
+                                    secure: process.env.NODE_ENV === 'production' // Use secure cookies in production
+                                });
+                            } else {
+                                // Clear the email cookie if Remember Me is unchecked
+                                res.clearCookie('rememberedEmail');
+                            }
 
                             return res.json({
                                 message: 'Login successful',
@@ -1570,6 +1705,18 @@ app.post('/LoginPage', (req, res) => {
                     req.session.accountID = user.AccountID;
                     req.session.role = user.Role;
                     req.session.email = user.Email;
+
+                    if (rememberMe) {
+                        // Set a cookie to remember the email
+                        res.cookie('rememberedEmail', email, {
+                            maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+                            httpOnly: false, // Allows client-side access for pre-filling
+                            secure: process.env.NODE_ENV === 'production' // Use secure cookies in production
+                        });
+                    } else {
+                        // Clear the email cookie if Remember Me is unchecked
+                        res.clearCookie('rememberedEmail');
+                    }
 
                     return res.json({
                         message: 'Login successful',

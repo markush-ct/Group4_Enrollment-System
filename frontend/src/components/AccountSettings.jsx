@@ -233,11 +233,15 @@ function AccountSettingsStudent() {
             setConfirmPassword("");
           } else {
             setIsCurrentPasswordValid(false);
+            setCurrentPassword("");
+            setNewPassword("");
+            setConfirmPassword("");
             alert(res.data.message);
           }
         })
         .catch((err) => {
           alert("Error: " + err);
+          
         })
     }
   }
@@ -502,7 +506,13 @@ function AccountSettingsStudent() {
                         onChange={handleInputChange}
                       />
                     ) : (
-                      <span className={styles.infoValue}>{accInfo.dob}</span>
+                      <span className={styles.infoValue}>
+                        {new Date(accInfo.dob).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                      })}
+                      </span>
                     )}
                   </div>
 

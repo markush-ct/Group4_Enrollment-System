@@ -225,8 +225,14 @@ function AccountSettingsStudent() {
             setErrorPrompt(false);
             setErrorMsg(false);
             setIsCurrentPasswordValid(false);
+            setCurrentPassword("");
+            setNewPassword("");
+            setConfirmPassword("");
           } else {
             setIsCurrentPasswordValid(false);
+            setCurrentPassword("");
+            setNewPassword("");
+            setConfirmPassword("");
             alert(res.data.message);
           }
         })
@@ -509,11 +515,24 @@ function AccountSettingsStudent() {
                         id="dob"
                         name="dob"
                         className={styles.editInput}
-                        value={accInfo.dob}
+                        value={accInfo.dob === "0000-00-00" || !accInfo.dob ? 
+                          "" : accInfo.dob
+                        }
                         onChange={handleInputChange}
                       />
                     ) : (
-                      <span className={styles.infoValue}>{accInfo.dob}</span>
+                      <span className={styles.infoValue}>
+                        {
+                          accInfo.dob === "0000-00-00" || !accInfo.dob ? 
+                          "" : 
+                          new Date(accInfo.dob).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                        })
+                        }
+
+                      </span>
                     )}
                   </div>
                 </div>

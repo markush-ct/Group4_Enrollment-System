@@ -19,7 +19,6 @@ import AccountRequest from './pages/AccountRequest.jsx'
 import ForgotPass from './pages/ForgotPass.jsx'
 import FreshmanDashboard from './pages/FreshmanDashboard.jsx';
 import TransfereeDashboard from './pages/TransfereeDashboard.jsx';
-import ShifteeDashboard from './pages/ShifteeDashboard.jsx';
 import RegIrregDashboard from './pages/RegIrregDashboard.jsx';
 import FreshmenAdmissionForm from './pages/FreshmenAdmissionForm.jsx';
 import TransfereeAdmissionForm from './pages/TransfereeAdmissionForm.jsx';
@@ -50,7 +49,6 @@ function App() {
         <Route path="/SocOfficerDashboard" element={<SocOfficerDashboard />} />
         <Route path="/FreshmanDashboard" element={<FreshmanDashboard />} />
         <Route path="/TransfereeDashboard" element={<TransfereeDashboard />} />
-        <Route path="/ShifteeDashboard" element={<ShifteeDashboard />} />
         <Route path="/RegIrregDashboard" element={<RegIrregDashboard />} />
         <Route path="/AdviserDashboard" element={<AdviserDashboard />} />
         <Route path="/DCSHeadDashboard" element={<DCSHeadDashboard />} />
