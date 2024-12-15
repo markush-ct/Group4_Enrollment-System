@@ -8,6 +8,7 @@ import 'aos/dist/aos.css';
 function TransfereeAdmissionForm() {
   const [activeStep, setActiveStep] = useState(0);
   const [errorPrompt, setErrorPrompt] = useState(false); //errors
+  const [isConfirmation, setIsConfirmation] = useState(false);
   const [formData, setFormData] = useState({
     applyingFor: '',
     applicantType: 'Transferee',
@@ -47,6 +48,24 @@ function TransfereeAdmissionForm() {
     medicalHistory: [],
     scheduleAppointment: ['certify'],
   };
+
+  const submitForm = () => {
+    if(!isConfirmation){
+      alert("Please check the box to proceed.")
+    } else{
+      axios.post("http://localhost:8080/submitAdmissionForm")
+      .then((res) => {
+        if(res.data.message === "Admission Form submitted successfully."){
+          alert(res.data.message);
+        } else{
+          alert(res.data.message);
+        }
+      })
+      .catch((err) => {
+        alert("Error: " + err);
+      })
+    }
+  }
   
   
 
@@ -821,6 +840,9 @@ function TransfereeAdmissionForm() {
                 required
               />
             </div>
+            <button type="submit" onClick={submitForm} className={styles.submitButton}>
+                            <span>Submit</span>
+                          </button>
           </form>
         </div>
       );

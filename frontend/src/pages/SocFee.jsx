@@ -7,7 +7,7 @@ import styles from '/src/styles/AccountRequest.module.css';
 import { useNavigate } from 'react-router-dom';
 
 
-function ShiftingRequest() {
+function SocFee() {
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const [accountRequests, setAccountRequests] = useState([]);
@@ -300,12 +300,12 @@ const closePrompt = () => {
 
       <div className={styles.contentSection}>
         <div className={styles.PageTitle} data-aos="fade-up">
-          Shifting Requests
+          Society Fee Status
         </div>
 
         {/* Dropdown  */}
         <div className={styles.filterSection} data-aos="fade-up">
-          <label htmlFor="filter" className={styles.filterLabel}>Filter by Program:</label>
+          <label htmlFor="filter" className={styles.filterLabel}>Filter by Year and Section:</label>
           <select
             id="filter"
             className={styles.filterDropdown}
@@ -313,11 +313,16 @@ const closePrompt = () => {
             onChange={(e) => setFilterType(e.target.value)}
           >
             <option value="All">All</option>
-            <option value="Bachelor of Secondary Education">Bachelor of Secondary Education</option>
-            <option value="Bachelor of Science in Business Management">Bachelor of Science in Business Management</option>
-            <option value="Bachelor of Science in Criminology">Bachelor of Science in Criminology</option>
-            <option value="Bachelor of Science in Hospitality Management">Bachelor of Science in Hospitality Management</option>
-            <option value="Bachelor of Science in Psychology">Bachelor of Science in Psychology</option>
+            <option value="1-1">1-1</option>
+            <option value="1-2">1-2</option>
+            <option value="1-3">1-3</option>
+            <option value="2-1">2-1</option>
+            <option value="2-1">2-1</option>
+            <option value="1-1">1-1</option>
+            <option value="1-1">1-1</option>
+            <option value="1-1">1-1</option>
+            <option value="1-1">1-1</option>
+            <option value="1-1">1-1</option>
            
           </select>
         </div>
@@ -329,7 +334,7 @@ const closePrompt = () => {
               <tr>
                 <th>Student ID</th>
                 <th>Name</th>
-                <th>Previous Program</th>
+                <th>Year - Section</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -349,7 +354,7 @@ const closePrompt = () => {
               setApprovalPrompt(true);
             }}
           >
-            Approve
+            &#10004;
           </button>
           <button
                                   className={styles.rejectButton}
@@ -359,7 +364,7 @@ const closePrompt = () => {
                                     setRejectionPrompt(true)
                                   }}
                                 >
-                                  {loading ? 'Loading...' : 'Reject'}
+                                  {loading ? 'Loading...' : 'X'}
                                 </button>
         </td>
       </tr>
@@ -367,7 +372,7 @@ const closePrompt = () => {
   ) : (
     <tr>
       <td colSpan="4" className={styles.noData}>
-        No shifting requests found.
+        No Society Fee found.
       </td>
     </tr>
   )}
@@ -379,47 +384,10 @@ const closePrompt = () => {
         </div>
       </div>
 
-      {/* PopUp */}
-      {popUpVisible && selectedRequest && (
-        <div data-aos="zoom-out" data-aos-duration="500" className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}>
-          <div className={styles.popupContent}>
-            <div className={styles.popupHeader}>
-              <button onClick={closePopup} className={styles.closeButton}>✖</button>
-              <h2>Shifting  Request</h2>
-            </div>
-            <div data-aos="fade-up" className={styles.studentType}>
-              <span>DETAILS</span>
-            </div>
-           
-              <div className={styles.popupText}>
-              <p><strong>Student ID:</strong> {selectedRequest.CvSUStudentID}</p>
-                <p><strong>Email:</strong> {selectedRequest.Email}</p>
-                <p><strong>First Name:</strong> {selectedRequest.Firstname}</p>
-                <p><strong>Middle Name:</strong> {selectedRequest.Middlename}</p>
-                <p><strong>Last Name:</strong> {selectedRequest.Lastname}</p>
-                <p><strong>Previous Program:</strong> {selectedRequest.PrevProgram}</p>
-                <p><strong>Current Academic Year:</strong> {selectedRequest.AcadYear}</p>
-                <p><strong>Reasons:</strong> {selectedRequest.Reasons}</p>
-                <p><strong>Submitted on: </strong> 
-                {selectedRequest.Date === "0000-00-00" || !selectedRequest.Date ? 
-                          "" : 
-                          new Date(selectedRequest.Date).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                        })
-                        }
-                </p>
-              </div>
       
-
-    
-          </div>
-        </div>
-      )}
 
     </>
   );
 }
 
-export default ShiftingRequest;
+export default SocFee;

@@ -51,7 +51,7 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
                     ],
                     "Society Officer": [
                         { name: 'Dashboard', icon: dashboardIcon, path: '/dashboard' },
-                        { name: 'Society Fee', icon: societyFeeIcon, path: '/society-fee' },
+                        { name: 'Society Fee', icon: societyFeeIcon, path: '/SocFee' },
                         { name: 'Requirements Submission', icon: requirementsIcon, path: '/requirements-submission' },
                     ],
                     "Adviser": [

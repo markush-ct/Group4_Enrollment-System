@@ -28,12 +28,6 @@ function DCSHeadDashboard() {
   const [announcements, setAnnouncements] = useState([]); // List of announcements
   
 
-  
-
- 
-
- 
-
   useEffect(() => {
     document.body.style.overflow = SideBar ? "hidden" : "auto";
     return () => (document.body.style.overflow = "auto");
