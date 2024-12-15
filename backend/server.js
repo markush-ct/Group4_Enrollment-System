@@ -65,6 +65,73 @@ const upload = multer({ storage });
 
 app.use("/uploads", express.static("uploads"));
 
+app.post('/rejectShiftingReq', (req, res) => {
+    const getEmpID = `SELECT * FROM employee where Email = ?`;
+
+    db.query(getEmpID, req.session.email, (err, idRes) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if (idRes.length > 0) {
+            const empID = idRes[0].EmployeeID;
+            console.log('Request Body:', req.body);
+
+            const { email, name, studentID, rejectionReason } = req.body;
+
+            const updateShiftingReject = `UPDATE shiftingform
+            SET EmployeeID = ?,
+                ShiftingStatus = ?
+            WHERE StudentID = ?
+            `;
+
+            const updateValues = [
+                empID,
+                "Rejected",
+                studentID
+            ];
+
+            db.query(updateShiftingReject, updateValues, (err, updateRes) => {
+                if(err){
+                    return res.json({message: "Error in server: " + err});
+                } else if(updateRes.affectedRows > 0){
+
+                    const emailBody = `
+                    Hello ${name},
+                    Student ID: ${studentID}
+
+                    I am sorry to inform you that your shifting request has been rejected.
+                    
+                    Reason for rejection: 
+                    ${rejectionReason}
+                
+                    Best regards,
+                    ${idRes[0].Firstname + " " + idRes[0].Lastname}
+                    `;
+
+                    const mailOptions = {
+                        from: 'gerlyntan07@gmail.com',
+                        to: email,
+                        subject: 'Rejected Shifting Request',
+                        text: emailBody,
+                    };
+
+                    try {
+                        console.log("Sending email with options:", mailOptions);
+                        transporter.sendMail(mailOptions);
+                        console.log("Email sent successfully.");
+                        return res.json({ message: "Shifting Request rejection sent" });
+                    } catch (emailError) {
+                        console.error('Error sending email:', emailError);
+                        return res.json({ message: "Error sending email", error: emailError.message });
+                    }
+                } else{
+                    console.log('Request Body:', req.body);
+                    return res.json({message: "Failed to reject shifting request"});
+                }
+            })
+        }
+    })
+})
+
 app.post('/approveShiftingReq', (req, res) => {
     const getEmpID = `SELECT * FROM employee where Email = ?`;
 
@@ -117,7 +184,7 @@ app.post('/approveShiftingReq', (req, res) => {
                     const mailOptions = {
                         from: 'gerlyntan07@gmail.com',
                         to: email,
-                        subject: 'Account Approval Notification',
+                        subject: 'Approved Shifting Request',
                         text: emailBody,
                     };
 

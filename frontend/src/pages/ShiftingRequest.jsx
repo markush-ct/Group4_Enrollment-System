@@ -5,6 +5,7 @@ import axios from 'axios';
 import Header from '/src/components/AdminDashHeader.jsx';
 import styles from '/src/styles/AccountRequest.module.css';
 import { useNavigate } from 'react-router-dom';
+import { use } from 'chai';
 
 function ShiftingRequest() {
   const [SideBar, setSideBar] = useState(false);
@@ -22,6 +23,7 @@ function ShiftingRequest() {
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const [submissionDate, setSubmissionDate] = useState('');
+  const [rejectionReason, setRejectionReason] = useState('');
 
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -68,6 +70,8 @@ function ShiftingRequest() {
       .catch((err) => {
         console.warn("Error fetching account requests, using example data:", err);
         setFilteredRequests(accountRequests);
+        setAccountRequests([]); // Ensure state is not undefined
+        setFilteredRequests([]);
       });
   }, []);
 
@@ -91,6 +95,12 @@ function ShiftingRequest() {
 
 
   const handleApprove = async (request) => {
+    if (!request || !request.Email) {
+      console.error("Invalid request or Email missing:", request);
+      setErrorPrompt(true);
+      setErrorMsg("Invalid request data.");
+      return;
+    }
 
     console.log('Request received in handleApprove:', request);
     console.log('Submission Date:', submissionDate);
@@ -124,28 +134,35 @@ function ShiftingRequest() {
   };
 
 const handleReject = async (request) => {
-  console.log('Request received in handleReject:', request);
-
-  setLoading(true);
-
-  if (!request?.Email || !request?.Name || !request?.AccountType) {
-      setErrorPrompt(true);
-      setErrorMsg('Email and name are required.');
-      return;
+  if (!request || !request.Email) {
+    console.error("Invalid request or Email missing:", request);
+    setErrorPrompt(true);
+    setErrorMsg("Invalid request data.");
+    return;
   }
 
+  console.log('Request received in handleReject:', request);
+  setLoading(true);
+
   try {
-      await axios.post('http://localhost:8080/sendEmailRejection', {
+      const response = await axios.post('http://localhost:8080/rejectShiftingReq', {
           email: request.Email,
-          name: request.Name,
-          accountType: request.AccountType
+          name: request.Firstname + " " + request.Lastname,
+          studentID: request.CvSUStudentID,
+          rejectionReason: rejectionReason,
       });
 
-      setRejectionPrompt(true);
-      setRejectionMsg(`Rejection email sent to ${request.Email}`);
-      setErrorPrompt(false);
-      setPopUpVisible(false);
-      setLoading(false);
+      if (response.data.message === "Shifting Request rejection sent") {
+        setRejectionPrompt(true);
+        setRejectionMsg(`Rejection email sent to ${request.Email}`);
+        setErrorPrompt(false);
+        setPopUpVisible(false);
+        setLoading(false);
+      } else {
+        console.error(response.data.message);
+        setErrorPrompt(true);
+        setErrorMsg('Failed to send rejection email');
+      }
   } catch (err) {
       console.error('Error:', err);
       setErrorPrompt(true);
@@ -173,12 +190,6 @@ const closePrompt = () => {
     setApprovalPrompt(false)
     setSelectedRequest(null);
   };
-
-  
-
-  
-  
-
   
 
 
@@ -225,27 +236,40 @@ const closePrompt = () => {
 
 {/* REJECTION PROMPT */}
 {rejectionPrompt && (
-    <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPrompt}>
-        <div className={styles.popupPromptContent}>
+
+<div data-aos="zoom-out" data-aos-duration="500" className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}>
+<div className={styles.popupContent}>
+  <div className={styles.popupHeader}>
+    <button onClick={closePopup} className={styles.closeButton}>✖</button>
+            <h3>Send Reason for Shifting Request Rejection</h3>
+        </div>
+
+        {/* Date Input and Send Button */}
+        <div data-aos="fade-up" className={styles.studentType}>
+          <h5>Reason</h5>
+      
+            <input
+                type="textarea"
+                id="rejectionReason"
+                name='rejectionReason'                    
+                value={rejectionReason}
+                onChange={(e) => setRejectionReason(e.target.value)}
+                className={styles.popupPromptInput}
+            />
+        </div>
+
+        {/* Buttons */}
+        <div className={styles.buttonContainer}>
             <button
-                className={styles.popupPromptcloseButton}
-                onClick={closePrompt}
+                className={styles.OKButton}
+                onClick={() => handleReject(selectedRequest)}
             >
-                &times;
+                <span>Send</span>
             </button>
-            <div className={styles.popupPromptHeader}>
-                <h2>Rejection Success</h2>
-            </div>
-            <div className={styles.popupPromptMessage}>
-                <img
-                    src="/src/assets/checkmark.png"
-                    alt="Success Icon"
-                    className={styles.popupPromptmessageImage}
-                />
-            </div>
-            <p className={styles.popupPromptText}>{rejectionMsg}</p>
+           
         </div>
     </div>
+</div>
 )}
 
 {/* ERROR PROMPT */}
@@ -321,7 +345,8 @@ const closePrompt = () => {
             className={styles.approveButton}
             onClick={(e) => {
               e.stopPropagation();
-              handleApprove(request);
+              setSelectedRequest(request);
+              setApprovalPrompt(true);
             }}
           >
             Approve
@@ -330,8 +355,8 @@ const closePrompt = () => {
                                   className={styles.rejectButton}
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    console.log('Request passed to handleReject:', request);
-                                    handleReject(request); // Pass the entire request object
+                                    setSelectedRequest(request);
+                                    setRejectionPrompt(true)
                                   }}
                                 >
                                   {loading ? 'Loading...' : 'Reject'}
