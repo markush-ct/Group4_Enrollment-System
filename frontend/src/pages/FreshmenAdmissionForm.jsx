@@ -14,6 +14,7 @@ function FreshmenAdmissionForm() {
   const [errorPrompt, setErrorPrompt] = useState(false); //errors
   const [isSaving, setIsSaving] = useState(false);
   const [prefProgram, setPrefProgram] = useState("");
+  const [isConfirmation, setIsConfirmation] = useState(false);
   const [formData, setFormData] = useState({
     applyingFor: '',
     applicantType: 'Freshman',
@@ -415,6 +416,24 @@ function FreshmenAdmissionForm() {
   const [SideBar, setSideBar] = useState(false);
   document.body.style.overflow = SideBar ? 'hidden' : 'auto';
 
+  const submitForm = () => {
+    if(!isConfirmation){
+      alert("Please check the box to proceed.")
+    } else{
+      axios.post("http://localhost:8080/submitAdmissionForm")
+      .then((res) => {
+        if(res.data.message === "Admission Form submitted successfully."){
+          alert(res.data.message);
+        } else{
+          alert(res.data.message);
+        }
+      })
+      .catch((err) => {
+        alert("Error: " + err);
+      })
+    }
+  }
+
   // Steps
   const renderStepContent = (step) => {
     switch (step) {
@@ -437,7 +456,8 @@ function FreshmenAdmissionForm() {
                   id="applyingFor"
                   name="applyingFor"
                   value={formData.applyingFor}
-                  onChange={handleInputChange}
+                  onChange={handleInputChange}     
+                  disabled={formData.applicationStatus !== "Pending"}
                   required
                 >
                   <option value="" disabled>
@@ -453,7 +473,7 @@ function FreshmenAdmissionForm() {
                   id="applicantType"
                   name="applicantType"
                   value={formData.applicantType}
-                  readOnly
+                  disabled
                 />
               </div>
 
@@ -465,7 +485,7 @@ function FreshmenAdmissionForm() {
                   id="preferredCampus"
                   name="preferredCampus"
                   value={formData.preferredCampus}
-                  readOnly
+                  disabled
                 />
               </div>
 
@@ -476,6 +496,7 @@ function FreshmenAdmissionForm() {
                   name="strand"
                   value={formData.strand}
                   onChange={handleInputChange}
+                  disabled={formData.applicationStatus !== "Pending"}
                   required
                 >
                   <option value="" disabled>
@@ -488,7 +509,7 @@ function FreshmenAdmissionForm() {
 
               <div className={styles.formGroup}>
                 <label htmlFor="preferredProgram">Preferred Program:</label>
-                <input type="text" value={prefProgram} readOnly />
+                <input type="text" value={prefProgram} disabled />
               </div>
 
 
@@ -503,6 +524,7 @@ function FreshmenAdmissionForm() {
                   onChange={handleInputChange}
                   type="number"
                   step="0.01"
+                  disabled={formData.applicationStatus !== "Pending"}
                   required
                 />
               </div>
@@ -518,6 +540,7 @@ function FreshmenAdmissionForm() {
                     onChange={handleInputChange}
                     type="number"
                     step="0.01"
+                    disabled={formData.applicationStatus !== "Pending"}
                     required
                   />
                 </div>
@@ -531,6 +554,7 @@ function FreshmenAdmissionForm() {
                     onChange={handleInputChange}
                     type="number"
                     step="0.01"
+                    disabled={formData.applicationStatus !== "Pending"}
                     required
                   />
                 </div>
@@ -544,6 +568,7 @@ function FreshmenAdmissionForm() {
                     onChange={handleInputChange}
                     type="number"
                     step="0.01"
+                    disabled={formData.applicationStatus !== "Pending"}
                     required
                   />
                 </div>
@@ -557,6 +582,7 @@ function FreshmenAdmissionForm() {
                     onChange={handleInputChange}
                     type="number"
                     step="0.01"
+                    disabled={formData.applicationStatus !== "Pending"}
                     required
                   />
                 </div>
@@ -564,30 +590,31 @@ function FreshmenAdmissionForm() {
 
               {/* ID */}
               {uploadedImage ? (
-              <div className={styles.formGroup}>
-                <label htmlFor="idPicture">Upload ID 1x1 Picture:</label>
-                <input
-                  id="idPicture"
-                  name="idPicture"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileUpload}
-                  required
-                />
+                <div className={styles.formGroup}>
+                  <label htmlFor="idPicture">Upload ID 1x1 Picture:</label>
+                  <input
+                    id="idPicture"
+                    name="idPicture"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileUpload}
+                    disabled={formData.applicationStatus !== "Pending"}
+                    required
+                  />
 
-                {formData.idPicture ? (
-                  <div className={styles.imagePreview}>
-                    <img
-                      src={uploadedImage}
-                      alt="Uploaded ID"
-                      style={{ maxWidth: "150px", maxHeight: "150px", textAlign: "center" }}
-                    />
-                  </div>
-                ) : (
-                  ''
-                )}
-              </div>)
-              : ('')}
+                  {formData.idPicture ? (
+                    <div className={styles.imagePreview}>
+                      <img
+                        src={uploadedImage}
+                        alt="Uploaded ID"
+                        style={{ maxWidth: "150px", maxHeight: "150px", textAlign: "center" }}
+                      />
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                </div>)
+                : ('')}
             </form>
           </div>
         );
@@ -610,6 +637,7 @@ function FreshmenAdmissionForm() {
                     value={formData.firstName}
                     onChange={handleInputChange}
                     type="text"
+                    disabled={formData.applicationStatus !== "Pending"}
                     required
                   />
                 </div>
@@ -622,6 +650,7 @@ function FreshmenAdmissionForm() {
                     value={formData.middleName}
                     onChange={handleInputChange}
                     type="text"
+                    disabled={formData.applicationStatus !== "Pending"}
                   />
                 </div>
               </div>
@@ -634,6 +663,7 @@ function FreshmenAdmissionForm() {
                   value={formData.lastName}
                   onChange={handleInputChange}
                   type="text"
+                  disabled={formData.applicationStatus !== "Pending"}
                   required
                 />
               </div>
@@ -649,6 +679,7 @@ function FreshmenAdmissionForm() {
                   onChange={handleInputChange}
                   type="text"
                   placeholder='House No. & Street, Barangay, City or Municipality, Province'
+                  disabled={formData.applicationStatus !== "Pending"}
                   required
                 />
               </div>
@@ -661,6 +692,7 @@ function FreshmenAdmissionForm() {
                   value={formData.zipCode}
                   onChange={handleInputChange}
                   type="number"
+                  disabled={formData.applicationStatus !== "Pending"}
                   required
                 />
               </div>
@@ -673,7 +705,7 @@ function FreshmenAdmissionForm() {
                   value={formData.email}
                   onChange={handleInputChange}
                   type="email"
-                  readOnly
+                  disabled
                   required
                 />
               </div>
@@ -688,6 +720,7 @@ function FreshmenAdmissionForm() {
                   value={formData.lrn}
                   onChange={handleInputChange}
                   type="tel"
+                  disabled={formData.applicationStatus !== "Pending"}
                   required
                 />
               </div>
@@ -702,6 +735,7 @@ function FreshmenAdmissionForm() {
                   value={formData.contactNumber}
                   onChange={handleInputChange}
                   type="tel"
+                  disabled={formData.applicationStatus !== "Pending"}
                   required
                 />
               </div>
@@ -713,6 +747,7 @@ function FreshmenAdmissionForm() {
                   name="sex"
                   value={formData.sex}
                   onChange={handleInputChange}
+                  disabled={formData.applicationStatus !== "Pending"}
                   required
                 >
                   <option value="" disabled>Select</option>
@@ -730,6 +765,7 @@ function FreshmenAdmissionForm() {
                     value={formData.age}
                     onChange={handleInputChange}
                     type="number"
+                    disabled={formData.applicationStatus !== "Pending"}
                     required
                   />
                 </div>
@@ -742,6 +778,7 @@ function FreshmenAdmissionForm() {
                     value={formData.dateOfBirth}
                     onChange={handleInputChange}
                     type="date"
+                    disabled={formData.applicationStatus !== "Pending"}
                     required
                   />
                 </div>
@@ -755,6 +792,7 @@ function FreshmenAdmissionForm() {
                   value={formData.religion}
                   onChange={handleInputChange}
                   type="text"
+                  disabled={formData.applicationStatus !== "Pending"}
                   required
                 />
               </div>
@@ -767,6 +805,7 @@ function FreshmenAdmissionForm() {
                   value={formData.nationality}
                   onChange={handleInputChange}
                   type="text"
+                  disabled={formData.applicationStatus !== "Pending"}
                   required
                 />
               </div>
@@ -778,6 +817,7 @@ function FreshmenAdmissionForm() {
                   name="civilStatus"
                   value={formData.civilStatus}
                   onChange={handleInputChange}
+                  disabled={formData.applicationStatus !== "Pending"}
                   required
                 >
                   <option value="" disabled>Select</option>
@@ -797,6 +837,7 @@ function FreshmenAdmissionForm() {
                       name="isPWD"
                       value="Yes"
                       checked={formData.isPWD === 'Yes'}
+                      disabled={formData.applicationStatus !== "Pending"}
                       onChange={handleInputChange}
                     />
                     Yes
@@ -808,6 +849,7 @@ function FreshmenAdmissionForm() {
                       value="No"
                       checked={formData.isPWD === 'No'}
                       onChange={handleInputChange}
+                      disabled={formData.applicationStatus !== "Pending"}
                     />
                     No
                   </label>
@@ -819,6 +861,7 @@ function FreshmenAdmissionForm() {
                     value={formData.pwd}
                     onChange={handleInputChange}
                     type="text"
+                    disabled={formData.applicationStatus !== "Pending"}
                     placeholder="Please specify"
                   />
                 )}
@@ -833,6 +876,7 @@ function FreshmenAdmissionForm() {
                       name="isIndigenous"
                       value="Yes"
                       checked={formData.isIndigenous === 'Yes'}
+                      disabled={formData.applicationStatus !== "Pending"}
                       onChange={handleInputChange}
                     />
                     Yes
@@ -843,6 +887,7 @@ function FreshmenAdmissionForm() {
                       name="isIndigenous"
                       value="No"
                       checked={formData.isIndigenous === 'No'}
+                      disabled={formData.applicationStatus !== "Pending"}
                       onChange={handleInputChange}
                     />
                     No
@@ -855,6 +900,7 @@ function FreshmenAdmissionForm() {
                     value={formData.indigenous}
                     onChange={handleInputChange}
                     type="text"
+                    disabled={formData.applicationStatus !== "Pending"}
                     placeholder="Please specify"
                   />
                 )}
@@ -883,6 +929,7 @@ function FreshmenAdmissionForm() {
                   onChange={handleInputChange}
                   type="text"
                   placeholder='e.g. John A. Doe'
+                  disabled={formData.applicationStatus !== "Pending"}
                   required
                 />
               </div>
@@ -895,6 +942,7 @@ function FreshmenAdmissionForm() {
                   onChange={handleInputChange}
                   type="text"
                   placeholder='e.g. Jane C. Doe'
+                  disabled={formData.applicationStatus !== "Pending"}
                   required
                 />
               </div>
@@ -907,6 +955,7 @@ function FreshmenAdmissionForm() {
                   onChange={handleInputChange}
                   type="text"
                   placeholder='e.g. Jane C. Doe'
+                  disabled={formData.applicationStatus !== "Pending"}
                   required
                 />
               </div>
@@ -920,6 +969,7 @@ function FreshmenAdmissionForm() {
                     value={formData.fatherContact}
                     onChange={handleInputChange}
                     type="tel"
+                    disabled={formData.applicationStatus !== "Pending"}
                     required
                   />
                 </div>
@@ -931,6 +981,7 @@ function FreshmenAdmissionForm() {
                     value={formData.motherContact}
                     onChange={handleInputChange}
                     type="tel"
+                    disabled={formData.applicationStatus !== "Pending"}
                     required
                   />
                 </div>
@@ -943,6 +994,7 @@ function FreshmenAdmissionForm() {
                   value={formData.guardianContact}
                   onChange={handleInputChange}
                   type="tel"
+                  disabled={formData.applicationStatus !== "Pending"}
                   required
                 />
               </div>
@@ -956,6 +1008,7 @@ function FreshmenAdmissionForm() {
                     value={formData.fatherOccupation}
                     onChange={handleInputChange}
                     type="text"
+                    disabled={formData.applicationStatus !== "Pending"}
                     required
                   />
                 </div>
@@ -967,6 +1020,7 @@ function FreshmenAdmissionForm() {
                     value={formData.motherOccupation}
                     onChange={handleInputChange}
                     type="text"
+                    disabled={formData.applicationStatus !== "Pending"}
                     required
                   />
                 </div>
@@ -980,6 +1034,7 @@ function FreshmenAdmissionForm() {
                   value={formData.guardianOccupation}
                   onChange={handleInputChange}
                   type="text"
+                  disabled={formData.applicationStatus !== "Pending"}
                   required
                 />
               </div>
@@ -993,6 +1048,7 @@ function FreshmenAdmissionForm() {
                   onChange={handleInputChange}
                   type="text"
                   placeholder='e.g. Mother'
+                  disabled={formData.applicationStatus !== "Pending"}
                   required
                 />
               </div>
@@ -1006,6 +1062,7 @@ function FreshmenAdmissionForm() {
                     value={formData.siblings}
                     onChange={handleInputChange}
                     type="number"
+                    disabled={formData.applicationStatus !== "Pending"}
                     required
                   />
                 </div>
@@ -1018,6 +1075,7 @@ function FreshmenAdmissionForm() {
                     name="birthOrder"
                     value={formData.birthOrder}
                     onChange={handleInputChange}
+                    disabled={formData.applicationStatus !== "Pending"}
                     required
                   >
                     <option value="" disabled>
@@ -1041,6 +1099,7 @@ function FreshmenAdmissionForm() {
                   name="familyIncome"
                   value={formData.familyIncome}
                   onChange={handleInputChange}
+                  disabled={formData.applicationStatus !== "Pending"}
                   required
                 >
                   <option value="" disabled>
@@ -1076,6 +1135,7 @@ function FreshmenAdmissionForm() {
                   value={formData.elementarySchool}
                   onChange={handleInputChange}
                   type="text"
+                  disabled={formData.applicationStatus !== "Pending"}
                   required
                 />
               </div>
@@ -1088,6 +1148,7 @@ function FreshmenAdmissionForm() {
                   onChange={handleInputChange}
                   placeholder='Street, Village or Subdivision, Barangay, City or Municipality'
                   type="text"
+                  disabled={formData.applicationStatus !== "Pending"}
                   required
                 />
               </div>
@@ -1102,6 +1163,7 @@ function FreshmenAdmissionForm() {
                     onChange={handleInputChange}
                     type="tel"
                     placeholder='YYYY'
+                    disabled={formData.applicationStatus !== "Pending"}
                     required
                   />
                 </div>
@@ -1113,6 +1175,7 @@ function FreshmenAdmissionForm() {
                     name="elementarySchoolType"
                     value={formData.elementarySchoolType}
                     onChange={handleInputChange}
+                    disabled={formData.applicationStatus !== "Pending"}
                     required
                   >
                     <option value="" disabled>
@@ -1134,6 +1197,7 @@ function FreshmenAdmissionForm() {
                   value={formData.seniorHighSchool}
                   onChange={handleInputChange}
                   type="text"
+                  disabled={formData.applicationStatus !== "Pending"}
                   required
                 />
               </div>
@@ -1146,6 +1210,7 @@ function FreshmenAdmissionForm() {
                   onChange={handleInputChange}
                   placeholder='Street, Village or Subdivision, Barangay, City or Municipality'
                   type="text"
+                  disabled={formData.applicationStatus !== "Pending"}
                   required
                 />
               </div>
@@ -1160,6 +1225,7 @@ function FreshmenAdmissionForm() {
                     onChange={handleInputChange}
                     type="tel"
                     placeholder='YYYY'
+                    disabled={formData.applicationStatus !== "Pending"}
                     required
                   />
                 </div>
@@ -1171,6 +1237,7 @@ function FreshmenAdmissionForm() {
                     name="seniorHighSchoolType"
                     value={formData.seniorHighSchoolType}
                     onChange={handleInputChange}
+                    disabled={formData.applicationStatus !== "Pending"}
                     required
                   >
                     <option value="" disabled>
@@ -1194,6 +1261,7 @@ function FreshmenAdmissionForm() {
                   name="vocationalSchool"
                   value={formData.vocationalSchool}
                   onChange={handleInputChange}
+                  disabled={formData.applicationStatus !== "Pending"}
                   type="text"
                 />
               </div>
@@ -1205,6 +1273,7 @@ function FreshmenAdmissionForm() {
                   value={formData.vocationalAddress}
                   onChange={handleInputChange}
                   placeholder='Street, Village or Subdivision, Barangay, City or Municipality'
+                  disabled={formData.applicationStatus !== "Pending"}
                   type="text"
                 />
               </div>
@@ -1220,6 +1289,7 @@ function FreshmenAdmissionForm() {
                     onChange={handleInputChange}
                     type="tel"
                     placeholder='YYYY'
+                    disabled={formData.applicationStatus !== "Pending"}
                   />
                 </div>
 
@@ -1231,6 +1301,7 @@ function FreshmenAdmissionForm() {
                     value={formData.vocationalSchoolType}
                     onChange={handleInputChange}
                     required
+                    disabled={formData.applicationStatus !== "Pending"}
                   >
                     <option value="" disabled>
                       Select Type
@@ -1265,6 +1336,7 @@ function FreshmenAdmissionForm() {
                   onChange={handleInputChange}
                   rows="4"
                   placeholder="List any medical conditions you have"
+                  disabled={formData.applicationStatus !== "Pending"}
                 />
               </div>
 
@@ -1278,11 +1350,26 @@ function FreshmenAdmissionForm() {
                   onChange={handleInputChange}
                   rows="4"
                   placeholder="List any medications you are currently taking"
+                  disabled={formData.applicationStatus !== "Pending"}
                 />
               </div>
-              <button type="submit" className={styles.submitButton}>
-                              <span>Submit</span>
-                            </button>
+
+              <div className={styles.formGroup}>
+                <label className={styles.checkboxLabel}>
+                  <input 
+                  type="checkbox" 
+                  className={styles.checkbox} 
+                  name="certify" 
+                  id="certify" 
+                  disabled={formData.applicationStatus !== "Pending"} 
+                  onChange={(e) => setIsConfirmation(e.target.checked)} 
+                  required />
+                  I hereby certify that the information provided is accurate and true.
+                </label>
+              </div>
+              <button type="submit" onClick={submitForm} className={styles.submitButton}>
+                <span>Submit</span>
+              </button>
             </form>
           </div>
         );
@@ -1344,13 +1431,6 @@ function FreshmenAdmissionForm() {
                 </button>
               </div>
 
-
-              <div className={styles.formGroup}>
-                <label className={styles.checkboxLabel}>
-                  <input type="checkbox" className={styles.checkbox} name="certify" id="certify" required />
-                  I hereby certify that the information provided is accurate and true.
-                </label>
-              </div>
             </form>
           </div>
         );
@@ -1368,7 +1448,7 @@ function FreshmenAdmissionForm() {
       <Header SideBar={SideBar} setSideBar={setSideBar} />
       <div className={styles.contentSection}>
         <div className={styles.PageTitle}>Admission
-          <h4>Please fill out the form below</h4>
+          <h4>Please fill out the form below. Form can no longer be edited once submitted.</h4>
         </div>
 
         {/* STEPPER */}

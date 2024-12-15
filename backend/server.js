@@ -428,7 +428,7 @@ app.get('/getFormData', (req, res) => {
                         medicalConditions: form.MedicalHistory,
                         medications: form.Medication,
                         controlNo: form.ExamControlNo,
-                        applicationStatus: form.AdmissionStatus
+                        applicationStatus: form.AdmissionStatus,
                     });
                 } else {
                     return res.json({ message: "Can't fetch form data" });
@@ -438,6 +438,32 @@ app.get('/getFormData', (req, res) => {
 
         } else {
             return res.json({ message: "Error fetching preferred program" });
+        }
+    })
+})
+
+//SUBMIT ADMISSION FORM
+app.post('/submitAdmissionForm', (req,res) => {
+    const getID = `SELECT * FROM student WHERE Email = ?`;
+    db.query(getID, req.session.email, (err, idRes) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else if(idRes.length > 0){
+            const updateFormStatus = `UPDATE admissionform
+            SET AdmissionStatus = 'Submitted'
+            WHERE StudentID = ?`;
+
+            db.query(updateFormStatus, idRes[0].StudentID, (err, updateRes) => {
+                if(err){
+                    return res.json({message: "Error in server: " + err});
+                } else if(updateRes.affectedRows > 0){
+                    return res.json({message: "Admission Form submitted successfully."});
+                } else{
+                    return res.json({message: "Unable to submit Admission Form"});
+                }
+            })
+        } else{
+            return res.json({message: "Unable to get Student ID"});
         }
     })
 })
