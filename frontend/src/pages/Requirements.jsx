@@ -1,0 +1,393 @@
+import { useEffect, useState } from 'react';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import axios from 'axios';
+import Header from '/src/components/AdminDashHeader.jsx';
+import styles from '/src/styles/AccountRequest.module.css';
+import { useNavigate } from 'react-router-dom';
+
+
+function Requirements() {
+  const [SideBar, setSideBar] = useState(false);
+  const [accName, setAccName] = useState("");
+  const [accountRequests, setAccountRequests] = useState([]);
+  const [filteredRequests, setFilteredRequests] = useState(accountRequests);
+  const [filterType, setFilterType] = useState("All");
+  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [popUpVisible, setPopUpVisible] = useState(false);
+  const [approvalPrompt, setApprovalPrompt] = useState(false);
+  const [approvalMsg, setApprovalMsg] = useState('');
+  const [rejectionPrompt, setRejectionPrompt] = useState(false);
+  const [rejectionMsg, setRejectionMsg] = useState('');
+  const [errorPrompt, setErrorPrompt] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [submissionDate, setSubmissionDate] = useState('');
+  const [rejectionReason, setRejectionReason] = useState('');
+
+  axios.defaults.withCredentials = true;
+  const navigate = useNavigate();
+  //RETURNING ACCOUNT NAME IF LOGGED IN
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080")
+      .then((res) => {
+        if (res.data.valid) {
+          setAccName(res.data.name);
+        } else {
+          navigate("/LoginPage");
+        }
+      })
+      //RETURNING ERROR IF NOT
+      .catch((err) => {
+        console.error("Error validating user session:", err);
+      });
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = SideBar ? "hidden" : "auto";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [SideBar]);
+
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true,
+    });
+  }, []);
+
+  // FETCH SHIFTING REQUESTS
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/shiftingRequests")
+      .then((res) => {
+        setAccountRequests(res.data.records);
+        setFilteredRequests(res.data.records);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.warn("Error fetching account requests, using example data:", err);
+        setFilteredRequests(accountRequests);
+        setAccountRequests([]); // Ensure state is not undefined
+        setFilteredRequests([]);
+      });
+  }, []);
+
+
+  useEffect(() => { // dropwdonw function
+    if (!accountRequests || accountRequests.length === 0) {
+      setFilteredRequests([]);
+      return;
+    }
+  
+    if (filterType === "All") {
+      
+      setFilteredRequests(accountRequests);
+    } else {
+      setFilteredRequests(
+        accountRequests.filter((request) => request.PrevProgram === filterType)
+      );
+    }
+  }, [filterType, accountRequests]);
+
+
+
+  const handleApprove = async (request) => {
+    if (!request || !request.Email) {
+      console.error("Invalid request or Email missing:", request);
+      setErrorPrompt(true);
+      setErrorMsg("Invalid request data.");
+      return;
+    }
+
+    console.log('Request received in handleApprove:', request);
+    console.log('Submission Date:', submissionDate);
+    setLoading(true);
+  
+    try {
+      const response = await axios.post('http://localhost:8080/approveShiftingReq', {
+        email: request.Email,
+        name: request.Firstname + " " + request.Lastname,
+        studentID: request.CvSUStudentID,
+        submissionDate: submissionDate, // Ensure this is passed correctly
+      });
+  
+      if (response.data.message === "Shifting Request approval sent") {
+        setApprovalPrompt(true);
+        setApprovalMsg(`Approval email sent to ${request.Email}`);
+        setErrorPrompt(false);
+        setPopUpVisible(false);
+      } else {
+        console.error(response.data.message);
+        setErrorPrompt(true);
+        setErrorMsg('Failed to send approval email');
+      }
+    } catch (err) {
+      console.error('Error:', err);
+      setErrorPrompt(true);
+      setErrorMsg(`Failed to send approval email: ${err.response?.data?.message || err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+const handleReject = async (request) => {
+  if (!request || !request.Email) {
+    console.error("Invalid request or Email missing:", request);
+    setErrorPrompt(true);
+    setErrorMsg("Invalid request data.");
+    return;
+  }
+
+  console.log('Request received in handleReject:', request);
+  setLoading(true);
+
+  try {
+      const response = await axios.post('http://localhost:8080/rejectShiftingReq', {
+          email: request.Email,
+          name: request.Firstname + " " + request.Lastname,
+          studentID: request.CvSUStudentID,
+          rejectionReason: rejectionReason,
+      });
+
+      if (response.data.message === "Shifting Request rejection sent") {
+        setRejectionPrompt(true);
+        setRejectionMsg(`Rejection email sent to ${request.Email}`);
+        setErrorPrompt(false);
+        setPopUpVisible(false);
+        setLoading(false);
+      } else {
+        console.error(response.data.message);
+        setErrorPrompt(true);
+        setErrorMsg('Failed to send rejection email');
+      }
+  } catch (err) {
+      console.error('Error:', err);
+      setErrorPrompt(true);
+      setErrorMsg(`Failed to send rejection email: ${err.response?.data?.message || err.message}`);
+      setLoading(false);
+  }
+};
+
+const closePrompt = () => {
+  setApprovalPrompt(false);
+  setRejectionPrompt(false);
+  window.location.reload();
+};
+
+
+  //show popup
+  const handleRowClick = (request) => {
+    setSelectedRequest(request);
+    setPopUpVisible(true);
+  };
+
+  //close popup
+  const closePopup = () => {
+    setPopUpVisible(false);
+    setApprovalPrompt(false)
+    setSelectedRequest(null);
+  };
+  
+
+
+  return (
+    <>
+      <Header SideBar={SideBar} setSideBar={setSideBar} />
+{/* PROMPTS */}
+{approvalPrompt && (
+    <div data-aos="zoom-out" data-aos-duration="500" className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}>
+    <div className={styles.popupContent}>
+      <div className={styles.popupHeader}>
+        <button onClick={closePopup} className={styles.closeButton}>✖</button>
+                <h3>Send Schedule for Requirements Submission</h3>
+            </div>
+
+            {/* Date Input and Send Button */}
+            <div data-aos="fade-up" className={styles.studentType}>
+              <h5>Date of Submission</h5>
+          
+                <input
+                    type="date"
+                    id="submissionDate"
+                    name='submissionDate'                    
+                    value={submissionDate}
+                    onChange={(e) => setSubmissionDate(e.target.value)}
+                    className={styles.popupPromptInput}
+                />
+            </div>
+
+            {/* Buttons */}
+            <div className={styles.buttonContainer}>
+                <button
+                    className={styles.OKButton}
+                    onClick={() => handleApprove(selectedRequest)}
+                >
+                    <span>Send</span>
+                </button>
+               
+            </div>
+        </div>
+    </div>
+)}
+
+
+{/* REJECTION PROMPT */}
+{rejectionPrompt && (
+
+<div data-aos="zoom-out" data-aos-duration="500" className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}>
+<div className={styles.popupContent}>
+  <div className={styles.popupHeader}>
+    <button onClick={closePopup} className={styles.closeButton}>✖</button>
+            <h3>Send Reason for Shifting Request Rejection</h3>
+        </div>
+
+        {/* Date Input and Send Button */}
+        <div data-aos="fade-up" className={styles.studentType}>
+          <h5>Reason</h5>
+      
+            <input
+                type="textarea"
+                id="rejectionReason"
+                name='rejectionReason'                    
+                value={rejectionReason}
+                onChange={(e) => setRejectionReason(e.target.value)}
+                className={styles.popupPromptInput}
+            />
+        </div>
+
+        {/* Buttons */}
+        <div className={styles.buttonContainer}>
+            <button
+                className={styles.OKButton}
+                onClick={() => handleReject(selectedRequest)}
+            >
+                <span>Send</span>
+            </button>
+           
+        </div>
+    </div>
+</div>
+)}
+
+{/* ERROR PROMPT */}
+{errorPrompt && (
+    <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPromptError}>
+        <div className={styles.popupPromptContentError}>
+            <button
+                className={styles.popupPromptcloseButton}
+                onClick={() => setErrorPrompt(false)}
+            >
+                &times;
+            </button>
+            <div className={styles.popupPromptHeaderError}>
+                <h2>Error</h2>
+            </div>
+            <div className={styles.popupPromptMessageError}>
+                <img
+                    src="/src/assets/errormark.png"
+                    alt="Error Icon"
+                    className={styles.popupPromptmessageImage}
+                />
+            </div>
+            <p className={styles.popupPromptTextError}>{errorMsg}</p>
+        </div>
+    </div>
+)}
+
+
+      <div className={styles.contentSection}>
+        <div className={styles.PageTitle} data-aos="fade-up">
+          Society Fee Status
+        </div>
+
+        {/* Dropdown  */}
+        <div className={styles.filterSection} data-aos="fade-up">
+          <label htmlFor="filter" className={styles.filterLabel}>Filter by Year and Section:</label>
+          <select
+            id="filter"
+            className={styles.filterDropdown}
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value)}
+          >
+            <option value="All">All</option>
+            <option value="1-1">1-1</option>
+            <option value="1-2">1-2</option>
+            <option value="1-3">1-3</option>
+            <option value="2-1">2-1</option>
+            <option value="2-1">2-1</option>
+            <option value="1-1">1-1</option>
+            <option value="1-1">1-1</option>
+            <option value="1-1">1-1</option>
+            <option value="1-1">1-1</option>
+            <option value="1-1">1-1</option>
+           
+          </select>
+        </div>
+
+        {/* Table */}
+        <div className={styles.tableContainer} data-aos="fade-up">
+          <table className={styles.requestsTable}>
+            <thead>
+              <tr>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Year - Section</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+  {filteredRequests && filteredRequests.length > 0 ? (
+    filteredRequests.map((request) => (
+      <tr key={request.CvSUStudentID} onClick={() => handleRowClick(request)}>
+        <td>{request.CvSUStudentID}</td>
+        <td>{request.Firstname} {request.Lastname}</td>
+        <td>{request.PrevProgram}</td>
+        <td>
+          <button
+            className={styles.approveButton}
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedRequest(request);
+              setApprovalPrompt(true);
+            }}
+          >
+            &#10004;
+          </button>
+          <button
+                                  className={styles.rejectButton}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedRequest(request);
+                                    setRejectionPrompt(true)
+                                  }}
+                                >
+                                  {loading ? 'Loading...' : 'X'}
+                                </button>
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan="4" className={styles.noData}>
+        No Society Fee found.
+      </td>
+    </tr>
+  )}
+</tbody>
+
+
+
+          </table>
+        </div>
+      </div>
+
+      
+
+    </>
+  );
+}
+
+export default Requirements;
