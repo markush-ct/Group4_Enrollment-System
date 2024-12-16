@@ -35,13 +35,7 @@ function DCSHeadDashboard() {
 
 
 
-  const handlePostAnnouncement = () => {
-    if (announcementText.trim()) {
-      setAnnouncements([...announcements, announcementText]); 
-      setAnnouncementText(''); 
-    }
-  };
-
+ 
 
 
   // BILOG NA ANO
@@ -110,34 +104,7 @@ function DCSHeadDashboard() {
     <div className={styles.HiContainer}>
       <h2 className={styles.GreetingTitle}>Hi DCS HEAD</h2>
     </div>
-    <div className={styles.announcementContainer}>
-      <div className={styles.announcementHeader}>
-        <h2 className={styles.announcementTitle}>Post an announcement</h2>
-
-        {/* AUDINECE */}
-        <select className={styles.audienceDropdown}>
-          <option value="everyone">Everyone</option>
-          <option value="students">Students</option>
-          <option value="teachers">Admin</option>
-          <option value="teachers">Regular</option>
-          <option value="teachers">Irregular</option>
-          <option value="teachers">Transferee</option>
-          <option value="teachers">Shiftee</option>
-          <option value="teachers">Freshmen</option>
     
-        </select>
-      </div>
-
-      <textarea
-            className={styles.announcementInput}
-            placeholder="Write your announcement here..."
-            value={announcementText}
-            onChange={(e) => setAnnouncementText(e.target.value)} 
-          ></textarea>
-          <button className={styles.postButton} onClick={handlePostAnnouncement}>
-            <span>POST</span>
-          </button>
-    </div>
   </div>
 </div>
 

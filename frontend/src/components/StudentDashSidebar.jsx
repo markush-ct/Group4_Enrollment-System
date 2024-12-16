@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import style from "/src/styles/AdminDashHeader.module.css";
 import closeIcon from "/src/assets/close-button.png";
+import form from "/src/assets/form-icon.png";
 import dashboardIcon from "/src/assets/dashboardicon.png";
 import preEnrollmentIcon from "/src/assets/applicationreq-icon.png";
 import settingsIcon from "/src/assets/settingsicon.png";
@@ -33,15 +34,15 @@ function StudentDashSideBar({ isOpen, toggleSidebar }) {
                         ]);
                 } else if(res.data.valid && res.data.role === "Freshman"){
                     setNavBtn([
-                        { name: "Admission Form", icon: dashboardIcon, path: "/FreshmenAdmissionForm" }
+                        { name: "Admission Form", icon: form, path: "/FreshmenAdmissionForm" }
                     ]);
                 } else if(res.data.valid && res.data.role === "Shiftee"){
                     setNavBtn([
-                        { name: "Shiftee Form", icon: dashboardIcon, path: "/ShifteeForm" }
+                        { name: "Shiftee Form", icon: form, path: "/ShifteeForm" }
                     ]);
                 } else if(res.data.valid && res.data.role === "Transferee"){
                     setNavBtn([
-                        { name: "Admission Form", icon: dashboardIcon, path: "/TransfereeAdmissionForm" }
+                        { name: "Admission Form", icon: form, path: "/TransfereeAdmissionForm" }
                     ]);
                 
                 } else {
