@@ -1,0 +1,204 @@
+.contentSection {
+    padding: 40px 20px 10px 20px;
+    text-align: justify;
+    background-color: #f7f7f7;
+    color: #333;
+    margin-bottom: 300px;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+  
+  .PageTitle {
+    margin-top: 100px;
+    font-size: 2.5rem;
+    color: #3d8c4b;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  
+  .form {
+    display: flex;
+    flex-direction:row;
+    margin-bottom: 40px; 
+  }
+  
+
+  .formGroup {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+    justify-content: space-evenly;
+  }
+
+  .formGroup label {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #3d8c4b;
+    background-color: transparent;
+  }
+  
+  .formGroup input,
+  .formGroup select, .formGroup textarea {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+  
+  .formGroup input:focus,
+  .formGroup select:focus {
+    border-color: #3d8c4b;
+  }
+  
+
+  input, select {
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px; 
+    width: 48%; 
+    margin-bottom: 10px; 
+  }
+  
+
+  .addButton {
+    position: relative; 
+    background-color: #d0943d;
+    color: white;
+    border: none;
+    padding: 0.8rem 1rem;
+    border-radius: 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    overflow: hidden; 
+    width: 50%;
+    transition: transform 0.3s ease, color 0.3s ease; 
+    z-index: 1; 
+  }
+  
+  .addButton span {
+    position: relative;
+    z-index: 2; 
+    font-size: 18px;
+    font-weight: bold;
+    background-color: transparent;
+  }
+  
+  .addButton::before {
+    content: ''; 
+    position: absolute;
+    top: 0;
+    left: -100%; 
+    width: 100%;
+    height: 100%;
+    background-color: #3d8c4b; 
+    transition: left 0.3s ease; 
+    z-index: 0; 
+  }
+  
+  .addButton:hover::before {
+    left: 0; 
+  }
+  
+  .addButton:hover {
+    color: white; 
+    transform: scale(1.01); 
+  }
+  
+
+  .table {
+    display: grid;
+    grid-template-rows: auto;
+    margin-top: 20px;
+  }
+  
+  .header {
+    display: grid;
+    grid-template-columns: 80px repeat(6, 1fr);
+    font-weight: bold;
+    text-align: center;
+    background-color: #3d8c4b; /* Light gray background for header */
+    border-radius: 6px;
+    padding: 10px;
+  }
+
+  .th{
+    background-color: #3d8c4b;
+    color: white;
+
+  }
+
+  .blox{
+    background-color: transparent;
+
+  }
+  
+  .timeRow {
+    display: grid;
+    grid-template-columns: 80px repeat(6, 1fr);
+  }
+  
+  .timeCell {
+    text-align: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    background-color: #f9f9f9;
+    font-weight: 600; /* Bolder text for time labels */
+  }
+  
+  .dayCell {
+    border: 1px solid #ddd;
+    position: relative;
+    min-height: 50px; /* Increased height for better layout */
+    background-color: #ffffff;
+    border-radius: 6px;
+  }
+  
+  .scheduleBlock {
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .lectureBlock {
+    background-color: #007bff; 
+    color: white;
+  }
+  
+  .labBlock {
+    background-color: #f5c400; 
+    color: black;
+  }
+  
+  .scheduleBlock:hover {
+    opacity: 0.9; 
+  }
+  
+  /* MOBILE */
+  @media (max-width: 768px) {
+    .formGroup {
+      flex-direction: column;
+      gap: 15px;
+    }
+  
+    input, select {
+      width: 100%; /* Full width for inputs on smaller screens */
+    }
+  
+    .addButton {
+      width: 100%; /* Full width for button on smaller screens */
+    }
+    
+    .table {
+      margin-top: 20px;
+      padding: 0 10px;
+    }
+}

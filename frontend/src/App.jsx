@@ -31,6 +31,9 @@ import EnrollmentIrregular from './pages/EnrollmentIrregular.jsx';
 import ShiftingRequest from './pages/ShiftingRequest.jsx';
 import ShifteeForm from './pages/ShifteeForm.jsx';
 import SocFee from './pages/SocFee.jsx';
+import Requirements from './pages/Requirements.jsx';
+import SchedManagement from './pages/SchedManagement.jsx';
+
 
 function App() {
   return (
@@ -69,6 +72,8 @@ function App() {
         <Route path="/ShiftingRequest" element={<ShiftingRequest />} />
         <Route path="/ShifteeForm" element={<ShifteeForm />} />
         <Route path="/SocFee" element={<SocFee />} />
+        <Route path="/Requirements" element={<Requirements />} />
+        <Route path="/SchedManagement" element={<SchedManagement />} />
         {/* Add other routes as needed */}
       </Routes>
     </Router>

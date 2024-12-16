@@ -6,6 +6,7 @@ import accountRequestsIcon from '/src/assets/accrequest-icon.png';
 import preEnrollmentIcon from '/src/assets/applicationreq-icon.png';
 import societyFeeIcon from '/src/assets/socfee-icon.png';
 import requirementsIcon from '/src/assets/reqsubmit-icon.png';
+import schedIcon from '/src/assets/sched-icon.png';
 import settingsIcon from '/src/assets/settingsicon.png';
 import logoutIcon from '/src/assets/logouticon.png';
 import axios from "axios";
@@ -52,7 +53,7 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
                     "Society Officer": [
                         { name: 'Dashboard', icon: dashboardIcon, path: '/dashboard' },
                         { name: 'Society Fee', icon: societyFeeIcon, path: '/SocFee' },
-                        { name: 'Requirements Submission', icon: requirementsIcon, path: '/requirements-submission' },
+                        { name: 'Requirements Submission', icon: requirementsIcon, path: '/Requirements' },
                     ],
                     "Adviser": [
                         { name: 'Dashboard', icon: dashboardIcon, path: '/dashboard' },
@@ -61,8 +62,10 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
                     ],
                     "DCS Head": [
                         { name: 'Dashboard', icon: dashboardIcon, path: '/DCSHeadDashboard' },
+                        { name: 'Schedule Management', icon: schedIcon, path: '/SchedManagement' },
                         { name: 'Shifting Request', icon: accountRequestsIcon, path: '/ShiftingRequest' },
-                        { name: 'Requirements Submission', icon: requirementsIcon, path: '/requirements-submission' },
+                        
+                        
                     ],
                     "School Head": [
                         { name: 'Dashboard', icon: dashboardIcon, path: '/dashboard' },

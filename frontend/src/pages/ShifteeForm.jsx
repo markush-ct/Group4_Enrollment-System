@@ -261,11 +261,11 @@ const autoSave = () => {
             <img
               src={
                 formValues.shiftingStatus === "Approved" ? 
-                "src/assets/paid-icon.png"
-                  : formValues.shiftingStatus === "Pending" ? 
-                  "src/assets/paid-icon.png"
+                "src/assets/chjeck-icon.png"
+                  : formValues.shiftingStatus === "Submitted" ? 
+                  "src/assets/pending-icon.png"
                     : formValues.shiftingStatus === "Rejected" ?
-                    "src/assets/paid-icon.png"
+                    "src/assets/rejected-icon.png"
                     : "src/assets/paid-icon.png"
               }
               alt="Fee Status Icon"
@@ -299,6 +299,15 @@ const autoSave = () => {
                   readOnly
                 />
               </div>
+              <div className={styles.formGroup}>
+                              <button
+                                type="button"
+                                className={styles.submitButton}
+                                
+                              ><span>
+                                  Download Shiftee Form</span>
+                              </button>
+                            </div>
             </form>
           </div>
         );

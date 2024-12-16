@@ -24,8 +24,7 @@ function DCSHeadDashboard() {
   const [SideBar, setSideBar] = useState(false);
   const [CScount, setCScount] = useState(0);
   const [ITcount, setITcount] = useState(0);
-  const [announcementText, setAnnouncementText] = useState(""); // Announcement 
-  const [announcements, setAnnouncements] = useState([]); // List of announcements
+  const [announcements, setAnnouncements] = useState([]); // LIST ANNOUNCEMENT
   
 
   useEffect(() => {
@@ -35,13 +34,7 @@ function DCSHeadDashboard() {
 
 
 
-  const handlePostAnnouncement = () => {
-    if (announcementText.trim()) {
-      setAnnouncements([...announcements, announcementText]); 
-      setAnnouncementText(''); 
-    }
-  };
-
+ 
 
 
   // BILOG NA ANO
@@ -105,41 +98,31 @@ function DCSHeadDashboard() {
         <div className={styles.gridContainer}>
 
 
-        <div className={styles.container1}>
-  <div className={styles.GreetingContainer}>
-    <div className={styles.HiContainer}>
-      <h2 className={styles.GreetingTitle}>Hi DCS HEAD</h2>
-    </div>
-    <div className={styles.announcementContainer}>
-      <div className={styles.announcementHeader}>
-        <h2 className={styles.announcementTitle}>Post an announcement</h2>
-
-        {/* AUDINECE */}
-        <select className={styles.audienceDropdown}>
-          <option value="everyone">Everyone</option>
-          <option value="students">Students</option>
-          <option value="teachers">Admin</option>
-          <option value="teachers">Regular</option>
-          <option value="teachers">Irregular</option>
-          <option value="teachers">Transferee</option>
-          <option value="teachers">Shiftee</option>
-          <option value="teachers">Freshmen</option>
-    
-        </select>
-      </div>
-
-      <textarea
-            className={styles.announcementInput}
-            placeholder="Write your announcement here..."
-            value={announcementText}
-            onChange={(e) => setAnnouncementText(e.target.value)} 
-          ></textarea>
-          <button className={styles.postButton} onClick={handlePostAnnouncement}>
-            <span>POST</span>
-          </button>
-    </div>
+        <div className={styles.container2}>
+          {/* STATS */}
+            <div className={styles.Stats}>
+            <div className={styles.nameCard}>
+  <div className={styles.nameSection}>
+    <p>HI</p>
+    <h3>NAME NG ACC</h3>
+  </div>
+  <div className={styles.logos}>
+  <img src="/src/assets/ACS-ICON.png" alt="Logo 1" className={styles.logo} />
+  <img src="/src/assets/ITS-ICON.png" alt="Logo 2" className={styles.logo} />
   </div>
 </div>
+
+
+              <div className={styles.blueCard}>
+              <h3>Total Enrolled</h3>
+              <p>{ITcount + CScount}</p>
+              </div>
+              <div className={styles.blueCard}>
+              <h3>Shifting Request</h3>
+              <p>200</p>
+              </div>
+            </div>
+          </div>
 
 
 
@@ -186,8 +169,13 @@ function DCSHeadDashboard() {
         </div>
         </div>
 
-      <div className={styles.row2}>Row 2 Content</div>
-      </div>
+        <div className={styles.row2}>
+        <div className={styles.headerContainer}>
+          <h2 className={styles.announcementHeader}>Class Schedules</h2>
+          
+        </div>
+        </div>
+        </div>
     
   
      
