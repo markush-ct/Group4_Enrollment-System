@@ -504,6 +504,95 @@
 }
 
 
+.popupContentReq {
+  padding: 20px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  text-align: left;
+  position: relative;
+}
+
+.detailsSection {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  align-items: center;     
+  justify-content: center;
+}
+
+.documentImage img {
+  width: 80vw;
+  height: auto;
+  border: 2px solid #2e7d32;
+  border-radius: 8px;
+}
+
+.popupTextReq {
+  font-size: 1rem;
+  display: flex;          
+  flex-direction: row;    
+  align-items: center;     
+  justify-content: center;
+  gap: 50px;               
+  margin-bottom: 20px;    
+}
+
+
+.popupTextReq strong{
+  color: #3d8c4b;
+  font-weight: bold;
+}
+
+.checklistTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.checklistTable th,
+.checklistTable td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.checklistTable th {
+  background-color: #2e7d32;
+  color: #fff;
+}
+
+.checklistTable input {
+  width: 90%;
+  padding: 5px;
+  text-align: center;
+}
+
+.buttonSection {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.setEnrollmentButton {
+  background-color: #3d8c4b; 
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.setEnrollmentButton:hover {
+  background-color: #d0943d;
+}
+
+
+
 
 
 
@@ -578,6 +667,14 @@
     margin-right: 5%;
   }
 
+  .popupContentReq {
+    max-height: 90vh;
+    margin-top: 10%;
+    margin-bottom: 20%;
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+
   .popupHeader {
     margin: 10px 0 20px;
   }
@@ -588,6 +685,15 @@
 
   .popupText {
     font-size: 14px;
+  }
+
+  .popupTextReq {
+    font-size: 14px;
+    display: flex;          
+  flex-direction: column;    
+  align-items: center;  
+  gap: 5px;   
+  justify-content: center;
   }
 
   .studentType {
@@ -615,5 +721,16 @@
 
   .popupHeader h2 {
     font-size: 1.25rem; 
+  }
+}
+
+
+@media (max-width: 500px) {
+
+  .checklistTable th,
+  .checklistTable td {
+   
+    font-size: 10px;
+    padding: 5px; 
   }
 }

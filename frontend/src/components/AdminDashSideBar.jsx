@@ -48,12 +48,12 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
                     "Enrollment Officer": [
                         { name: 'Dashboard', icon: dashboardIcon, path: '/EnrollmentOfficerDashboard' },
                         { name: 'Account Requests', icon: accountRequestsIcon, path: '/AccountRequest' },
-                        { name: 'Pre-enrollment', icon: preEnrollmentIcon, path: '/AdminPreEnrollment' },
+                        { name: 'Enrollment', icon: preEnrollmentIcon, path: '/AdminPreEnrollment' },
                     ],
                     "Society Officer": [
                         { name: 'Dashboard', icon: dashboardIcon, path: '/dashboard' },
                         { name: 'Society Fee', icon: societyFeeIcon, path: '/SocFee' },
-                        { name: 'Requirements Submission', icon: requirementsIcon, path: '/Requirements' },
+                        { name: 'Requirements', icon: requirementsIcon, path: '/Requirements' },
                     ],
                     "Adviser": [
                         { name: 'Dashboard', icon: dashboardIcon, path: '/dashboard' },
@@ -69,8 +69,10 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
                     ],
                     "School Head": [
                         { name: 'Dashboard', icon: dashboardIcon, path: '/dashboard' },
-                        { name: 'Society Fee', icon: societyFeeIcon, path: '/society-fee' },
-                        { name: 'Requirements Submission', icon: requirementsIcon, path: '/requirements-submission' },
+                        { name: 'Freshman Admission', icon: accountRequestsIcon, path: '/ShiftingRequest' },
+                        { name: 'Transferee Admission', icon: accountRequestsIcon, path: '/ShiftingRequest' },
+                        
+                        
                     ]
                 };
 
