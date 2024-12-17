@@ -1,156 +1,161 @@
-import React from 'react'; 
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'; 
-import Header from '/src/components/Header';  
-import { BrowserRouter as Router } from 'react-router-dom';  
+import React from "react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import Header from "/src/components/Header";
+import { BrowserRouter as Router } from "react-router-dom";
 
+jest.mock("/src/components/SidebarMenu", () => () => (
+  <div data-testid="sidebar-menu">Sidebar Menu</div>
+));
 
-jest.mock('/src/components/SidebarMenu', () => () => <div data-testid="sidebar-menu">Sidebar Menu</div>);
+describe("Unit Testing for the Header Component", () => {
+  let setSideBarMock;
 
-describe('Header Component', () => { 
-    let setSideBarMock; 
+  beforeEach(() => {
+    setSideBarMock = jest.fn();
+  });
 
-    beforeEach(() => {
-        setSideBarMock = jest.fn(); 
-    });
+  test("Renders Header correctly", () => {
+    render(
+      <Router>
+        <Header SideBar={false} setSideBar={setSideBarMock} />
+      </Router>
+    );
 
+    const menuIcon = screen.getByAltText(/menu-icon/i);
+    expect(menuIcon).toBeInTheDocument();
 
-    test('Renders Header correctly', () => {
-        render(
-            <Router>  
-                <Header SideBar={false} setSideBar={setSideBarMock} /> 
-            </Router>
-        );
+    const logo = screen.getByAltText(/cvsu logo/i);
+    expect(logo).toBeInTheDocument();
 
-        const menuIcon = screen.getByAltText(/menu-icon/i);
-        expect(menuIcon).toBeInTheDocument();
+    expect(screen.getByText(/CAVITE STATE UNIVERSITY/i)).toBeInTheDocument();
+    expect(screen.getByText(/BACOOR CAMPUS/i)).toBeInTheDocument();
 
-        const logo = screen.getByAltText(/cvsu logo/i);
-        expect(logo).toBeInTheDocument(); 
+    const departmentElements = screen.getAllByText(
+      /DEPARTMENT OF COMPUTER STUDIES/i
+    );
+    expect(departmentElements.length).toBeGreaterThan(0);
 
-        expect(screen.getByText(/CAVITE STATE UNIVERSITY/i)).toBeInTheDocument();  
-        expect(screen.getByText(/BACOOR CAMPUS/i)).toBeInTheDocument();  
+    expect(screen.getByText(/About/)).toBeInTheDocument();
+    expect(screen.getByText(/Admissions/)).toBeInTheDocument();
+    expect(screen.getByText(/Contact/)).toBeInTheDocument();
+    expect(screen.getByText(/Sign In/)).toBeInTheDocument();
+  });
 
-        const departmentElements = screen.getAllByText(/DEPARTMENT OF COMPUTER STUDIES/i);
-        expect(departmentElements.length).toBeGreaterThan(0); 
+  test("Dropdown displays correct options for About", () => {
+    render(
+      <Router>
+        <Header SideBar={false} setSideBar={setSideBarMock} />
+      </Router>
+    );
 
-        expect(screen.getByText(/About/)).toBeInTheDocument();  
-        expect(screen.getByText(/Admissions/)).toBeInTheDocument();  
-        expect(screen.getByText(/Contact/)).toBeInTheDocument();  
-        expect(screen.getByText(/Sign In/)).toBeInTheDocument();  
-    });
+    const aboutNavItem = screen.getByText(/About/);
 
+    fireEvent.mouseOver(aboutNavItem);
 
-    test('Dropdown displays correct options for About', () => {
-        render(
-            <Router>
-                <Header SideBar={false} setSideBar={setSideBarMock} />
-            </Router>
-        );
+    expect(screen.getByText(/History of CvSU/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Mission, Vision, and Core Values/)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Department of Computer Studies/)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Computer Studies Society Officers/)
+    ).toBeInTheDocument();
+  });
 
-        const aboutNavItem = screen.getByText(/About/);
+  test("Dropdown displays correct options for Admissions", () => {
+    render(
+      <Router>
+        <Header SideBar={false} setSideBar={setSideBarMock} />
+      </Router>
+    );
 
-        fireEvent.mouseOver(aboutNavItem);
+    const admissionsNavItem = screen.getByText(/Admissions/);
 
-        expect(screen.getByText(/History of CvSU/)).toBeInTheDocument();
-        expect(screen.getByText(/Mission, Vision, and Core Values/)).toBeInTheDocument();
-        expect(screen.getByText(/Department of Computer Studies/)).toBeInTheDocument();
-        expect(screen.getByText(/Computer Studies Society Officers/)).toBeInTheDocument();
-    });
+    fireEvent.mouseOver(admissionsNavItem);
 
+    expect(screen.getByText(/Apply/)).toBeInTheDocument();
+    expect(screen.getByText(/Enrollment FAQs/)).toBeInTheDocument();
+    expect(screen.getByText(/Undergraduate Programs/)).toBeInTheDocument();
+  });
 
-    test('Dropdown displays correct options for Admissions', () => {
-        render(
-            <Router>
-                <Header SideBar={false} setSideBar={setSideBarMock} />
-            </Router>
-        );
+  test("Navigates to the correct route when a link is clicked", () => {
+    render(
+      <Router>
+        <Header SideBar={false} setSideBar={setSideBarMock} />
+      </Router>
+    );
 
-        const admissionsNavItem = screen.getByText(/Admissions/);
+    const mainpageLink = screen.getByAltText(/cvsu logo/);
+    fireEvent.click(mainpageLink);
+    expect(window.location.pathname).toBe("/MainPage");
 
-        fireEvent.mouseOver(admissionsNavItem);
+    const historyLink = screen.getByText(/History of CvSU/);
+    fireEvent.click(historyLink);
+    expect(window.location.pathname).toBe("/CvsuHistory");
 
-        expect(screen.getByText(/Apply/)).toBeInTheDocument();
-        expect(screen.getByText(/Enrollment FAQs/)).toBeInTheDocument();
-        expect(screen.getByText(/Undergraduate Programs/)).toBeInTheDocument();
-    });
-    
+    const missionvisionLink = screen.getByText(
+      /Mission, Vision, and Core Values/
+    );
+    fireEvent.click(missionvisionLink);
+    expect(window.location.pathname).toBe("/MissionVision");
 
-    test('Navigates to the correct route when a link is clicked', () => {
-        render(
-            <Router>
-                <Header SideBar={false} setSideBar={setSideBarMock} />
-            </Router>
-        );
-      
-        const mainpageLink = screen.getByAltText(/cvsu logo/);
-        fireEvent.click(mainpageLink);
-        expect(window.location.pathname).toBe('/MainPage');
+    const dcsLink = screen.getByText(/Department of Computer Studies/);
+    fireEvent.click(dcsLink);
+    expect(window.location.pathname).toBe("/DcsPage");
 
-        const historyLink = screen.getByText(/History of CvSU/);
-        fireEvent.click(historyLink);
-        expect(window.location.pathname).toBe('/CvsuHistory');
+    const csLink = screen.getByText(/Computer Studies Society Officers/);
+    fireEvent.click(csLink);
+    expect(window.location.pathname).toBe("/SocOff");
 
-        const missionvisionLink = screen.getByText(/Mission, Vision, and Core Values/);
-        fireEvent.click(missionvisionLink);
-        expect(window.location.pathname).toBe('/MissionVision');
+    const contactLink = screen.getByText(/Contact/);
+    fireEvent.click(contactLink);
+    expect(window.location.pathname).toBe("/MainPage");
+    expect(window.location.hash).toBe("#contact");
 
-        const dcsLink = screen.getByText(/Department of Computer Studies/);
-        fireEvent.click(dcsLink);
-        expect(window.location.pathname).toBe('/DcsPage');
+    const signinLink = screen.getByText(/Sign In/);
+    fireEvent.click(signinLink);
+    expect(window.location.pathname).toBe("/LoginPage");
+  });
 
-        const csLink = screen.getByText(/Computer Studies Society Officers/);
-        fireEvent.click(csLink);
-        expect(window.location.pathname).toBe('/SocOff');
+  test("Toggles the sidebar on menu button click", async () => {
+    let SideBar = false;
 
-        const contactLink = screen.getByText(/Contact/);
-        fireEvent.click(contactLink);
-        expect(window.location.pathname).toBe('/MainPage'); 
-        expect(window.location.hash).toBe('#contact');      
+    const { rerender } = render(
+      <Router>
+        <Header SideBar={SideBar} setSideBar={setSideBarMock} />
+      </Router>
+    );
 
-        const signinLink = screen.getByText(/Sign In/);
-        fireEvent.click(signinLink);
-        expect(window.location.pathname).toBe('/LoginPage');
-    });
+    const menuButton = screen.getByAltText(/menu-icon/i);
 
+    fireEvent.click(menuButton);
 
-    test('Toggles the sidebar on menu button click', async () => {
-        let SideBar = false;  
+    await waitFor(() => expect(setSideBarMock).toHaveBeenCalledWith(true));
 
-        const { rerender } = render(
-            <Router>
-                <Header SideBar={SideBar} setSideBar={setSideBarMock} />  
-            </Router>
-        );
+    SideBar = true;
+    rerender(
+      <Router>
+        <Header SideBar={SideBar} setSideBar={setSideBarMock} />
+      </Router>
+    );
 
-        const menuButton = screen.getByAltText(/menu-icon/i);
+    fireEvent.click(menuButton);
 
-        fireEvent.click(menuButton);
+    await waitFor(() => expect(setSideBarMock).toHaveBeenCalledWith(false));
 
-        await waitFor(() => expect(setSideBarMock).toHaveBeenCalledWith(true));
+    expect(setSideBarMock).toHaveBeenCalledTimes(2);
+  });
 
-        SideBar = true;
-        rerender(  
-            <Router>
-                <Header SideBar={SideBar} setSideBar={setSideBarMock} />
-            </Router>
-        );
+  test("Renders SidebarMenu when SideBar is true", () => {
+    render(
+      <Router>
+        <Header SideBar={true} setSideBar={setSideBarMock} />
+      </Router>
+    );
 
-        fireEvent.click(menuButton);
-
-        await waitFor(() => expect(setSideBarMock).toHaveBeenCalledWith(false));
-
-        expect(setSideBarMock).toHaveBeenCalledTimes(2);
-    });
-
-
-    test('Renders SidebarMenu when SideBar is true', () => {
-        render(
-            <Router>
-                <Header SideBar={true} setSideBar={setSideBarMock} />  
-            </Router>
-        );
-
-        const sidebarMenu = screen.getByTestId('sidebar-menu');
-        expect(sidebarMenu).toBeInTheDocument();  
-    });
+    const sidebarMenu = screen.getByTestId("sidebar-menu");
+    expect(sidebarMenu).toBeInTheDocument();
+  });
 });
