@@ -64,6 +64,7 @@ function MainPage() {
                         autoClose: 3000,
                     });
                     setSenderName('');
+                    setSubject('');
                     setEmail('');
                     setMessage('');
                 },

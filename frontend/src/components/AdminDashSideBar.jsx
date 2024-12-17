@@ -52,6 +52,7 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
                     ],
                     "Society Officer": [
                         { name: 'Dashboard', icon: dashboardIcon, path: '/dashboard' },
+                        { name: 'Schedule Management', icon: schedIcon, path: '/SchedManagement' },
                         { name: 'Society Fee', icon: societyFeeIcon, path: '/SocFee' },
                         { name: 'Requirements', icon: requirementsIcon, path: '/Requirements' },
                     ],
@@ -62,7 +63,6 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
                     ],
                     "DCS Head": [
                         { name: 'Dashboard', icon: dashboardIcon, path: '/DCSHeadDashboard' },
-                        { name: 'Schedule Management', icon: schedIcon, path: '/SchedManagement' },
                         { name: 'Shifting Request', icon: accountRequestsIcon, path: '/ShiftingRequest' },
                         
                         

@@ -15,6 +15,8 @@ function FreshmenAdmissionForm() {
   const [isSaving, setIsSaving] = useState(false);
   const [prefProgram, setPrefProgram] = useState("");
   const [isConfirmation, setIsConfirmation] = useState(false);
+  const [studentID, setStudentID] = useState(""); //Will store student ID to use as a reference for download page of admission form
+
   const [formData, setFormData] = useState({
     applyingFor: '',
     applicantType: 'Freshman',
@@ -74,6 +76,8 @@ function FreshmenAdmissionForm() {
     medications: '',
     controlNo: '',
     applicationStatus: '',
+    examSched: '',
+    reqSubmission: '',
   });
   {/* FOR ANIMATION */ }
   useEffect(() => {
@@ -227,7 +231,11 @@ function FreshmenAdmissionForm() {
             medications: res.data.medications || '',
             controlNo: res.data.controlNo || '',
             applicationStatus: res.data.applicationStatus || '',
+            examSched: res.data.examSched || '',
+            reqSubmission: res.data.reqSubmission || '',
           });
+
+          setStudentID(res.data.studentID);
 
         } else if (res.data.preferredProgram === 2) {
           setPrefProgram("Bachelor of Science in Information Technology");
@@ -292,7 +300,10 @@ function FreshmenAdmissionForm() {
             medications: res.data.medications || '',
             controlNo: res.data.controlNo || '',
             applicationStatus: res.data.applicationStatus || '',
+            examSched: res.data.examSched || '',
+            reqSubmission: res.data.reqSubmission || '',
           });
+          setStudentID(res.data.studentID);
         }
       })
       .catch((err) => {
@@ -365,6 +376,8 @@ function FreshmenAdmissionForm() {
     data.append("medications", formData.medications);
     data.append("controlNo", formData.controlNo);
     data.append("applicationStatus", formData.applicationStatus);
+    data.append("examSched", formData.examSched);
+    data.append("dateTimeSchedule", formData.dateTimeSchedule);
 
 
     Promise.all([
@@ -407,23 +420,25 @@ function FreshmenAdmissionForm() {
   };
 
   const handleDownloadForm = () => {
-    const link = document.createElement('a');
-    link.href = '/path/to/application-form.pdf'; // APPLICATION FORM
-    link.download = 'Application_Form.pdf';
-    link.click();
+      navigate(`/download-form/${studentID}`); // Redirect to download page
   };
 
   const [SideBar, setSideBar] = useState(false);
   document.body.style.overflow = SideBar ? 'hidden' : 'auto';
 
-  const submitForm = () => {
+  const submitForm = (e) => {
+e.preventDefault();
+
     if(!isConfirmation){
       alert("Please check the box to proceed.")
     } else{
       axios.post("http://localhost:8080/submitAdmissionForm")
       .then((res) => {
         if(res.data.message === "Admission Form submitted successfully."){
+          setStudentID(res.data.studentID)
           alert(res.data.message);
+          window.location.reload();
+          setActiveStep(5);
         } else{
           alert(res.data.message);
         }
@@ -1367,7 +1382,7 @@ function FreshmenAdmissionForm() {
                   I hereby certify that the information provided is accurate and true.
                 </label>
               </div>
-              <button type="submit" onClick={submitForm} className={styles.submitButton}>
+              <button type="button" onClick={submitForm} className={styles.submitButton}>
                 <span>Submit</span>
               </button>
             </form>
@@ -1390,6 +1405,7 @@ function FreshmenAdmissionForm() {
                   id="applicationStatus"
                   name="applicationStatus"
                   value={formData.applicationStatus}
+                  onChange={handleInputChange}
                   readOnly
                   disabled
                 />
@@ -1402,6 +1418,7 @@ function FreshmenAdmissionForm() {
                   id="controlNo"
                   name="controlNo"
                   value={formData.controlNo}
+                  onChange={handleInputChange}
                   readOnly
                   disabled
                 />
@@ -1409,14 +1426,27 @@ function FreshmenAdmissionForm() {
 
 
               <div className={styles.formGroup}>
-                <label htmlFor="dateTimeSchedule">Date & Time Schedule:</label>
+                <label htmlFor="examSched">Exam Schedule:</label>
                 <input
-                  id="dateTimeSchedule"
-                  name="dateTimeSchedule"
-                  value={formData.dateTimeSchedule}
+                  id="examSched"
+                  name="examSched"
+                  value={formData.examSched === "" || !formData.examSched ? "Not yet scheduled" : formData.examSched}
                   onChange={handleInputChange}
-                  type="datetime-local"
+                  type="text"
+                  disabled
                   required
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="reqSubmission">Submission of Requirements</label>
+                <input
+                  id="reqSubmission"
+                  name="reqSubmission"
+                  value={formData.dateTimeSchedule === "" || !formData.dateTimeSchedule ? "Not yet scheduled" : formData.dateTimeSchedule}
+                  onChange={handleInputChange}
+                  type="text"
+                  disabled
                 />
               </div>
 
@@ -1426,6 +1456,7 @@ function FreshmenAdmissionForm() {
                   type="button"
                   className={styles.downloadButton}
                   onClick={handleDownloadForm}
+                  disabled={formData.applicationStatus !== "Approved"}
                 ><span>
                     Download Application Form</span>
                 </button>
