@@ -429,6 +429,8 @@ app.get('/getFormData', (req, res) => {
                         medications: form.Medication,
                         controlNo: form.ExamControlNo,
                         applicationStatus: form.AdmissionStatus,
+                        examSched: form.DateOfExamAndTime,
+                        reqSubmission: form.SubmissionSchedule,
                     });
                 } else {
                     return res.json({ message: "Can't fetch form data" });
@@ -457,7 +459,7 @@ app.post('/submitAdmissionForm', (req,res) => {
                 if(err){
                     return res.json({message: "Error in server: " + err});
                 } else if(updateRes.affectedRows > 0){
-                    return res.json({message: "Admission Form submitted successfully."});
+                    return res.json({message: "Admission Form submitted successfully.", studentID: idRes[0].StudentID});
                 } else{
                     return res.json({message: "Unable to submit Admission Form"});
                 }
@@ -467,6 +469,19 @@ app.post('/submitAdmissionForm', (req,res) => {
         }
     })
 })
+
+// API to fetch admission form data by student ID
+app.get("/get-form/:id", (req, res) => {
+    const { id } = req.params;
+    const sql = "SELECT * FROM admissionform WHERE StudentID = ?";
+    db.query(sql, [id], (err, result) => {
+      if (err) {
+        console.error("Error fetching data:", err);
+        return res.json({message: "Error fetching data:" + err});
+      }
+      res.send(result[0]);
+    });
+  });
 
 //ADMISSION FORM TABLE AUTO SAVE EVERY INPUT CHANGES
 app.post('/admissionFormTable', upload.single("idPicture"), (req, res) => {
