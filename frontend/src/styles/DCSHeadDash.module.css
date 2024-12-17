@@ -279,6 +279,11 @@
     background-color: transparent;
 }
 
+.nameCard p{
+    color: #3d8c4b;
+    background-color: transparent;
+}
+
 .yellowCard {
     background-color: #f0b435;;
     color: #fff;
@@ -323,6 +328,7 @@
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
 
   .headerContainer{
@@ -361,7 +367,13 @@
     border: 2px solid #3d8c4b;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
+
+  .row1:hover, .row2:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); 
+}
 
 
 
@@ -412,73 +424,81 @@
 
 
 /* MOBILE */
-@media (max-width: 768px) {
-   
-    .gridContainer {
-        grid-template-columns: 1fr;
-         
-    }
 
-  
-    .nameCard {
-        flex-direction: column; 
-        align-items: flex-start; 
-    }
-
-
-    .logos {
-        justify-content: flex-start; 
-        margin-top: 10px; 
-    }
-
-
-    .announcementContainer {
-        padding: 10px; 
-        text-align: left; 
-    }
-
-
-    .GreetingTitle {
-        font-size: 1.25rem; 
-    }
-
-    
-    .Stats {
-        display: grid; 
-    grid-template-columns: 50% 50%; 
-    gap: 15px; 
-    }
-
-
-    .postButton {
-        width: auto; 
-        font-size: 0.9rem; 
-        padding: 0.5rem 1rem;
-    }
-
-
-    .Donut {
-        height: auto; 
-    }
-
-
+@media screen and (max-width: 768px) {
     .contentSection {
         padding: 20px 10px; 
+        margin-top: 50px; 
         margin-bottom: 100px; 
     }
-}
 
-
-@media (max-width: 400px) {
-    
     .gridContainer {
         grid-template-columns: 1fr; 
+        gap: 10px;
     }
 
     .Stats {
-        grid-template-columns: 1fr; 
+        grid-template-columns: 1fr;
     }
 
-    
-   
+    .DCScount, .CsStats, .ItStats, .nameCard, .yellowCard, .blueCard {
+        grid-column: span 1; 
+    }
+
+    .nameCard {
+        flex-direction: column; 
+        align-items: center;
+    }
+
+    .logos {
+        flex-direction:row;
+    }
+
+    .logo {
+        width: 80px; 
+        height: 80px;
+    }
+
+    .container1, .container2, .container3, .container4 {
+        padding: 10px; 
+    }
+
+    .HiContainer, .announcementContainer, .DonutText, .Donut {
+        padding: 10px; 
+    }
+
+    .postButton {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.7rem;
+    }
+
+    .announcementInput {
+        height: 80px; 
+    }
 }
+
+@media screen and (max-width: 480px) {
+    .GreetingTitle, .announcementTitle, .Stats h3 {
+        font-size: 1.2rem; 
+    }
+
+
+    .Stats p {
+        font-size: 1.5rem; 
+    }
+
+    .HiContainer, .announcementContainer {
+        height: auto;
+    }
+
+    .postButton {
+        font-size: 0.8rem; 
+    }
+
+    .logo {
+        width: 60px; 
+        height: 60px;
+    }
+}
+
+

@@ -108,14 +108,23 @@ function SocOfficerDashboard() {
 
         <div className={styles.container1}>
   <div className={styles.GreetingContainer}>
-    <div className={styles.HiContainer}>
-      <h2 className={styles.GreetingTitle}>Hi ADDNAME HERE</h2>
+    <div className={styles.nameCard}>
+      <div className={styles.nameSection}>
+        <p>HI</p>
+        <h3>NAME NG ACC</h3>
+      </div>
+      <div className={styles.logos}>
+        <img src="/src/assets/ACS-ICON.png" alt="Logo 1" className={styles.logo} />
+        <img src="/src/assets/ITS-ICON.png" alt="Logo 2" className={styles.logo} />
+      </div>
     </div>
+
+    {/* Announcement Section */}
     <div className={styles.announcementContainer}>
       <div className={styles.announcementHeader}>
         <h2 className={styles.announcementTitle}>Post an announcement</h2>
 
-        {/* AUDINECE */}
+        {/* Audience Dropdown */}
         <select className={styles.audienceDropdown}>
           <option value="everyone">Everyone</option>
           <option value="students">Students</option>
@@ -125,19 +134,21 @@ function SocOfficerDashboard() {
           <option value="teachers">Transferee</option>
           <option value="teachers">Shiftee</option>
           <option value="teachers">Freshmen</option>
-    
         </select>
       </div>
 
+      {/* Announcement Input */}
       <textarea
-            className={styles.announcementInput}
-            placeholder="Write your announcement here..."
-            value={announcementText}
-            onChange={(e) => setAnnouncementText(e.target.value)} 
-          ></textarea>
-          <button className={styles.postButton} onClick={handlePostAnnouncement}>
-            <span>POST</span>
-          </button>
+        className={styles.announcementInput}
+        placeholder="Write your announcement here..."
+        value={announcementText}
+        onChange={(e) => setAnnouncementText(e.target.value)}
+      ></textarea>
+
+      {/* Post Button */}
+      <button className={styles.postButton} onClick={handlePostAnnouncement}>
+        <span>POST</span>
+      </button>
     </div>
   </div>
 </div>

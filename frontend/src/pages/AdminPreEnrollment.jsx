@@ -6,7 +6,7 @@ import Header from '/src/components/AdminDashHeader.jsx';
 import styles from '/src/styles/AccountRequest.module.css';
 import { useNavigate } from 'react-router-dom';
 
-function AdminPreEnrollment() {
+function Requirements() {
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const [accountRequests, setAccountRequests] = useState([]);
@@ -283,7 +283,7 @@ const closePrompt = () => {
 
       <div className={styles.contentSection}>
         <div className={styles.PageTitle} data-aos="fade-up">
-          Pre-enrollment
+          Enrollment
         </div>
 
         {/* Dropdown  */}
@@ -296,150 +296,184 @@ const closePrompt = () => {
             onChange={(e) => setFilterType(e.target.value)}
           >
             <option value="All">All</option>
-            <option value="Freshman">Freshman</option>
             <option value="Regular">Regular</option>
             <option value="Irregular">Irregular</option>
             <option value="Shiftee">Shiftee</option>
-            <option value="Transferee">Transferee</option>
-            <option value="Society Officer">Society Officer</option>
-            <option value="DCS Head">DCS Head</option>
-            <option value="Adviser">Adviser</option>
-            <option value="School Head">School Head</option>
-            <option value="Enrollment Officer">Enrollment Officer</option>
+            
           </select>
         </div>
 
-    
-     {/* Table */}
-<div className={styles.tableContainer} data-aos="fade-up">
-  <table className={styles.requestsTable}>
-    <thead>
-      <tr>
-        <th>StudentID</th>
-        <th>Name</th>
-        <th>Program</th>
-      </tr>
-    </thead>
-    <tbody>
-      {filteredRequests.length > 0 ? (
-        filteredRequests.map((request) => (
-          <tr key={request.id} onClick={() => handleRowClick(request)}>
-            <td data-label="StudentID">{request.StudentID}</td>
-            <td data-label="Name">{request.Name}</td>
-            <td data-label="Program">{request.Program}</td>
-          </tr>
-        ))
-      ) : (
-        <tr>
-          <td colSpan="3" className={styles.noData}>
-            No student requests found.
-          </td>
-        </tr>
-      )}
-    </tbody>
-  </table>
-</div>
-</div>
+        {/* Table */}
+        <div className={styles.tableContainer} data-aos="fade-up">
+          <table className={styles.requestsTable}>
+            <thead>
+              <tr>
+              <th>Student ID</th>
+                <th>Name</th>
+                <th>Student Type</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredRequests.length > 0 ? (
+                filteredRequests.map((request) => (
+                  <tr key={request.id} onClick={() => handleRowClick(request)}>
+                    <td data-label="Student ID">{request.Name}</td>
+                    <td data-label="Name">{request.Email}</td>
+                    <td data-label="Student Type">{request.AccountType}</td>
+                    <td>
+                      <button
+                        className={styles.approveButton}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          console.log('Request passed to handleApprove:', request);
+                          handleApprove(request); // Pass the entire request object
+                        }}
+                      >
+                        {loading ? 'Loading...' : 'Approve'}
+                      </button>
 
-
-      {/* PopUp */}
-      {popUpVisible && selectedRequest && (
-        <div data-aos="zoom-out" data-aos-duration="500" className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}>
-          <div className={styles.popupContent}>
-            <div className={styles.popupHeader}>
-              <button onClick={closePopup} className={styles.closeButton}>✖</button>
-              <h2>Request Account</h2>
-            </div>
-            <div data-aos="fade-up" className={styles.studentType}>
-              <span>DETAILS</span>
-            </div>
-            {(selectedRequest.AccountType === "Freshman" || selectedRequest.AccountType === "Transferee") && (
-              <div className={styles.popupText}>
-                <p><strong>Account Type:</strong> {selectedRequest.AccountType}</p>
-                <p><strong>Name:</strong> {selectedRequest.Name}</p>
-                <p><strong>Email:</strong> {selectedRequest.Email}</p>
-                <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
-              </div>
-            )}
-
-            {(selectedRequest.AccountType === "Regular" || selectedRequest.AccountType === "Irregular") && (
-              <div className={styles.popupText}>
-                <p><strong>Account Type:</strong> {selectedRequest.AccountType}</p>
-                <p><strong>Student ID:</strong> {selectedRequest.ID}</p>
-                <p><strong>Program:</strong> {selectedRequest.ProgramID === 1 ? 'Bachelor of Science in Computer Science' : 'Bachelor of Science in Information Technology'}</p>
-                <p><strong>Name:</strong> {selectedRequest.Name}</p>
-                <p><strong>Email:</strong> {selectedRequest.Email}</p>
-                <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
-              </div>
-            )}
-
-            {selectedRequest.AccountType === "Shiftee" && (
-              <div className={styles.popupText}>
-                <p><strong>Account Type:</strong> {selectedRequest.AccountType}</p>
-                <p><strong>Student ID:</strong> {selectedRequest.ID}</p>
-                <p><strong>Name:</strong> {selectedRequest.Name}</p>
-                <p><strong>Email:</strong> {selectedRequest.Email}</p>
-                <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
-              </div>
-            )}
-
-            {["President",
-              "Vice President",
-              "Secretary",
-              "Assistant Secretary",
-              "Treasurer",
-              "Assistant Treasurer",
-              "Business Manager",
-              "Auditor",
-              "P.R.O.",
-              "Assistant P.R.O.",
-              "GAD Representative",
-              "1st Year Senator",
-              "2nd Year Senator",
-              "3rd Year Senator",
-              "4th Year Senator",
-              "1st Year Chairperson",
-              "2nd Year Chairperson",
-              "3rd Year Chairperson",
-              "4th Year Chairperson"].includes(selectedRequest.AccountType) && (
-                <div className={styles.popupText}>
-                  <p><strong>Account Type:</strong> Society Officer</p>
-                  <p><strong>Position:</strong> {selectedRequest.AccountType}</p>
-                  <p><strong>Student ID:</strong> {selectedRequest.ID}</p>
-                  <p><strong>Program:</strong> {selectedRequest.ProgramID === 1 ? 'Bachelor of Science in Computer Science' : 'Bachelor of Science in Information Technology'}</p>
-                  <p><strong>Name:</strong> {selectedRequest.Name}</p>
-                  <p><strong>Email:</strong> {selectedRequest.Email}</p>
-                  <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
-                </div>
+                      <button
+                        className={styles.rejectButton}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          console.log('Request passed to handleReject:', request);
+                          handleReject(request); // Pass the entire request object
+                        }}
+                      >
+                        {loading ? 'Loading...' : 'Reject'}
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className={styles.noData}>
+                    No enrollment found.
+                  </td>
+                </tr>
               )}
+            </tbody>
 
-            {["Adviser", "Enrollment Officer", "School Head"].includes(selectedRequest.AccountType) && (
-              <div className={styles.popupText}>
-                <p><strong>Account Type:</strong> {selectedRequest.AccountType}</p>
-                <p><strong>Employee ID:</strong> {selectedRequest.ID}</p>
-                <p><strong>Name:</strong> {selectedRequest.Name}</p>
-                <p><strong>Email:</strong> {selectedRequest.Email}</p>
-                <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
-              </div>
-            )}
 
-            {selectedRequest.AccountType === "DCS Head" && (
-              <div className={styles.popupText}>
-                <p><strong>Account Type:</strong> {selectedRequest.AccountType}</p>
-                <p><strong>Employee ID:</strong> {selectedRequest.ID}</p>
-                <p><strong>Program:</strong> {selectedRequest.ProgramID === 1 ? 'Bachelor of Science in Computer Science' : 'Bachelor of Science in Information Technology'}</p>
-                <p><strong>Name:</strong> {selectedRequest.Name}</p>
-                <p><strong>Email:</strong> {selectedRequest.Email}</p>
-                <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
-              </div>
-            )}
-
-          </div>
+          </table>
         </div>
-      )}
+      </div>
+
+
+
+    {/* PopUp */}
+{popUpVisible && selectedRequest && (
+  <div
+    data-aos="zoom-out"
+    data-aos-duration="500"
+    className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}
+  >
+    <div className={styles.popupContentReq}>
+      {/* Popup Header */}
+      <div className={styles.popupHeader}>
+        <button onClick={closePopup} className={styles.closeButton}>✖</button>
+        <h2>Enrollment</h2>
+      </div>
+
+      {/* Details Section */}
+      <div data-aos="fade-up" className={styles.studentType}>
+        <span>DETAILS</span>
+      </div>
+
+      {/* Submission Details */}
+      <div className={styles.popupTextReq}>
+        <p><strong>Name:</strong> Kai Sotto</p>
+        <p><strong>Student ID:</strong> K4848158</p>
+        <p><strong>Course/Program:</strong> BS Computer Science</p>
+        <p><strong>Student Type:</strong> Regular</p>
+      </div>
+      <div className={styles.popupTextReq}>
+        <p><strong>SOC FEE STATUS:</strong> Paid</p>
+        <p><strong>REQUIREMENT SUBMISSION:</strong> Complete</p>
+        <p><strong>ADVISING:</strong> Approved</p>
+        <p><strong>PRE-ENROLLMENT FORM:</strong> Submitted</p>
+      </div>
+
+      {/* Checklist Table */}
+      <div className={styles.checklistSection}>
+        <h3 className={styles.semesterTitle}>1st Year - First Semester</h3>
+        <table className={styles.checklistTable}>
+          <thead>
+            <tr>
+              <th>COURSE CODE</th>
+              <th>COURSE TITLE</th>
+              <th>UNITS</th>
+              <th>FINAL GRADE</th>
+              <th>INSTRUCTOR</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>CS</td>
+              <td>WALANG MATUTULOG</td>
+              <td>3</td>
+              <td>1.25</td>
+              <td>LEBRON</td>
+            </tr>
+            <tr>
+              <td>CS</td>
+              <td>WALANG MATUTULOG</td>
+              <td>3</td>
+              <td>1.25</td>
+              <td>LEBRON</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 className={styles.semesterTitle}>1st Year - Second Semester</h3>
+        <table className={styles.checklistTable}>
+          <thead>
+            <tr>
+              <th>COURSE CODE</th>
+              <th>COURSE TITLE</th>
+              <th>UNITS</th>
+              <th>FINAL GRADE</th>
+              <th>INSTRUCTOR</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>CS</td>
+              <td>WALANG MATUTULOG</td>
+              <td>3</td>
+              <td>1.25</td>
+              <td>LEBRON</td>
+            </tr>
+            <tr>
+              <td>CS</td>
+              <td>WALANG MATUTULOG</td>
+              <td>3</td>
+              <td>1.25</td>
+              <td>LEBRON</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      {/* Button Section */}
+      <div className={styles.buttonSection}>
+        <button
+          className={styles.setEnrollmentButton}
+          
+        >
+          Set Enrollment Status
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+
+
 
     </>
   );
 }
 
-export default AdminPreEnrollment;
+export default Requirements;
