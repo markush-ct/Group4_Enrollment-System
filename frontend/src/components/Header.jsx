@@ -1,7 +1,7 @@
 import React from 'react'; 
 import { Link } from 'react-router-dom'; // FOR LINKING PAGE
 import SidebarMenu from '/src/components/SidebarMenu';
-import style from "/src/styles/header.module.css";
+import style from '/src/styles/header.module.css';
 
 function Header({SideBar, setSideBar}) {
 

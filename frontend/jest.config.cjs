@@ -2,6 +2,7 @@ module.exports = {
   setupFilesAfterEnv: ["<rootDir>/setupTests.js"],
   
   moduleNameMapper: {
+    '\\.css$': 'jest-transform-css',
     "^/src/(.*)": "<rootDir>/src/$1", 
     "^src/(.*)$": "<rootDir>/frontend/src/$1", 
     "\\.css$": "identity-obj-proxy", 
