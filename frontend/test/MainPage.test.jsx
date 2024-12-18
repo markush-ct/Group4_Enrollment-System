@@ -66,7 +66,7 @@ describe("Unit Testing for the Main Page", () => {
     const parallaxSection1 = screen.queryAllByTestId("parallax-section1");
     expect(parallaxSection1).toHaveLength(1);
     const div = parallaxSection1[0];
-    console.log(div.classList);
+    // console.log(div.classList);
   });
 
   test("Renders the main title and first section", () => {
@@ -136,7 +136,7 @@ describe("Unit Testing for the Main Page", () => {
     const parallaxSection2 = screen.queryAllByTestId("parallax-section2");
     expect(parallaxSection2).toHaveLength(1);
     const div = parallaxSection2[0];
-    console.log(div.classList);
+    // console.log(div.classList);
   });
 
   test('Renders "Contact Us" title', () => {
@@ -282,7 +282,7 @@ describe("Unit Testing for the Main Page", () => {
 
     const footer = parallaxFooters[0];
 
-    console.log(footer.classList);
+    // console.log(footer.classList);
   });
 
   test("Renders Cavite State University logo and text", () => {

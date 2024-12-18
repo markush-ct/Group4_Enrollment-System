@@ -75,7 +75,7 @@ app.post('/LoginPage', (req, res) => {
 });
 
 
-describe('POST /LoginPage', () => {
+describe('Unit Testing for the Login Function', () => {
     beforeEach(() => {
         mysql.createConnection().query.mockReset();
     });

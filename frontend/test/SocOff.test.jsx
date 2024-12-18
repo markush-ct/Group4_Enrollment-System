@@ -147,17 +147,17 @@ describe("Unit Testing for Society Officer Page", () => {
 
     const parentContainer = firstSocietyLogo.closest(`.${styles.DcsContainer}`);
     if (!parentContainer) {
-      console.log("Parent container not found!");
+      // console.log("Parent container not found!");
     } else {
       const children = Array.from(parentContainer.children);
 
-      console.log(children);
+      // console.log(children);
 
       const logoIndex = children.indexOf(firstSocietyLogo);
       const nameIndex = children.indexOf(firstSocietyName);
 
-      console.log("Logo Index:", logoIndex);
-      console.log("Name Index:", nameIndex);
+      // console.log("Logo Index:", logoIndex);
+      // console.log("Name Index:", nameIndex);
 
       expect(nameIndex).toBeGreaterThan(logoIndex);
     }
