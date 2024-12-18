@@ -64,6 +64,10 @@ function FreshmenAdmissionForm() {
     elementaryAddress: '',
     elementaryYearGraduated: '',
     elementarySchoolType: '',
+    highSchool: '',
+    jhsAddress: '',
+    jhsYearGraduated: '',
+    highSchoolType: '',
     seniorHighSchool: '',
     seniorHighAddress: '',
     seniorHighYearGraduated: '',
@@ -124,7 +128,7 @@ function FreshmenAdmissionForm() {
     admissionInfo: ['strand', 'finalAverage', 'firstQuarter', 'secondQuarter', 'idPicture'],
     personalInfo: ['firstName', 'lastName', 'zipCode', 'permanentAddress', 'email', 'lrn', 'contactNumber', 'sex', 'age', 'dateOfBirth', 'religion', 'nationality', 'civilStatus', 'isPWD', 'pwd', 'isIndigenous', 'indigenous'],
     familyBackground: ['fatherName', 'motherName', 'guardianName', 'guardianContact', 'fatherOccupation', 'motherOccupation', 'guardianOccupation', 'guardianRelationship', 'siblings', 'birthOrder', 'familyIncome'],
-    educationalBackground: ['elementarySchool', 'elementaryAddress', 'elementaryYearGraduated', 'elementarySchoolType', 'seniorHighSchool', 'seniorHighAddress', 'seniorHighYearGraduated', 'seniorHighSchoolType'],
+    educationalBackground: ['elementarySchool', 'elementaryAddress', 'elementaryYearGraduated', 'elementarySchoolType', 'highSchool', 'jhsAddress', 'jhsYearGraduated', 'highSchoolType', 'seniorHighSchool', 'seniorHighAddress', 'seniorHighYearGraduated', 'seniorHighSchoolType'],
     medicalHistory: [],
     scheduleAppointment: ['certify'],
   };
@@ -219,6 +223,12 @@ function FreshmenAdmissionForm() {
             elementaryAddress: res.data.elementaryAddress || '',
             elementaryYearGraduated: res.data.elementaryYearGraduated || '',
             elementarySchoolType: res.data.elementarySchoolType || '',
+
+            highSchool: res.data.highSchool || '',
+            jhsAddress: res.data.jhsAddress || '',
+            jhsYearGraduated: res.data.jhsYearGraduated || '',
+            highSchoolType: res.data.highSchoolType || '',
+
             seniorHighSchool: res.data.seniorHighSchool || '',
             seniorHighAddress: res.data.seniorHighAddress || '',
             seniorHighYearGraduated: res.data.seniorHighYearGraduated || '',
@@ -288,6 +298,12 @@ function FreshmenAdmissionForm() {
             elementaryAddress: res.data.elementaryAddress || '',
             elementaryYearGraduated: res.data.elementaryYearGraduated || '',
             elementarySchoolType: res.data.elementarySchoolType || '',
+
+            highSchool: res.data.highSchool || '',
+            jhsAddress: res.data.jhsAddress || '',
+            jhsYearGraduated: res.data.jhsYearGraduated || '',
+            highSchoolType: res.data.highSchoolType || '',
+
             seniorHighSchool: res.data.seniorHighSchool || '',
             seniorHighAddress: res.data.seniorHighAddress || '',
             seniorHighYearGraduated: res.data.seniorHighYearGraduated || '',
@@ -364,6 +380,10 @@ function FreshmenAdmissionForm() {
     data.append("elementaryAddress", formData.elementaryAddress);
     data.append("elementaryYearGraduated", formData.elementaryYearGraduated);
     data.append("elementarySchoolType", formData.elementarySchoolType);
+    data.append("highSchool", formData.highSchool);
+    data.append("jhsAddress", formData.jhsAddress);
+    data.append("jhsYearGraduated", formData.jhsYearGraduated);
+    data.append("highSchoolType", formData.highSchoolType);
     data.append("seniorHighSchool", formData.seniorHighSchool);
     data.append("seniorHighAddress", formData.seniorHighAddress);
     data.append("seniorHighYearGraduated", formData.seniorHighYearGraduated);
@@ -420,7 +440,8 @@ function FreshmenAdmissionForm() {
   };
 
   const handleDownloadForm = () => {
-      navigate(`/download-form/${studentID}`); // Redirect to download page
+      const url = `/download-form/${studentID}`;
+      window.open(url, "_blank");
   };
 
   const [SideBar, setSideBar] = useState(false);
@@ -448,6 +469,12 @@ e.preventDefault();
       })
     }
   }
+
+  const formatDate = (dateString) => {
+    if (!dateString) return ""; // Handle cases where the date might be empty
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return new Date(dateString).toLocaleDateString("en-US", options);
+  };
 
   // Steps
   const renderStepContent = (step) => {
@@ -790,9 +817,13 @@ e.preventDefault();
                   <input
                     id="dateOfBirth"
                     name="dateOfBirth"
-                    value={formData.dateOfBirth}
+                    value={
+                      formData.applicationStatus === "Pending"
+                        ? formData.dateOfBirth // Unformatted for "Pending" status
+                        : formatDate(formData.dateOfBirth) // Formatted otherwise
+                    }
                     onChange={handleInputChange}
-                    type="date"
+                    type={formData.applicationStatus === "Pending" ? "date" : "text"}
                     disabled={formData.applicationStatus !== "Pending"}
                     required
                   />
@@ -1189,6 +1220,68 @@ e.preventDefault();
                     id="elementarySchoolType"
                     name="elementarySchoolType"
                     value={formData.elementarySchoolType}
+                    onChange={handleInputChange}
+                    disabled={formData.applicationStatus !== "Pending"}
+                    required
+                  >
+                    <option value="" disabled>
+                      Select Type
+                    </option>
+                    <option value="Public">Public</option>
+                    <option value="Private">Private</option>
+                  </select>
+                </div>
+              </div>
+
+              <br />
+
+              <div className={styles.formGroup}>
+                <label htmlFor="highSchool">Name of High School:</label>
+                <input
+                  id="highSchool"
+                  name="highSchool"
+                  value={formData.highSchool}
+                  onChange={handleInputChange}
+                  type="text"
+                  disabled={formData.applicationStatus !== "Pending"}
+                  required
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="jhsAddress">Address:</label>
+                <input
+                  id="jhsAddress"
+                  name="jhsAddress"
+                  value={formData.jhsAddress}
+                  onChange={handleInputChange}
+                  placeholder='Street, Village or Subdivision, Barangay, City or Municipality'
+                  type="text"
+                  disabled={formData.applicationStatus !== "Pending"}
+                  required
+                />
+              </div>
+
+              <div className={styles.formGrid}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="jhsYearGraduated">Year Graduated:</label>
+                  <input
+                    id="jhsYearGraduated"
+                    name="jhsYearGraduated"
+                    value={formData.jhsYearGraduated}
+                    onChange={handleInputChange}
+                    type="tel"
+                    placeholder='YYYY'
+                    disabled={formData.applicationStatus !== "Pending"}
+                    required
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="highSchoolType">School Type:</label>
+                  <select
+                    id="highSchoolType"
+                    name="highSchoolType"
+                    value={formData.highSchoolType}
                     onChange={handleInputChange}
                     disabled={formData.applicationStatus !== "Pending"}
                     required

@@ -6,11 +6,9 @@ import styles from '/src/styles/DownloadForm.module.css';
 
 const DownloadAdmissionForm = () => {
   const { id } = useParams(); // Fetch ID from URL
-  const [formData, setFormData] = useState({
-    StudentID: "",
-    Branch: "",
-    ApplyingFor: ""
-  });
+  const [formData, setFormData] = useState({});
+  const [studentData, setStudentData] = useState({});
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const printRef = useRef();
@@ -20,6 +18,10 @@ const DownloadAdmissionForm = () => {
       try {
         const response = await axios.get(`http://localhost:8080/get-form/${id}`);
         setFormData(response.data);
+        setLoading(false);
+
+        const response1 = await axios.get(`http://localhost:8080/get-student/${id}`);
+        setStudentData(response1.data);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching form data:", error);
@@ -34,12 +36,6 @@ const DownloadAdmissionForm = () => {
     contentRef: printRef, // Use contentRef instead of content
     documentTitle: "form-details",
   });
-  
-  
-  const handleClick = () => {
-    console.log("Button clicked!");
-    handlePrint();
-  };
   
   return (
     <div className={styles.contentSection} ref={printRef}>
@@ -64,7 +60,8 @@ const DownloadAdmissionForm = () => {
 
 
         <div className={styles.pictureContainer}>
-          <div className={styles.idPictureBox}>1x1 ID Picture</div>
+          
+          <img className={styles.idPictureBox} src={`http://localhost:8080/${formData.IDPicture}`} alt="" />
         </div>
       </div>
 
@@ -72,35 +69,35 @@ const DownloadAdmissionForm = () => {
       <div className={styles.infoGrid}>
         <div>
           <p>Generated: <span>Date and Time</span></p>
-          <p>Admission Information - <span>132564 1st semester 2022-2023</span></p>
-          <p>Campus - <span>CvSU - Bacoor</span></p>
+          <p>Admission Information - <span>{formData.ExamControlNo} 1st semester 2022-2023</span></p>
+          <p>Campus - <span>{formData.Branch}</span></p>
         </div>
         </div>
       <div className={styles.infoGrid}>
         <div>
         <p>Entry: <span>New</span></p>
-        <p>Strand: <span>STEM</span></p>
-        <p>LRN: <span>123546</span></p>
-        <p>Preffered Course: <span>BSCS</span></p>
+        <p>Strand: <span>{formData.SHSStrand}</span></p>
+        <p>LRN: <span>{formData.LRN}</span></p>
+        <p>Preffered Course: <span>{studentData.ProgramID === 1 ? "BSCS" : studentData.ProgramID === 2 ? "BSIT" : "Unknown"}</span></p>
         </div>
         <div>
         <p>Type: <span>K12 SHS Graduate</span></p>
 
         </div>
         <div>
-          <p>Applicant Type: <span>Filipino</span></p>
+          <p>Applicant Type: <span>{formData.Nationality}</span></p>
         </div>
         <div>
-        <p>1st Quarter: <span>100</span></p>
-        <p>2nd Quarter: <span>100</span></p>
+        <p>1st Quarter: <span>{formData.FirstQuarterAve}</span></p>
+        <p>2nd Quarter: <span>{formData.SecondQuarterAve}</span></p>
 
         </div>
         <div>
-        <p>3rd Quarter: <span>100</span></p>
-        <p>4th Quarter: <span>100</span></p>
+        <p>3rd Quarter: <span>{formData.ThirdQuarterAve}</span></p>
+        <p>4th Quarter: <span>{formData.FourthQuarterAve === 0 ? '' : formData.FourthQuarterAve}</span></p>
 
         </div><div>
-        <p>Final Average: <span>100</span></p>
+        <p>Final Average: <span>{formData.FinalAverage}</span></p>
 
         </div>
       </div>
@@ -109,19 +106,19 @@ const DownloadAdmissionForm = () => {
       <div className={styles.sectionTitle}>Personal Information</div>
       <div className={styles.infoGrid}>
         <div>
-          <p>Name: <span>Kai Sotto</span></p>
-          <p>Address: <span>Las Piñas City</span></p>
-          <p>Email: <span>kaisotto@gmail.com</span></p>
-          <p>Birthdate: <span>March 21, 2003</span></p>
-          <p>PWD: <span>No</span></p>
+          <p>Name: <span>{`${studentData.Lastname?.toUpperCase()}, ${studentData.Firstname?.toUpperCase()} ${studentData.Middlename?.toUpperCase()}`}</span></p>
+          <p>Address: <span>{studentData.Address}</span></p>
+          <p>Email: <span>{studentData.Email}</span></p>
+          <p>Birthdate: <span>{new Date(studentData.DOB).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })}</span></p>
+          <p>PWD: <span>{formData.PWD}</span></p>
         </div>
        
         <div>
-          <p>Sex: <span>G po</span></p>
-          <p>Mobile: <span>0000000215</span></p>
-          <p>Civil Status: <span>Taken</span></p>
-          <p>Nationality: <span>Filipino</span></p>
-          <p>Indigenous: <span>No</span></p>
+          <p>Sex: <span>{studentData.Gender === 'F' ? "Female" : studentData.Gender === 'M' ? "Male" : ""}</span></p>
+          <p>Mobile: <span>{studentData.PhoneNo}</span></p>
+          <p>Civil Status: <span>{formData.CivilStatus}</span></p>
+          <p>Nationality: <span>{formData.Nationality}</span></p>
+          <p>Indigenous: <span>{formData.Indigenous}</span></p>
         </div>
         
       </div>
@@ -130,20 +127,20 @@ const DownloadAdmissionForm = () => {
     <div className={styles.sectionTitle}>Family Background</div>
       <div className={styles.infoGrid}>
         <div>
-          <p>Father: <span>LeBron Jamees</span></p>
-          <p>Mother: <span>Savannah James</span></p>
-          <p>Guardian: <span>Angel</span></p>
+          <p>Father: <span>{formData.FatherName}</span></p>
+          <p>Mother: <span>{formData.MotherName}</span></p>
+          <p>Guardian: <span>{formData.MotherName}</span></p>
         </div>
        
         <div>
-          <p>Contact: <span>12115</span></p>
-          <p>Contact: <span>12115</span></p>
-          <p>Contact: <span>12115</span></p>
+          <p>Contact: <span>{formData.FatherContactNo}</span></p>
+          <p>Contact: <span>{formData.MotherContactNo}</span></p>
+          <p>Contact: <span>{formData.GuardianContactNo}</span></p>
         </div>
         <div>
-          <p>Occupation: <span>NBA player</span></p>
-          <p>Occupation: <span>Model</span></p>
-          <p>Occupation: <span>Guardian</span></p>
+          <p>Occupation: <span>{formData.FatherOccupation}</span></p>
+          <p>Occupation: <span>{formData.MotherOccupation}</span></p>
+          <p>Occupation: <span>{formData.GuardianOccupation}</span></p>
         </div>
 
         
@@ -154,28 +151,28 @@ const DownloadAdmissionForm = () => {
       <div className={styles.infoGrid}>
         <div>
           <p>Elementary</p>
-          <p><span>GAES</span></p>
+          <p><span>{formData.ElemSchoolName}</span></p>
           <p>High School</p>
-          <p><span>GANHS</span></p>
+          <p><span>{formData.HighSchoolName}</span></p>
           <p>Senior High School</p>
-          <p><span>AMACC</span></p>
+          <p><span>{formData.SHSchoolName}</span></p>
         </div>
        
         <div>
         <p>Address</p>
-          <p><span>Las Piñas</span></p>
+          <p><span>{formData.ElemSchoolAddress}</span></p>
           <p>Address</p>
-          <p><span>Las Piñas</span></p>
+          <p><span>{formData.HighSchoolAddress}</span></p>
           <p>Address</p>
-          <p><span>Las Piñas</span></p>
+          <p><span>{formData.SHSchoolAddress}</span></p>
         </div>
         <div>
         <p>Type</p>
-          <p><span>Public</span></p>
+          <p><span>{formData.ElemSchoolType}</span></p>
           <p>Type</p>
-          <p><span>Public</span></p>
+          <p><span>{formData.HighSchoolType}</span></p>
           <p>Type</p>
-          <p><span>Private</span></p>
+          <p><span>{formData.SHSchoolType}</span></p>
         </div>
 
         
@@ -184,15 +181,12 @@ const DownloadAdmissionForm = () => {
       <div className={styles.sectionTitle}>Medical History Information</div>
       <div className={styles.infoGrid}>
         <div>
-          <p>Medications: <span>None</span></p>
-          <p>Medical Condtion/s: <span>None</span></p><br></br>
+          <p>Medications: <span>{formData.Medication}</span></p>
+          <p>Medical Condtion/s: <span>{formData.MedicalHistory}</span></p><br></br>
           <p>I hereby.........: <span></span></p>
         </div>
        
-       
-
-
-
+      
         
         
   

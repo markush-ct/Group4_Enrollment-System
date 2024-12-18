@@ -417,6 +417,12 @@ app.get('/getFormData', (req, res) => {
                         elementaryAddress: form.ElemSchoolAddress,
                         elementaryYearGraduated: form.ElemYearGraduated,
                         elementarySchoolType: form.ElemSchoolType,
+
+                        highSchool: form.HighSchoolName,
+                        jhsAddress: form.HighSchoolAddress,
+                        jhsYearGraduated: form.HighSchoolYearGraduated,
+                        highSchoolType: form.HighSchoolType,
+
                         seniorHighSchool: form.SHSchoolName,
                         seniorHighAddress: form.SHSchoolAddress,
                         seniorHighYearGraduated: form.SHYearGraduated,
@@ -469,6 +475,18 @@ app.post('/submitAdmissionForm', (req,res) => {
         }
     })
 })
+
+app.get("/get-student/:id", (req, res) => {
+    const { id } = req.params;
+    const sql = "SELECT * FROM student WHERE StudentID = ?";
+    db.query(sql, [id], (err, result) => {
+      if (err) {
+        console.error("Error fetching data:", err);
+        return res.json({message: "Error fetching data:" + err});
+      }
+      res.send(result[0]);
+    });
+  });
 
 // API to fetch admission form data by student ID
 app.get("/get-form/:id", (req, res) => {
@@ -531,6 +549,10 @@ app.post('/admissionFormTable', upload.single("idPicture"), (req, res) => {
             ElemSchoolAddress = ?,
             ElemYearGraduated = ?,
             ElemSchoolType = ?,
+            HighSchoolName = ?,
+            HighSchoolAddress = ?,
+            HighSchoolYearGraduated = ?,
+            HighSchoolType = ?,
             SHSchoolName = ?,
             SHSchoolAddress = ?,
             SHYearGraduated = ?,
@@ -577,6 +599,10 @@ app.post('/admissionFormTable', upload.single("idPicture"), (req, res) => {
                 req.body.elementaryAddress,
                 req.body.elementaryYearGraduated,
                 req.body.elementarySchoolType,
+                req.body.highSchool,
+                req.body.jhsAddress,
+                req.body.jhsYearGraduated,
+                req.body.highSchoolType,
                 req.body.seniorHighSchool,
                 req.body.seniorHighAddress,
                 req.body.seniorHighYearGraduated,
