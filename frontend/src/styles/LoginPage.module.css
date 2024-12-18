@@ -165,13 +165,14 @@ form{
 .rememberMe {
     display: flex;
     align-items: center;
-    color: #3685cd;
+    color: #3d8c4b;
     background-color: transparent;
 }
 
 .rememberMe input[type="checkbox"] {
     margin-right: 8px;
-    color: #3685cd;
+    color: #3d8c4b;
+    width: auto;
 }
 
 

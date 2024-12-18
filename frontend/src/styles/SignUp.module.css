@@ -99,8 +99,9 @@
 
 .radioGroup input[type="radio"] {
     margin-right: 10px;
+    width: auto;
     transform: scale(1.2); 
-    accent-color: blue; 
+    accent-color: #3d8c4b; ; 
 }
 
 .formGroup {

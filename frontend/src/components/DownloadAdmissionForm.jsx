@@ -67,45 +67,54 @@ const DownloadAdmissionForm = () => {
 
 
       <div className={styles.infoGrid}>
-        <div>
+      <div className={styles.contentt}>
           <p>Generated: <span>Date and Time</span></p>
           <p>Admission Information - <span>{formData.ExamControlNo} 1st semester 2022-2023</span></p>
           <p>Campus - <span>{formData.Branch}</span></p>
         </div>
         </div>
       <div className={styles.infoGrid}>
-        <div>
+      <div className={styles.contentt}>
         <p>Entry: <span>New</span></p>
         <p>Strand: <span>{formData.SHSStrand}</span></p>
         <p>LRN: <span>{formData.LRN}</span></p>
         <p>Preffered Course: <span>{studentData.ProgramID === 1 ? "BSCS" : studentData.ProgramID === 2 ? "BSIT" : "Unknown"}</span></p>
         </div>
-        <div>
+        <div className={styles.contentt}>
         <p>Type: <span>K12 SHS Graduate</span></p>
 
         </div>
-        <div>
+        <div className={styles.contentt}>
           <p>Applicant Type: <span>{formData.Nationality}</span></p>
         </div>
-        <div>
-        <p>1st Quarter: <span>{formData.FirstQuarterAve}</span></p>
-        <p>2nd Quarter: <span>{formData.SecondQuarterAve}</span></p>
-
-        </div>
-        <div>
-        <p>3rd Quarter: <span>{formData.ThirdQuarterAve}</span></p>
-        <p>4th Quarter: <span>{formData.FourthQuarterAve === 0 ? '' : formData.FourthQuarterAve}</span></p>
-
-        </div><div>
+        <div className={styles.contentt}>
         <p>Final Average: <span>{formData.FinalAverage}</span></p>
 
         </div>
-      </div>
+        </div>
+
+        <div className={styles.infoGrid3}>
+        <div className={styles.contentt}>
+        <p>1st Quarter: <span>{formData.FirstQuarterAve}</span></p>
+        </div>
+        <div className={styles.contentt}>
+        <p>2nd Quarter: <span>{formData.SecondQuarterAve}</span></p>
+        </div>
+        <div className={styles.contentt}>
+        <p>3rd Quarter: <span>{formData.ThirdQuarterAve}</span></p>
+        </div>
+        <div className={styles.contentt}>
+        <p>4th Quarter: <span>{formData.FourthQuarterAve === 0 ? '' : formData.FourthQuarterAve}</span></p>
+        </div>
+
+        </div>
+        
+
 
 
       <div className={styles.sectionTitle}>Personal Information</div>
-      <div className={styles.infoGrid}>
-        <div>
+      <div className={styles.infoGrid2}>
+      <div className={styles.contentt}>
           <p>Name: <span>{`${studentData.Lastname?.toUpperCase()}, ${studentData.Firstname?.toUpperCase()} ${studentData.Middlename?.toUpperCase()}`}</span></p>
           <p>Address: <span>{studentData.Address}</span></p>
           <p>Email: <span>{studentData.Email}</span></p>
@@ -113,7 +122,7 @@ const DownloadAdmissionForm = () => {
           <p>PWD: <span>{formData.PWD}</span></p>
         </div>
        
-        <div>
+        <div className={styles.contentt}>
           <p>Sex: <span>{studentData.Gender === 'F' ? "Female" : studentData.Gender === 'M' ? "Male" : ""}</span></p>
           <p>Mobile: <span>{studentData.PhoneNo}</span></p>
           <p>Civil Status: <span>{formData.CivilStatus}</span></p>
@@ -126,18 +135,18 @@ const DownloadAdmissionForm = () => {
 
     <div className={styles.sectionTitle}>Family Background</div>
       <div className={styles.infoGrid}>
-        <div>
+      <div className={styles.contentt}>
           <p>Father: <span>{formData.FatherName}</span></p>
           <p>Mother: <span>{formData.MotherName}</span></p>
           <p>Guardian: <span>{formData.MotherName}</span></p>
         </div>
        
-        <div>
+        <div className={styles.contentt}>
           <p>Contact: <span>{formData.FatherContactNo}</span></p>
           <p>Contact: <span>{formData.MotherContactNo}</span></p>
           <p>Contact: <span>{formData.GuardianContactNo}</span></p>
         </div>
-        <div>
+        <div className={styles.contentt}>
           <p>Occupation: <span>{formData.FatherOccupation}</span></p>
           <p>Occupation: <span>{formData.MotherOccupation}</span></p>
           <p>Occupation: <span>{formData.GuardianOccupation}</span></p>
@@ -148,8 +157,8 @@ const DownloadAdmissionForm = () => {
       </div>
 
     <div className={styles.sectionTitle}>Educational Background</div>
-      <div className={styles.infoGrid}>
-        <div>
+      <div className={styles.infoGrid3}>
+      <div className={styles.contentt}>
           <p>Elementary</p>
           <p><span>{formData.ElemSchoolName}</span></p>
           <p>High School</p>
@@ -158,7 +167,7 @@ const DownloadAdmissionForm = () => {
           <p><span>{formData.SHSchoolName}</span></p>
         </div>
        
-        <div>
+        <div className={styles.contentt}>
         <p>Address</p>
           <p><span>{formData.ElemSchoolAddress}</span></p>
           <p>Address</p>
@@ -166,7 +175,15 @@ const DownloadAdmissionForm = () => {
           <p>Address</p>
           <p><span>{formData.SHSchoolAddress}</span></p>
         </div>
-        <div>
+        <div className={styles.contentt}>
+        <p>Year</p>
+          <p><span>{formData.ElemYearGraduated}</span></p>
+          <p>Year</p>
+          <p><span>{formData.HighSchoolYearGraduated}</span></p>
+          <p>Year</p>
+          <p><span>{formData.SHYearGraduated}</span></p>
+        </div>
+        <div className={styles.contentt}>
         <p>Type</p>
           <p><span>{formData.ElemSchoolType}</span></p>
           <p>Type</p>
@@ -175,12 +192,13 @@ const DownloadAdmissionForm = () => {
           <p><span>{formData.SHSchoolType}</span></p>
         </div>
 
-        
-        
+      
       </div>
+
+
       <div className={styles.sectionTitle}>Medical History Information</div>
       <div className={styles.infoGrid}>
-        <div>
+      <div className={styles.contentt}>
           <p>Medications: <span>{formData.Medication}</span></p>
           <p>Medical Condtion/s: <span>{formData.MedicalHistory}</span></p><br></br>
           <p>I hereby.........: <span></span></p>
