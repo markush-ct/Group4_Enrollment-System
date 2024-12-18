@@ -5,6 +5,7 @@
     flex-direction: column;
     align-items: center;
     padding: 30px;
+    margin-bottom: 100px;
     background-color: #f9f9f9;
   }
   
@@ -12,10 +13,7 @@
   .container {
     width: 100%;
     max-width: 800px;
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    background-color: white;
     padding: 30px;
   }
   
@@ -28,10 +26,15 @@
     background-color: transparent;
   }
   
+
+  .logoContainer{
+    background-color: white;
+  }
   .logoContainer img {
     width: 80px;
     height: auto;
-    background-color: transparent;
+    margin-left: 50px;
+    background-color: white;
   }
   
   .header {
@@ -43,6 +46,7 @@
   .header p {
     font-size: 14px;
     margin-bottom: 5px;
+    font-weight: bold;
     color: #555;
     background-color: transparent;
   }
@@ -50,19 +54,21 @@
   .header h1 {
     font-size: 24px;
     margin-bottom: 5px;
+    font-weight: bold;
     color: #222;
     text-transform: uppercase;
     background-color: transparent;
   }
   
   .header h2 {
-    font-size: 18px;
+    font-size: 16px;
     color: #444;
     background-color: transparent;
   }
   
-  div{
+  .contentt{
     background-color: transparent;
+    margin-top: 0;
   }
 
   .pictureContainer {
@@ -87,12 +93,12 @@
   
 
   .sectionTitle {
-    margin: 15px 0 10px;
-    font-size: 18px;
+    margin: 0;
+    font-size: 12px;
     font-weight: bold;
     color: #333;
     border-top: 2px solid #ddd;
-    padding-bottom: 5px;
+    padding-bottom: 2px;
     background-color: transparent;
   }
   
@@ -100,14 +106,14 @@
   .infoGrid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: 2px;
     background-color: transparent;
   }
+
   
   .infoGrid div p {
     margin: 5px 0;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
     color: #444;
     background-color: transparent;
@@ -118,15 +124,68 @@
     font-weight: 500;
     background-color: transparent;
   }
+
+  
+  
+  
+  
+
+  .infoGrid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-bottom: 20px;
+    background-color: transparent;
+  }
+
+  
+  .infoGrid2 div p {
+    margin: 5px 0;
+    font-size: 12px;
+    font-weight: bold;
+    color: #444;
+    background-color: transparent;
+  }
+  
+  .infoGrid2 div span {
+    color: #222;
+    font-weight: 500;
+    background-color: transparent;
+  }
+
+  .infoGrid3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 2px;
+    background-color: transparent;
+  }
+
+  
+  .infoGrid3 div p {
+    margin: 5px 0;
+    font-size: 12px;
+    font-weight: bold;
+    color: #444;
+    background-color: transparent;
+  }
+  
+  .infoGrid3 div span {
+    color: #222;
+    font-weight: 500;
+    background-color: transparent;
+  }
+
+  
   
 
   .printButton {
-    padding: 12px 24px; 
+  padding: 12px 24px; 
   font-size: 1rem;
-  width: 70%;
+  width: 30%;
   background-color: #3d8c4b;
   color: white;
   border: none;
+  margin-top: 100px;
   border-radius: 40px;
   cursor: pointer;
   position: relative;
@@ -165,6 +224,175 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
 }
   
+@media print {
+  .container {
+    width: 100%;
+    max-width: 800px;
+    background-color: white;
+    padding: 30px;
+  }
+  
 
+  .headerContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    background-color: transparent;
+  }
+  
+  .logoContainer{
+    background-color: white;
+  }
+  .logoContainer img {
+    width: 80px;
+    height: auto;
+    margin-left: 50px;
+    background-color: white;
+  }
+  
+  .header {
+    text-align: center;
+    flex-grow: 1;
+    background-color: transparent;
+  }
+  
+  .header p {
+    font-size: 14px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+    background-color: transparent;
+  }
+  
+  .header h1 {
+    font-size: 24px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #222;
+    text-transform: uppercase;
+    background-color: transparent;
+  }
+  
+  .header h2 {
+    font-size: 16px;
+    color: #444;
+    background-color: transparent;
+  }
+  
+  
+  .contentt{
+    background-color: transparent;
+    margin-top: 0;
+  }
+
+  .pictureContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 100px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #777;
+    text-align: center;
+    line-height: 1.2;
+    background-color: transparent;
+  }
+
+  .idPictureBox{
+    width: 100%;
+    height: 100%;
+  }
+  
+
+  .sectionTitle {
+    margin: 0;
+    font-size: 12px;
+    font-weight: bold;
+    color: #333;
+    border-top: 2px solid #ddd;
+    padding-bottom: 2px;
+    background-color: transparent;
+  }
+  
+
+  .infoGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 5px;
+    background-color: transparent;
+  }
+
+  
+  .infoGrid div p {
+    margin: 5px 0;
+    font-size: 12px;
+    font-weight: bold;
+    color: #444;
+    background-color: transparent;
+  }
+  
+  .infoGrid div span {
+    color: #222;
+    font-weight: 500;
+    background-color: transparent;
+  }
+
+  .infoGrid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    margin-bottom: 20px;
+    background-color: transparent;
+  }
+
+  
+  .infoGrid2 div p {
+    margin: 5px 0;
+    font-size: 12px;
+    font-weight: bold;
+    color: #444;
+    background-color: transparent;
+  }
+  
+  .infoGrid2 div span {
+    color: #222;
+    font-weight: 500;
+    background-color: transparent;
+  }
+
+  .infoGrid3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 5px;
+    background-color: transparent;
+  }
+
+  
+  .infoGrid3 div p {
+    margin: 5px 0;
+    font-size: 12px;
+    font-weight: bold;
+    color: #444;
+    background-color: transparent;
+  }
+  
+  .infoGrid3 div span {
+    color: #222;
+    font-weight: 500;
+    background-color: transparent;
+  }
+
+  
+
+  .contentSection {
+    
+  }
+  .printButton {
+    display: none;
+  }
+}
   
   
