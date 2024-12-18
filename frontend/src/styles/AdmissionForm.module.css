@@ -92,12 +92,13 @@
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    width: 100%;
     outline: none;
     transition: border-color 0.2s ease;
   }
   
   .formGroup input:focus,
-  .formGroup select:focus {
+  .formGroup select:focus { 
     border-color: #3d8c4b;
   }
   
@@ -113,11 +114,7 @@
     background-color: transparent;
   }
   
-  .formGroup {
-    display: flex;
-    flex-direction: column;
-  }
-
+  
 
 
 
@@ -268,6 +265,7 @@
 .checkbox {
   margin-right: 8px; 
   width: 16px;
+  max-width: 20px;
   height: 16px;
   accent-color: #3d8c4b; 
   cursor: pointer;
