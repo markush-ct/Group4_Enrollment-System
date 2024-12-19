@@ -16,12 +16,14 @@ function ShifteeForm() {
   const [errorPrompt, setErrorPrompt] = useState(false); //errors
   const [errorMsg, setErrorMsg] = useState("");
 
+  const [studentID, setStudentID] = useState(""); //Will store student ID to use as a reference for download page of admission form
   const [formValues, setFormValues] = useState({
     shiftingStatus: '',
     prevProgram: '',
     prevProgramAdviser: '',
     studentID: '',
     currentAcadYear: '',
+    semester: '',
     reasons: '',
     dateSubmitted: '',
     submissionDate: '',
@@ -43,10 +45,13 @@ function ShifteeForm() {
             prevProgramAdviser: res.data.prevProgramAdviser || '',
             studentID: res.data.studentID || '',
             currentAcadYear: res.data.currentAcadYear || '',
+            semester: res.data.semester || '',
             reasons: res.data.reasons || '',
             dateSubmitted: res.data.dateSubmitted,
             submissionDate: res.data.submissionDate,
           });
+
+          setStudentID(res.data.studentID);
         } else {
           setErrorMsg(res.data.message);
           setErrorPrompt(true);
@@ -58,23 +63,33 @@ function ShifteeForm() {
       })
   }, []);
 
-const autoSave = () => {
-  axios.post("http://localhost:8080/saveShiftingInfo", formValues)
-  .then((res) => {
-    if(res.data.message === "Record updated successfully"){
-      console.log(res.data);      
-      setErrorMsg("");
-      setErrorPrompt(false);
-    } else{
-      setErrorMsg(res.data.message);
+  const autoSave = async () => {
+    try {
+      const res1 = await axios.post("http://localhost:8080/saveShiftingInfo", formValues)
+      if (res1.data.message === "Record updated successfully") {
+        console.log(res1.data);
+        setErrorMsg("");
+        setErrorPrompt(false);
+      } else {
+        setErrorMsg(res1.data.message);
+        setErrorPrompt(true);
+        return;
+      }
+
+      const res2 = await axios.post("http://localhost:8080/saveShifteeInfo", formValues)
+      if (res2.data.message === "Record updated successfully") {
+        console.log(res2.data);
+        setErrorMsg("");
+        setErrorPrompt(false);
+      } else {
+        setErrorMsg(res2.data.message);
+        setErrorPrompt(true);
+      }
+    } catch (err) {
+      setErrorMsg("Error: " + err.message);
       setErrorPrompt(true);
     }
-  })
-  .catch((err) => {
-      setErrorMsg("Error: " + err);
-      setErrorPrompt(true);
-  })
-}
+  }
 
   //AUTOSAVE INPUT IN TEXTFIELDS AFTER 1 SECOND OF CHANGES
   useEffect(() => {
@@ -136,38 +151,50 @@ const autoSave = () => {
 
   const handleSubmitForm = (e) => {
     e.preventDefault();
-    if (!formValues.shiftingStatus || !formValues.prevProgram || !formValues.prevProgramAdviser || !formValues.studentID || !formValues.currentAcadYear || !formValues.reasons) {
+    if (!formValues.shiftingStatus || !formValues.prevProgram || !formValues.prevProgramAdviser || !formValues.studentID || !formValues.currentAcadYear || !formValues.semester || !formValues.reasons) {
       setErrorMsg("Fill all fields");
       setErrorPrompt(true);
       return;
-  }
+    }
 
-  // Update the dateSubmitted here
-  const currentDate = new Date().toISOString();  // or use .toLocaleDateString() based on your preference
+    // Update the dateSubmitted here
+    const currentDate = new Date().toISOString();  // or use .toLocaleDateString() based on your preference
 
     axios.post("http://localhost:8080/submitShiftingForm", { ...formValues, dateSubmitted: currentDate })
-    .then((res) => {
-      if(res.data.message === "Form submitted successfully"){
-        setErrorMsg("");
-        setErrorPrompt(false);
-        setSuccessPrompt(true);
-        console.log(res.data);
+      .then((res) => {
+        if (res.data.message === "Form submitted successfully") {
+          setStudentID(res.data.studentID);
+          setErrorMsg("");
+          setErrorPrompt(false);
+          setSuccessPrompt(true);
+          setActiveStep(2);
+          console.log(res.data);
 
-        // Update the formValues state immediately with the new date
-        setFormValues((prevValues) => ({
-          ...prevValues,
-          dateSubmitted: currentDate, // Set the new date here
-        }));
-      } else{
-        setErrorMsg(res.data.message);
+          // Update the formValues state immediately with the new date
+          setFormValues((prevValues) => ({
+            ...prevValues,
+            dateSubmitted: currentDate, // Set the new date here
+          }));
+
+          // Delay the reload
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+        } else {
+          setErrorMsg(res.data.message);
+          setErrorPrompt(true);
+        }
+      })
+      .catch((err) => {
+        setErrorMsg("Error: " + err);
         setErrorPrompt(true);
-      }
-    })
-    .catch((err) => {
-      setErrorMsg("Error: " + err);
-      setErrorPrompt(true);
-    })
+      })
   }
+
+  const handleDownloadForm = () => {
+    const url = `/download-shiftingform/${studentID}`;
+    window.open(url, "_blank");
+  };
 
   const renderContent = () => {
     switch (steps[activeStep]) {
@@ -197,6 +224,7 @@ const autoSave = () => {
                   value={formValues.prevProgramAdviser}
                   onChange={handleInputChange}
                   type="text"
+                  disabled={formValues.shiftingStatus !== "Pending"}
                   required
                 />
               </div>
@@ -211,17 +239,41 @@ const autoSave = () => {
                   disabled
                 />
               </div>
-              <div className={styles.formGroup}>
-                <label htmlFor="currentAcadYear">Current Academic Year:</label>
-                <input
-                  id="currentAcadYear"
-                  name="currentAcadYear"
-                  value={formValues.currentAcadYear}
-                  onChange={handleInputChange}
-                  type="text"
-                  required
-                />
+
+              <div className={styles.formGrid}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="semester">Current Semester:</label>
+                  <select
+                    name="semester"
+                    id="semester"
+                    value={formValues.semester}
+                    onChange={handleInputChange}
+                    disabled={formValues.shiftingStatus !== "Pending"}
+                    required>
+                    <option value="" disabled>
+                      Select Semester
+                    </option>
+                    <option value="First Semester">1st Semester</option>
+                    <option value="Second Semester">2nd Semester</option>
+                  </select>
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="currentAcadYear">Current Academic Year:</label>
+                  <input
+                    id="currentAcadYear"
+                    name="currentAcadYear"
+                    value={formValues.currentAcadYear}
+                    onChange={handleInputChange}
+                    type="text"
+                    disabled={formValues.shiftingStatus !== "Pending"}
+                    required
+                  />
+                </div>
               </div>
+
+
+
               <div className={styles.formGroup}>
                 <label htmlFor="reasons">Reasons:</label>
                 <textarea
@@ -229,6 +281,8 @@ const autoSave = () => {
                   name="reasons"
                   value={formValues.reasons}
                   onChange={handleInputChange}
+                  placeholder="e.g.&#10;1.&#10;2.&#10;3."
+                  disabled={formValues.shiftingStatus !== "Pending"}
                   required
                 ></textarea>
               </div>
@@ -241,32 +295,32 @@ const autoSave = () => {
 
       case "Shifting Status": {
         const formattedDate = formValues.dateSubmitted === "0000-00-00" || !formValues.dateSubmitted
-        ? "Not yet submitted"
-        : new Date(formValues.dateSubmitted).toLocaleDateString('en-US', {
+          ? "Not yet submitted"
+          : new Date(formValues.dateSubmitted).toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric',
           });
 
-          const formattedDate1 = formValues.submissionDate === "0000-00-00" || !formValues.submissionDate
+        const formattedDate1 = formValues.submissionDate === "0000-00-00" || !formValues.submissionDate
           ? "No schedule available"
           : new Date(formValues.submissionDate).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-            });
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          });
 
         return (
           <div className={styles.Contentt}>
             <img
               src={
-                formValues.shiftingStatus === "Approved" ? 
-                "src/assets/chjeck-icon.png"
-                  : formValues.shiftingStatus === "Submitted" ? 
-                  "src/assets/pending-icon.png"
+                formValues.shiftingStatus === "Approved" ?
+                  "src/assets/check-icon.png"
+                  : formValues.shiftingStatus === "Submitted" ?
+                    "src/assets/pending-icon.png"
                     : formValues.shiftingStatus === "Rejected" ?
-                    "src/assets/rejected-icon.png"
-                    : "src/assets/paid-icon.png"
+                      "src/assets/rejected-icon.png"
+                      : "src/assets/pending-icon.png"
               }
               alt="Fee Status Icon"
               className={styles.uploadIcon}
@@ -300,14 +354,15 @@ const autoSave = () => {
                 />
               </div>
               <div className={styles.formGroup}>
-                              <button
-                                type="button"
-                                className={styles.submitButton}
-                                
-                              ><span>
-                                  Download Shiftee Form</span>
-                              </button>
-                            </div>
+                <button
+                  type="button"
+                  className={styles.submitButton}
+                  onClick={handleDownloadForm}
+                  disabled={formValues.shiftingStatus !== "Approved"}
+                ><span>
+                    Download Shiftee Form</span>
+                </button>
+              </div>
             </form>
           </div>
         );

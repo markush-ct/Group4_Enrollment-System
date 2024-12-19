@@ -65,6 +65,17 @@ const upload = multer({ storage });
 
 app.use("/uploads", express.static("uploads"));
 
+app.get('/getTotalShiftingReq', (req, res) => {
+    const sql = `SELECT COUNT(*) AS shiftingReqCount from shiftingform WHERE ShiftingStatus = 'Submitted'`;
+    db.query(sql, (err, result) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else {
+            return res.json({ shiftingReqCount: result[0].shiftingReqCount });
+        }
+    })
+})
+
 app.post('/rejectShiftingReq', (req, res) => {
     const getEmpID = `SELECT * FROM employee where Email = ?`;
 
@@ -231,7 +242,6 @@ app.get('/shiftingRequests', (req, res) => {
     });
 });
 
-
 //SUBMIT SHIFTING FORM
 app.post('/submitShiftingForm', (req, res) => {
     const getID = `SELECT * FROM student WHERE Email = ?`;
@@ -254,11 +264,53 @@ app.post('/submitShiftingForm', (req, res) => {
                 if (err) {
                     return res.json({ message: "Error in server: " + err });
                 } else if (submitRes.affectedRows > 0) {
-                    return res.json({ message: "Form submitted successfully" });
+                    return res.json({ message: "Form submitted successfully", studentID: idRes[0].CvSUStudentID});
                 } else {
                     return res.json({ message: "Unable to submit form" });
                 }
             })
+        }
+    })
+})
+
+app.get("/get-shiftee/:id", (req, res) => {
+    const { id } = req.params;
+    const sql = "SELECT * FROM student WHERE CvSUStudentID = ?";
+    db.query(sql, [id], (err, result) => {
+      if (err) {
+        console.error("Error fetching data:", err);
+        return res.json({message: "Error fetching data:" + err});
+      }
+      res.send(result[0]);
+    });
+  });
+
+// API to fetch admission form data by student ID
+app.get("/get-shifteeForm/:id", (req, res) => {
+    const { id } = req.params;
+    const sql = "SELECT * FROM shiftingform WHERE StudentID = ?";
+    db.query(sql, [id], (err, result) => {
+      if (err) {
+        console.error("Error fetching data:", err);
+        return res.json({message: "Error fetching data:" + err});
+      }
+      res.send(result[0]);
+    });
+  });
+
+app.post('/saveShifteeInfo', (req,res) => {
+    const updateSem = `UPDATE student SET Semester = ? WHERE Email = ?`;
+    const values = [
+        req.body.semester,
+        req.session.email
+    ];    
+    db.query(updateSem, values, (err, result) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if(result.affectedRows > 0){
+            return res.json({ message: "Record updated successfully" });
+        } else{
+            return res.json({ message: "Failed to updated record " });
         }
     })
 })
@@ -320,6 +372,7 @@ app.get('/getShifteeInfo', (req, res) => {
                     prevProgramAdviser: shiftingInfo.PrevProgramAdviser,
                     studentID: studentInfo.CvSUStudentID,
                     currentAcadYear: shiftingInfo.AcadYear,
+                    semester: studentInfo.Semester,
                     reasons: shiftingInfo.Reasons,
                     dateSubmitted: shiftingInfo.Date,
                     submissionDate: shiftingInfo.SubmissionSchedule

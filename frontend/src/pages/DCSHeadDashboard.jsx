@@ -24,6 +24,7 @@ function DCSHeadDashboard() {
   const [SideBar, setSideBar] = useState(false);
   const [CScount, setCScount] = useState(0);
   const [ITcount, setITcount] = useState(0);
+  const [reqCount, setReqCount] = useState(0);
   const [announcements, setAnnouncements] = useState([]); // LIST ANNOUNCEMENT
   const [accName, setAccName] = useState("");
 
@@ -108,6 +109,16 @@ useEffect(() => {
       });
   }, []);
 
+  useEffect(() => {
+    axios.get("http://localhost:8080/getTotalShiftingReq")
+      .then((res) => {
+        setReqCount(res.data.shiftingReqCount);
+      })
+      .catch((err) => {
+        alert("Error: " + err);
+        console.error("ERROR FETCHING DATA: " + err);
+      });
+  })
 
 
   return (
@@ -138,7 +149,7 @@ useEffect(() => {
               </div>
               <div className={styles.blueCard}>
                 <h3>Shifting Request</h3>
-                <p>200</p>
+                <p>{reqCount}</p>
               </div>
             </div>
           </div>
