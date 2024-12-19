@@ -51,7 +51,7 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
                         { name: 'Enrollment', icon: preEnrollmentIcon, path: '/AdminPreEnrollment' },
                     ],
                     "Society Officer": [
-                        { name: 'Dashboard', icon: dashboardIcon, path: '/dashboard' },
+                        { name: 'Dashboard', icon: dashboardIcon, path: '/SocOfficerDashboard' },
                         { name: 'Schedule Management', icon: schedIcon, path: '/SchedManagement' },
                         { name: 'Society Fee', icon: societyFeeIcon, path: '/SocFee' },
                         { name: 'Requirements', icon: requirementsIcon, path: '/Requirements' },
@@ -90,7 +90,7 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
         logoutFunction(navigate);
     };
 
-    const isActive = (path) => location.pathname === path; // Helper function to check if the current path is active
+    const isActive = (path) => location.pathname === path; 
 
     return (
         <div className={`${style.sidebar} ${isOpen ? style.open : ''}`}>
