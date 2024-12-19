@@ -35,6 +35,7 @@ import Requirements from './pages/Requirements.jsx';
 import SchedManagement from './pages/SchedManagement.jsx';
 import DownloadAdmissionForm from './components/DownloadAdmissionForm.jsx';
 import DownloadShiftingForm from './components/DownloadShiftingForm.jsx';
+import FreshmenAdmissionRequest from './pages/FreshmenAdmissionRequests.jsx';
 
 function App() {
   return (
@@ -77,6 +78,7 @@ function App() {
         <Route path="/SchedManagement" element={<SchedManagement />} />
         <Route path="/download-form/:id" element={<DownloadAdmissionForm />} />
         <Route path="/download-shiftingform/:id" element={<DownloadShiftingForm />} />
+        <Route path="/FreshmenAdmissionRequest" element={<FreshmenAdmissionRequest />} />
         {/* Add other routes as needed */}
       </Routes>
     </Router>

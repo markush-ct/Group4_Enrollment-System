@@ -185,10 +185,6 @@ function LoginPage() {
                              
 
                         <div className={styles.options}>
-                            <label className={styles.rememberMe}>
-                                <input type="checkbox" name="remember" title='Remember my username for next time' />
-                                Remember Me
-                            </label>
                             <Link to='/ForgotPass' className={styles.forgotPassword}>Forgot Password?</Link>
                         </div>
 

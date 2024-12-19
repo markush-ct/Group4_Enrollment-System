@@ -65,6 +65,211 @@ const upload = multer({ storage });
 
 app.use("/uploads", express.static("uploads"));
 
+app.post('/rejectFreshmenAdmissionReq', (req, res) =>{
+    const getEmpID = `SELECT * FROM employee where Email = ?`;
+
+    db.query(getEmpID, req.session.email, (err, idRes) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if (idRes.length > 0) {
+            const empID = idRes[0].EmployeeID;
+            console.log('Request Body:', req.body);
+
+            const { email, name, studentID, rejectionReason } = req.body;
+
+            const updateShiftingReject = `UPDATE admissionform
+            SET EmployeeID = ?,
+                AssessedBy = ?,
+                AdmissionStatus = ?
+            WHERE StudentID = ?
+            `;
+
+            const updateValues = [
+                empID,
+                idRes.Firstname + " " + idRes.Lastname,
+                "Rejected",
+                studentID
+            ];
+
+            db.query(updateShiftingReject, updateValues, (err, updateRes) => {
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else if (updateRes.affectedRows > 0) {
+
+                    const emailBody = `
+                    Dear ${name},
+                    
+                    Thank you for your interest in joining Cavite State University - Bacoor Campus!. 
+
+                    After careful consideration, we regret to inform you that your admission request has not been approved at this time.  
+                    **Reason for rejection:**  
+                    ${rejectionReason}  
+
+                    We understand this news may be disappointing, and we encourage you to continue pursuing your educational goals. If you have any questions or need further clarification, please feel free to reach out to us at [Contact Information].
+
+                    We wish you the very best in your future endeavors.
+                
+                    Best regards,
+                    ${idRes[0].Firstname + " " + idRes[0].Lastname}
+                    `;
+
+                    const mailOptions = {
+                        from: 'gerlyntan07@gmail.com',
+                        to: email,
+                        subject: 'Admission Request Rejection',
+                        text: emailBody,
+                    };
+
+                    try {
+                        console.log("Sending email with options:", mailOptions);
+                        transporter.sendMail(mailOptions);
+                        console.log("Email sent successfully.");
+                        return res.json({ message: "Admission request rejection sent" });
+                    } catch (emailError) {
+                        console.error('Error sending email:', emailError);
+                        return res.json({ message: "Error sending email", error: emailError.message });
+                    }
+                } else {
+                    console.log('Request Body:', req.body);
+                    return res.json({ message: "Failed to reject admission request" });
+                }
+            })
+        }
+    })
+})
+
+app.post('/approveFreshmenAdmissionReq', (req, res) => {
+    const getEmpID = `SELECT * FROM employee where Email = ?`;
+
+    db.query(getEmpID, req.session.email, (err, idRes) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if (idRes.length > 0) {
+            const empID = idRes[0].EmployeeID;
+            console.log('Request Body:', req.body);
+
+            const { email, name, studentID, submissionDate, examDateTime } = req.body;
+
+            const formattedSubmissionDate = new Date(submissionDate).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            // Format exam date and time
+            const formattedExamDateTime = new Date(examDateTime).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            }) + ' ' + 
+            new Date(examDateTime).toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+
+            const updateSubmissionSched = `UPDATE admissionform
+            SET EmployeeID = ?,
+                AssessedBy = ?,
+                DateOfExamAndTime = ?,
+                SubmissionSchedule = ?,
+                AdmissionStatus = ?
+            WHERE StudentID = ?
+            `;
+
+            const updateValues = [
+                empID,
+                idRes.Firstname + " " + idRes.Lastname,
+                examDateTime,
+                submissionDate,
+                "Approved",
+                studentID
+            ];
+
+            db.query(updateSubmissionSched, updateValues, (err, updateRes) => {
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else if (updateRes.affectedRows > 0) {
+
+                    const emailBody = `
+                    Dear ${name},
+                    Congratulations on your admission approval at Cavite State University - Bacoor Campus!
+
+                    Please mark the following important dates:
+
+                    - **Examination Date and Time:** ${formattedExamDateTime}  
+
+                    - **Submission of Requirements:** ${formattedSubmissionDate}  
+                    Kindly bring the following documents:  
+                    1. Accomplished Admission Form  
+                    2. Two (2) copies of 1x1 ID pictures with name tags  
+                    3. One (1) short ordinary folder  
+                    4. Certified True Copy of your G12 Report Card  
+                    
+                    We are excited to welcome you to the CvSU - Bacoor community!
+                
+                    Best regards,
+                    ${idRes[0].Firstname + " " + idRes[0].Lastname}
+                    `;
+
+                    const mailOptions = {
+                        from: 'gerlyntan07@gmail.com',
+                        to: email,
+                        subject: 'Admission Approval',
+                        text: emailBody,
+                    };
+
+                    try {
+                        console.log("Sending email with options:", mailOptions);
+                        transporter.sendMail(mailOptions);
+                        console.log("Email sent successfully.");
+                        return res.json({ message: "Admission Approval sent" });
+                    } catch (emailError) {
+                        console.error('Error sending email:', emailError);
+                        return res.json({ message: "Error sending email", error: emailError.message });
+                    }
+                } else {
+                    console.log('Request Body:', req.body);
+                    return res.json({ message: "Failed to approve admission request" });
+                }
+            })
+        }
+    })
+})
+
+app.get('/getFreshmenAdmissionReq', (req, res) => {
+    const query = `
+        SELECT * 
+        FROM student s
+        JOIN admissionform af ON s.StudentID = af.StudentID
+        WHERE af.AdmissionStatus = 'Submitted';`;
+
+    db.query(query, (err, results) => {
+        console.log("Executing query:", query);
+        console.log("Query parameters:", ["Submitted"]);
+        console.log("Query results:", results);
+
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        }
+
+        if (results === undefined || results.length === 0) {
+            console.log("No records found or results are undefined.");
+            return res.json({ message: "No records found" });
+        }
+
+        if (results.length > 0) {            
+            return res.json({
+                message: "Fetched records successfully",
+                records: results,
+            });
+        } else {
+            console.log(results);
+            return res.json({ message: "No records found" });
+        }
+    });
+})
+
 app.get('/getTotalShiftingReq', (req, res) => {
     const sql = `SELECT COUNT(*) AS shiftingReqCount from shiftingform WHERE ShiftingStatus = 'Submitted'`;
     db.query(sql, (err, result) => {
@@ -101,9 +306,9 @@ app.post('/rejectShiftingReq', (req, res) => {
             ];
 
             db.query(updateShiftingReject, updateValues, (err, updateRes) => {
-                if(err){
-                    return res.json({message: "Error in server: " + err});
-                } else if(updateRes.affectedRows > 0){
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else if (updateRes.affectedRows > 0) {
 
                     const emailBody = `
                     Hello ${name},
@@ -134,9 +339,9 @@ app.post('/rejectShiftingReq', (req, res) => {
                         console.error('Error sending email:', emailError);
                         return res.json({ message: "Error sending email", error: emailError.message });
                     }
-                } else{
+                } else {
                     console.log('Request Body:', req.body);
-                    return res.json({message: "Failed to reject shifting request"});
+                    return res.json({ message: "Failed to reject shifting request" });
                 }
             })
         }
@@ -159,7 +364,7 @@ app.post('/approveShiftingReq', (req, res) => {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
-              });
+            });
 
             const updateSubmissionSched = `UPDATE shiftingform
             SET EmployeeID = ?,
@@ -176,16 +381,16 @@ app.post('/approveShiftingReq', (req, res) => {
             ];
 
             db.query(updateSubmissionSched, updateValues, (err, updateRes) => {
-                if(err){
-                    return res.json({message: "Error in server: " + err});
-                } else if(updateRes.affectedRows > 0){
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else if (updateRes.affectedRows > 0) {
 
                     const emailBody = `
                     Hello ${name},
                     Student ID: ${studentID}
 
                     Your shifting request has been approved!
-                    Please come to the department by ${formattedDate} and bring the follwong requirements:
+                    Please come to the department by ${formattedDate} and bring the following requirements:
                     1. Accomplished Shifting Form
                 
                     Best regards,
@@ -208,9 +413,9 @@ app.post('/approveShiftingReq', (req, res) => {
                         console.error('Error sending email:', emailError);
                         return res.json({ message: "Error sending email", error: emailError.message });
                     }
-                } else{
+                } else {
                     console.log('Request Body:', req.body);
-                    return res.json({message: "Failed to approve shifting request"});
+                    return res.json({ message: "Failed to approve shifting request" });
                 }
             })
         }
@@ -228,7 +433,7 @@ app.get('/shiftingRequests', (req, res) => {
 
     db.query(query, ["Submitted"], (err, results) => {
         if (err) {
-            return res.status(500).json({ message: "Error in server: " + err });
+            return res.json({ message: "Error in server: " + err });
         }
 
         if (results.length > 0) {
@@ -264,7 +469,7 @@ app.post('/submitShiftingForm', (req, res) => {
                 if (err) {
                     return res.json({ message: "Error in server: " + err });
                 } else if (submitRes.affectedRows > 0) {
-                    return res.json({ message: "Form submitted successfully", studentID: idRes[0].CvSUStudentID});
+                    return res.json({ message: "Form submitted successfully", studentID: idRes[0].CvSUStudentID });
                 } else {
                     return res.json({ message: "Unable to submit form" });
                 }
@@ -277,39 +482,39 @@ app.get("/get-shiftee/:id", (req, res) => {
     const { id } = req.params;
     const sql = "SELECT * FROM student WHERE CvSUStudentID = ?";
     db.query(sql, [id], (err, result) => {
-      if (err) {
-        console.error("Error fetching data:", err);
-        return res.json({message: "Error fetching data:" + err});
-      }
-      res.send(result[0]);
+        if (err) {
+            console.error("Error fetching data:", err);
+            return res.json({ message: "Error fetching data:" + err });
+        }
+        res.send(result[0]);
     });
-  });
+});
 
 // API to fetch admission form data by student ID
 app.get("/get-shifteeForm/:id", (req, res) => {
     const { id } = req.params;
     const sql = "SELECT * FROM shiftingform WHERE StudentID = ?";
     db.query(sql, [id], (err, result) => {
-      if (err) {
-        console.error("Error fetching data:", err);
-        return res.json({message: "Error fetching data:" + err});
-      }
-      res.send(result[0]);
+        if (err) {
+            console.error("Error fetching data:", err);
+            return res.json({ message: "Error fetching data:" + err });
+        }
+        res.send(result[0]);
     });
-  });
+});
 
-app.post('/saveShifteeInfo', (req,res) => {
+app.post('/saveShifteeInfo', (req, res) => {
     const updateSem = `UPDATE student SET Semester = ? WHERE Email = ?`;
     const values = [
         req.body.semester,
         req.session.email
-    ];    
+    ];
     db.query(updateSem, values, (err, result) => {
         if (err) {
             return res.json({ message: "Error in server: " + err });
-        } else if(result.affectedRows > 0){
+        } else if (result.affectedRows > 0) {
             return res.json({ message: "Record updated successfully" });
-        } else{
+        } else {
             return res.json({ message: "Failed to updated record " });
         }
     })
@@ -504,27 +709,27 @@ app.get('/getFormData', (req, res) => {
 })
 
 //SUBMIT ADMISSION FORM
-app.post('/submitAdmissionForm', (req,res) => {
+app.post('/submitAdmissionForm', (req, res) => {
     const getID = `SELECT * FROM student WHERE Email = ?`;
     db.query(getID, req.session.email, (err, idRes) => {
-        if(err){
-            return res.json({message: "Error in server: " + err});
-        } else if(idRes.length > 0){
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if (idRes.length > 0) {
             const updateFormStatus = `UPDATE admissionform
             SET AdmissionStatus = 'Submitted'
             WHERE StudentID = ?`;
 
             db.query(updateFormStatus, idRes[0].StudentID, (err, updateRes) => {
-                if(err){
-                    return res.json({message: "Error in server: " + err});
-                } else if(updateRes.affectedRows > 0){
-                    return res.json({message: "Admission Form submitted successfully.", studentID: idRes[0].StudentID});
-                } else{
-                    return res.json({message: "Unable to submit Admission Form"});
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else if (updateRes.affectedRows > 0) {
+                    return res.json({ message: "Admission Form submitted successfully.", studentID: idRes[0].StudentID });
+                } else {
+                    return res.json({ message: "Unable to submit Admission Form" });
                 }
             })
-        } else{
-            return res.json({message: "Unable to get Student ID"});
+        } else {
+            return res.json({ message: "Unable to get Student ID" });
         }
     })
 })
@@ -533,26 +738,26 @@ app.get("/get-student/:id", (req, res) => {
     const { id } = req.params;
     const sql = "SELECT * FROM student WHERE StudentID = ?";
     db.query(sql, [id], (err, result) => {
-      if (err) {
-        console.error("Error fetching data:", err);
-        return res.json({message: "Error fetching data:" + err});
-      }
-      res.send(result[0]);
+        if (err) {
+            console.error("Error fetching data:", err);
+            return res.json({ message: "Error fetching data:" + err });
+        }
+        res.send(result[0]);
     });
-  });
+});
 
 // API to fetch admission form data by student ID
 app.get("/get-form/:id", (req, res) => {
     const { id } = req.params;
     const sql = "SELECT * FROM admissionform WHERE StudentID = ?";
     db.query(sql, [id], (err, result) => {
-      if (err) {
-        console.error("Error fetching data:", err);
-        return res.json({message: "Error fetching data:" + err});
-      }
-      res.send(result[0]);
+        if (err) {
+            console.error("Error fetching data:", err);
+            return res.json({ message: "Error fetching data:" + err });
+        }
+        res.send(result[0]);
     });
-  });
+});
 
 //ADMISSION FORM TABLE AUTO SAVE EVERY INPUT CHANGES
 app.post('/admissionFormTable', upload.single("idPicture"), (req, res) => {

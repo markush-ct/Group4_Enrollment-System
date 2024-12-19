@@ -63,13 +63,11 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
                     ],
                     "DCS Head": [
                         { name: 'Dashboard', icon: dashboardIcon, path: '/DCSHeadDashboard' },
-                        { name: 'Shifting Request', icon: accountRequestsIcon, path: '/ShiftingRequest' },
-                        
-                        
+                        { name: 'Shifting Request', icon: accountRequestsIcon, path: '/ShiftingRequest' },                                                
                     ],
                     "School Head": [
-                        { name: 'Dashboard', icon: dashboardIcon, path: '/dashboard' },
-                        { name: 'Freshman Admission', icon: accountRequestsIcon, path: '/ShiftingRequest' },
+                        { name: 'Dashboard', icon: dashboardIcon, path: '/SocOfficerDashboard' },
+                        { name: 'Freshman Admission', icon: accountRequestsIcon, path: '/FreshmenAdmissionRequest' },
                         { name: 'Transferee Admission', icon: accountRequestsIcon, path: '/ShiftingRequest' },
                         
                         

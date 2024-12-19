@@ -154,7 +154,7 @@ form{
     display: flex;
     margin-top: -15px;
     font: 16px poppins reg;
-    justify-content: space-between;
+    justify-content: end;
     align-items: center;
     margin-bottom: 10px;
     margin-left: 15px;
