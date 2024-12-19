@@ -88,7 +88,7 @@ function FreshmenAdmissionRequest() {
       setFilteredRequests(accountRequests);
     } else {
       setFilteredRequests(
-        accountRequests.filter((request) => request.SHStrand === filterType)
+        accountRequests.filter((request) => request.SHSStrand === filterType)
       );
     }
   }, [filterType, accountRequests]);
@@ -184,12 +184,6 @@ function FreshmenAdmissionRequest() {
     }
   };
 
-  const closePrompt = () => {
-    setApprovalPrompt(false);
-    setRejectionPrompt(false);
-    window.location.reload();
-  };
-
 
   //show popup
   const handleRowClick = (request) => {
@@ -201,6 +195,7 @@ function FreshmenAdmissionRequest() {
   const closePopup = () => {
     setPopUpVisible(false);
     setApprovalPrompt(false)
+    setRejectionPrompt(false);
     setSelectedRequest(null);
   };
 
@@ -217,7 +212,21 @@ function FreshmenAdmissionRequest() {
               <h3>Send Schedule for Exam and Requirements Submission</h3>
             </div>
 
+        
             {/* Date Input and Send Button */}
+            <div data-aos="fade-up" className={styles.studentType}>
+              <h5>Date of Examination</h5>
+
+              <input
+                type="datetime-local"
+                id="examDatetime"
+                name='examDatetime'
+                value={examDatetime}
+                onChange={(e) => setExamDatetime(e.target.value)}
+                className={styles.popupPromptInput}
+              />
+            </div>
+
             <div data-aos="fade-up" className={styles.studentType}>
               <h5>Date of Submission</h5>
 
@@ -231,19 +240,6 @@ function FreshmenAdmissionRequest() {
               />
             </div>
 
-            {/* Date Input and Send Button */}
-            <div data-aos="fade-up" className={styles.studentType}>
-              <h5>Date of Examination</h5>
-
-              <input
-                type="date"
-                id="examDatetime"
-                name='examDatetime'
-                value={examDatetime}
-                onChange={(e) => setExamDatetime(e.target.value)}
-                className={styles.popupPromptInput}
-              />
-            </div>
 
             {/* Buttons */}
             <div className={styles.buttonContainer}>

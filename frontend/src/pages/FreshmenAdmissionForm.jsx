@@ -1536,7 +1536,7 @@ e.preventDefault();
                 <input
                   id="reqSubmission"
                   name="reqSubmission"
-                  value={formData.dateTimeSchedule === "" || !formData.dateTimeSchedule ? "Not yet scheduled" : formData.dateTimeSchedule}
+                  value={formData.reqSubmission === "" || !formData.reqSubmission ? "Not yet scheduled" : formData.reqSubmission}
                   onChange={handleInputChange}
                   type="text"
                   disabled

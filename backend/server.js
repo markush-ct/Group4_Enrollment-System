@@ -86,7 +86,7 @@ app.post('/rejectFreshmenAdmissionReq', (req, res) =>{
 
             const updateValues = [
                 empID,
-                idRes.Firstname + " " + idRes.Lastname,
+                idRes[0].Firstname + " " + idRes[0].Lastname,
                 "Rejected",
                 studentID
             ];
@@ -148,7 +148,7 @@ app.post('/approveFreshmenAdmissionReq', (req, res) => {
             const empID = idRes[0].EmployeeID;
             console.log('Request Body:', req.body);
 
-            const { email, name, studentID, submissionDate, examDateTime } = req.body;
+            const { email, name, studentID, submissionDate, examDatetime } = req.body;
 
             const formattedSubmissionDate = new Date(submissionDate).toLocaleDateString('en-US', {
                 year: 'numeric',
@@ -156,13 +156,14 @@ app.post('/approveFreshmenAdmissionReq', (req, res) => {
                 day: 'numeric'
             });
 
-            // Format exam date and time
-            const formattedExamDateTime = new Date(examDateTime).toLocaleDateString('en-US', {
+            // Ensure that examDatetime is in the correct format (YYYY-MM-DDTHH:MM)
+            const examDate = new Date(examDatetime);
+            const formattedExamDateTime = isNaN(examDate)
+            ? "Invalid Date"
+            : examDate.toLocaleString('en-US', {
                 year: 'numeric',
                 month: 'long',
-                day: 'numeric'
-            }) + ' ' + 
-            new Date(examDateTime).toLocaleTimeString('en-US', {
+                day: 'numeric',
                 hour: 'numeric',
                 minute: '2-digit',
                 hour12: true
@@ -179,8 +180,8 @@ app.post('/approveFreshmenAdmissionReq', (req, res) => {
 
             const updateValues = [
                 empID,
-                idRes.Firstname + " " + idRes.Lastname,
-                examDateTime,
+                idRes[0].Firstname + " " + idRes[0].Lastname,
+                examDatetime,
                 submissionDate,
                 "Approved",
                 studentID
@@ -223,6 +224,7 @@ app.post('/approveFreshmenAdmissionReq', (req, res) => {
                         console.log("Sending email with options:", mailOptions);
                         transporter.sendMail(mailOptions);
                         console.log("Email sent successfully.");
+                        console.log('Exam DateTime:', examDatetime);
                         return res.json({ message: "Admission Approval sent" });
                     } catch (emailError) {
                         console.error('Error sending email:', emailError);
@@ -625,6 +627,36 @@ app.get('/getFormData', (req, res) => {
                     return res.json({ message: "Error in server: " + err });
                 } else if (formResult.length > 0) {
 
+                    // Format examSched (datetime) to 'Month Day, Year Hour:Minute AM/PM'
+                    const formatExamSched = (examSched) => {
+                        const examDate = new Date(examSched);
+                        return isNaN(examDate)
+                            ? "Invalid Date"
+                            : examDate.toLocaleString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                hour: 'numeric',
+                                minute: '2-digit',
+                                hour12: true
+                            });
+                    };
+
+                    // Format reqSubmission (date only) to 'Month Day, Year'
+                    const formatReqSubmission = (reqSubmission) => {
+                        const submissionDate = new Date(reqSubmission);
+                        return isNaN(submissionDate)
+                            ? "Invalid Date"
+                            : submissionDate.toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            });
+                    };
+
+                    // Format dates
+                    const examSchedFormatted = formatExamSched(form.DateOfExamAndTime);
+                    const reqSubmissionFormatted = formatReqSubmission(form.SubmissionSchedule);
 
                     return res.json({
                         preferredProgram: student.ProgramID,
@@ -675,12 +707,10 @@ app.get('/getFormData', (req, res) => {
                         elementaryAddress: form.ElemSchoolAddress,
                         elementaryYearGraduated: form.ElemYearGraduated,
                         elementarySchoolType: form.ElemSchoolType,
-
                         highSchool: form.HighSchoolName,
                         jhsAddress: form.HighSchoolAddress,
                         jhsYearGraduated: form.HighSchoolYearGraduated,
                         highSchoolType: form.HighSchoolType,
-
                         seniorHighSchool: form.SHSchoolName,
                         seniorHighAddress: form.SHSchoolAddress,
                         seniorHighYearGraduated: form.SHYearGraduated,
@@ -693,13 +723,12 @@ app.get('/getFormData', (req, res) => {
                         medications: form.Medication,
                         controlNo: form.ExamControlNo,
                         applicationStatus: form.AdmissionStatus,
-                        examSched: form.DateOfExamAndTime,
-                        reqSubmission: form.SubmissionSchedule,
+                        examSched: examSchedFormatted,
+                        reqSubmission: reqSubmissionFormatted,
                     });
                 } else {
                     return res.json({ message: "Can't fetch form data" });
                 }
-
             })
 
         } else {
