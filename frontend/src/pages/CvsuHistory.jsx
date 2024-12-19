@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect } from 'react';
 import styles from '/src/styles/CvsuHistory.module.css'; 
 import { useState } from 'react';
@@ -24,7 +25,7 @@ function CvsuHistory() {
             <Header SideBar={SideBar} setSideBar={setSideBar} />
             <div className={styles.mainPage}>
                 {/* Parallax Section 1 */}
-                <div className={`${styles.parallaxSection} ${styles.parallax1}`}>
+                <div className={`${styles.parallaxSection} ${styles.parallax1}`} data-testid="parallax-section">
                     <h2>CAVITE STATE UNIVERSITY</h2>
                     <h1>HISTORY</h1>
                 </div>
@@ -69,7 +70,7 @@ function CvsuHistory() {
                 {/* Footer */}
                 <footer className={styles.footer}>
                     <div className={styles.footerCopyright}>
-                        <p>© Copyright <span>Cavite State University</span>. All Rights Reserved</p>
+                        <p>© Copyright <span>Cavite State University</span>. All Rights Reserved.</p>
                         <p>Designed by <span className={styles.highlighted}>BSCS 3-5 Group 4</span></p>
                     </div>
                 </footer>

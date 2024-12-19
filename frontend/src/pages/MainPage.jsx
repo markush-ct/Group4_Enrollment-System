@@ -1,11 +1,12 @@
+import React from 'react';
 import { useEffect } from 'react';
-import styles from '../styles/MainPage.module.css';
+import styles from '/src/styles/MainPage.module.css';
 import emailjs from '@emailjs/browser';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '/src/styles/globalToastStyles.css'; // for toastify css 
 import { useRef, useState } from 'react';
-import Header from '../components/Header.jsx';
+import Header from '/src/components/Header.jsx';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { useLocation } from "react-router-dom";
@@ -13,7 +14,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import '../styles/SwiperStyles.css'; 
+import '/src/styles/SwiperStyles.css'; 
 import { Navigation, Pagination } from 'swiper/modules';
 import { Link } from 'react-router-dom'; // FOR LINKING PAGE
 
@@ -83,7 +84,7 @@ function MainPage() {
         <>
             <Header SideBar={SideBar} setSideBar={setSideBar} />
             <div className={styles.mainPage}>
-                <div className={`${styles.parallaxSection} ${styles.parallax1}`}>
+                <div className={`${styles.parallaxSection} ${styles.parallax1}`} data-testid="parallax-section1">
                     <h2>STEP INTO THE FUTURE WITH</h2>
                     <h1>CAVITE STATE UNIVERSITY</h1>
                     <Link to="/Apply"><button className={styles.mainButton}><span>ENROLL NOW</span></button></Link>
@@ -97,7 +98,7 @@ function MainPage() {
                 <div data-aos="fade-up" className={styles.galleryContainer}>
                 
                 {/* GALLERY SWIPER */}
-<div className={styles.galleryContainer}>
+<div className={styles.galleryContainer} data-testid="swiper-container">
     <div className="swiper-button-prev"></div>
     <Swiper
         modules={[Navigation, Pagination]}
@@ -171,8 +172,8 @@ function MainPage() {
 
 </div>
 
-                <div className={`${styles.parallaxSection} ${styles.parallax2}`}>
-                    <h2>JOIN US NOW</h2>
+                <div className={`${styles.parallaxSection} ${styles.parallax2}`} data-testid="parallax-section2">
+                    <h2 data-testid="join-us-now-heading">JOIN US NOW</h2>
                     <h3>Taking a course in Computer Studies is a great way to prepare for a career in a world that&apos;s becoming more digital every day.</h3>
                 </div>
 
@@ -185,7 +186,7 @@ function MainPage() {
                                 <img src="/src/assets/location-logo.svg" alt="Location Icon" className={styles.contactIcon} />
                             </div>
                             <h3>Our Address</h3>
-                            <p>Cavite State University - Bacoor Campus, Bacoor, Cavite</p>
+                            <p>Cavite State University - Bacoor Campus, Bacoor, Cavite.</p>
                         </div>
                         <div className={styles.contactCard}>
                             <div className={styles.iconContainer}>
@@ -218,7 +219,7 @@ function MainPage() {
 
                         <div data-aos="fade-up" className={styles.contactForm}>
                             <h1 className={styles.contactTitle}>Email Us</h1>
-                            <form ref={emailUs} onSubmit={sendEmail}>
+                            <form ref={emailUs} onSubmit={sendEmail} data-testid="contact-form">
                                 <div className={styles.formGroup}>
                                     <input value={senderName} name='from_senderName' type="text" placeholder="Your Name" onChange={(e) => { setSenderName(e.target.value); }} required />
                                 </div>
@@ -238,7 +239,7 @@ function MainPage() {
                     </div>
                 </div>
 
-                <footer className={styles.parallaxFooter}>
+                <footer className={styles.parallaxFooter} data-testid="parallax-footer">
                     <div className={styles.parallaxContent}>
                         <div className={styles.footerBranding}>
                             <img src="/src/assets/cvsu-logo.png" alt="Cavite State University Logo" className={styles.footerLogo} />
@@ -247,15 +248,15 @@ function MainPage() {
                         <p>The Future Begins Here!</p>
 
                         <div className={styles.socialIcons}>
-                            <a href="https://www.facebook.com/YourPage" target="_blank" rel="noopener noreferrer">
+                            <a href="https://www.facebook.com/CvSUBacoorCityCampus" target="_blank" rel="noopener noreferrer">
                                 <img src="/src/assets/facebook.png" alt="Facebook" className={styles.socialIcon} />
                             </a>
                         </div>
                     </div>
                 </footer>
 
-                <footer className={styles.footerCopyright}>
-                    <p>© Copyright <span>Cavite State University</span>. All Rights Reserved</p>
+                <footer className={styles.footerCopyright} data-testid="footer-copyright">
+                    <p>© Copyright <span>Cavite State University</span>. All Rights Reserved.</p>
                     <p>Designed by <span className={styles.highlighted}>BSCS 3-5 Group 4</span></p>
                 </footer>
             </div>

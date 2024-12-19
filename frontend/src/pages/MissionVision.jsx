@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect } from 'react';
 import styles from '/src/styles/MissionVision.module.css'; 
 import { useState } from 'react';
@@ -24,13 +25,13 @@ function MissionVision() {
             <Header SideBar={SideBar} setSideBar={setSideBar} />
             <div className={styles.mainPage}>
                 {/* Parallax Section 1 */}
-                <div className={`${styles.parallaxSection} ${styles.parallax1}`}>
+                <div className={`${styles.parallaxSection} ${styles.parallax1}`} data-testid="parallax-section">
                     <h2>CAVITE STATE UNIVERSITY</h2>
                     <h1>Mission, Vision and Core Values</h1>
                 </div>
 
                 {/* Regular Section */}
-                <div data-aos="fade-up" className={styles.contentSection}>
+                <div data-aos="fade-up" className={styles.contentSection} data-testid="content-section">
                     <h2 data-aos="fade-up">Mission</h2>
                     <p data-aos="fade-up">Cavite State University shall provide excellent, equitable and 
                         relevant educational opportunities in the arts, sciences and 
@@ -84,16 +85,16 @@ function MissionVision() {
                         2. prepare students to meet the demands of the global market and respond to the society’s needs;<br></br><br></br>
                         3. develop innovative and scholarly researchers who have the ability to create new 
                         understanding in quest for quality 
-                        research through inquiry, analysis and problem solving; and<br></br><br></br>
-                        4. produce globally competitive graduates with full competence in their fields of study.</p>
+                        research through inquiry, analysis and problem solving; <br></br><br></br>
+                        4. and produce globally competitive graduates with full competence in their fields of study.</p>
 
 
                 </div>
 
                 {/* Footer */}
-                <footer className={styles.footer}>
+                <footer className={styles.footer} data-testid="footer-copyright">
                     <div className={styles.footerCopyright}>
-                        <p>© Copyright <span>Cavite State University</span>. All Rights Reserved</p>
+                        <p>© Copyright <span>Cavite State University</span>. All Rights Reserved.</p>
                         <p>Designed by <span className={styles.highlighted}>BSCS 3-5 Group 4</span></p>
                     </div>
                 </footer>

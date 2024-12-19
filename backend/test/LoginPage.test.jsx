@@ -75,7 +75,7 @@ app.post('/LoginPage', (req, res) => {
 });
 
 
-describe('POST /LoginPage', () => {
+describe('Unit Testing for the Login Function', () => {
     beforeEach(() => {
         mysql.createConnection().query.mockReset();
     });
@@ -152,7 +152,7 @@ describe('POST /LoginPage', () => {
             if (email === 'jenniekim@bp.com' && password === 'rubyjane') {
                 callback(null, [{
                     AccountID: 2,
-                    Name: 'Jane Doe',
+                    Name: 'Jennie Kim',
                     Role: 'Student',
                     Status: 'Terminated',
                     Email: 'jenniekim@bp.com'
