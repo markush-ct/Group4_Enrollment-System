@@ -1,5 +1,11 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
 import MainPage from "/src/pages/MainPage";
 import emailjs from "@emailjs/browser";
@@ -48,11 +54,6 @@ describe("Unit Testing for the Main Page", () => {
   ));
 
   test("Renders Header component", () => {
-    render(
-      <Router>
-        <MainPage />
-      </Router>
-    );
     const headerElements = screen.getAllByTestId("mock-header");
     expect(headerElements.length).toBeGreaterThan(0);
     expect(headerElements[0]).toBeInTheDocument();
@@ -65,8 +66,6 @@ describe("Unit Testing for the Main Page", () => {
   test("Should apply background image correctly to the first section", () => {
     const parallaxSection1 = screen.queryAllByTestId("parallax-section1");
     expect(parallaxSection1).toHaveLength(1);
-    const div = parallaxSection1[0];
-    // console.log(div.classList);
   });
 
   test("Renders the main title and first section", () => {
@@ -111,13 +110,7 @@ describe("Unit Testing for the Main Page", () => {
     expect(swiperImages.length).toBeGreaterThan(0);
   });
 
-  it('Renders "Join Us Now" section with right additional text', () => {
-    render(
-      <Router>
-        <MainPage />
-      </Router>
-    );
-
+  test('Renders "Join Us Now" section with right additional text', () => {
     const allHeadings = screen.getAllByTestId("join-us-now-heading");
 
     expect(allHeadings.length).toBeGreaterThanOrEqual(1);
@@ -126,7 +119,7 @@ describe("Unit Testing for the Main Page", () => {
     expect(allHeadings[0]).toHaveTextContent(/Join Us Now/i);
 
     const joinUsSubheadings = screen.getAllByText(
-      /Taking a course in Computer Studies is a great way to prepare for a career/i
+      /Taking a course in Computer Studies is a great way to prepare for a career in a world that's becoming more digital every day./i
     );
     expect(joinUsSubheadings.length).toBeGreaterThanOrEqual(1);
     expect(joinUsSubheadings[0]).toBeInTheDocument();
@@ -135,8 +128,6 @@ describe("Unit Testing for the Main Page", () => {
   test("Should apply background image correctly to join us section", () => {
     const parallaxSection2 = screen.queryAllByTestId("parallax-section2");
     expect(parallaxSection2).toHaveLength(1);
-    const div = parallaxSection2[0];
-    // console.log(div.classList);
   });
 
   test('Renders "Contact Us" title', () => {
@@ -201,6 +192,12 @@ describe("Unit Testing for the Main Page", () => {
   test("Checks if the map is rendered correctly", () => {
     const map = screen.getByTitle("Cavite State University Bacoor Campus Map");
     expect(map).toBeInTheDocument();
+  });
+
+  test('Renders "Email Us" title', () => {
+    const section = screen.getByTestId("emailUs");
+    const title = within(section).getByText(/Email Us/i);
+    expect(title).toBeInTheDocument();
   });
 
   test("Checks if the contact form renders and can be submitted", async () => {
@@ -279,10 +276,6 @@ describe("Unit Testing for the Main Page", () => {
     const parallaxFooters = screen.queryAllByTestId("parallax-footer");
 
     expect(parallaxFooters).toHaveLength(1);
-
-    const footer = parallaxFooters[0];
-
-    // console.log(footer.classList);
   });
 
   test("Renders Cavite State University logo and text", () => {
@@ -297,12 +290,6 @@ describe("Unit Testing for the Main Page", () => {
   });
 
   test("Renders the footer slogan", () => {
-    render(
-      <Router>
-        <MainPage />
-      </Router>
-    );
-
     const slogans = screen.getAllByText("The Future Begins Here!");
 
     expect(slogans.length).toBe(slogans.length);
@@ -311,12 +298,6 @@ describe("Unit Testing for the Main Page", () => {
   });
 
   test("Renders the Facebook social icon with a link", () => {
-    render(
-      <Router>
-        <MainPage />
-      </Router>
-    );
-
     const facebookLinks = screen.getAllByRole("link", { name: /facebook/i });
 
     const facebookLink = facebookLinks[0];
@@ -327,15 +308,17 @@ describe("Unit Testing for the Main Page", () => {
     );
     expect(facebookLink).toHaveAttribute("target", "_blank");
     expect(facebookLink).toHaveAttribute("rel", "noopener noreferrer");
+
+    const facebookImages = screen.getAllByAltText(/Facebook/i);
+    expect(facebookImages.length).toBeGreaterThan(0);
+    expect(facebookImages[0]).toHaveAttribute(
+      "src",
+      "/src/assets/facebook.png"
+    );
+    expect(facebookImages[0]).toHaveAttribute("alt", "Facebook");
   });
 
   test("Renders page footer correctly", async () => {
-    render(
-      <Router>
-        <MainPage />
-      </Router>
-    );
-
     const footers = screen.getAllByTestId("footer-copyright");
 
     expect(footers.length).toBe(footers.length);
