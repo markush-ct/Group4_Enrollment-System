@@ -85,9 +85,9 @@ function MainPage() {
             <Header SideBar={SideBar} setSideBar={setSideBar} />
             <div className={styles.mainPage}>
                 <div className={`${styles.parallaxSection} ${styles.parallax1}`} data-testid="parallax-section1">
-                    <h2>STEP INTO THE FUTURE WITH</h2>
-                    <h1>CAVITE STATE UNIVERSITY</h1>
-                    <Link to="/Apply"><button className={styles.mainButton}><span>ENROLL NOW</span></button></Link>
+                    <h2 data-aos="fade-up">STEP INTO THE FUTURE WITH</h2>
+                    <h1 data-aos="fade-up">CAVITE STATE UNIVERSITY</h1>
+                    <Link to="/Apply"><button data-aos="fade-up" className={styles.mainButton}><span>ENROLL NOW</span></button></Link>
                 </div>
 
                 <div data-aos="fade-up" className={styles.contentSection}>
