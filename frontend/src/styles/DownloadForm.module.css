@@ -394,6 +394,54 @@
   .printButton {
     display: none;
   }
+
+
+
+  .infoGrid2 .hereby p{
+    margin: 0px 0;
+    font-size: 8px;
+    color: #444;
+    font-weight: 50;
+    background-color: transparent;
+  }
+  
+  .hereby{
+    background-color: transparent;
+    margin-right: 5px;
+  }
+  
+  .contentt3box{
+    background-color: transparent;
+    margin-right: 5px;
+    border: 1px solid black;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+  }
+  
+  .contentt3box .contentt3 {
+    font-size: 8px;
+    background-color: transparent;
+    color: #444;
+    text-align: center;
+    font-weight: 400;
+  }
+  
+  .contentt3{
+    background-color: transparent;
+    border-bottom: 1px solid black;
+    text-align: center;
+    
+  }
+  
+  .contentt3box .contentt4 {
+    font-size: 8px;
+    background-color: transparent;
+    color: #444;
+    text-align: left;
+    font-weight: 400;
+    margin-bottom: 0px;
+  }
+  
 }
   
   
@@ -505,6 +553,55 @@ strong,u{
 .shifteeName{
   text-align: right;
 }
+
+.infoGrid2 .hereby p{
+  margin: 0px 0;
+  font-size: 8px;
+  color: #444;
+  font-weight: 50;
+  background-color: transparent;
+}
+
+.hereby{
+  background-color: transparent;
+  margin-right: 5px;
+}
+
+.contentt3box{
+  background-color: transparent;
+  margin-right: 5px;
+  border: 1px solid black;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.contentt3box .contentt3 {
+  font-size: 8px;
+  background-color: transparent;
+  color: #444;
+  text-align: center;
+  font-weight: 400;
+}
+
+.contentt3{
+  background-color: transparent;
+  border-bottom: 1px solid black;
+  text-align: center;
+  
+}
+
+.contentt3box .contentt4 {
+  font-size: 8px;
+  background-color: transparent;
+  color: #444;
+  text-align: left;
+  font-weight: 400;
+  margin-bottom: 0px;
+}
+
+
+
+
 
 @media print {
 
