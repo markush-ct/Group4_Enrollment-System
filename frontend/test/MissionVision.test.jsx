@@ -8,6 +8,7 @@ import styles from "/src/styles/MissionVision.module.css";
 jest.mock("/src/components/Header.jsx", () => () => (
   <div data-testid="mock-header" />
 ));
+
 jest.mock("aos", () => ({
   init: jest.fn(),
 }));
