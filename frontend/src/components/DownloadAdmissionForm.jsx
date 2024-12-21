@@ -38,8 +38,8 @@ const DownloadAdmissionForm = () => {
   });
   
   return (
-    <div className={styles.contentSection} ref={printRef}>
-    <div className={styles.container}>
+    <div className={styles.contentSection}>
+    <div className={styles.container} ref={printRef}>
 
       <div className={styles.headerContainer}>
 
@@ -68,7 +68,6 @@ const DownloadAdmissionForm = () => {
 
       <div className={styles.infoGrid}>
       <div className={styles.contentt}>
-          <p>Generated: <span>Date and Time</span></p>
           <p>Admission Information - <span>{formData.ExamControlNo} 1st semester 2022-2023</span></p>
           <p>Campus - <span>{formData.Branch}</span></p>
         </div>
