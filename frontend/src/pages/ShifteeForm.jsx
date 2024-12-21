@@ -329,8 +329,7 @@ function ShifteeForm() {
               Shifting Status: <span>{formValues.shiftingStatus}</span>
             </h3>
             <p>
-              Kindly go to the Registrar’s Office to claim your Certificate of
-              Registration.
+              Please proceed to the Department of Computer Studies on your scheduled date to submit your requirements.
             </p>
             <form className={styles.form}>
               <div className={styles.formGroup}>

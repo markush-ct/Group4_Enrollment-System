@@ -39,9 +39,10 @@ const DownloadShiftingForm = () => {
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
 
+
     return (
-        <div className={styles.contentSection} ref={printRef}>
-            <div className={styles.container}>
+        <div className={styles.contentSection}>
+            <div className={styles.container} ref={printRef}>
         
               <div className={styles.headerContainer}>
         
@@ -79,22 +80,36 @@ const DownloadShiftingForm = () => {
                 </div>
 
                 <div className={styles.infoGrid}>
-              <div className={styles.contentt2}>
+              <div className={styles.contentt2} style={{marginTop: "10px"}}>
                   <p>Sir/Madam</p>
                 </div>
                 </div>
         
                 <div className={styles.contentt2}>
-        <p className={styles.contentt2}>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;I wish to ask permission to shift to <strong>{studentData.ProgramID === 1 ? "BS COMPUTER SCIENCE" 
-        : studentData.ProgramID === 2 ? "BS INFORMATION TECHNOLOGY" : "Unknown"}</strong> program 
-        from {studentData.PrevProgram} during the {studentData.Semester === "First Semester" 
-        ? "1st" : studentData.Semester === "Second Semester" ? "2nd" : "Unknown"} of AY
+        <p className={styles.contentt2}>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;I wish to ask permission to shift to{" "}
+          <strong>
+            <u>
+              {studentData.ProgramID === 1 ? "Bachelor of Science in Computer Science" 
+              : studentData.ProgramID === 2 ? "Bachelor of Science in Information Technology" 
+              : "Unknown"}
+            </u>
+          </strong> program 
+        from <u>{studentData.PrevProgram}</u> during the{" "}
+        {studentData.Semester === "First Semester" ? "1st" 
+        : studentData.Semester === "Second Semester" ? "2nd" 
+        : "Unknown"} semester of AY {" "}
          {formData.AcadYear} due to the following reasons:         </p>
          
+         <p className={styles.contentt2}>
+         {formData.Reasons.split("\n").map((line, index) => (
+      <React.Fragment key={index}>
+        {line}
+        <br />
+      </React.Fragment>
+    ))}
+         </p>
 
-         <p className={styles.contentt2}>{formData.Reasons}</p>
-
-         <p className={styles.contentt2}>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Hoping for your favorable action.</p>
+         <p className={styles.contentt2_1}>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Hoping for your favorable action.</p>
 
 
         </div>
@@ -105,26 +120,27 @@ const DownloadShiftingForm = () => {
         
         </div>
         <div className={styles.contentt2}>
-      <p>Very truly yours,</p><br></br>
-      <p><span
+      <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Very truly yours,</p><br></br>
+      <p className={styles.shifteeName}><span
           style={{
             display: "inline-block",
             borderBottom: "1px solid black",
             width: "80%",
             marginLeft: "10px",
             marginRight: "0px",
+            textAlign: "center",
+            textTransform: "uppercase",
           }}
-        ></span>
+        >{studentData.Lastname}, {studentData.Firstname} {studentData.Middlename}</span>
         <br />
         (Signature over printed name)
       </p>
-      <p style={{ textAlign: "left" }}>
+      <p style={{ textAlign: "right", marginTop: "10px" }}>
         Date: <span
           style={{
             display: "inline-block",
             borderBottom: "1px solid black",
             width: "70%",
-            marginLeft: "10px",
           }}
         ></span>
       </p>
@@ -161,8 +177,8 @@ const DownloadShiftingForm = () => {
           ></span>
         </p>
         </div>
-        <div className={styles.contentt2}>
-        <p>.</p>
+        <div className={styles.contentt2} style={{ textAlign: "right" }}>
+        <p>&nbsp;</p>
         <span
           style={{
             display: "inline-block",
@@ -182,7 +198,7 @@ const DownloadShiftingForm = () => {
           }}
         ></span>
         </p>
-        <p>Date: 
+        <p style={{ textAlign: "right" }}>Date: 
           <span
             style={{
               display: "inline-block",
@@ -215,8 +231,8 @@ const DownloadShiftingForm = () => {
           (From New Program)
         </p>
         </div>
-        <div className={styles.contentt2}>
-        <p>.</p>
+        <div className={styles.contentt2} style={{ textAlign: "right" }}>
+        <p>&nbsp;</p>
         <span
           style={{
             display: "inline-block",
@@ -271,7 +287,7 @@ const DownloadShiftingForm = () => {
         <div className={styles.contentt2}>
         <p>.</p>
         
-        <p>Date: 
+        <p style={{ textAlign: "right" }}>Date: 
           <span
             style={{
               display: "inline-block",

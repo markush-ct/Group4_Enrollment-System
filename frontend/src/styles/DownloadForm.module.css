@@ -4,18 +4,17 @@
     flex-direction: column;
     align-items: center;
     padding: 30px;
-    margin-bottom: 100px;
-    background-color: #f9f9f9;
+    padding-bottom: 100px;
+    background-color: #eeeeee;
   }
   
 
   .container {
-    width: 100%;
-    max-width: 800px;
+    width: 595px;
+    height: 842px;
     background-color: white;
     padding: 30px;
   }
-  
 
   .headerContainer {
     display: flex;
@@ -43,16 +42,16 @@
   }
   
   .header p {
-    font-size: 14px;
-    margin-bottom: 5px;
+    font-size: 11px;
+    margin-bottom: 0px;
     font-weight: bold;
     color: #555;
     background-color: transparent;
   }
   
   .header h1 {
-    font-size: 24px;
-    margin-bottom: 5px;
+    font-size: 15px;
+    margin-bottom: 3px;
     font-weight: bold;
     color: #222;
     text-transform: uppercase;
@@ -60,7 +59,7 @@
   }
   
   .header h2 {
-    font-size: 16px;
+    font-size: 11px;
     color: #444;
     background-color: transparent;
   }
@@ -111,8 +110,8 @@
 
   
   .infoGrid div p {
-    margin: 5px 0;
-    font-size: 12px;
+    margin: 0px 0;
+    font-size: 10px;
     font-weight: bold;
     color: #444;
     background-color: transparent;
@@ -125,22 +124,19 @@
   }
 
   
-  
-  
-  
 
   .infoGrid2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2px;
-    margin-bottom: 20px;
+    
     background-color: transparent;
   }
 
   
   .infoGrid2 div p {
-    margin: 5px 0;
-    font-size: 12px;
+    margin: 0px 0;
+    font-size: 10px;
     font-weight: bold;
     color: #444;
     background-color: transparent;
@@ -161,8 +157,8 @@
 
   
   .infoGrid3 div p {
-    margin: 5px 0;
-    font-size: 12px;
+    margin: 0px 0;
+    font-size: 10px;
     font-weight: bold;
     color: #444;
     background-color: transparent;
@@ -184,7 +180,7 @@
   background-color: #3d8c4b;
   color: white;
   border: none;
-  margin-top: 100px;
+  margin-top: 50px;
   border-radius: 40px;
   cursor: pointer;
   position: relative;
@@ -263,7 +259,7 @@
   }
   
   .header p {
-    font-size: 14px;
+    font-size: 11px;
     margin-bottom: 5px;
     font-weight: bold;
     color: #555;
@@ -271,7 +267,7 @@
   }
   
   .header h1 {
-    font-size: 24px;
+    font-size: 15px;
     margin-bottom: 5px;
     font-weight: bold;
     color: #222;
@@ -280,7 +276,7 @@
   }
   
   .header h2 {
-    font-size: 16px;
+    font-size: 13px;
     color: #444;
     background-color: transparent;
   }
@@ -299,7 +295,7 @@
     height: 100px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 13px;
     color: #777;
     text-align: center;
     line-height: 1.2;
@@ -314,7 +310,7 @@
 
   .sectionTitle {
     margin: 0;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: bold;
     color: #333;
     border-top: 2px solid #ddd;
@@ -332,8 +328,8 @@
 
   
   .infoGrid div p {
-    margin: 5px 0;
-    font-size: 12px;
+    margin: 0px 0;
+    font-size: 13px;
     font-weight: bold;
     color: #444;
     background-color: transparent;
@@ -355,8 +351,8 @@
 
   
   .infoGrid2 div p {
-    margin: 5px 0;
-    font-size: 12px;
+    margin: 0px 0;
+    font-size: 13px;
     font-weight: bold;
     color: #444;
     background-color: transparent;
@@ -377,8 +373,8 @@
 
   
   .infoGrid3 div p {
-    margin: 5px 0;
-    font-size: 12px;
+    margin: 0px 0;
+    font-size: 13px;
     font-weight: bold;
     color: #444;
     background-color: transparent;
@@ -398,6 +394,54 @@
   .printButton {
     display: none;
   }
+
+
+
+  .infoGrid2 .hereby p{
+    margin: 0px 0;
+    font-size: 8px;
+    color: #444;
+    font-weight: 50;
+    background-color: transparent;
+  }
+  
+  .hereby{
+    background-color: transparent;
+    margin-right: 5px;
+  }
+  
+  .contentt3box{
+    background-color: transparent;
+    margin-right: 5px;
+    border: 1px solid black;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+  }
+  
+  .contentt3box .contentt3 {
+    font-size: 8px;
+    background-color: transparent;
+    color: #444;
+    text-align: center;
+    font-weight: 400;
+  }
+  
+  .contentt3{
+    background-color: transparent;
+    border-bottom: 1px solid black;
+    text-align: center;
+    
+  }
+  
+  .contentt3box .contentt4 {
+    font-size: 8px;
+    background-color: transparent;
+    color: #444;
+    text-align: left;
+    font-weight: 400;
+    margin-bottom: 0px;
+  }
+  
 }
   
   
@@ -427,9 +471,13 @@
   margin-top: 0;
 }
 
+strong,u{
+  background-color: transparent;
+}
+
 .infoGrid .contentt2 p {
-  margin: 5px 0;
-  font-size: 14px;
+  margin: 0px 0;
+  font-size: 11px;
   font-weight: bold;
   color: #444;
   background-color: transparent;
@@ -447,14 +495,14 @@
   display: flex;
   justify-content: flex-end; 
   gap: 2px;
-  font-size: 14px;
+  font-size: 11px;
   margin-bottom: 20px;
   background-color: transparent;
 }
 
 .infoGrid4 .contentt2 p {
-  margin: 5px 0;
-  font-size: 14px;
+  margin: 0px 0;
+  font-size: 11px;
   font-weight: bold;
   color: #444;
   background-color: transparent;
@@ -471,13 +519,27 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr); 
   gap: 2px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   background-color: transparent;
 }
 
 .infoGrid5 .contentt2 p {
-  margin-top: -5px;
-  font-size: 14px;
+  margin: 0px 0;
+  font-size: 11px;
+  color: #444;
+  background-color: transparent;
+}
+
+.contentt2{
+  margin: 0px 0;
+  font-size: 11px;
+  color: #444;
+  background-color: transparent;
+}
+
+.contentt2_1{
+  margin-top: 5px 0;
+  font-size: 11px;
   color: #444;
   background-color: transparent;
 }
@@ -488,6 +550,54 @@
   background-color: transparent;
 }
 
+.shifteeName{
+  text-align: right;
+}
+
+.infoGrid2 .hereby p{
+  margin: 0px 0;
+  font-size: 8px;
+  color: #444;
+  font-weight: 50;
+  background-color: transparent;
+}
+
+.hereby{
+  background-color: transparent;
+  margin-right: 5px;
+}
+
+.contentt3box{
+  background-color: transparent;
+  margin-right: 5px;
+  border: 1px solid black;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.contentt3box .contentt3 {
+  font-size: 8px;
+  background-color: transparent;
+  color: #444;
+  text-align: center;
+  font-weight: 400;
+}
+
+.contentt3{
+  background-color: transparent;
+  border-bottom: 1px solid black;
+  text-align: center;
+  
+}
+
+.contentt3box .contentt4 {
+  font-size: 8px;
+  background-color: transparent;
+  color: #444;
+  text-align: left;
+  font-weight: 400;
+  margin-bottom: 0px;
+}
 
 
 
@@ -503,7 +613,7 @@
   width: 100px;
   height: 100px;
   border: none;
-  font-size: 12px;
+  font-size: 13px;
   text-align: center;
   background-color: transparent;
 }
@@ -514,13 +624,19 @@
 }
 
 .contentt2{
+  margin: 0px 0;
+  font-size: 13px;
+  color: #444;
   background-color: transparent;
-  margin-top: 0;
+}
+
+.contentt2_1{
+  font-size: 13px;
 }
 
 .infoGrid .contentt2 p {
-  margin: 5px 0;
-  font-size: 14px;
+  margin: 0px 0;
+  font-size: 13px;
   font-weight: bold;
   color: #444;
   background-color: transparent;
@@ -538,14 +654,14 @@
   display: flex;
   justify-content: flex-end; 
   gap: 2px;
-  font-size: 14px;
+  font-size: 13px;
   margin-bottom: 20px;
   background-color: transparent;
 }
 
 .infoGrid4 .contentt2 p {
   margin: 5px 0;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: bold;
   color: #444;
   background-color: transparent;
@@ -568,7 +684,7 @@
 
 .infoGrid5 .contentt2 p {
   margin-top: -5px;
-  font-size: 14px;
+  font-size: 13px;
   color: #444;
   background-color: transparent;
 }

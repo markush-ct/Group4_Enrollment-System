@@ -4,7 +4,7 @@ import 'aos/dist/aos.css';
 import axios from 'axios';
 import Header from '/src/components/AdminDashHeader.jsx';
 import styles from '/src/styles/AccountRequest.module.css';
-import { useNavigate } from 'react-router-dom';
+import { data, useNavigate } from 'react-router-dom';
 
 function AccountRequest() {
   const [SideBar, setSideBar] = useState(false);
@@ -120,17 +120,23 @@ const handleApprove = async (request) => {
   }
 
   try {
-      await axios.post('http://localhost:8080/sendApprovalEmail', {
+      const res = await axios.post('http://localhost:8080/sendApprovalEmail', {
           email: request.Email,
           name: request.Name,
           accountType: request.AccountType,
       });
 
-      setApprovalPrompt(true);
-      setApprovalMsg(`Approval email sent to ${request.Email}`);
-      setErrorPrompt(false);
-      setPopUpVisible(false);
-      setLoading(false);
+      if(res.data.message === "Account saved"){
+        setApprovalPrompt(true);
+        setApprovalMsg(`Approval email sent to ${request.Email}`);
+        setErrorPrompt(false);
+        setPopUpVisible(false);
+        setLoading(false);
+      } else {
+        setErrorPrompt(true);
+        setErrorMsg(`Failed to send approval email:  ${res.data.message}`);
+        setLoading(false);
+      }
       
   } catch (err) {
       console.error('Error:', err);
@@ -152,17 +158,23 @@ const handleReject = async (request) => {
   }
 
   try {
-      await axios.post('http://localhost:8080/sendEmailRejection', {
+      const res = await axios.post('http://localhost:8080/sendEmailRejection', {
           email: request.Email,
           name: request.Name,
           accountType: request.AccountType
       });
 
-      setRejectionPrompt(true);
-      setRejectionMsg(`Rejection email sent to ${request.Email}`);
-      setErrorPrompt(false);
-      setPopUpVisible(false);
-      setLoading(false);
+      if(res.data.message === "Account request rejected"){
+        setRejectionPrompt(true);
+        setRejectionMsg(`Rejection email sent to ${request.Email}`);
+        setErrorPrompt(false);
+        setPopUpVisible(false);
+        setLoading(false);
+      } else{
+        setErrorPrompt(true);
+        setErrorMsg(`Failed to send rejection email: ${res.data.message}`);
+        setLoading(false);
+      }
   } catch (err) {
       console.error('Error:', err);
       setErrorPrompt(true);

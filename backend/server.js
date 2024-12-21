@@ -1070,7 +1070,7 @@ app.post('/sendEmailRejection', async (req, res) => {
     } catch (error) {
         console.error('Error in /sendEmailRejection:', error);
         res.json({
-            message: 'Internal Server Error',
+            message: 'Internal server error. Please check your internet connection.',
             error: error.message,
         });
     }
@@ -1366,7 +1366,7 @@ app.post('/sendApprovalEmail', async (req, res) => {
     } catch (error) {
         console.error('Error in /sendApprovalEmail:', error);
         res.json({
-            message: 'Internal Server Error',
+            message: 'Internal server error. Please check your internet connection.',
             error: error.message,
         });
     }
