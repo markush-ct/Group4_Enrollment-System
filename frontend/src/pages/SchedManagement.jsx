@@ -8,11 +8,18 @@ function SchedManagement() {
   const [SideBar, setSideBar] = useState(false);
   const [errorPrompt, setErrorPrompt] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [viewMode, setViewMode] = useState("table"); 
-  const [popUpVisible, setPopUpVisible] = useState(false); 
-  const [selectedSection, setSelectedSection] = useState(""); 
+  const [viewMode, setViewMode] = useState("table");
+  const [popUpVisible, setPopUpVisible] = useState(false);
+  const [selectedSection, setSelectedSection] = useState("");
 
-  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const days = [
+    { full: "Monday", short: "Mon" },
+    { full: "Tuesday", short: "Tue" },
+    { full: "Wednesday", short: "Wed" },
+    { full: "Thursday", short: "Thu" },
+    { full: "Friday", short: "Fri" },
+    { full: "Saturday", short: "Sat" },
+  ];
   const times = Array.from({ length: 14 }, (_, i) => {
     const hour = 7 + i;
     return hour.toString().padStart(2, "0") + ":00";
@@ -78,7 +85,7 @@ function SchedManagement() {
         classType: "Lecture",
       },
     ];
-  
+
     setSchedule(mockData); // mock data
   }, []);
 
@@ -100,7 +107,7 @@ function SchedManagement() {
     }
 
     setSchedule((prev) => [...prev, formData]);
-    setViewMode("table"); 
+    setViewMode("table");
     setFormData({
       courseCode: "",
       startTime: "",
@@ -115,12 +122,12 @@ function SchedManagement() {
 
   const handleSectionClick = (section) => {
     setSelectedSection(section); // section
-    setPopUpVisible(true); 
+    setPopUpVisible(true);
   };
 
   const closePopup = () => {
-    setPopUpVisible(false); 
-    setSelectedSection(""); 
+    setPopUpVisible(false);
+    setSelectedSection("");
   };
 
   return (
@@ -129,35 +136,30 @@ function SchedManagement() {
       <div className={styles.contentSection}>
         <div className={styles.PageTitle}>Schedule Management</div>
 
+        <div className={styles.buttonFilterContainer}>
+          <button
+            className={styles.addButton1}
+            onClick={() => setViewMode(viewMode === "table" ? "form" : "table")}
+          >
+            {viewMode === "table" ? <span>Add Schedule</span> : <span>Back to Table</span>}
+          </button>
 
-<div className={styles.buttonFilterContainer}>
-  <button
-    className={styles.addButton1}
-    onClick={() => setViewMode(viewMode === "table" ? "form" : "table")}
-  >
-    {viewMode === "table" ? <span>Add Schedule</span> : <span>Back to Table</span>}
-  </button>
-
-  {/* Dropdown  */}
-  <div className={styles.filterSection} data-aos="fade-up">
-    <label htmlFor="filter" className={styles.filterLabel}>Filter by Type:</label>
-    <select
-      id="filter"
-      className={styles.filterDropdown}
-      value="filterType"
-    >
-      <option value="All">All</option>
-      <option value="1-1">1-1</option>
-      <option value="1-2">1-2</option>
-      <option value="1-3">1-3</option>
-      <option value="2-1">2-1</option>
-
-    </select>
-  </div>
-</div>
-
-
-
+          {/* Dropdown  */}
+          <div className={styles.filterSection} data-aos="fade-up">
+            <label htmlFor="filter" className={styles.filterLabel}>Filter by Type:</label>
+            <select
+              id="filter"
+              className={styles.filterDropdown}
+              value="filterType"
+            >
+              <option value="All">All</option>
+              <option value="1-1">1-1</option>
+              <option value="1-2">1-2</option>
+              <option value="1-3">1-3</option>
+              <option value="2-1">2-1</option>
+            </select>
+          </div>
+        </div>
 
         {viewMode === "table" ? (
           <div className={styles.tableContainer}>
@@ -199,8 +201,8 @@ function SchedManagement() {
               <select name="day" value={formData.day} onChange={handleInputChange}>
                 <option value="">Select Day</option>
                 {days.map((day) => (
-                  <option key={day} value={day}>
-                    {day}
+                  <option key={day.full} value={day.full}>
+                    {day.full}
                   </option>
                 ))}
               </select>
@@ -247,7 +249,7 @@ function SchedManagement() {
                 <option value="Laboratory">Laboratory</option>
               </select>
               <button className={styles.addButton} onClick={addSchedule}>
-              <span>Add Schedule</span>
+                <span>Add Schedule</span>
               </button>
             </div>
           </div>
@@ -270,87 +272,85 @@ function SchedManagement() {
           </div>
         )}
 
-{popUpVisible && (
-  <div
-    data-aos="zoom-out"
-    data-aos-duration="500"
-    className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}
-  >
-    <div className={styles.popupContentReq}>
+        {popUpVisible && (
+          <div
+            data-aos="zoom-out"
+            data-aos-duration="500"
+            className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}
+          >
+            <div className={styles.popupContentReq}>
+              <div className={styles.popupHeader}>
+                <button onClick={closePopup} className={styles.closeButton}>✖</button>
+                <h2>CLASS SCHEDULE</h2>
+              </div>
+              <div data-aos="fade-up" className={styles.studentType}>
+                <span>BSCS 2-3</span>
+              </div>
 
-      <div className={styles.popupHeader}>
-        <button onClick={closePopup} className={styles.closeButton}>✖</button>
-        <h2>CLASS SCHEDULE</h2>
-      </div>
-      <div data-aos="fade-up" className={styles.studentType}>
-        <span>BSCS 2-3</span>
-      </div>
+              {/* Calendar */}
+              <div data-aos="fade-up" className={styles.detailsSection}>
+                <div className={styles.table}>
+                  <div className={styles.header}>
+                    <div className={styles.th}>Time</div>
+                    {days.map((day) => (
+                      <div className={styles.th} key={day.full}>
+                        <span className={styles.fullDay}>{day.full}</span>
+                        <span className={styles.shortDay}>{day.short}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className={styles.body}>
+                    {times.map((time, rowIndex) => {
+                      const nextTime = times[rowIndex + 1] || "21:00 PM";
+                      const timeRange = `${time} - ${nextTime}`;
 
-      {/* calendar */}
-      <div data-aos="fade-up" className={styles.detailsSection}>
-        <div className={styles.table}>
-          <div className={styles.header}>
-            <div className={styles.th}>Time</div>
-            {days.map((day) => (
-              <div className={styles.th} key={day}>{day}</div>
-            ))}
-          </div>
-          <div className={styles.body}>
-            {times.map((time, rowIndex) => {
-              const nextTime = times[rowIndex + 1] || "21:00 PM";
-              const timeRange = `${time} - ${nextTime}`;
+                      return (
+                        <div key={time} className={styles.timeRow}>
+                          <div className={styles.timeCell}>{timeRange}</div>
+                          {days.map((day) => (
+                            <div key={day.full} className={styles.dayCell}>
+                              {schedule
+                                .filter(
+                                  (sched) =>
+                                    sched.day === day.full &&
+                                    times.indexOf(sched.startTime) <= rowIndex &&
+                                    times.indexOf(sched.endTime) > rowIndex
+                                )
+                                .map((sched) => {
+                                  const startIndex = times.indexOf(sched.startTime);
+                                  const endIndex = times.indexOf(sched.endTime);
+                                  const blockColor =
+                                    sched.classType === "Lecture"
+                                      ? styles.lectureBlock
+                                      : styles.labBlock;
 
-              return (
-                <div key={time} className={styles.timeRow}>
-                  <div className={styles.timeCell}>{timeRange}</div>
-                  {days.map((day) => (
-                    <div key={day} className={styles.dayCell}>
-                      {schedule
-                        .filter(
-                          (sched) =>
-                            sched.day === day &&
-                            times.indexOf(sched.startTime) <= rowIndex &&
-                            times.indexOf(sched.endTime) > rowIndex
-                        )
-                        .map((sched) => {
-                          const startIndex = times.indexOf(sched.startTime);
-                          const endIndex = times.indexOf(sched.endTime);
-                          const blockColor =
-                            sched.classType === "Lecture"
-                              ? styles.lectureBlock
-                              : styles.labBlock;
-
-                          return (
-                            <div
-                              key={sched.courseCode}
-                              className={`${styles.scheduleBlock} ${blockColor}`}
-                              style={{
-                                gridRow: `${startIndex + 1} / ${endIndex + 1}`, 
-                              }}
-                            >
-                              <div className={styles.blox}>{sched.courseCode}</div>
-                              <div className={styles.blox}>{sched.room}</div>
-                              <div className={styles.blox}>
-                                {sched.year}-{sched.section}
-                              </div>
+                                  return (
+                                    <div
+                                      key={sched.courseCode}
+                                      className={`${styles.scheduleBlock} ${blockColor}`}
+                                      style={{
+                                        gridRow: `${startIndex + 1} / ${endIndex + 1}`,
+                                      }}
+                                    >
+                                      <div className={styles.blox}>{sched.courseCode}</div>
+                                      <div className={styles.blox}>{sched.room}</div>
+                                      <div className={styles.blox}>
+                                        {sched.year}-{sched.section}
+                                      </div>
+                                    </div>
+                                  );
+                                })}
                             </div>
-                          );
-                        })}
-                    </div>
-                  ))}
+                          ))}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              );
-            })}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-
-     
-    </div>
-  </div>
-)}
-
-
+        )}
       </div>
     </>
   );

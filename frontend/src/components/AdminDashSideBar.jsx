@@ -49,6 +49,7 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
                         { name: 'Dashboard', icon: dashboardIcon, path: '/EnrollmentOfficerDashboard' },
                         { name: 'Account Requests', icon: accountRequestsIcon, path: '/AccountRequest' },
                         { name: 'Enrollment', icon: preEnrollmentIcon, path: '/AdminPreEnrollment' },
+                        { name: 'Account Management', icon: preEnrollmentIcon, path: '/' },
                     ],
                     "Society Officer": [
                         { name: 'Dashboard', icon: dashboardIcon, path: '/SocOfficerDashboard' },
@@ -57,18 +58,18 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
                         { name: 'Requirements', icon: requirementsIcon, path: '/Requirements' },
                     ],
                     "Adviser": [
-                        { name: 'Dashboard', icon: dashboardIcon, path: '/dashboard' },
+                        { name: 'Dashboard', icon: dashboardIcon, path: '/AdviserDashboard' },
                         { name: 'Advising', icon: societyFeeIcon, path: '/advising' },
-                        { name: 'Requirements Submission', icon: requirementsIcon, path: '/requirements-submission' },
+                        { name: 'Requirements', icon: requirementsIcon, path: '/Requirements' },
                     ],
                     "DCS Head": [
                         { name: 'Dashboard', icon: dashboardIcon, path: '/DCSHeadDashboard' },
                         { name: 'Shifting Request', icon: accountRequestsIcon, path: '/ShiftingRequest' },                                                
                     ],
                     "School Head": [
-                        { name: 'Dashboard', icon: dashboardIcon, path: '/SocOfficerDashboard' },
+                        { name: 'Dashboard', icon: dashboardIcon, path: '/SchoolHeadDashboard' },
                         { name: 'Freshman Admission', icon: accountRequestsIcon, path: '/FreshmenAdmissionRequest' },
-                        { name: 'Transferee Admission', icon: accountRequestsIcon, path: '/ShiftingRequest' },
+                        { name: 'Transferee Admission', icon: accountRequestsIcon, path: '/TransfereeAdmissionRequest' },
                         
                         
                     ]

@@ -627,27 +627,222 @@
   color: #3d8c4b;
   font-weight: bold;
 }
+.fullDay {
+  display: block; 
+  background-color: transparent;
+}
+
+.shortDay {
+  display: none;
+}
   
 
 
 
   /* MOBILE */
-  @media (max-width: 768px) {
-    .formGroup {
-      flex-direction: column;
-      gap: 15px;
-    }
+
+@media (max-width: 768px) {
+  .formGroup {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  input, select, .addButton {
+    width: 100%; 
+  }
+
+
   
-    input, select {
-      width: 100%; 
-    }
+  .addButton1{
+    width: 100%;
+  }
+
+  .table {
+    grid-template-columns: 1fr 1fr; 
+    font-size: 10px;
+  }
+
+  .th, .timeCell, .scheduleBlock {
+    font-size: 10px;
+    padding: 3px;
+  }
+
+  .dayCell {
+    min-height: 40px;
+  }
+
+
+  .requestsTable {
+    display: block;
+    width: 100%;
+  }
+
+  .requestsTable thead {
+    display: none; 
+  }
+
+  .requestsTable tbody {
+    display: block;
+  }
+
+  .requestsTable tr {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #fafafa;
+    border-radius: 8px;
+  }
+
+  .requestsTable td {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .requestsTable td:last-child {
+    border-bottom: none;
+    justify-content: flex-end;
+  }
+
+  .requestsTable td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #3d8c4b; 
+    padding-right: 10px;
+  }
+
+  .requestsTable td button {
+    margin-top: 10px;
+    gap: 10px;
+    align-self: flex-end; 
+  }
+
+  .buttonFilterContainer {
+    flex-direction: column; 
+    align-items: flex-start; 
+  }
+
+  .buttonFilterContainer button,
+  .buttonFilterContainer .filterSection {
+    width: 100%;
+    margin-bottom: 10px; 
+  }
+
+
+  .schedTable {
+    display: block;
+    width: 100%;
+    font-size: 12px; 
+  }
   
-    .addButton {
-      width: 100%; 
-    }
-    
-    .table {
-      margin-top: 20px;
-      padding: 0 10px;
-    }
+  .schedTable thead {
+    display: none; 
+  }
+  
+  .schedTable tbody {
+    display: block;
+  }
+  
+  .schedTable tr {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+  }
+  
+  .schedTable td {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 12px; 
+  }
+  
+  .schedTable td:last-child {
+    border-bottom: none;
+    justify-content: flex-end;
+  }
+  
+  .schedTable td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #2b7ab9; 
+    padding-right: 10px;
+    font-size: 12px; 
+  }
+  
+
+  /* Popup Styling */
+  .popupContent,
+  .popupContentReq {
+    max-height: 80vh;
+    margin: 10% 5% 20% 5%;
+  }
+
+  .popupHeader {
+    margin: 10px 0 20px;
+  }
+
+  .popupHeader h2 {
+    font-size: 1.5rem; 
+  }
+
+  .popupText,
+  .popupTextReq {
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    justify-content: center;
+  }
+
+  .studentType {
+    font-size: 1.25rem; 
+  }
+
+
+  .fullDay {
+    display: none;
+  }
+
+  .shortDay {
+    display: block; 
+    background-color: transparent;
+  }
+
+}
+
+@media (max-width: 480px) {
+  .filterDropdown {
+    width: 100%; 
+  }
+
+  .popupContent {
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+
+  .PageTitle {
+    font-size: 1.25rem; 
+  }
+
+  .popupHeader h2 {
+    font-size: 1.25rem; 
+  }
+}
+
+@media (max-width: 500px) {
+  table th,
+  table td {
+    font-size: 10px;
+    padding: 5px; 
+  }
 }

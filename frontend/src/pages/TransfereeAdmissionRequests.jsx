@@ -7,7 +7,7 @@ import styles from '/src/styles/FreshmenAdmissionRequests.module.css';
 import { useNavigate } from 'react-router-dom';
 
 
-function FreshmenAdmissionRequest() {
+function TransfereeAdmissionRequest() {
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const [accountRequests, setAccountRequests] = useState([]);
@@ -386,7 +386,7 @@ function FreshmenAdmissionRequest() {
               ) : (
                 <tr>
                   <td colSpan="4" className={styles.noData}>
-                    No freshmen admission requests found.
+                    No transferee admission requests found.
                   </td>
                 </tr>
               )}
@@ -594,4 +594,4 @@ function FreshmenAdmissionRequest() {
   );
 }
 
-export default FreshmenAdmissionRequest;
+export default TransfereeAdmissionRequest;
