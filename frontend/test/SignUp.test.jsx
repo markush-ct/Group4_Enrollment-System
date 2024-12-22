@@ -4,11 +4,11 @@ import SignUp from "/src/pages/SignUp";
 import styles from "/src/styles/SignUp.module.css";
 import { BrowserRouter as Router } from "react-router-dom";
 import axios from "axios";
-import MockAdapter from "axios-mock-adapter";
+import axiosMock from "axios-mock-adapter";
 import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
 
-const mock = new MockAdapter(axios);
+const mockAxios = new axiosMock(axios);
 
 jest.mock("/src/components/Header.jsx", () => ({
   __esModule: true,
@@ -27,7 +27,7 @@ jest.mock("aos", () => ({
 
 describe("Unit Testing for Sign Up Page", () => {
   beforeEach(() => {
-    mock.reset();
+    mockAxios.reset();
   });
 
   test("Checks AOS animations initialization", () => {
@@ -95,16 +95,28 @@ describe("Unit Testing for Sign Up Page", () => {
 
     const freshmanRadio = screen.getByLabelText(/Freshman/i);
     const transfereeRadio = screen.getByLabelText(/Transferee/i);
+    const shifteeRadio = screen.getByLabelText(/Shiftee/i);
 
     userEvent.click(freshmanRadio);
+
     expect(freshmanRadio).toBeChecked();
     expect(transfereeRadio).not.toBeChecked();
+    expect(shifteeRadio).not.toBeChecked();
 
     userEvent.click(transfereeRadio);
 
     await waitFor(() => {
       expect(transfereeRadio).toBeChecked();
       expect(freshmanRadio).not.toBeChecked();
+      expect(shifteeRadio).not.toBeChecked();
+    });
+
+    userEvent.click(shifteeRadio);
+
+    await waitFor(() => {
+      expect(shifteeRadio).toBeChecked();
+      expect(freshmanRadio).not.toBeChecked();
+      expect(transfereeRadio).not.toBeChecked();
     });
   });
 
@@ -155,7 +167,7 @@ describe("Unit Testing for Sign Up Page", () => {
   });
 
   test("Fetches Academic Preference options in the select dropdown for all categories from API", async () => {
-    mock.onGet("http://localhost:8080/programs").reply(200, [
+    mockAxios.onGet("http://localhost:8080/programs").reply(200, [
       { programID: 1, programName: "Bachelor of Science in Computer Science" },
       {
         programID: 2,
