@@ -1,11 +1,11 @@
-import { useEffect, useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
+import styles from "/src/styles/DCSHeadDash.module.css";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { Line, Doughnut } from "react-chartjs-2";
-import styles from "/src/styles/AdminDash.module.css";
 import Header from "/src/components/AdminDashHeader.jsx";
+import { Doughnut } from "react-chartjs-2";
+import { useNavigate } from "react-router-dom";
 
-// Chart.js 
+
 import {
   Chart as ChartJS,
   ArcElement,
@@ -18,12 +18,15 @@ import {
 } from "chart.js";
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement);
 
+
+
 function EnrollmentOfficerDashboard() {
   const [SideBar, setSideBar] = useState(false);
-  const [accName, setAccName] = useState("");
   const [CScount, setCScount] = useState(0);
   const [ITcount, setITcount] = useState(0);
-  const [pendingAcc, setPendingAcc] = useState(0);
+  const [reqCount, setReqCount] = useState(0);
+  const [announcements, setAnnouncements] = useState([]); // LIST ANNOUNCEMENT
+  const [accName, setAccName] = useState("");
 
 
   useEffect(() => {
@@ -31,72 +34,28 @@ function EnrollmentOfficerDashboard() {
     return () => (document.body.style.overflow = "auto");
   }, [SideBar]);
 
-  //FETCH TOTAL NUMBER OF PENDING ACCOUNT REQUESTS
-  useEffect(() => {
-    axios.get("http://localhost:8080/pendingAccounts")
+
+//Reuse in other pages that requires logging in
+const navigate = useNavigate();
+axios.defaults.withCredentials = true;
+//RETURNING ACCOUNT NAME IF LOGGED IN
+useEffect(() => {
+  axios
+    .get("http://localhost:8080")
     .then((res) => {
-      const totalPendingAcc = res.data.studentCount + res.data.socOfficerCount + res.data.employeeCount
-      setPendingAcc(totalPendingAcc);
+      if (res.data.valid) {
+        setAccName(res.data.name);
+      } else {
+        navigate("/LoginPage");
+      }
     })
+    //RETURNING ERROR IF NOT
     .catch((err) => {
-      alert("Error occurred: " + err);
-    })
-  })
+      console.error("Error validating user session:", err);
+    });
+}, []);
+//Reuse in other pages that requires logging in
 
-  //Reuse in other pages that requires logging in
-  const navigate = useNavigate();
-  axios.defaults.withCredentials = true;
-  //RETURNING ACCOUNT NAME IF LOGGED IN
-  useEffect(() => {
-    axios
-      .get("http://localhost:8080")
-      .then((res) => {
-        if (res.data.valid) {
-          setAccName(res.data.name);
-        } else {
-          navigate("/LoginPage");
-        }
-      })
-      //RETURNING ERROR IF NOT
-      .catch((err) => {
-        console.error("Error validating user session:", err);
-      });
-  }, []);
-  //Reuse in other pages that requires logging in
-
-  // LINE CHART 
-  const lineData = useMemo(
-    () => ({
-      labels: ["2018", "2019", "2020", "2021", "2022", "2023", "2024"],
-      datasets: [
-        {
-          label: "Yearly Student Population",
-          data: [10, 30, 50, 70, 100, 150, 180],
-          fill: true,
-          backgroundColor: "rgba(75, 192, 192, 0.2)",
-          borderColor: "rgba(75, 192, 192, 1)",
-          borderWidth: 2,
-          tension: 0.4,
-        },
-      ],
-    }),
-    []
-  );
-
-  const lineOptions = useMemo(
-    () => ({
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        x: { beginAtZero: true },
-        y: { beginAtZero: true },
-      },
-      plugins: {
-        legend: { display: true, position: "top" },
-      },
-    }),
-    []
-  );
 
   // BILOG NA ANO
   const doughnutData = useMemo(
@@ -127,103 +86,134 @@ function EnrollmentOfficerDashboard() {
   );
 
   //GET NUMBER OF REGULAR STUDENTS ENROLLED IN BSCS
-  useEffect (() => {
+  useEffect(() => {
     axios.get("http://localhost:8080/getCS")
-    .then((res) => {
-      setCScount(res.data.CScount);
-    })
-    .catch((err) => {
-      alert("Error: " + err);
-      console.error("ERROR FETCHING DATA: " + err);
-    });
+      .then((res) => {
+        setCScount(res.data.CScount);
+      })
+      .catch((err) => {
+        alert("Error: " + err);
+        console.error("ERROR FETCHING DATA: " + err);
+      });
   }, []);
 
   //GET NUMBER OF REGULAR STUDENTS ENROLLED IN BSIT
-  useEffect (() => {
+  useEffect(() => {
     axios.get("http://localhost:8080/getIT")
-    .then((res) => {
-      setITcount(res.data.ITcount);
-    })
-    .catch((err) => {
-      alert("Error: " + err);
-      console.error("ERROR FETCHING DATA: " + err);
-    });
+      .then((res) => {
+        setITcount(res.data.ITcount);
+      })
+      .catch((err) => {
+        alert("Error: " + err);
+        console.error("ERROR FETCHING DATA: " + err);
+      });
   }, []);
+
+  useEffect(() => {
+    axios.get("http://localhost:8080/getTotalShiftingReq")
+      .then((res) => {
+        setReqCount(res.data.shiftingReqCount);
+      })
+      .catch((err) => {
+        alert("Error: " + err);
+        console.error("ERROR FETCHING DATA: " + err);
+      });
+  })
+
 
   return (
     <>
       <Header SideBar={SideBar} setSideBar={setSideBar} />
-      <div className={`${styles.dashboard} container`}>
-        <h1 className={styles.greeting}>Hi {accName || "Loading..."}</h1>
+      <div className={styles.contentSection}>
+        <div className={styles.gridContainer}>
 
-        {/* CONTENT */}
-        <div className={`${styles.content} container`}>
 
-        <div className={styles.dashboardCards}>
-  <div className={styles.dashboardCard}>
-    <h3>Total Enrolled</h3>
-    <p className={styles.cardNumber}>{ITcount + CScount}</p>
-    <p className={styles.cardDetails}>
-      +18% <span>+3.8k this week</span>
-    </p>
-  </div>
-  <div className={styles.dashboardCard}>
-    <h3>Visitor</h3>
-    <p className={styles.cardNumber}>1.234</p>
-    <p className={styles.cardDetails}>
-      +18% <span>+2.8k this week</span>
-    </p>
-  </div>
-  <div className={styles.dashboardCard}>
-    <h3>Pending Accounts</h3>
-    <p className={styles.cardNumber}>{pendingAcc}</p>
-    <p className={styles.cardDetails}>
-      +18% <span>+7.8k this week</span>
-    </p>
-  </div>
-  <div className={styles.dashboardCard}>
-    <h3>Registered Student</h3>
-    <p className={styles.cardNumber}>123</p>
-    <p className={styles.cardDetails}>
-      +18% <span>+1.2k this week</span>
-    </p>
-  </div>
-</div>
-          
-          {/* STYATS */}
-          <div className={styles.statCards}>
-            <div className={`${styles.statCard} ${styles.computerScience}`}>
-              <h3>Computer Science</h3>
-              <p>{CScount}</p>
-            </div>
-            <div className={`${styles.statCard} ${styles.informationTechnology}`}>
-              <h3>Information Technology</h3>
-              <p>{ITcount}</p>
+          <div className={styles.container2}>
+            {/* STATS */}
+            <div className={styles.Stats}>
+              <div className={styles.nameCard}>
+                <div className={styles.nameSection}>
+                  <p>HI</p>
+                  <h3>{accName}</h3>
+                </div>
+                <div className={styles.logos}>
+                  <img src="/src/assets/ACS-ICON.png" alt="Logo 1" className={styles.logo} />
+                  <img src="/src/assets/ITS-ICON.png" alt="Logo 2" className={styles.logo} />
+                </div>
+              </div>
+
+
+              <div className={styles.blueCard}>
+                <h3>Total Enrolled</h3>
+                <p>{ITcount + CScount}</p>
+              </div>
+              <div className={styles.blueCard}>
+                <h3>Shifting Request</h3>
+                <p>{reqCount}</p>
+              </div>
             </div>
           </div>
 
-          {/* CHARTS */}
-<div className={styles.charts}>
-  {/* LINE CHART */}
-  <div className={styles.chart}>
-    <h3>DCS Yearly Student Population</h3>
-    <div className={styles.chartContainer}>
-      <Line data={lineData} options={lineOptions} />
-    </div>
-  </div>
 
-  {/* BILOG NA ANO */}
-  <div className={styles.chart}>
-    <h3>DCS Population Per Course</h3>
-    <div className={styles.chartContainer}>
-      <Doughnut data={doughnutData} options={doughnutOptions} />
-    </div>
-  </div>
-</div>
-</div>
-</div>
+          <div className={styles.container2}>
+            {/* STATS */}
+            <div className={styles.Stats}>
+              <div className={styles.DCScount}>
+                <h3>Total DCS Students</h3>
+                <p>70</p>
+              </div>
+              <div className={styles.CsStats}>
+                <h3>Computer Science</h3>
+                <p>35</p>
+              </div>
+              <div className={styles.ItStats}>
+                <h3>Information Technology</h3>
+                <p>35</p>
+              </div>
+            </div>
+          </div>
+
+
+          <div className={styles.container3}>
+            <div className={styles.row1}>
+              <div className={styles.headerContainer}>
+                <h2 className={styles.announcementHeader}>View Announcements</h2>
+
+              </div>
+              <div className={styles.announcementList}>
+                {announcements.slice(0, 3).map((announcement, index) => (
+                  <div key={index} className={styles.announcementItem}>
+                    {announcement}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className={styles.row2}>
+              <div className={styles.headerContainer}>
+                <h2 className={styles.announcementHeader}>Class Schedules</h2>
+
+              </div>
+            </div>
+          </div>
+
+
+          {/* DONUT  */}
+          <div className={styles.container4}>
+            <div className={styles.DonutContainer}>
+              <div className={styles.DonutText}>
+                <h3>DCS Population Per Course</h3>
+              </div>
+              <div className={styles.Donut}>
+                <Doughnut data={doughnutData} options={doughnutOptions} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </>
   );
-}
+};
 
 export default EnrollmentOfficerDashboard;
