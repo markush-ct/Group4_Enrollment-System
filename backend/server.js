@@ -65,6 +65,29 @@ const upload = multer({ storage });
 
 app.use("/uploads", express.static("uploads"));
 
+app.get('/getTransfereeData', (req, res) => {
+    const getStudentData = `SELECT * FROM student WHERE Email = ?`;
+    const getTransfereeData = `SELECT * FROM admissionform WHERE StudentID = ?`;
+
+    db.query(getStudentData, req.session.email, (err, studentRes) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if (studentRes.length > 0) {
+            db.query(getTransfereeData, studentRes[0].StudentID, (err, transfereeRes) => {
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else if(transfereeRes.length > 0 ){
+                    return res.json({
+                        message: "Fetched records successfully",
+                        student: studentRes[0],
+                        transferee: transfereeRes[0]
+                    });
+                }
+            })
+        }
+    });
+})
+
 app.post('/rejectFreshmenAdmissionReq', (req, res) =>{
     const getEmpID = `SELECT * FROM employee where Email = ?`;
 

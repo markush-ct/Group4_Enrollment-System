@@ -19,7 +19,7 @@ function FreshmenAdmissionForm() {
 
   const [formData, setFormData] = useState({
     applyingFor: '',
-    applicantType: 'Freshman',
+    applicantType: 'Transferee',
     preferredCampus: 'CvSU - Bacoor',
     strand: '',
     finalAverage: '',
@@ -76,6 +76,10 @@ function FreshmenAdmissionForm() {
     vocationalAddress: '',
     vocationalYearGraduated: '',
     vocationalSchoolType: '',
+    transfereeCollegeSchool: '',
+    transfereeCollegeAddress: '',
+    transfereeCollegeCourse: '',
+    transfereeCollegeSchoolType: '',
     medicalConditions: '',
     medications: '',
     controlNo: '',
@@ -167,165 +171,90 @@ function FreshmenAdmissionForm() {
     setActiveStep((prevStep) => Math.max(prevStep - 1, 0));
   };
 
-  //GET PREFERRED PROGRAM
+  //TODO: Fetch the transferee's data from the database
   useEffect(() => {
-    axios.get("http://localhost:8080/getFormData")
-      .then((res) => {
-        console.log(res.data.preferredProgram);
-        if (res.data.preferredProgram === 1) {
-          setPrefProgram("Bachelor of Science in Computer Science");
-          setUploadedImage(res.data.idPictureUrl);
+    axios.get("http://localhost:8080/getTransfereeData")
+    .then((res) => {
+      if(res.data.message === "Fetched records successfully"){
+        const student = res.data.student;
+        const transferee = res.data.transferee;
 
-          setFormData({
-            applyingFor: res.data.applyingFor || '',
-            applicantType: 'Freshman',
-            preferredCampus: 'CvSU - Bacoor',
-            strand: res.data.strand || '',
-            finalAverage: res.data.finalAve || '',
-            firstQuarter: res.data.firstQuarter || '',
-            secondQuarter: res.data.secondQuarter || '',
-            thirdQuarter: res.data.thirdQuarter || '',
-            fourthQuarter: res.data.fourthQuarter || '',
-            idPicture: res.data.IDPicture || null,
-            idPictureUrl: res.data.idPictureUrl || '',
-            firstName: res.data.firstname || '',
-            middleName: res.data.middlename || '',
-            lastName: res.data.lastname || '',
-            zipCode: res.data.zipCode || '',
-            permanentAddress: res.data.permanentAddress || '',
-            email: res.data.email || '',
-            lrn: res.data.lrn || '',
-            contactNumber: res.data.contactnum || '',
-            sex: res.data.sex || '',
-            age: res.data.age || '',
-            dateOfBirth: res.data.dob || '',
-            religion: res.data.religion || '',
-            nationality: res.data.nationality || '',
-            civilStatus: res.data.civilStatus || '',
-            isPWD: res.data.isPWD || '',
-            pwd: res.data.pwd || '',
-            isIndigenous: res.data.isIndigenous || '',
-            indigenous: res.data.indigenous || '',
-            fatherName: res.data.fatherName || '',
-            motherName: res.data.motherName || '',
-            guardianName: res.data.guardianName || '',
-            fatherContact: res.data.fatherContact || '',
-            motherContact: res.data.motherContact || '',
-            guardianContact: res.data.guardianContact || '',
-            fatherOccupation: res.data.fatherOccupation || '',
-            motherOccupation: res.data.motherOccupation || '',
-            guardianOccupation: res.data.guardianOccupation || '',
-            guardianRelationship: res.data.guardianRelationship || '',
-            siblings: res.data.siblings || '',
-            birthOrder: res.data.birthOrder || '',
-            familyIncome: res.data.familyIncome || '',
-            elementarySchool: res.data.elementarySchool || '',
-            elementaryAddress: res.data.elementaryAddress || '',
-            elementaryYearGraduated: res.data.elementaryYearGraduated || '',
-            elementarySchoolType: res.data.elementarySchoolType || '',
-
-            highSchool: res.data.highSchool || '',
-            jhsAddress: res.data.jhsAddress || '',
-            jhsYearGraduated: res.data.jhsYearGraduated || '',
-            highSchoolType: res.data.highSchoolType || '',
-
-            seniorHighSchool: res.data.seniorHighSchool || '',
-            seniorHighAddress: res.data.seniorHighAddress || '',
-            seniorHighYearGraduated: res.data.seniorHighYearGraduated || '',
-            seniorHighSchoolType: res.data.seniorHighSchoolType || '',
-            vocationalSchool: res.data.vocationalSchool || '',
-            vocationalAddress: res.data.vocationalAddress || '',
-            vocationalYearGraduated: res.data.vocationalYearGraduated || '',
-            vocationalSchoolType: res.data.vocationalSchoolType || '',
-            medicalConditions: res.data.medicalConditions || '',
-            medications: res.data.medications || '',
-            controlNo: res.data.controlNo || '',
-            applicationStatus: res.data.applicationStatus || '',
-            examSched: res.data.examSched || '',
-            reqSubmission: res.data.reqSubmission || '',
-          });
-
-          setStudentID(res.data.studentID);
-
-        } else if (res.data.preferredProgram === 2) {
-          setPrefProgram("Bachelor of Science in Information Technology");
-          setUploadedImage(res.data.idPictureUrl);
-
-          setFormData({
-            applyingFor: res.data.applyingFor || '',
-            applicantType: 'Freshman',
-            preferredCampus: 'CvSU - Bacoor',
-            strand: res.data.strand || '',
-            finalAverage: res.data.finalAve || '',
-            firstQuarter: res.data.firstQuarter || '',
-            secondQuarter: res.data.secondQuarter || '',
-            thirdQuarter: res.data.thirdQuarter || '',
-            fourthQuarter: res.data.fourthQuarter || '',
-            idPicture: res.data.IDPicture || null,
-            idPictureUrl: res.data.idPictureUrl || '',
-            firstName: res.data.firstname || '',
-            middleName: res.data.middlename || '',
-            lastName: res.data.lastname || '',
-            zipCode: res.data.zipCode || '',
-            permanentAddress: res.data.permanentAddress || '',
-            email: res.data.email || '',
-            lrn: res.data.lrn || '',
-            contactNumber: res.data.contactnum || '',
-            sex: res.data.sex || '',
-            age: res.data.age || '',
-            dateOfBirth: res.data.dob || '',
-            religion: res.data.religion || '',
-            nationality: res.data.nationality || '',
-            civilStatus: res.data.civilStatus || '',
-            isPWD: res.data.isPWD || '',
-            pwd: res.data.pwd || '',
-            isIndigenous: res.data.isIndigenous || '',
-            indigenous: res.data.indigenous || '',
-            fatherName: res.data.fatherName || '',
-            motherName: res.data.motherName || '',
-            guardianName: res.data.guardianName || '',
-            fatherContact: res.data.fatherContact || '',
-            motherContact: res.data.motherContact || '',
-            guardianContact: res.data.guardianContact || '',
-            fatherOccupation: res.data.fatherOccupation || '',
-            motherOccupation: res.data.motherOccupation || '',
-            guardianOccupation: res.data.guardianOccupation || '',
-            guardianRelationship: res.data.guardianRelationship || '',
-            siblings: res.data.siblings || '',
-            birthOrder: res.data.birthOrder || '',
-            familyIncome: res.data.familyIncome || '',
-            elementarySchool: res.data.elementarySchool || '',
-            elementaryAddress: res.data.elementaryAddress || '',
-            elementaryYearGraduated: res.data.elementaryYearGraduated || '',
-            elementarySchoolType: res.data.elementarySchoolType || '',
-
-            highSchool: res.data.highSchool || '',
-            jhsAddress: res.data.jhsAddress || '',
-            jhsYearGraduated: res.data.jhsYearGraduated || '',
-            highSchoolType: res.data.highSchoolType || '',
-
-            seniorHighSchool: res.data.seniorHighSchool || '',
-            seniorHighAddress: res.data.seniorHighAddress || '',
-            seniorHighYearGraduated: res.data.seniorHighYearGraduated || '',
-            seniorHighSchoolType: res.data.seniorHighSchoolType || '',
-            vocationalSchool: res.data.vocationalSchool || '',
-            vocationalAddress: res.data.vocationalAddress || '',
-            vocationalYearGraduated: res.data.vocationalYearGraduated || '',
-            vocationalSchoolType: res.data.vocationalSchoolType || '',
-            medicalConditions: res.data.medicalConditions || '',
-            medications: res.data.medications || '',
-            controlNo: res.data.controlNo || '',
-            applicationStatus: res.data.applicationStatus || '',
-            examSched: res.data.examSched || '',
-            reqSubmission: res.data.reqSubmission || '',
-          });
-          setStudentID(res.data.studentID);
-        }
-      })
-      .catch((err) => {
-        alert("Error fetching preferred program: " + err);
+        setFormData({
+          applyingFor: transferee.ApplyingFor || '',
+          applicantType: "Transferee",
+          preferredCampus: transferee.Branch || '',
+          strand: transferee.SHSStrand || '',
+          finalAverage: transferee.FinalAverage || '',
+          firstQuarter: transferee.FirstQuarterAve || '',
+          secondQuarter: transferee.SecondQuarterAve || '',
+          thirdQuarter: transferee.ThirdQuarterAve || '',
+          fourthQuarter: transferee.FourthQuarterAve || '',
+          idPicture: transferee.IDPicture || '',
+          idPictureUrl: transferee.IDPicture || '',
+          firstName: student.Firstname || '',
+          middleName: student.Middlename || '',
+          lastName: student.Lastname || '',
+          zipCode: transferee.ZipCode || '',
+          permanentAddress: student.Address || '',
+          email: student.Email || '',
+          lrn: transferee.LRN || '',
+          contactNumber: student.PhoneNo || '',
+          sex: student.Gender || '',
+          age: student.Age || '',
+          dateOfBirth: student.DOB || '',
+          religion: transferee.Religion || '',
+          nationality: transferee.Nationality || '',
+          civilStatus: transferee.CivilStatus || '',
+          isPWD: transferee.PWD || '',
+          pwd: transferee.PWDSpecification || '',
+          isIndigenous: transferee.Indigenous || '',
+          indigenous: transferee.IndigenousSpecification || '',
+          fatherName: transferee.FatherName || '',
+          motherName: transferee.MotherName || '',
+          guardianName: transferee.GuardianName || '',
+          fatherContact: transferee.FatherContactNo || '',
+          motherContact: transferee.MotherContactNo || '',
+          guardianContact: transferee.GuardianContactNo || '',
+          fatherOccupation: transferee.FatherOccupation || '',
+          motherOccupation: transferee.MotherOccupation || '',
+          guardianOccupation: transferee.GuardianOccupation || '',
+          guardianRelationship: transferee.GuardianRelationship || '',
+          siblings: transferee.NoOfSiblings || '',
+          birthOrder: transferee.BirthOrder || '',
+          familyIncome: transferee.MonthlyFamilyIncome || '',
+          elementarySchool: transferee.ElemSchoolName || '',
+          elementaryAddress: transferee.ElemSchoolAddress || '',
+          elementaryYearGraduated: transferee.ElemYearGraduated || '',
+          elementarySchoolType: transferee.ElemSchoolType || '',
+          highSchool: transferee.HighSchoolName || '',
+          jhsAddress: transferee.HighSchoolAddress || '',
+          jhsYearGraduated: transferee.HighSchoolYearGraduated || '',
+          highSchoolType: transferee.HighSchoolType || '',
+          seniorHighSchool: transferee.SHSchoolName || '',
+          seniorHighAddress: transferee.SHSchoolAddress || '',
+          seniorHighYearGraduated: transferee.SHYearGraduated || '',
+          seniorHighSchoolType: transferee.SHSchoolType || '',
+          vocationalSchool: transferee.VocationalSchoolName || '',
+          vocationalAddress: transferee.VocationalSchoolAddress || '',
+          vocationalYearGraduated: transferee.VocationalYearGraduated || '',
+          vocationalSchoolType: transferee.VocationalSchoolType || '',
+          transfereeCollegeSchool: transferee.TransfereeCollegeSchoolName || '',
+          transfereeCollegeAddress: transferee.TransfereeCollegeSchoolAddress || '',
+          transfereeCollegeCourse: transferee.TransfereeCollegeCourse || '',
+          transfereeCollegeSchoolType: transferee.TransfereeCollegeSchoolType || '',
+          medicalConditions: transferee.MedicalHistory || '',
+          medications: transferee.Medication || '',
+          controlNo: transferee.ExamControlNo || '',
+          applicationStatus: transferee.AdmissionStatus || '',
+          examSched: transferee.DateOfExamAndTime || '',
+          reqSubmission: transferee.SubmissionSchedule || '',
       });
-  }, [])
+      }
+    })
+    .catch((err) => {
+      alert("error: " + err); 
+    })
+  },[])
 
   const autoSave = () => {
     setIsSaving(true);
@@ -476,6 +405,7 @@ e.preventDefault();
     return new Date(dateString).toLocaleDateString("en-US", options);
   };
 
+  //TODO: ADD FIELDS FOR TRANSFEREE PREVIOUS COLLEGE SCHOOL
   // Steps
   const renderStepContent = (step) => {
     switch (step) {
@@ -505,7 +435,13 @@ e.preventDefault();
                   <option value="" disabled>
                     Select Semester
                   </option>
-                  <option value="1st Year 1st Sem 2024 - 2025">1st Year 1st Sem 2024 - 2025</option>
+                  <option value="1st Year 2nd Sem">1st Year 2nd Sem</option>
+                  <option value="2nd Year 1st Sem">2nd Year 1st Sem</option>
+                  <option value="2nd Year 2nd Sem">2nd Year 2nd Sem</option>
+                  <option value="3rd Year 1st Sem">3rd Year 1st Sem</option>
+                  <option value="3rd Year 2nd Sem">3rd Year 2nd Sem</option>
+                  <option value="4th Year 1st Sem">4th Year 1st Sem</option>
+                  <option value="4th Year 2nd Sem">4th Year 2nd Sem</option>
                 </select>
               </div>
 
