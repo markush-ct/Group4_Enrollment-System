@@ -246,6 +246,7 @@ function FreshmenAdmissionForm() {
           });
 
           setStudentID(res.data.studentID);
+          {formData.applicationStatus === "Pending" ? setActiveStep(0) : setActiveStep(5)}
 
         } else if (res.data.preferredProgram === 2) {
           setPrefProgram("Bachelor of Science in Information Technology");
@@ -320,6 +321,7 @@ function FreshmenAdmissionForm() {
             reqSubmission: res.data.reqSubmission || '',
           });
           setStudentID(res.data.studentID);
+          {formData.applicationStatus === "Pending" ? setActiveStep(0) : setActiveStep(5)}
         }
       })
       .catch((err) => {
@@ -440,9 +442,14 @@ function FreshmenAdmissionForm() {
   };
 
   const handleDownloadForm = () => {
-      const url = `/download-form/${studentID}`;
-      window.open(url, "_blank");
-  };
+    if(formData.applicationStatus !== "Approved"){
+      alert("You can only download the form once your application is approved.");
+      return;
+    }
+
+    const url = `/download-form/${studentID}`;
+    window.open(url, "_blank");
+};
 
   const [SideBar, setSideBar] = useState(false);
   document.body.style.overflow = SideBar ? 'hidden' : 'auto';
@@ -1500,7 +1507,6 @@ e.preventDefault();
                   value={formData.applicationStatus}
                   onChange={handleInputChange}
                   readOnly
-                  disabled
                 />
               </div>
 
@@ -1513,7 +1519,6 @@ e.preventDefault();
                   value={formData.controlNo}
                   onChange={handleInputChange}
                   readOnly
-                  disabled
                 />
               </div>
 
@@ -1526,7 +1531,7 @@ e.preventDefault();
                   value={formData.examSched === "" || !formData.examSched ? "Not yet scheduled" : formData.examSched}
                   onChange={handleInputChange}
                   type="text"
-                  disabled
+                  readOnly
                   required
                 />
               </div>
@@ -1539,7 +1544,7 @@ e.preventDefault();
                   value={formData.reqSubmission === "" || !formData.reqSubmission ? "Not yet scheduled" : formData.reqSubmission}
                   onChange={handleInputChange}
                   type="text"
-                  disabled
+                  readOnly
                 />
               </div>
 
@@ -1549,7 +1554,6 @@ e.preventDefault();
                   type="button"
                   className={styles.downloadButton}
                   onClick={handleDownloadForm}
-                  disabled={formData.applicationStatus !== "Approved"}
                 ><span>
                     Download Application Form</span>
                 </button>

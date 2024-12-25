@@ -224,6 +224,7 @@ function FreshmenAdmissionRequest() {
                 value={examDatetime}
                 onChange={(e) => setExamDatetime(e.target.value)}
                 className={styles.popupPromptInput}
+                required
               />
             </div>
 
@@ -237,6 +238,7 @@ function FreshmenAdmissionRequest() {
                 value={submissionDate}
                 onChange={(e) => setSubmissionDate(e.target.value)}
                 className={styles.popupPromptInput}
+                required
               />
             </div>
 

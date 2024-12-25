@@ -65,6 +65,196 @@ const upload = multer({ storage });
 
 app.use("/uploads", express.static("uploads"));
 
+app.post('/rejectTransfereeAdmissionReq', (req, res) =>{
+    const getEmpID = `SELECT * FROM employee where Email = ?`;
+
+    db.query(getEmpID, req.session.email, (err, idRes) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if (idRes.length > 0) {
+            const empID = idRes[0].EmployeeID;
+            console.log('Request Body:', req.body);
+
+            const { email, name, studentID, rejectionReason } = req.body;
+
+            const updateShiftingReject = `UPDATE admissionform
+            SET EmployeeID = ?,
+                AssessedBy = ?,
+                AdmissionStatus = ?
+            WHERE StudentID = ?
+            `;
+
+            const updateValues = [
+                empID,
+                idRes[0].Firstname + " " + idRes[0].Lastname,
+                "Rejected",
+                studentID
+            ];
+
+            db.query(updateShiftingReject, updateValues, (err, updateRes) => {
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else if (updateRes.affectedRows > 0) {
+
+                    const emailBody = `
+                    Dear ${name},
+                    
+                    Thank you for your interest in transferring at Cavite State University - Bacoor Campus!. 
+
+                    After careful consideration, we regret to inform you that your transfer request has not been approved at this time.  
+                    **Reason for rejection:**  
+                    ${rejectionReason}  
+
+                    We understand this news may be disappointing, and we encourage you to continue pursuing your educational goals. If you have any questions or need further clarification, please feel free to reach out to us at (046)476-5029.
+
+                    We wish you the very best in your future endeavors.
+                
+                    Best regards,
+                    ${idRes[0].Firstname + " " + idRes[0].Lastname}
+                    `;
+
+                    const mailOptions = {
+                        from: 'gerlyntan07@gmail.com',
+                        to: email,
+                        subject: 'Transfer Request Rejection',
+                        text: emailBody,
+                    };
+
+                    try {
+                        console.log("Sending email with options:", mailOptions);
+                        transporter.sendMail(mailOptions);
+                        console.log("Email sent successfully.");
+                        return res.json({ message: "Transfer request rejection sent" });
+                    } catch (emailError) {
+                        console.error('Error sending email:', emailError);
+                        return res.json({ message: "Error sending email", error: emailError.message });
+                    }
+                } else {
+                    console.log('Request Body:', req.body);
+                    return res.json({ message: "Failed to reject transfer request" });
+                }
+            })
+        }
+    })
+})
+
+app.post('/approveTransfereeAdmissionReq', (req, res) => {
+    const getEmpID = `SELECT * FROM employee where Email = ?`;
+
+    db.query(getEmpID, req.session.email, (err, idRes) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if (idRes.length > 0) {
+            const empID = idRes[0].EmployeeID;
+            console.log('Request Body:', req.body);
+
+            const { email, name, studentID, submissionDate } = req.body;
+
+            const formattedSubmissionDate = new Date(submissionDate).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            const updateSubmissionSched = `UPDATE admissionform
+            SET EmployeeID = ?,
+                AssessedBy = ?,
+                SubmissionSchedule = ?,
+                AdmissionStatus = ?
+            WHERE StudentID = ?
+            `;
+
+            const updateValues = [
+                empID,
+                idRes[0].Firstname + " " + idRes[0].Lastname,
+                submissionDate,
+                "Approved",
+                studentID
+            ];
+
+            db.query(updateSubmissionSched, updateValues, (err, updateRes) => {
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else if (updateRes.affectedRows > 0) {
+
+                    const emailBody = `
+                    Dear ${name},
+                    Congratulations on your transfer approval at Cavite State University - Bacoor Campus!
+
+                    Please mark the following important dates:
+
+                    - **Submission of Requirements:** ${formattedSubmissionDate}  
+                    Kindly bring the following documents:
+                    1. TOR
+                    2. Honorable Dismissal
+                    3. Good Moral Certificate
+                    4. NBI Clearance
+                    
+                    We are excited to welcome you to the CvSU - Bacoor community!
+                
+                    Best regards,
+                    ${idRes[0].Firstname + " " + idRes[0].Lastname}
+                    `;
+
+                    const mailOptions = {
+                        from: 'gerlyntan07@gmail.com',
+                        to: email,
+                        subject: 'Transfer Approval',
+                        text: emailBody,
+                    };
+
+                    try {
+                        console.log("Sending email with options:", mailOptions);
+                        transporter.sendMail(mailOptions);
+                        console.log("Email sent successfully.");
+                        return res.json({ message: "Transfer Approval sent" });
+                    } catch (emailError) {
+                        console.error('Error sending email:', emailError);
+                        return res.json({ message: "Error sending email", error: emailError.message });
+                    }
+                } else {
+                    console.log('Request Body:', req.body);
+                    return res.json({ message: "Failed to approve transfer request" });
+                }
+            })
+        }
+    })
+})
+
+app.get('/getTransfereeAdmissionReq', (req, res) => {
+    const query = `
+        SELECT * 
+        FROM student s
+        JOIN admissionform af ON s.StudentID = af.StudentID
+        WHERE af.AdmissionStatus = 'Submitted'
+        AND s.StudentType = 'Transferee'`;
+
+    db.query(query, (err, results) => {
+        console.log("Executing query:", query);
+        console.log("Query parameters:", ["Submitted"]);
+        console.log("Query results:", results);
+
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        }
+
+        if (results === undefined || results.length === 0) {
+            console.log("No records found or results are undefined.");
+            return res.json({ message: "No records found" });
+        }
+
+        if (results.length > 0) {            
+            return res.json({
+                message: "Fetched records successfully",
+                records: results,
+            });
+        } else {
+            console.log(results);
+            return res.json({ message: "No records found" });
+        }
+    });
+})
+
 //STUDENT TABLE AUTO SAVE EVERY INPUT CHANGES
 app.post('/saveTransfereeData', (req, res) => {
     //READ FOR STUDENTID COLUMN FIRST
@@ -301,7 +491,7 @@ app.post('/rejectFreshmenAdmissionReq', (req, res) =>{
                     **Reason for rejection:**  
                     ${rejectionReason}  
 
-                    We understand this news may be disappointing, and we encourage you to continue pursuing your educational goals. If you have any questions or need further clarification, please feel free to reach out to us at [Contact Information].
+                    We understand this news may be disappointing, and we encourage you to continue pursuing your educational goals. If you have any questions or need further clarification, please feel free to reach out to us at (046)476-5029.
 
                     We wish you the very best in your future endeavors.
                 
@@ -440,7 +630,8 @@ app.get('/getFreshmenAdmissionReq', (req, res) => {
         SELECT * 
         FROM student s
         JOIN admissionform af ON s.StudentID = af.StudentID
-        WHERE af.AdmissionStatus = 'Submitted';`;
+        WHERE af.AdmissionStatus = 'Submitted'
+        AND s.StudentType = 'Freshman'`;
 
     db.query(query, (err, results) => {
         console.log("Executing query:", query);
