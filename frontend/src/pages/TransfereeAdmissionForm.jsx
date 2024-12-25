@@ -21,12 +21,6 @@ function FreshmenAdmissionForm() {
     applyingFor: '',
     applicantType: 'Transferee',
     preferredCampus: 'CvSU - Bacoor',
-    strand: '',
-    finalAverage: '',
-    firstQuarter: '',
-    secondQuarter: '',
-    thirdQuarter: '',
-    fourthQuarter: '',
     idPicture: null, // For file upload
     idPictureUrl: '',
     firstName: '',
@@ -129,10 +123,10 @@ function FreshmenAdmissionForm() {
 
 
   const requiredFields = {
-    admissionInfo: ['strand', 'finalAverage', 'firstQuarter', 'secondQuarter', 'idPicture'],
+    admissionInfo: ['idPicture'],
     personalInfo: ['firstName', 'lastName', 'zipCode', 'permanentAddress', 'email', 'lrn', 'contactNumber', 'sex', 'age', 'dateOfBirth', 'religion', 'nationality', 'civilStatus', 'isPWD', 'pwd', 'isIndigenous', 'indigenous'],
     familyBackground: ['fatherName', 'motherName', 'guardianName', 'guardianContact', 'fatherOccupation', 'motherOccupation', 'guardianOccupation', 'guardianRelationship', 'siblings', 'birthOrder', 'familyIncome'],
-    educationalBackground: ['elementarySchool', 'elementaryAddress', 'elementaryYearGraduated', 'elementarySchoolType', 'highSchool', 'jhsAddress', 'jhsYearGraduated', 'highSchoolType', 'seniorHighSchool', 'seniorHighAddress', 'seniorHighYearGraduated', 'seniorHighSchoolType'],
+    educationalBackground: ['elementarySchool', 'elementaryAddress', 'elementaryYearGraduated', 'elementarySchoolType', 'highSchool', 'jhsAddress', 'jhsYearGraduated', 'highSchoolType', 'seniorHighSchool', 'seniorHighAddress', 'seniorHighYearGraduated', 'seniorHighSchoolType', 'transfereeCollegeSchool', 'transfereeCollegeAddress', 'transfereeCollegeCourse', 'transfereeCollegeSchoolType'],
     medicalHistory: [],
     scheduleAppointment: ['certify'],
   };
@@ -183,12 +177,6 @@ function FreshmenAdmissionForm() {
           applyingFor: transferee.ApplyingFor || '',
           applicantType: "Transferee",
           preferredCampus: transferee.Branch || '',
-          strand: transferee.SHSStrand || '',
-          finalAverage: transferee.FinalAverage || '',
-          firstQuarter: transferee.FirstQuarterAve || '',
-          secondQuarter: transferee.SecondQuarterAve || '',
-          thirdQuarter: transferee.ThirdQuarterAve || '',
-          fourthQuarter: transferee.FourthQuarterAve || '',
           idPicture: transferee.IDPicture || '',
           idPictureUrl: transferee.IDPicture || '',
           firstName: student.Firstname || '',
@@ -249,10 +237,12 @@ function FreshmenAdmissionForm() {
           examSched: transferee.DateOfExamAndTime || '',
           reqSubmission: transferee.SubmissionSchedule || '',
       });
+
+      setPrefProgram(student.ProgramID);
       }
     })
     .catch((err) => {
-      alert("error: " + err); 
+      alert("error: " + err);       
     })
   },[])
 
@@ -264,12 +254,6 @@ function FreshmenAdmissionForm() {
     data.append("applyingFor", formData.applyingFor);
     data.append("applicantType", formData.applicantType);
     data.append("preferredCampus", formData.preferredCampus);
-    data.append("strand", formData.strand);
-    data.append("finalAverage", formData.finalAverage);
-    data.append("firstQuarter", formData.firstQuarter);
-    data.append("secondQuarter", formData.secondQuarter);
-    data.append("thirdQuarter", formData.thirdQuarter);
-    data.append("fourthQuarter", formData.fourthQuarter);
     if (formData.idPicture) {
       data.append("idPicture", formData.idPicture);
     }
@@ -321,6 +305,10 @@ function FreshmenAdmissionForm() {
     data.append("vocationalAddress", formData.vocationalAddress);
     data.append("vocationalYearGraduated", formData.vocationalYearGraduated);
     data.append("vocationalSchoolType", formData.vocationalSchoolType);
+    data.append("transfereeCollegeSchool", formData.transfereeCollegeSchool);
+    data.append("transfereeCollegeCourse", formData.transfereeCollegeCourse);
+    data.append("transfereeCollegeAddress", formData.transfereeCollegeAddress);
+    data.append("transfereeCollegeSchoolType", formData.transfereeCollegeSchoolType);
     data.append("medicalConditions", formData.medicalConditions);
     data.append("medications", formData.medications);
     data.append("controlNo", formData.controlNo);
@@ -330,10 +318,10 @@ function FreshmenAdmissionForm() {
 
 
     Promise.all([
-      axios.post("http://localhost:8080/admissionFormTable", data, {
+      axios.post("http://localhost:8080/saveTransfereeAdmissionForm", data, {
         headers: { "Content-Type": "multipart/form-data", },
       }),
-      axios.post("http://localhost:8080/studentTable", formData)
+      axios.post("http://localhost:8080/saveTransfereeData", formData)
     ])
       .then((responses) => {
         console.log("Form saved successfully:", responses[0].data);
@@ -432,8 +420,8 @@ e.preventDefault();
                   disabled={formData.applicationStatus !== "Pending"}
                   required
                 >
-                  <option value="" disabled>
-                    Select Semester
+                  <option value={formData.applyingFor !== "" ? formData.applyingFor : ""} disabled>
+                  {formData.applyingFor !== "" ? formData.applyingFor : "Select Year and Semester"}
                   </option>
                   <option value="1st Year 2nd Sem">1st Year 2nd Sem</option>
                   <option value="2nd Year 1st Sem">2nd Year 1st Sem</option>
@@ -468,103 +456,13 @@ e.preventDefault();
               </div>
 
               <div className={styles.formGroup}>
-                <label htmlFor="strand">Strand:</label>
-                <select
-                  id="strand"
-                  name="strand"
-                  value={formData.strand}
-                  onChange={handleInputChange}
-                  disabled={formData.applicationStatus !== "Pending"}
-                  required
-                >
-                  <option value="" disabled>
-                    Select Strand
-                  </option>
-                  <option value="STEM">STEM</option>
-                  <option value="ICIT">ICIT</option>
-                </select>
-              </div>
-
-              <div className={styles.formGroup}>
                 <label htmlFor="preferredProgram">Preferred Program:</label>
-                <input type="text" value={prefProgram} disabled />
+                <input type="text" value={prefProgram === 1 ? "Bachelor of Science in Computer Science"
+                  : prefProgram === 2 ? "Bachelor of Science in Information Technology"
+                  : ""
+                } disabled />
               </div>
 
-
-
-              {/* 1 1 */}
-              <div className={styles.formGroup}>
-                <label htmlFor="finalAverage">Final Average:</label>
-                <input
-                  id="finalAverage"
-                  name="finalAverage"
-                  value={formData.finalAverage}
-                  onChange={handleInputChange}
-                  type="number"
-                  step="0.01"
-                  disabled={formData.applicationStatus !== "Pending"}
-                  required
-                />
-              </div>
-
-              {/* 1 2 */}
-              <div className={styles.formGrid}>
-                <div className={styles.formGroup}>
-                  <label htmlFor="firstQuarter">1st Quarter:</label>
-                  <input
-                    id="firstQuarter"
-                    name="firstQuarter"
-                    value={formData.firstQuarter}
-                    onChange={handleInputChange}
-                    type="number"
-                    step="0.01"
-                    disabled={formData.applicationStatus !== "Pending"}
-                    required
-                  />
-                </div>
-
-                <div className={styles.formGroup}>
-                  <label htmlFor="secondQuarter">2nd Quarter:</label>
-                  <input
-                    id="secondQuarter"
-                    name="secondQuarter"
-                    value={formData.secondQuarter}
-                    onChange={handleInputChange}
-                    type="number"
-                    step="0.01"
-                    disabled={formData.applicationStatus !== "Pending"}
-                    required
-                  />
-                </div>
-
-                <div className={styles.formGroup}>
-                  <label htmlFor="thirdQuarter">3rd Quarter:</label>
-                  <input
-                    id="thirdQuarter"
-                    name="thirdQuarter"
-                    value={formData.thirdQuarter}
-                    onChange={handleInputChange}
-                    type="number"
-                    step="0.01"
-                    disabled={formData.applicationStatus !== "Pending"}
-                    required
-                  />
-                </div>
-
-                <div className={styles.formGroup}>
-                  <label htmlFor="fourthQuarter">4th Quarter:</label>
-                  <input
-                    id="fourthQuarter"
-                    name="fourthQuarter"
-                    value={formData.fourthQuarter}
-                    onChange={handleInputChange}
-                    type="number"
-                    step="0.01"
-                    disabled={formData.applicationStatus !== "Pending"}
-                    required
-                  />
-                </div>
-              </div>
 
               {/* ID */}
               {uploadedImage ? (
@@ -589,7 +487,7 @@ e.preventDefault();
                       />
                     </div>
                   ) : (
-                    ''
+                    'No picture uploaded'
                   )}
                 </div>)
                 : ('')}
@@ -1280,6 +1178,70 @@ e.preventDefault();
                     id="seniorHighSchoolType"
                     name="seniorHighSchoolType"
                     value={formData.seniorHighSchoolType}
+                    onChange={handleInputChange}
+                    disabled={formData.applicationStatus !== "Pending"}
+                    required
+                  >
+                    <option value="" disabled>
+                      Select Type
+                    </option>
+                    <option value="Public">Public</option>
+                    <option value="Private">Private</option>
+                  </select>
+                </div>
+
+              </div>
+
+              <br />
+
+              <div className={styles.formGroup}>
+                <label htmlFor="transfereeCollegeSchool">Name of Previous College School:</label>
+                <input
+                  id="transfereeCollegeSchool"
+                  name="transfereeCollegeSchool"
+                  value={formData.transfereeCollegeSchool}
+                  onChange={handleInputChange}
+                  type="text"
+                  disabled={formData.applicationStatus !== "Pending"}
+                  required
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="transfereeCollegeAddress">Address:</label>
+                <input
+                  id="transfereeCollegeAddress"
+                  name="transfereeCollegeAddress"
+                  value={formData.transfereeCollegeAddress}
+                  onChange={handleInputChange}
+                  placeholder='Street, Village or Subdivision, Barangay, City or Municipality'
+                  type="text"
+                  disabled={formData.applicationStatus !== "Pending"}
+                  required
+                />
+              </div>
+
+              <div className={styles.formGrid}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="transfereeCollegeCourse">Previous Program:</label>
+                  <input
+                    id="transfereeCollegeCourse"
+                    name="transfereeCollegeCourse"
+                    value={formData.transfereeCollegeCourse}
+                    onChange={handleInputChange}
+                    type="text"
+                    placeholder='e.g. Bachelor of Science in Computer Science'
+                    disabled={formData.applicationStatus !== "Pending"}
+                    required
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="transfereeCollegeSchoolType">School Type:</label>
+                  <select
+                    id="transfereeCollegeSchoolType"
+                    name="transfereeCollegeSchoolType"
+                    value={formData.transfereeCollegeSchoolType}
                     onChange={handleInputChange}
                     disabled={formData.applicationStatus !== "Pending"}
                     required

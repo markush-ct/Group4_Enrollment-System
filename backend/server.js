@@ -65,6 +65,179 @@ const upload = multer({ storage });
 
 app.use("/uploads", express.static("uploads"));
 
+//STUDENT TABLE AUTO SAVE EVERY INPUT CHANGES
+app.post('/saveTransfereeData', (req, res) => {
+    //READ FOR STUDENTID COLUMN FIRST
+    const readID = `SELECT * FROM student WHERE Email = ?`;
+    db.query(readID, req.session.email, (err, idResult) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if (idResult.length > 0) {
+            const getID = idResult[0].StudentID;
+
+            const updateStudentTbl = `UPDATE student
+            SET Firstname = ?,
+            Middlename = ?,
+            Lastname = ?,
+            Gender = ?,
+            Age = ?,
+            Address = ?,
+            DOB = ?
+            WHERE Email = ?
+            `;
+
+            const studentTblValues = [
+                req.body.firstName,
+                req.body.middleName,
+                req.body.lastName,
+                req.body.sex,
+                req.body.age,
+                req.body.permanentAddress,
+                req.body.dateOfBirth,
+                req.session.email
+            ];
+
+            db.query(updateStudentTbl, studentTblValues, (err, studentTblRes) => {
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else if (studentTblRes.affectedRows > 0) {
+                    return res.json({ message: "Update success" });
+                }
+            })
+        } else {
+            return res.json({ message: "Error retrieving Student ID" });
+        }
+    })
+})
+
+//ADMISSION FORM TABLE AUTO SAVE EVERY INPUT CHANGES
+app.post('/saveTransfereeAdmissionForm', upload.single("idPicture"), (req, res) => {
+    //READ FOR STUDENTID COLUMN FIRST
+    const readID = `SELECT * FROM student WHERE Email = ?`;
+    db.query(readID, req.session.email, (err, idResult) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if (idResult.length > 0) {
+            const getID = idResult[0].StudentID;
+
+            // File path for the uploaded ID picture
+            const idPicturePath = req.file ? req.file.path : req.body.idPictureUrl;
+
+            //UPDATE ADMISSION FORM
+            const updateQuery = `UPDATE admissionform
+            SET ApplyingFor = ?,
+            IDPicture = ?,
+            ZipCode = ?,
+            LRN = ?,
+            Religion = ?,
+            Nationality = ?,
+            CivilStatus = ?,
+            PWD = ?,
+            PWDSpecification = ?,
+            Indigenous = ?,
+            IndigenousSpecification = ?,
+            FatherName = ?,
+            MotherName = ?,
+            GuardianName = ?,
+            FatherContactNo = ?,
+            MotherContactNo = ?,
+            GuardianContactNo = ?,
+            FatherOccupation = ?,
+            MotherOccupation = ?,
+            GuardianOccupation = ?,
+            GuardianRelationship = ?,
+            NoOfSiblings = ?,
+            BirthOrder = ?,
+            MonthlyFamilyIncome = ?,            
+            ElemSchoolName = ?,
+            ElemSchoolAddress = ?,
+            ElemYearGraduated = ?,
+            ElemSchoolType = ?,
+            HighSchoolName = ?,
+            HighSchoolAddress = ?,
+            HighSchoolYearGraduated = ?,
+            HighSchoolType = ?,
+            SHSchoolName = ?,
+            SHSchoolAddress = ?,
+            SHYearGraduated = ?,
+            SHSchoolType = ?,
+            VocationalSchoolName = ?,
+            VocationalSchoolAddress = ?,
+            VocationalYearGraduated = ?,
+            VocationalSchooltype = ?,
+            TransfereeCollegeSchoolName = ?,
+            TransfereeCollegeSchoolAddress = ?,
+            TransfereeCollegeCourse = ?,
+            TransfereeCollegeSchoolType = ?,
+            MedicalHistory = ?,
+            Medication = ?
+            WHERE StudentID = ?`;
+
+            const values = [
+                req.body.applyingFor,
+                idPicturePath,
+                req.body.zipCode,
+                req.body.lrn,
+                req.body.religion,
+                req.body.nationality,
+                req.body.civilStatus,
+                req.body.isPWD,
+                req.body.pwd,
+                req.body.isIndigenous,
+                req.body.indigenous,
+                req.body.fatherName,
+                req.body.motherName,
+                req.body.guardianName,
+                req.body.fatherContact,
+                req.body.motherContact,
+                req.body.guardianContact,
+                req.body.fatherOccupation,
+                req.body.motherOccupation,
+                req.body.guardianOccupation,
+                req.body.guardianRelationship,
+                req.body.siblings,
+                req.body.birthOrder,
+                req.body.familyIncome,
+                req.body.elementarySchool,
+                req.body.elementaryAddress,
+                req.body.elementaryYearGraduated,
+                req.body.elementarySchoolType,
+                req.body.highSchool,
+                req.body.jhsAddress,
+                req.body.jhsYearGraduated,
+                req.body.highSchoolType,
+                req.body.seniorHighSchool,
+                req.body.seniorHighAddress,
+                req.body.seniorHighYearGraduated,
+                req.body.seniorHighSchoolType,
+                req.body.vocationalSchool,
+                req.body.vocationalAddress,
+                req.body.vocationalYearGraduated,
+                req.body.vocationalSchoolType,
+                req.body.transfereeCollegeSchool,
+                req.body.transfereeCollegeAddress,
+                req.body.transfereeCollegeCourse,
+                req.body.transfereeCollegeSchoolType,
+                req.body.medicalConditions,
+                req.body.medications,
+                getID
+            ];
+
+            db.query(updateQuery, values, (err, updateRes) => {
+                if (err) {
+                    return res.json({ message: "Error in server: " + err, });
+                } else if (updateRes.affectedRows > 0) {
+                    return res.json({ message: "Update success", idPictureUrl: idPicturePath, results: updateRes });
+                } else {
+                    return res.json({ message: "Update failed" });
+                }
+            })
+        } else {
+            return res.json({ message: "Error retrieving Student ID" });
+        }
+    })
+})
+
 app.get('/getTransfereeData', (req, res) => {
     const getStudentData = `SELECT * FROM student WHERE Email = ?`;
     const getTransfereeData = `SELECT * FROM admissionform WHERE StudentID = ?`;

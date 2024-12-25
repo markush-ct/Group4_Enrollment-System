@@ -545,7 +545,7 @@ e.preventDefault();
                     Select Strand
                   </option>
                   <option value="STEM">STEM</option>
-                  <option value="ICIT">ICIT</option>
+                  <option value="ICT">ICT</option>
                 </select>
               </div>
 
