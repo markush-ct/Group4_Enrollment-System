@@ -16,6 +16,7 @@ function FreshmenAdmissionRequest() {
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [popUpVisible, setPopUpVisible] = useState(false);
   const [approvalPrompt, setApprovalPrompt] = useState(false);
+    const [studentData, setStudentData] = useState({});
   const [approvalMsg, setApprovalMsg] = useState('');
   const [rejectionPrompt, setRejectionPrompt] = useState(false);
   const [rejectionMsg, setRejectionMsg] = useState('');
@@ -571,13 +572,99 @@ function FreshmenAdmissionRequest() {
               
               
                     <div className={styles.sectionTitle}>Medical History Information</div>
-                    <div className={styles.infoGrid}>
-                    <div className={styles.contentt}>
-                        <p>Medications: <span>{selectedRequest.Medication}</span></p>
-                        <p>Medical Condtion/s: <span>{selectedRequest.MedicalHistory}</span></p><br></br>
-                        <p>I hereby.........: <span></span></p>
-                      </div>
+                          <div className={styles.infoGrid2}>
+                          <div className={styles.contentt}>
+                              <p>Medications: <span>{selectedRequest.Medication}</span></p>
+                              <p>Medical Condtion/s: <span>{selectedRequest.MedicalHistory}</span></p><br></br>
+                              </div>
+                              </div>
+                              <div className={styles.infoGrid2}>
+                              <div className={styles.hereby}>
+                              <p><strong>I hereby certify that all the information 
+                                stated above are true and correct</strong> as to the best 
+                                of my knowledge. I hereby give consent for my
+                                 personal data included in my offer to be processed 
+                                 for the purposes of admission and enrollment in accordance
+                                  with Republic Act 10173 - Data Privacy Act of 2012.: <span></span></p>
+                                  <br></br>
+                    
+                                  <p><span
+                                            style={{
+                                              display: "inline-block",
+                                              borderBottom: "1px solid black",
+                                              width: "80%",
+                                              marginLeft: "10px",
+                                              marginRight: "0px",
+                                              textAlign: "center",
+                                              textTransform: "uppercase",
+                                            }}
+                                          >{selectedRequest.Lastname}, {selectedRequest.Firstname} {selectedRequest.Middlename}</span>
+                                          <br />
+                                          <p style={{textAlign: "center",}}>
+                                          Signature over printed name</p>
+                                        </p>
+                            </div>
                      
+                      <div className={styles.contentt3box}>
+                             <p className={styles.contentt3}>
+                             To be filled up by the OSAS/Guidance Staff
+                           </p>
+                           <p className={styles.contentt3}>
+                             SUBMITTED REQUIREMENTS
+                           </p>
+                           <p className={styles.contentt4}><span
+                                 style={{
+                                   display: "inline-block",
+                                   borderBottom: "1px solid black",
+                                   width: "10px",
+                                   marginLeft: "2px",
+                                   marginRight: "2px",
+                                 }}
+                               ></span>2 copies of 1x1 ID Picture with name tag</p>
+                           <p className={styles.contentt4}><span
+                                 style={{
+                                   display: "inline-block",
+                                   borderBottom: "1px solid black",
+                                   width: "10px",
+                                   marginLeft: "2px",
+                                   marginRight: "2px",
+                                 }}
+                               ></span>Short ordinary folder</p>
+                           <p className={styles.contentt4}>
+                            <strong>New Student (SHS, ALS)</strong>
+                             <br />
+                             <span
+                                 style={{
+                                   display: "inline-block",
+                                   borderBottom: "1px solid black",
+                                   width: "10px",
+                                   marginLeft: "2px",
+                                   marginRight: "2px",
+                                 }}
+                               ></span>Certified True Copy of G12 report/Certificate of ALS Rating
+                           </p>
+                           <p className={styles.contentt4}><strong>Assessed by:</strong><span
+                                 style={{
+                                   display: "inline-block",
+                                   borderBottom: "1px solid black",
+                                   width: "100px",
+                                   marginLeft: "2px",
+                                   marginRight: "2px",
+                                 }}
+                               ></span></p>
+                           <p className={styles.contentt4}><strong>Control No.:</strong><span
+                                 style={{
+                                   display: "inline-block",
+                                   borderBottom: "1px solid black",
+                                   width: "100px",
+                                   marginLeft: "2px",
+                                   marginRight: "2px",
+                                 }}
+                               ></span></p>
+                     
+                     
+                           
+                         </div>
                     
                       
                       

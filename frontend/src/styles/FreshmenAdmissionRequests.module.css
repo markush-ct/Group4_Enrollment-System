@@ -593,6 +593,152 @@
   .setEnrollmentButton:hover {
     background-color: #d0943d;
   }
+
+  .NoContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+  border: none;
+  font-size: 13px;
+  text-align: center;
+  background-color: transparent;
+}
+
+.NoPictureBox{
+  width: 100%;
+  height: 100%;
+}
+
+.infoGrid0 .contentt p{
+  font-size: 13px;
+}
+
+.contentt2{
+  margin: 0px 0;
+  font-size: 13px;
+  color: #444;
+  background-color: transparent;
+}
+
+.contentt2_1{
+  font-size: 13px;
+}
+
+.infoGrid .contentt2 p {
+  margin: 0px 0;
+  font-size: 13px;
+  font-weight: bold;
+  color: #444;
+  background-color: transparent;
+}
+
+.infoGrid .contentt2 span {
+  color: #222;
+  font-weight: 500;
+  background-color: transparent;
+}
+
+
+
+.infoGrid4 {
+  display: flex;
+  justify-content: flex-end; 
+  gap: 2px;
+  font-size: 13px;
+  margin-bottom: 20px;
+  background-color: transparent;
+}
+
+.infoGrid4 .contentt2 p {
+  margin: 5px 0;
+  font-size: 13px;
+  font-weight: bold;
+  color: #444;
+  background-color: transparent;
+}
+
+.infoGrid4 div span {
+  color: #222;
+  font-weight: 500;
+  background-color: transparent;
+}
+
+
+.infoGrid5 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 2px;
+  margin-bottom: 20px;
+  background-color: transparent;
+}
+
+.infoGrid5 .contentt2 p {
+  margin-top: -5px;
+  font-size: 13px;
+  color: #444;
+  background-color: transparent;
+}
+
+.infoGrid5 .contentt2 span {
+  color: #222;
+  font-weight: bold;
+  background-color: transparent;
+}
+
+.infoGrid2 .hereby p{
+  margin: 0px 0;
+  font-size: 10px;
+  color: #444;
+  font-weight: 50;
+  background-color: transparent;
+}
+
+.hereby{
+  background-color: transparent;
+  margin-right: 5px;
+}
+
+.hereby strong{
+  color: black;
+}
+
+.contentt3box{
+  background-color: transparent;
+  margin-right: 5px;
+  border: 1px solid black;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.contentt3box .contentt3 {
+  font-size: 10px;
+  background-color: transparent;
+  color: #444;
+  text-align: center;
+  font-weight: 400;
+}
+
+.contentt3{
+  background-color: transparent;
+  border-bottom: 1px solid black;
+  text-align: center;
+  
+}
+
+.contentt3box .contentt4 {
+  font-size: 10px;
+  background-color: transparent;
+  color: #444;
+  text-align: left;
+  font-weight: 400;
+  margin-bottom: 0px;
+}
+
+.contentt4 strong{
+  color: black;
+}
   
   
   
@@ -1105,6 +1251,8 @@
     font-weight: 500;
     background-color: transparent;
   }
+
+  
 
   
 
