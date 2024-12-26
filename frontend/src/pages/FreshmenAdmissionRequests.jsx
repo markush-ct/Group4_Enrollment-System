@@ -29,6 +29,7 @@ function FreshmenAdmissionRequest() {
   const [submissionDate, setSubmissionDate] = useState('');
   const [examDatetime, setExamDatetime] = useState('');
   const [rejectionReason, setRejectionReason] = useState('');
+  const [activeView, setActiveView] = useState('Request');
 
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -359,140 +360,151 @@ function FreshmenAdmissionRequest() {
       )}
 
       {/* Admission requests */}
-      <div className={styles.contentSection}>
-        <div className={styles.PageTitle} data-aos="fade-up">
-          Admission Requests
-        </div>
+     {/* Toggle Button and Page Title */}
+     <div className={styles.contentSection}>
 
-        {/* Dropdown  */}
-        <div className={styles.filterSection} data-aos="fade-up">
-          <label htmlFor="filter" className={styles.filterLabel}>Filter by Strand:</label>
-          <select
-            id="filter"
-            className={styles.filterDropdown}
-            value={filterType}
-            onChange={(e) => setFilterType(e.target.value)}
-          >
-            <option value="All">All</option>
-            <option value="STEM">STEM</option>
-            <option value="ICT">ICT</option>
+    <div className={styles.PageTitle} data-aos="fade-up">
+      {activeView === 'Request' ? 'Admission Requests' : 'Confirmed Slots'}
+      <button
+      className={styles.toggleButton}
+      onClick={() =>
+        setActiveView((prev) => (prev === 'Request' ? 'Confirm' : 'Request'))
+      }
+    >
+      <img
+        src={'/src/assets/switch-icon.png'}
+        alt={activeView === 'Request' ? 'Confirm Slot' : 'Request'}
+        className={styles.iconImage}
+      />
+    </button>
+    </div>
+    
 
-          </select>
-        </div>
 
-        {/* Table */}
-        <div className={styles.tableContainer} data-aos="fade-up">
-          <table className={styles.requestsTable}>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Strand</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredRequests && filteredRequests.length > 0 ? (
-                filteredRequests.map((request) => (
-                  <tr key={request.StudentID} onClick={() => handleRowClick(request)}>
-                    <td>{request.Firstname} {request.Lastname}</td>
-                    <td>{request.Email}</td>
-                    <td>{request.SHSStrand}</td>
-                    <td>
-                      <button
-                        className={styles.approveButton}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedRequest(request);
-                          setApprovalPrompt(true);
-                        }}
-                      >
-                        Approve
-                      </button>
-                      <button
-                        className={styles.rejectButton}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedRequest(request);
-                          setRejectionPrompt(true)
-                        }}
-                      >
-                        {loading ? 'Loading...' : 'Reject'}
-                      </button>
-                    </td>
+
+
+        {/* Conditional Rendering */}
+        {activeView === 'Request' ? (
+          <>
+            {/* Admission Requests Section */}
+            <div className={styles.filterSection} data-aos="fade-up">
+              <label htmlFor="filter" className={styles.filterLabel}>
+                Filter by Strand:
+              </label>
+              <select
+                id="filter"
+                className={styles.filterDropdown}
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+              >
+                <option value="All">All</option>
+                <option value="STEM">STEM</option>
+                <option value="ICT">ICT</option>
+              </select>
+            </div>
+
+            <div className={styles.tableContainer} data-aos="fade-up">
+              <table className={styles.requestsTable}>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Strand</th>
+                    <th>Actions</th>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="4" className={styles.noData}>
-                    No freshmen admission requests found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
+                </thead>
+                <tbody>
+                  {filteredRequests && filteredRequests.length > 0 ? (
+                    filteredRequests.map((request) => (
+                      <tr key={request.StudentID} onClick={() => handleRowClick(request)}>
+                        <td>{request.Firstname} {request.Lastname}</td>
+                        <td>{request.Email}</td>
+                        <td>{request.SHSStrand}</td>
+                        <td>
+                          <button
+                            className={styles.approveButton}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedRequest(request);
+                              setApprovalPrompt(true);
+                            }}
+                          >
+                            Approve
+                          </button>
+                          <button
+                            className={styles.rejectButton}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedRequest(request);
+                              setRejectionPrompt(true);
+                            }}
+                          >
+                            {loading ? 'Loading...' : 'Reject'}
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="4" className={styles.noData}>
+                        No freshmen admission requests found.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Confirmed Slots Section */}
+            <div className={styles.filterSection} data-aos="fade-up">
+              <label htmlFor="filter" className={styles.filterLabel}>
+                Filter by Strand:
+              </label>
+              <select
+                id="filter"
+                className={styles.filterDropdown}
+                value={filterType1}
+                onChange={(e) => setFilterType1(e.target.value)}
+              >
+                <option value="All">All</option>
+                <option value="STEM">STEM</option>
+                <option value="ICT">ICT</option>
+              </select>
+            </div>
 
-
-
-          </table>
-        </div>
-      </div>
-
-      {/* confirmed slot */}
-
-      <div className={styles.contentSection1}>
-        <div className={styles.PageTitle1} data-aos="fade-up">
-          Confirmed slots
-        </div>
-
-        {/* Dropdown  */}
-        <div className={styles.filterSection} data-aos="fade-up">
-          <label htmlFor="filter" className={styles.filterLabel}>Filter by Strand:</label>
-          <select
-            id="filter"
-            className={styles.filterDropdown}
-            value={filterType1}
-            onChange={(e) => setFilterType1(e.target.value)}
-          >
-            <option value="All">All</option>
-            <option value="STEM">STEM</option>
-            <option value="ICT">ICT</option>
-
-          </select>
-        </div>
-
-        {/* Table */}
-        <div className={styles.tableContainer} data-aos="fade-up">
-          <table className={styles.requestsTable}>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Control Number</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredRequests1 && filteredRequests1.length > 0 ? (
-                filteredRequests1.map((request) => (
-                  <tr key={request.StudentID} onClick={() => handleRowClick(request)}>
-                    <td>{request.Firstname} {request.Lastname}</td>
-                    <td>{request.Email}</td>
-                    <td>{request.ExamControlNo}</td>                
+            <div className={styles.tableContainer} data-aos="fade-up">
+              <table className={styles.requestsTable}>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Control Number</th>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="4" className={styles.noData}>
-                    No confirmed slots.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-
-
-
-          </table>
+                </thead>
+                <tbody>
+                  {filteredRequests1 && filteredRequests1.length > 0 ? (
+                    filteredRequests1.map((request) => (
+                      <tr key={request.StudentID} onClick={() => handleRowClick(request)}>
+                        <td>{request.Firstname} {request.Lastname}</td>
+                        <td>{request.Email}</td>
+                        <td>{request.ExamControlNo}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="4" className={styles.noData}>
+                        No confirmed slots.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
         </div>
-      </div>
 
       {/* PopUp */}
       {popUpVisible && selectedRequest && (

@@ -13,10 +13,10 @@ import SocOfficerDashboard from './pages/SocOfficerDashboard';
 import AdviserDashboard from './pages/AdviserDashboard.jsx';
 import DCSHeadDashboard from './pages/DCSHeadDashboard.jsx';
 import SchoolHeadDashboard from './pages/SchoolHeadDashboard.jsx';
-import SignUp from './pages/SignUp.jsx'
-import CreateAcc from './pages/CreateAcc.jsx'
-import AccountRequest from './pages/AccountRequest.jsx'
-import ForgotPass from './pages/ForgotPass.jsx'
+import SignUp from './pages/SignUp.jsx';
+import CreateAcc from './pages/CreateAcc.jsx';
+import AccountRequest from './pages/AccountRequest.jsx';
+import ForgotPass from './pages/ForgotPass.jsx';
 import FreshmanDashboard from './pages/FreshmanDashboard.jsx';
 import TransfereeDashboard from './pages/TransfereeDashboard.jsx';
 import RegIrregDashboard from './pages/RegIrregDashboard.jsx';
@@ -37,6 +37,7 @@ import DownloadAdmissionForm from './components/DownloadAdmissionForm.jsx';
 import DownloadShiftingForm from './components/DownloadShiftingForm.jsx';
 import FreshmenAdmissionRequest from './pages/FreshmenAdmissionRequests.jsx';
 import TransfereeAdmissionRequest from './pages/TransfereeAdmissionRequests.jsx';
+import AccountManagement from './pages/AccountManagement.jsx';
 
 function App() {
   return (
@@ -81,7 +82,10 @@ function App() {
         <Route path="/download-shiftingform/:id" element={<DownloadShiftingForm />} />
         <Route path="/FreshmenAdmissionRequest" element={<FreshmenAdmissionRequest />} />
         <Route path="/TransfereeAdmissionRequest" element={<TransfereeAdmissionRequest />} />
+        <Route path="/AccountManagement" element={<AccountManagement />} />
 
+
+        
         {/* Add other routes as needed */}
       </Routes>
     </Router>

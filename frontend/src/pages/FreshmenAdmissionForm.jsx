@@ -16,6 +16,7 @@ function FreshmenAdmissionForm() {
   const [prefProgram, setPrefProgram] = useState("");
   const [isConfirmation, setIsConfirmation] = useState(false);
   const [studentID, setStudentID] = useState(""); //Will store student ID to use as a reference for download page of admission form
+  const [Applicationstatus, setApplicationStatus] = useState("Approved"); //value ng application
 
   const [formData, setFormData] = useState({
     applyingFor: '',
@@ -1558,6 +1559,33 @@ e.preventDefault();
                     Download Application Form</span>
                 </button>
               </div>
+
+
+              <h3 className={styles.stepTitle} style={{ marginTop: "50px", marginBottom: "10px" }}>
+  <img src="/src/assets/pending-icon.png" alt="Personal Info Icon" className={styles.icon} />
+  Slot Confirmation
+</h3>
+      <div className={styles.Contentt}>
+
+
+<p>Congratulations! You are accepted. Please click the button to confirm your slot. </p>
+
+
+
+
+  <button
+    type="button"
+    className={styles.downloadButton}
+    onClick={handleDownloadForm} // palitan mo nalang ssob
+    style={{ width: "200px" }} 
+  >
+    <span>Confirm Slot</span>
+  </button>
+</div>
+
+
+
+
 
             </form>
           </div>

@@ -758,6 +758,20 @@
 .contentt4 strong{
   color: black;
 }
+
+
+
+.toggleButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.iconImage {
+  width: 35px; 
+  height: 35px;
+}
   
   
   
@@ -867,6 +881,11 @@
     .studentType {
       font-size: 1.25rem; 
     }
+
+    .iconImage {
+      width: 20px; 
+      height: 20px;
+    }
   }
   
   
@@ -890,6 +909,9 @@
     .popupHeader h2 {
       font-size: 1.25rem; 
     }
+
+    
+      
   }
   
   
@@ -901,6 +923,8 @@
       font-size: 10px;
       padding: 5px; 
     }
+
+    
   }
   
   
