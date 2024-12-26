@@ -118,7 +118,7 @@ function FreshmenAdmissionForm() {
     'Family Background',
     'Educational Background',
     'Medical History',
-    'Schedule Appointment',
+    'Admission Status',
   ];
 
 
@@ -1489,12 +1489,12 @@ e.preventDefault();
           </div>
         );
 
-      case 5: // Schedule Appointment
+      case 5: 
         return (
           <div className={styles.content}>
             <h3 className={styles.stepTitle}>
               <img src='/src/assets/calendar-icon.png' alt="Personal Info Icon" className={styles.icon} />
-              Schedule Appointment
+              Admission Status
             </h3>
 
             <form className={styles.form}>

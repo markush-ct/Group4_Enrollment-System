@@ -12,6 +12,10 @@ import { devNull } from 'os';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import accReqNotif from './accReqNotif.js';
+import admissionNotif from './admissionNotif.js';
+import getFreshmenConfirmedSlots from './getFreshmenConfirmedSlots.js';
+import getShiftingRequestsNotif from './getShiftingRequestsNotif.js';
 
 
 dotenv.config();
@@ -64,6 +68,11 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 app.use("/uploads", express.static("uploads"));
+
+app.use('/accReqNotif', accReqNotif);
+app.use('/admissionNotif', admissionNotif);
+app.use('/getFreshmenConfirmedSlots', getFreshmenConfirmedSlots);
+app.use('/getShiftingRequestsNotif', getShiftingRequestsNotif);
 
 app.post('/rejectTransfereeAdmissionReq', (req, res) =>{
     const getEmpID = `SELECT * FROM employee where Email = ?`;
@@ -611,7 +620,23 @@ app.post('/approveFreshmenAdmissionReq', (req, res) => {
                         transporter.sendMail(mailOptions);
                         console.log("Email sent successfully.");
                         console.log('Exam DateTime:', examDatetime);
-                        return res.json({ message: "Admission Approval sent" });
+
+                        const getAdmissionID = `SELECT * FROM admissionform WHERE StudentID = ?`;
+                        db.query(getAdmissionID, studentID, (err, admissionIDRes) => {
+                            if (err) {
+                                return res.json({ message: "Error in server: " + err });
+                            } else if (admissionIDRes.length > 0) {
+                                const slotConfirm = `INSERT INTO slotconfirmation (AdmissionID) VALUES (?)`;
+                                db.query(slotConfirm, admissionIDRes[0].AdmissionID, (err, slotRes) => {
+                                    if (err) {
+                                        return res.json({ message: "Error in server: " + err });
+                                    } else if (slotRes.affectedRows > 0) {
+                                        return res.json({ message: "Admission Approval sent", admissionID: admissionIDRes[0].AdmissionID });
+                                    }
+                                });
+                            }
+                        });
+
                     } catch (emailError) {
                         console.error('Error sending email:', emailError);
                         return res.json({ message: "Error sending email", error: emailError.message });

@@ -11,12 +11,15 @@ function FreshmenAdmissionRequest() {
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const [accountRequests, setAccountRequests] = useState([]);
+  const [accountRequests1, setAccountRequests1] = useState([]);
   const [filteredRequests, setFilteredRequests] = useState(accountRequests);
+  const [filteredRequests1, setFilteredRequests1] = useState(filteredRequests);
   const [filterType, setFilterType] = useState("All");
+  const [filterType1, setFilterType1] = useState("All");
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [popUpVisible, setPopUpVisible] = useState(false);
   const [approvalPrompt, setApprovalPrompt] = useState(false);
-    const [studentData, setStudentData] = useState({});
+  const [studentData, setStudentData] = useState({});
   const [approvalMsg, setApprovalMsg] = useState('');
   const [rejectionPrompt, setRejectionPrompt] = useState(false);
   const [rejectionMsg, setRejectionMsg] = useState('');
@@ -93,6 +96,39 @@ function FreshmenAdmissionRequest() {
       );
     }
   }, [filterType, accountRequests]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/getFreshmenConfirmedSlots")
+      .then((res) => {
+        setAccountRequests1(res.data.admissionRes);
+        setFilteredRequests1(res.data.admissionRes);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.warn("Error fetching account requests, using example data:", err);
+        setFilteredRequests1(accountRequests1);
+        setAccountRequests1([]); // Ensure state is not undefined
+        setFilteredRequests1([]);
+      });
+  }, []);
+
+
+  useEffect(() => { // dropwdonw function
+    if (!accountRequests1 || accountRequests1.length === 0) {
+      setFilteredRequests1([]);
+      return;
+    }
+
+    if (filterType1 === "All") {
+
+      setFilteredRequests1(accountRequests1);
+    } else {
+      setFilteredRequests1(
+        accountRequests1.filter((request) => request.SHSStrand === filterType1)
+      );
+    }
+  }, [filterType1, accountRequests1]);
 
 
   const handleApprove = async (request) => {
@@ -322,7 +358,7 @@ function FreshmenAdmissionRequest() {
         </div>
       )}
 
-
+      {/* Admission requests */}
       <div className={styles.contentSection}>
         <div className={styles.PageTitle} data-aos="fade-up">
           Admission Requests
@@ -390,6 +426,63 @@ function FreshmenAdmissionRequest() {
                 <tr>
                   <td colSpan="4" className={styles.noData}>
                     No freshmen admission requests found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+
+
+
+          </table>
+        </div>
+      </div>
+
+      {/* confirmed slot */}
+
+      <div className={styles.contentSection1}>
+        <div className={styles.PageTitle1} data-aos="fade-up">
+          Confirmed slots
+        </div>
+
+        {/* Dropdown  */}
+        <div className={styles.filterSection} data-aos="fade-up">
+          <label htmlFor="filter" className={styles.filterLabel}>Filter by Strand:</label>
+          <select
+            id="filter"
+            className={styles.filterDropdown}
+            value={filterType1}
+            onChange={(e) => setFilterType1(e.target.value)}
+          >
+            <option value="All">All</option>
+            <option value="STEM">STEM</option>
+            <option value="ICT">ICT</option>
+
+          </select>
+        </div>
+
+        {/* Table */}
+        <div className={styles.tableContainer} data-aos="fade-up">
+          <table className={styles.requestsTable}>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Control Number</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredRequests1 && filteredRequests1.length > 0 ? (
+                filteredRequests1.map((request) => (
+                  <tr key={request.StudentID} onClick={() => handleRowClick(request)}>
+                    <td>{request.Firstname} {request.Lastname}</td>
+                    <td>{request.Email}</td>
+                    <td>{request.ExamControlNo}</td>                
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className={styles.noData}>
+                    No confirmed slots.
                   </td>
                 </tr>
               )}

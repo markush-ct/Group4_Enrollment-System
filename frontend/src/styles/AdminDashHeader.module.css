@@ -328,7 +328,19 @@ button{
     font-weight: 500; 
 }
 
-
+.sidebarNotif{
+    display: flex;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    font-size: 12px;
+    width: 17px;
+    height: 17px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    margin-left: 3px;
+}
 
 .menuItem:hover {
     transform: scale(1.02);  
