@@ -23,7 +23,6 @@ function TransfereeAdmissionRequest() {
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const [submissionDate, setSubmissionDate] = useState('');
-  const [examDatetime, setExamDatetime] = useState('');
   const [rejectionReason, setRejectionReason] = useState('');
 
   axios.defaults.withCredentials = true;
@@ -62,7 +61,7 @@ function TransfereeAdmissionRequest() {
   // FETCH ADMISSION REQUEST
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getFreshmenAdmissionReq")
+      .get("http://localhost:8080/getTransfereeAdmissionReq")
       .then((res) => {
         setAccountRequests(res.data.records);
         setFilteredRequests(res.data.records);
@@ -104,19 +103,17 @@ function TransfereeAdmissionRequest() {
 
     console.log('Request received in handleApprove:', request);
     console.log('Submission Date:', submissionDate);
-    console.log('Exam Date:', examDatetime);
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:8080/approveFreshmenAdmissionReq', {
+      const response = await axios.post('http://localhost:8080/approveTransfereeAdmissionReq', {
         email: request.Email,
         name: request.Firstname + " " + request.Lastname,
         studentID: request.StudentID,
         submissionDate: submissionDate,
-        examDatetime: examDatetime,
       });
 
-      if (response.data.message === "Admission Approval sent") {
+      if (response.data.message === "Transfer Approval sent") {
         setApprovalPrompt(true);
         setApprovalMsg(`Approval email sent to ${request.Email}`);
         setErrorPrompt(false);
@@ -152,14 +149,14 @@ function TransfereeAdmissionRequest() {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:8080/rejectFreshmenAdmissionReq', {
+      const response = await axios.post('http://localhost:8080/rejectTransfereeAdmissionReq', {
         email: request.Email,
         name: request.Firstname + " " + request.Lastname,
         studentID: request.StudentID,
         rejectionReason: rejectionReason,
       });
 
-      if (response.data.message === "Admission request rejection sent") {
+      if (response.data.message === "Transfer request rejection sent") {
         setRejectionPrompt(true);
         setRejectionMsg(`Rejection email sent to ${request.Email}`);
         setErrorPrompt(false);
@@ -209,23 +206,11 @@ function TransfereeAdmissionRequest() {
           <div className={styles.popupContent}>
             <div className={styles.popupHeader}>
               <button onClick={closePopup} className={styles.closeButton}>✖</button>
-              <h3>Send Schedule for Exam and Requirements Submission</h3>
+              <h3>Send Schedule for Requirements Submission</h3>
             </div>
 
         
             {/* Date Input and Send Button */}
-            <div data-aos="fade-up" className={styles.studentType}>
-              <h5>Date of Examination</h5>
-
-              <input
-                type="datetime-local"
-                id="examDatetime"
-                name='examDatetime'
-                value={examDatetime}
-                onChange={(e) => setExamDatetime(e.target.value)}
-                className={styles.popupPromptInput}
-              />
-            </div>
 
             <div data-aos="fade-up" className={styles.studentType}>
               <h5>Date of Submission</h5>
@@ -237,6 +222,7 @@ function TransfereeAdmissionRequest() {
                 value={submissionDate}
                 onChange={(e) => setSubmissionDate(e.target.value)}
                 className={styles.popupPromptInput}
+                required
               />
             </div>
 
@@ -348,7 +334,7 @@ function TransfereeAdmissionRequest() {
               <tr>
                 <th>Name</th>
                 <th>Email</th>
-                <th>Strand</th>
+                <th>Previous Program</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -358,7 +344,7 @@ function TransfereeAdmissionRequest() {
                   <tr key={request.StudentID} onClick={() => handleRowClick(request)}>
                     <td>{request.Firstname} {request.Lastname}</td>
                     <td>{request.Email}</td>
-                    <td>{request.SHSStrand}</td>
+                    <td>{request.TransfereeCollegeCourse}</td>
                     <td>
                       <button
                         className={styles.approveButton}
@@ -440,7 +426,6 @@ function TransfereeAdmissionRequest() {
               
                     <div className={styles.infoGrid}>
                     <div className={styles.contentt}>
-                        <p>Generated: <span>Date and Time</span></p>
                         <p>Admission Information - <span>{selectedRequest.ExamControlNo} 1st semester 2022-2023</span></p>
                         <p>Campus - <span>{selectedRequest.Branch}</span></p>
                       </div>
@@ -569,13 +554,99 @@ function TransfereeAdmissionRequest() {
               
               
                     <div className={styles.sectionTitle}>Medical History Information</div>
-                    <div className={styles.infoGrid}>
-                    <div className={styles.contentt}>
-                        <p>Medications: <span>{selectedRequest.Medication}</span></p>
-                        <p>Medical Condtion/s: <span>{selectedRequest.MedicalHistory}</span></p><br></br>
-                        <p>I hereby.........: <span></span></p>
-                      </div>
-                     
+                                              <div className={styles.infoGrid2}>
+                                              <div className={styles.contentt}>
+                                                  <p>Medications: <span>{selectedRequest.Medication}</span></p>
+                                                  <p>Medical Condtion/s: <span>{selectedRequest.MedicalHistory}</span></p><br></br>
+                                                  </div>
+                                                  </div>
+                                                  <div className={styles.infoGrid2}>
+                                                  <div className={styles.hereby}>
+                                                  <p><strong>I hereby certify that all the information 
+                                                    stated above are true and correct</strong> as to the best 
+                                                    of my knowledge. I hereby give consent for my
+                                                     personal data included in my offer to be processed 
+                                                     for the purposes of admission and enrollment in accordance
+                                                      with Republic Act 10173 - Data Privacy Act of 2012.: <span></span></p>
+                                                      <br></br>
+                                        
+                                                      <p><span
+                                                                style={{
+                                                                  display: "inline-block",
+                                                                  borderBottom: "1px solid black",
+                                                                  width: "80%",
+                                                                  marginLeft: "10px",
+                                                                  marginRight: "0px",
+                                                                  textAlign: "center",
+                                                                  textTransform: "uppercase",
+                                                                }}
+                                                              >{selectedRequest.Lastname}, {selectedRequest.Firstname} {selectedRequest.Middlename}</span>
+                                                              <br />
+                                                              <p style={{textAlign: "center",}}>
+                                                              Signature over printed name</p>
+                                                            </p>
+                                                </div>
+
+                                                <div className={styles.contentt3box}>
+        <p className={styles.contentt3}>
+        To be filled up by the OSAS/Guidance Staff
+      </p>
+      <p className={styles.contentt3}>
+        SUBMITTED REQUIREMENTS
+      </p>
+      <p className={styles.contentt4}><span
+            style={{
+              display: "inline-block",
+              borderBottom: "1px solid black",
+              width: "10px",
+              marginLeft: "2px",
+              marginRight: "2px",
+            }}
+          ></span>2 copies of 1x1 ID Picture with name tag</p>
+      <p className={styles.contentt4}><span
+            style={{
+              display: "inline-block",
+              borderBottom: "1px solid black",
+              width: "10px",
+              marginLeft: "2px",
+              marginRight: "2px",
+            }}
+          ></span>Short ordinary folder</p>
+      <p className={styles.contentt4}>
+       <strong>New Student (SHS, ALS)</strong>
+        <br />
+        <span
+            style={{
+              display: "inline-block",
+              borderBottom: "1px solid black",
+              width: "10px",
+              marginLeft: "2px",
+              marginRight: "2px",
+            }}
+          ></span>Certified True Copy of G12 report/Certificate of ALS Rating
+      </p>
+      <p className={styles.contentt4}><strong>Assessed by:</strong><span
+            style={{
+              display: "inline-block",
+              borderBottom: "1px solid black",
+              width: "100px",
+              marginLeft: "2px",
+              marginRight: "2px",
+            }}
+          ></span></p>
+      <p className={styles.contentt4}><strong>Control No.:</strong><span
+            style={{
+              display: "inline-block",
+              borderBottom: "1px solid black",
+              width: "100px",
+              marginLeft: "2px",
+              marginRight: "2px",
+            }}
+          ></span></p>
+
+
+      
+    </div>
                     
                       
                       

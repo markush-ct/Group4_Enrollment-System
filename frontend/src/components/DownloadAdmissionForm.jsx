@@ -8,10 +8,27 @@ const DownloadAdmissionForm = () => {
   const { id } = useParams(); // Fetch ID from URL
   const [formData, setFormData] = useState({});
   const [studentData, setStudentData] = useState({});
+  const [print, setPrint] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const printRef = useRef();
+
+  const [datetimeGenerated, setDatetimeGenerated] = useState("");
+  useEffect(() => {
+    const today = new Date();
+    const date = today.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    const time = today.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+    });
+    setDatetimeGenerated(`${date} ${time}`);
+  }, [datetimeGenerated]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,8 +82,14 @@ const DownloadAdmissionForm = () => {
         </div>
       </div>
 
+    
+      <div className={styles.infoGrid0}>
+      <div className={styles.contentt}>
+          <p>Generated: <span>{datetimeGenerated}</span></p>
+        </div>
+        </div>
 
-      <div className={styles.infoGrid}>
+      <div className={styles.infoGrid0}>
       <div className={styles.contentt}>
           <p>Admission Information - <span>{formData.ExamControlNo} 1st semester 2022-2023</span></p>
           <p>Campus - <span>{formData.Branch}</span></p>

@@ -11,11 +11,15 @@ function FreshmenAdmissionRequest() {
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const [accountRequests, setAccountRequests] = useState([]);
+  const [accountRequests1, setAccountRequests1] = useState([]);
   const [filteredRequests, setFilteredRequests] = useState(accountRequests);
+  const [filteredRequests1, setFilteredRequests1] = useState(filteredRequests);
   const [filterType, setFilterType] = useState("All");
+  const [filterType1, setFilterType1] = useState("All");
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [popUpVisible, setPopUpVisible] = useState(false);
   const [approvalPrompt, setApprovalPrompt] = useState(false);
+  const [studentData, setStudentData] = useState({});
   const [approvalMsg, setApprovalMsg] = useState('');
   const [rejectionPrompt, setRejectionPrompt] = useState(false);
   const [rejectionMsg, setRejectionMsg] = useState('');
@@ -25,6 +29,7 @@ function FreshmenAdmissionRequest() {
   const [submissionDate, setSubmissionDate] = useState('');
   const [examDatetime, setExamDatetime] = useState('');
   const [rejectionReason, setRejectionReason] = useState('');
+  const [activeView, setActiveView] = useState('Request');
 
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -92,6 +97,39 @@ function FreshmenAdmissionRequest() {
       );
     }
   }, [filterType, accountRequests]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/getFreshmenConfirmedSlots")
+      .then((res) => {
+        setAccountRequests1(res.data.admissionRes);
+        setFilteredRequests1(res.data.admissionRes);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.warn("Error fetching account requests, using example data:", err);
+        setFilteredRequests1(accountRequests1);
+        setAccountRequests1([]); // Ensure state is not undefined
+        setFilteredRequests1([]);
+      });
+  }, []);
+
+
+  useEffect(() => { // dropwdonw function
+    if (!accountRequests1 || accountRequests1.length === 0) {
+      setFilteredRequests1([]);
+      return;
+    }
+
+    if (filterType1 === "All") {
+
+      setFilteredRequests1(accountRequests1);
+    } else {
+      setFilteredRequests1(
+        accountRequests1.filter((request) => request.SHSStrand === filterType1)
+      );
+    }
+  }, [filterType1, accountRequests1]);
 
 
   const handleApprove = async (request) => {
@@ -224,6 +262,7 @@ function FreshmenAdmissionRequest() {
                 value={examDatetime}
                 onChange={(e) => setExamDatetime(e.target.value)}
                 className={styles.popupPromptInput}
+                required
               />
             </div>
 
@@ -237,6 +276,7 @@ function FreshmenAdmissionRequest() {
                 value={submissionDate}
                 onChange={(e) => setSubmissionDate(e.target.value)}
                 className={styles.popupPromptInput}
+                required
               />
             </div>
 
@@ -319,84 +359,152 @@ function FreshmenAdmissionRequest() {
         </div>
       )}
 
+      {/* Admission requests */}
+     {/* Toggle Button and Page Title */}
+     <div className={styles.contentSection}>
 
-      <div className={styles.contentSection}>
-        <div className={styles.PageTitle} data-aos="fade-up">
-          Admission Requests
-        </div>
+    <div className={styles.PageTitle} data-aos="fade-up">
+      {activeView === 'Request' ? 'Admission Requests' : 'Confirmed Slots'}
+      <button
+      className={styles.toggleButton}
+      onClick={() =>
+        setActiveView((prev) => (prev === 'Request' ? 'Confirm' : 'Request'))
+      }
+    >
+      <img
+        src={'/src/assets/switch-icon.png'}
+        alt={activeView === 'Request' ? 'Confirm Slot' : 'Request'}
+        className={styles.iconImage}
+      />
+    </button>
+    </div>
+    
 
-        {/* Dropdown  */}
-        <div className={styles.filterSection} data-aos="fade-up">
-          <label htmlFor="filter" className={styles.filterLabel}>Filter by Strand:</label>
-          <select
-            id="filter"
-            className={styles.filterDropdown}
-            value={filterType}
-            onChange={(e) => setFilterType(e.target.value)}
-          >
-            <option value="All">All</option>
-            <option value="STEM">STEM</option>
-            <option value="ICT">ICT</option>
 
-          </select>
-        </div>
 
-        {/* Table */}
-        <div className={styles.tableContainer} data-aos="fade-up">
-          <table className={styles.requestsTable}>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Strand</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredRequests && filteredRequests.length > 0 ? (
-                filteredRequests.map((request) => (
-                  <tr key={request.StudentID} onClick={() => handleRowClick(request)}>
-                    <td>{request.Firstname} {request.Lastname}</td>
-                    <td>{request.Email}</td>
-                    <td>{request.SHSStrand}</td>
-                    <td>
-                      <button
-                        className={styles.approveButton}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedRequest(request);
-                          setApprovalPrompt(true);
-                        }}
-                      >
-                        Approve
-                      </button>
-                      <button
-                        className={styles.rejectButton}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedRequest(request);
-                          setRejectionPrompt(true)
-                        }}
-                      >
-                        {loading ? 'Loading...' : 'Reject'}
-                      </button>
-                    </td>
+
+        {/* Conditional Rendering */}
+        {activeView === 'Request' ? (
+          <>
+            {/* Admission Requests Section */}
+            <div className={styles.filterSection} data-aos="fade-up">
+              <label htmlFor="filter" className={styles.filterLabel}>
+                Filter by Strand:
+              </label>
+              <select
+                id="filter"
+                className={styles.filterDropdown}
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+              >
+                <option value="All">All</option>
+                <option value="STEM">STEM</option>
+                <option value="ICT">ICT</option>
+              </select>
+            </div>
+
+            <div className={styles.tableContainer} data-aos="fade-up">
+              <table className={styles.requestsTable}>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Strand</th>
+                    <th>Actions</th>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="4" className={styles.noData}>
-                    No freshmen admission requests found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
+                </thead>
+                <tbody>
+                  {filteredRequests && filteredRequests.length > 0 ? (
+                    filteredRequests.map((request) => (
+                      <tr key={request.StudentID} onClick={() => handleRowClick(request)}>
+                        <td>{request.Firstname} {request.Lastname}</td>
+                        <td>{request.Email}</td>
+                        <td>{request.SHSStrand}</td>
+                        <td>
+                          <button
+                            className={styles.approveButton}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedRequest(request);
+                              setApprovalPrompt(true);
+                            }}
+                          >
+                            Approve
+                          </button>
+                          <button
+                            className={styles.rejectButton}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedRequest(request);
+                              setRejectionPrompt(true);
+                            }}
+                          >
+                            {loading ? 'Loading...' : 'Reject'}
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="4" className={styles.noData}>
+                        No freshmen admission requests found.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Confirmed Slots Section */}
+            <div className={styles.filterSection} data-aos="fade-up">
+              <label htmlFor="filter" className={styles.filterLabel}>
+                Filter by Strand:
+              </label>
+              <select
+                id="filter"
+                className={styles.filterDropdown}
+                value={filterType1}
+                onChange={(e) => setFilterType1(e.target.value)}
+              >
+                <option value="All">All</option>
+                <option value="STEM">STEM</option>
+                <option value="ICT">ICT</option>
+              </select>
+            </div>
 
-
-
-          </table>
+            <div className={styles.tableContainer} data-aos="fade-up">
+              <table className={styles.requestsTable}>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Control Number</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredRequests1 && filteredRequests1.length > 0 ? (
+                    filteredRequests1.map((request) => (
+                      <tr key={request.StudentID} onClick={() => handleRowClick(request)}>
+                        <td>{request.Firstname} {request.Lastname}</td>
+                        <td>{request.Email}</td>
+                        <td>{request.ExamControlNo}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="4" className={styles.noData}>
+                        No confirmed slots.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
         </div>
-      </div>
 
       {/* PopUp */}
       {popUpVisible && selectedRequest && (
@@ -569,13 +677,99 @@ function FreshmenAdmissionRequest() {
               
               
                     <div className={styles.sectionTitle}>Medical History Information</div>
-                    <div className={styles.infoGrid}>
-                    <div className={styles.contentt}>
-                        <p>Medications: <span>{selectedRequest.Medication}</span></p>
-                        <p>Medical Condtion/s: <span>{selectedRequest.MedicalHistory}</span></p><br></br>
-                        <p>I hereby.........: <span></span></p>
-                      </div>
+                          <div className={styles.infoGrid2}>
+                          <div className={styles.contentt}>
+                              <p>Medications: <span>{selectedRequest.Medication}</span></p>
+                              <p>Medical Condtion/s: <span>{selectedRequest.MedicalHistory}</span></p><br></br>
+                              </div>
+                              </div>
+                              <div className={styles.infoGrid2}>
+                              <div className={styles.hereby}>
+                              <p><strong>I hereby certify that all the information 
+                                stated above are true and correct</strong> as to the best 
+                                of my knowledge. I hereby give consent for my
+                                 personal data included in my offer to be processed 
+                                 for the purposes of admission and enrollment in accordance
+                                  with Republic Act 10173 - Data Privacy Act of 2012.: <span></span></p>
+                                  <br></br>
+                    
+                                  <p><span
+                                            style={{
+                                              display: "inline-block",
+                                              borderBottom: "1px solid black",
+                                              width: "80%",
+                                              marginLeft: "10px",
+                                              marginRight: "0px",
+                                              textAlign: "center",
+                                              textTransform: "uppercase",
+                                            }}
+                                          >{selectedRequest.Lastname}, {selectedRequest.Firstname} {selectedRequest.Middlename}</span>
+                                          <br />
+                                          <p style={{textAlign: "center",}}>
+                                          Signature over printed name</p>
+                                        </p>
+                            </div>
                      
+                      <div className={styles.contentt3box}>
+                             <p className={styles.contentt3}>
+                             To be filled up by the OSAS/Guidance Staff
+                           </p>
+                           <p className={styles.contentt3}>
+                             SUBMITTED REQUIREMENTS
+                           </p>
+                           <p className={styles.contentt4}><span
+                                 style={{
+                                   display: "inline-block",
+                                   borderBottom: "1px solid black",
+                                   width: "10px",
+                                   marginLeft: "2px",
+                                   marginRight: "2px",
+                                 }}
+                               ></span>2 copies of 1x1 ID Picture with name tag</p>
+                           <p className={styles.contentt4}><span
+                                 style={{
+                                   display: "inline-block",
+                                   borderBottom: "1px solid black",
+                                   width: "10px",
+                                   marginLeft: "2px",
+                                   marginRight: "2px",
+                                 }}
+                               ></span>Short ordinary folder</p>
+                           <p className={styles.contentt4}>
+                            <strong>New Student (SHS, ALS)</strong>
+                             <br />
+                             <span
+                                 style={{
+                                   display: "inline-block",
+                                   borderBottom: "1px solid black",
+                                   width: "10px",
+                                   marginLeft: "2px",
+                                   marginRight: "2px",
+                                 }}
+                               ></span>Certified True Copy of G12 report/Certificate of ALS Rating
+                           </p>
+                           <p className={styles.contentt4}><strong>Assessed by:</strong><span
+                                 style={{
+                                   display: "inline-block",
+                                   borderBottom: "1px solid black",
+                                   width: "100px",
+                                   marginLeft: "2px",
+                                   marginRight: "2px",
+                                 }}
+                               ></span></p>
+                           <p className={styles.contentt4}><strong>Control No.:</strong><span
+                                 style={{
+                                   display: "inline-block",
+                                   borderBottom: "1px solid black",
+                                   width: "100px",
+                                   marginLeft: "2px",
+                                   marginRight: "2px",
+                                 }}
+                               ></span></p>
+                     
+                     
+                           
+                         </div>
                     
                       
                       

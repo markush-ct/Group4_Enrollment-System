@@ -38,6 +38,54 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
       });
   }, []);
 
+  const [accReqNotif, setAccReqNotif] = useState(0);
+  const [freshmenAdmissionNotif, setFreshmenAdmissionNotif] = useState(0);
+  const [transfereeAdmissionNotif, setTransfereeAdmissionNotif] = useState(0);
+  const [shiftingNotif, setShiftingNotif] = useState(0);
+
+  useEffect(() => {
+    const fetchAccReqNotif = async () => {
+        try {
+            const accReqRes = await axios.get("http://localhost:8080/accReqNotif");
+            setAccReqNotif(accReqRes.data.studentCount + accReqRes.data.empCount + accReqRes.data.societyCount);
+        } catch (err) {
+            console.error("Error getting account request notifications:", err);
+        }
+    };
+
+    fetchAccReqNotif();
+  }, []);
+
+  useEffect(() => {
+    const fetchAdmissionNotif = async () => {
+        try {
+            const admissionReqRes = await axios.get("http://localhost:8080/admissionNotif");
+            console.log("Fetched admission notifications:", admissionReqRes.data);
+            setFreshmenAdmissionNotif(admissionReqRes.data.freshmenCount);
+            setTransfereeAdmissionNotif(admissionReqRes.data.transfereeCount);
+        } catch (err) {
+            console.error("Error getting admission notifications:", err);
+        }
+    };
+
+    fetchAdmissionNotif();
+  }, []);
+
+
+  useEffect(() => {
+    const fetchShiftingNotif = async () => {
+        try {
+            const accReqRes = await axios.get("http://localhost:8080/getShiftingRequestsNotif");
+            setShiftingNotif(accReqRes.data.studentCount);
+        } catch (err) {
+            console.error("Error getting account request notifications:", err);
+        }
+    };
+
+    fetchShiftingNotif();
+  }, []);
+
+  
     useEffect(() => {
         axios.get("http://localhost:8080")
           .then((res) => {
@@ -47,9 +95,15 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
                 const menuItems = {
                     "Enrollment Officer": [
                         { name: 'Dashboard', icon: dashboardIcon, path: '/EnrollmentOfficerDashboard' },
-                        { name: 'Account Requests', icon: accountRequestsIcon, path: '/AccountRequest' },
+                        { name: 'Account Requests', icon: accountRequestsIcon, path: '/AccountRequest', 
+                            notification: accReqNotif > 0 ? (
+                                <div className={style.sidebarNotif}>
+                                  {accReqNotif}
+                                </div>
+                              ) : null
+                            },
                         { name: 'Enrollment', icon: preEnrollmentIcon, path: '/AdminPreEnrollment' },
-                        { name: 'Account Management', icon: preEnrollmentIcon, path: '/' },
+                        { name: 'Account Management', icon: preEnrollmentIcon, path: '/AccountManagement' },
                     ],
                     "Society Officer": [
                         { name: 'Dashboard', icon: dashboardIcon, path: '/SocOfficerDashboard' },
@@ -64,12 +118,30 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
                     ],
                     "DCS Head": [
                         { name: 'Dashboard', icon: dashboardIcon, path: '/DCSHeadDashboard' },
-                        { name: 'Shifting Request', icon: accountRequestsIcon, path: '/ShiftingRequest' },                                                
+                        { name: 'Shifting Request', icon: accountRequestsIcon, path: '/ShiftingRequest',
+                            notification: shiftingNotif > 0 ? (
+                                <div className={style.sidebarNotif}>
+                                  {shiftingNotif}
+                                </div>
+                              ) : null
+                         },                                                
                     ],
                     "School Head": [
                         { name: 'Dashboard', icon: dashboardIcon, path: '/SchoolHeadDashboard' },
-                        { name: 'Freshman Admission', icon: accountRequestsIcon, path: '/FreshmenAdmissionRequest' },
-                        { name: 'Transferee Admission', icon: accountRequestsIcon, path: '/TransfereeAdmissionRequest' },
+                        { name: 'Freshman Admission', icon: accountRequestsIcon, path: '/FreshmenAdmissionRequest',
+                            notification: freshmenAdmissionNotif > 0 ? (
+                                <div className={style.sidebarNotif}>
+                                  {freshmenAdmissionNotif}
+                                </div>
+                              ) : null
+                        },
+                        { name: 'Transferee Admission', icon: accountRequestsIcon, path: '/TransfereeAdmissionRequest',
+                            notification: transfereeAdmissionNotif > 0 ? (
+                                <div className={style.sidebarNotif}>
+                                  {transfereeAdmissionNotif}
+                                </div>
+                              ) : null
+                         },
                         
                         
                     ]
@@ -83,7 +155,7 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
           .catch((err) => {
             console.error("Error validating user session:", err);
           });
-    }, [navigate]);
+    }, [navigate, accReqNotif, freshmenAdmissionNotif, transfereeAdmissionNotif]);
 
     const handleLogout = () => {
         logoutFunction(navigate);
@@ -111,6 +183,7 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
                             <li key={index} className={`${style.menuItem} ${isActive(item.path) ? style.active : ''}`}>
                                 <img src={item.icon} alt={item.name} className={style.icon} />
                                 <Link to={item.path}>{item.name}</Link>
+                                {item.notification}
                             </li>
                         ))}
                     </ul>

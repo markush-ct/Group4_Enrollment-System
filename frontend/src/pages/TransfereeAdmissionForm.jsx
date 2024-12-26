@@ -116,7 +116,7 @@ function FreshmenAdmissionForm() {
     'Family Background',
     'Educational Background',
     'Medical History',
-    'Schedule Appointment',
+    'Admission Status',
   ];
 
 
@@ -235,10 +235,22 @@ function FreshmenAdmissionForm() {
           controlNo: transferee.ExamControlNo || '',
           applicationStatus: transferee.AdmissionStatus || '',
           examSched: transferee.DateOfExamAndTime || '',
-          reqSubmission: transferee.SubmissionSchedule || '',
+          reqSubmission: transferee.SubmissionSchedule ? 
+          new Date(transferee.SubmissionSchedule).toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          }) 
+          : '',
       });
 
+      console.log("Student ID: ", student.StudentID);
+
+      setStudentID(student.StudentID);
+
       setPrefProgram(student.ProgramID);
+      
+      {formData.applicationStatus === "Pending" ? setActiveStep(0) : setActiveStep(5)}
       }
     })
     .catch((err) => {
@@ -357,6 +369,11 @@ function FreshmenAdmissionForm() {
   };
 
   const handleDownloadForm = () => {
+      if(formData.applicationStatus !== "Approved"){
+        alert("You can only download the form once your application is approved.");
+        return;
+      }
+
       const url = `/download-form/${studentID}`;
       window.open(url, "_blank");
   };
@@ -1385,7 +1402,7 @@ e.preventDefault();
           <div className={styles.content}>
             <h3 className={styles.stepTitle}>
               <img src='/src/assets/calendar-icon.png' alt="Personal Info Icon" className={styles.icon} />
-              Schedule Appointment
+              Admission Status
             </h3>
 
             <form className={styles.form}>
@@ -1398,7 +1415,6 @@ e.preventDefault();
                   value={formData.applicationStatus}
                   onChange={handleInputChange}
                   readOnly
-                  disabled
                 />
               </div>
 
@@ -1411,23 +1427,9 @@ e.preventDefault();
                   value={formData.controlNo}
                   onChange={handleInputChange}
                   readOnly
-                  disabled
                 />
               </div>
 
-
-              <div className={styles.formGroup}>
-                <label htmlFor="examSched">Exam Schedule:</label>
-                <input
-                  id="examSched"
-                  name="examSched"
-                  value={formData.examSched === "" || !formData.examSched ? "Not yet scheduled" : formData.examSched}
-                  onChange={handleInputChange}
-                  type="text"
-                  disabled
-                  required
-                />
-              </div>
 
               <div className={styles.formGroup}>
                 <label htmlFor="reqSubmission">Submission of Requirements</label>
@@ -1437,7 +1439,7 @@ e.preventDefault();
                   value={formData.reqSubmission === "" || !formData.reqSubmission ? "Not yet scheduled" : formData.reqSubmission}
                   onChange={handleInputChange}
                   type="text"
-                  disabled
+                  readOnly
                 />
               </div>
 
@@ -1447,7 +1449,6 @@ e.preventDefault();
                   type="button"
                   className={styles.downloadButton}
                   onClick={handleDownloadForm}
-                  disabled={formData.applicationStatus !== "Approved"}
                 ><span>
                     Download Application Form</span>
                 </button>

@@ -114,7 +114,37 @@
     background-color: transparent;
   }
   
+  .Contentt {
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    background-color: transparent; 
+    text-align: center;
+    flex-direction: column;
+  }
   
+  
+  
+  .Contentt h3{
+    background-color: transparent;
+    color: #333;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  
+  .Contentt p{
+    background-color: transparent;
+    color: #333;
+  }
+  
+  .Contentt h4, h5{
+    background-color: transparent;
+  }
+  
+  .Contentt h3 span{
+    background-color: transparent;
+    color: #3d8c4b;
+  }
 
 
 
@@ -183,6 +213,12 @@
   .downloadButton:hover {
     color: white; 
     transform: scale(1.01); 
+  }
+  
+  .uploadIcon {
+    width: 100px;
+    height: 100px;
+    opacity: 0.7;
   }
   
   

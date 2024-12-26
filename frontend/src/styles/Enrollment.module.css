@@ -181,6 +181,10 @@
   flex-direction: column;
 }
 
+.formGroup input, .formGroup select, .formGroup textarea{
+  width: 100%;
+}
+
 .submitButton {
   position: relative; 
   background-color: #d0943d;
@@ -638,7 +642,6 @@ input[type="file"] {
   }
 
   .PageTitle {
-    margin-top: ;
     font-size: 1.5rem;
   }
   

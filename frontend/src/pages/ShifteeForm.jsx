@@ -52,6 +52,7 @@ function ShifteeForm() {
           });
 
           setStudentID(res.data.studentID);
+          {formValues.shiftingStatus === "Pending" ? setActiveStep(0) : setActiveStep(1)}
         } else {
           setErrorMsg(res.data.message);
           setErrorPrompt(true);
@@ -192,10 +193,14 @@ function ShifteeForm() {
   }
 
   const handleDownloadForm = () => {
-    const url = `/download-shiftingform/${studentID}`;
-    window.open(url, "_blank");
-  };
+    if(formValues.shiftingStatus !== "Approved"){
+      alert("You can only download the form once your application is approved.");
+      return;
+    }
 
+    const url = `/download-form/${studentID}`;
+    window.open(url, "_blank");
+};
   const renderContent = () => {
     switch (steps[activeStep]) {
       case "Shifting Information":
@@ -357,7 +362,6 @@ function ShifteeForm() {
                   type="button"
                   className={styles.submitButton}
                   onClick={handleDownloadForm}
-                  disabled={formValues.shiftingStatus !== "Approved"}
                 ><span>
                     Download Shiftee Form</span>
                 </button>
