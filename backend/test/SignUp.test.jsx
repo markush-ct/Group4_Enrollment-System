@@ -111,7 +111,7 @@ app.post("/SignUp", (req, res) => {
   }
 });
 
-describe("Unit Testing for the Sign Up Function", () => {
+describe("Unit Testing for Sign Up Function", () => {
   beforeEach(() => {
     db.query.mockReset();
   });

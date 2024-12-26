@@ -276,8 +276,8 @@ describe("Unit Testing for Create Account Function", () => {
       applicantCategory: "Society Officer",
       email: "societyofficer@example.com",
       firstname: "John",
-      lastname: "Doe",
       middlename: "Smith",
+      lastname: "Doe",
       contactnum: "09123456789",
       program: "Computer Science",
       position: "President",
@@ -331,10 +331,10 @@ describe("Unit Testing for Create Account Function", () => {
       email: "employee@example.com",
       firstname: "Jane",
       lastname: "Doe",
-      employeeID: "EMP123",
+      employeeID: "123",
       contactnum: "09123456789",
-      program: "HR",
-      position: "Manager",
+      program: "Computer Science",
+      position: "DCS Head",
     });
 
     expect(response.body.message).toBe(
@@ -356,4 +356,5 @@ describe("Unit Testing for Create Account Function", () => {
     expect(response.body.message).toBe("Error in server: Database error");
   });
 });
+
 module.exports = app;

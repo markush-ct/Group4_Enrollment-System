@@ -73,7 +73,7 @@ app.post("/LoginPage", (req, res) => {
   });
 });
 
-describe("Unit Testing for the Login Function", () => {
+describe("Unit Testing for Login Function", () => {
   beforeEach(() => {
     mysql.createConnection().query.mockReset();
   });
