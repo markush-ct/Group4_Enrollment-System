@@ -20,6 +20,7 @@ import socOfficerProgram from './socOfficerProgram.js';
 import DCSHeadProgram from './DCSHeadProgram.js';
 import postEnrollmentPeriod from './postEnrollmentPeriod.js';
 import handleEnrollment from './handleEnrollment.js';
+import socFee from './socFee.js';
 
 dotenv.config();
 const app = express();
@@ -80,6 +81,7 @@ app.use('/socOfficerProgram', socOfficerProgram);
 app.use('/DCSHeadProgram', DCSHeadProgram);
 app.use('/postEnrollmentPeriod', postEnrollmentPeriod);
 app.use('/', handleEnrollment);
+app.use('/', socFee);
 
 app.post('/rejectTransfereeAdmissionReq', (req, res) =>{
     const getEmpID = `SELECT * FROM employee where Email = ?`;

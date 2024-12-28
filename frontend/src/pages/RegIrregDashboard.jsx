@@ -64,6 +64,31 @@ useEffect(() => {
 }, []);
 //Reuse in other pages that requires logging in
 
+const [isEnrollment, setIsEnrollment] = useState(false);
+const [enrollment, setEnrollment] = useState([]);
+
+useEffect(() => {
+  axios.get("http://localhost:8080/getEnrollment")
+  .then((res) => {
+    const {enrollmentPeriod} = res.data;
+
+    if(res.data.message === "Enrollment fetched successfully"){
+      if(enrollmentPeriod.Status === "Pending" || enrollmentPeriod.Status === "Ongoing"){
+        setIsEnrollment(true);
+        setEnrollment(enrollmentPeriod);
+      } else {
+        setIsEnrollment(false);
+      }
+    } else{
+      setIsEnrollment(false);
+    }
+  })
+  .catch((err) => {
+    alert("Error: ", err);
+    setIsEnrollment(false);
+  })
+}, []);
+
   return (
     <>
 
@@ -102,16 +127,43 @@ useEffect(() => {
   
  
         <div className={styles.dashboardGrid}>
- 
-          <div className={styles.announcements}>
-            <h2>📢 Important Announcements</h2>
+
+          {isEnrollment === true ? (
+            <div className={styles.announcements}>
+            <h2>📢 {enrollment.Status === "Ongoing" ? "Enrollment is On Going" : "Enrollment Period"}</h2>
             <ul>
               <li>
-                Enrollment for 1st Semester closes on March 21, 2028.
+                Enrollment starts on <strong>{new Date(enrollment.Start).toLocaleString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: 'numeric',
+                          minute: 'numeric',
+                          hour12: true,
+                        })}</strong>
+                <br />
+                Ends on <strong>{new Date(enrollment.End).toLocaleString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: 'numeric',
+                          minute: 'numeric',
+                          hour12: true,
+                        })}</strong>
               </li>
-              <li>Midterm exams are scheduled for December 15–20, 2024.</li>
             </ul>
           </div>
+          ): (
+            <div className={styles.announcements}>
+            <h2>📢 Enrollment Period</h2>
+            <ul>
+              <li>
+                Enrollment period ended
+              </li>
+            </ul>
+          </div>
+          )}
+          
   
        
           <div className={styles.enrollmentProgress}>

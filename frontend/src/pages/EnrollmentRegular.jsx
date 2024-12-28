@@ -4,6 +4,8 @@ import styles from "/src/styles/Enrollment.module.css";
 import Header from "/src/components/StudentDashHeader.jsx";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function EnrollmentRegular() {
   const [SideBar, setSideBar] = useState(false);
@@ -17,6 +19,54 @@ function EnrollmentRegular() {
   const [errorPrompt, setErrorPrompt] = useState(false); //errors
   const [errorMsg, setErrorMsg] = useState(""); 
   const [selectedSubjects, setSelectedSubjects] = useState([]);
+  const [accName, setAccName] = useState("");
+
+
+  //Reuse in other pages that requires logging in
+const navigate = useNavigate();
+axios.defaults.withCredentials = true;
+//RETURNING ACCOUNT NAME IF LOGGED IN
+useEffect(() => {
+  axios
+    .get("http://localhost:8080")
+    .then((res) => {
+      if (res.data.valid) {
+        setAccName(res.data.name);
+      } else {
+        navigate("/LoginPage");
+      }
+    })
+    //RETURNING ERROR IF NOT
+    .catch((err) => {
+      console.error("Error validating user session:", err);
+    });
+}, []);
+//Reuse in other pages that requires logging in
+
+  const [isEnrollment, setIsEnrollment] = useState(false);
+const [enrollment, setEnrollment] = useState([]);
+
+useEffect(() => {
+  axios.get("http://localhost:8080/getEnrollment")
+  .then((res) => {
+    const {enrollmentPeriod} = res.data;
+
+    if(res.data.message === "Enrollment fetched successfully"){
+      if(enrollmentPeriod.Status === "Pending" || enrollmentPeriod.Status === "Ongoing"){
+        setIsEnrollment(true);
+        setEnrollment(enrollmentPeriod);
+      } else {
+        setIsEnrollment(false);
+      }
+    } else{
+      setIsEnrollment(false);
+    }
+  })
+  .catch((err) => {
+    alert("Error: ", err);
+    setIsEnrollment(false);
+  })
+}, []);
 
   {/* FOR ANIMATION */ }
   useEffect(() => {
@@ -328,8 +378,9 @@ function EnrollmentRegular() {
 
   return (
     <>
-      <Header SideBar={SideBar} setSideBar={setSideBar} />
-      <div className={styles.contentSection}>
+    <Header SideBar={SideBar} setSideBar={setSideBar} />
+      {enrollment.Status === "Ongoing" ? (
+        <div className={styles.contentSection}>
         <div className={styles.PageTitle}>Enrollment</div>
 
         {/* STEPPER */}
@@ -449,6 +500,11 @@ function EnrollmentRegular() {
 
 
       </div>
+      ) : (
+        <div className={styles.contentSection}>
+          <div className={styles.PageTitle}>Enrollment is currently closed.</div>
+        </div>        
+      )}
     </>
   );
 }

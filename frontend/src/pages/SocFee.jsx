@@ -61,14 +61,15 @@ function SocFee() {
   // FETCH SHIFTING REQUESTS
   useEffect(() => {
     axios
-      .get("http://localhost:8080/shiftingRequests")
+      .get("http://localhost:8080/getSocFee")
       .then((res) => {
+        console.log(res.data.records);
         setAccountRequests(res.data.records);
         setFilteredRequests(res.data.records);
         setLoading(false);
       })
       .catch((err) => {
-        console.warn("Error fetching account requests, using example data:", err);
+        console.warn("Error fetching records, using example data:", err);
         setFilteredRequests(accountRequests);
         setAccountRequests([]); // Ensure state is not undefined
         setFilteredRequests([]);
@@ -82,12 +83,11 @@ function SocFee() {
       return;
     }
   
-    if (filterType === "All") {
-      
+    if (filterType === "All") {      
       setFilteredRequests(accountRequests);
     } else {
       setFilteredRequests(
-        accountRequests.filter((request) => request.PrevProgram === filterType)
+        accountRequests.filter((request) => request.Year === filterType)
       );
     }
   }, [filterType, accountRequests]);
@@ -192,6 +192,57 @@ const closePrompt = () => {
   };
   
 
+  const handleApproveSocFee = async (request) => {
+    console.log('Request received in handleApprove:', request);
+  
+    setLoading(true);
+  
+    try {
+        const res = await axios.post('http://localhost:8080/verifyPaidSocFee', {
+            studentID: request.StudentID,
+            cvsuStudentID: request.CvSUStudentID
+        });
+        if(res.data.message === "Society Fee changed to PAID"){
+          window.location.reload();
+          setLoading(false);
+        } else{
+          setErrorPrompt(true);
+          setErrorMsg(`Failed to send rejection email: ${res.data.message}`);
+          setLoading(false);
+        }
+    } catch (err) {
+        console.error('Error:', err);
+        setErrorPrompt(true);
+        setErrorMsg(`Failed to send rejection email: ${err.response?.data?.message || err.message}`);
+        setLoading(false);
+    }
+  };
+
+  const handleRejectSocFee = async (request) => {
+    console.log('Request received in handleApprove:', request);
+  
+    setLoading(true);
+  
+    try {
+        const res = await axios.post('http://localhost:8080/verifyUnpaidSocFee', {
+            studentID: request.StudentID,
+            cvsuStudentID: request.CvSUStudentID
+        });
+        if(res.data.message === "Society Fee changed to UNPAID"){
+          window.location.reload();
+          setLoading(false);
+        } else{
+          setErrorPrompt(true);
+          setErrorMsg(`Failed to send rejection email: ${res.data.message}`);
+          setLoading(false);
+        }
+    } catch (err) {
+        console.error('Error:', err);
+        setErrorPrompt(true);
+        setErrorMsg(`Failed to send rejection email: ${err.response?.data?.message || err.message}`);
+        setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -313,10 +364,10 @@ const closePrompt = () => {
             onChange={(e) => setFilterType(e.target.value)}
           >
             <option value="All">All</option>
-            <option value="1-1">1-1</option>
-            <option value="1-2">1-2</option>
-            <option value="1-3">1-3</option>
-            <option value="2-1">2-1</option>
+            <option value="1 - 1">1 - 1</option>
+            <option value="1 - 2">1 - 2</option>
+            <option value="1 - 3">1 - 3</option>
+            <option value="2-1">2 - 1</option>
             <option value="2-1">2-1</option>
             <option value="1-1">1-1</option>
             <option value="1-1">1-1</option>
@@ -341,17 +392,20 @@ const closePrompt = () => {
             <tbody>
   {filteredRequests && filteredRequests.length > 0 ? (
     filteredRequests.map((request) => (
-      <tr key={request.CvSUStudentID} onClick={() => handleRowClick(request)}>
+      <tr key={request.StudentID} onClick={() => handleRowClick(request)}>
         <td>{request.CvSUStudentID}</td>
         <td>{request.Firstname} {request.Lastname}</td>
-        <td>{request.PrevProgram}</td>
+        <td>{request.Year === "First Year" ? "1"
+        : request.Year === "Second Year" ? "2"
+      : request.Year === "Third Year" ? "3"
+    : request.Year === "Fourth Year" ? "4"
+  : ""} - {request.Section}</td>
         <td>
           <button
             className={styles.approveButton}
             onClick={(e) => {
               e.stopPropagation();
-              setSelectedRequest(request);
-              setApprovalPrompt(true);
+              handleApproveSocFee(request);
             }}
           >
             &#10004;
@@ -360,8 +414,7 @@ const closePrompt = () => {
                                   className={styles.rejectButton}
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    setSelectedRequest(request);
-                                    setRejectionPrompt(true)
+                                    handleRejectSocFee(request);
                                   }}
                                 >
                                   {loading ? 'Loading...' : 'X'}
