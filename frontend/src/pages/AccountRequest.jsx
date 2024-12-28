@@ -126,7 +126,7 @@ const handleApprove = async (request) => {
           accountType: request.AccountType,
       });
 
-      if(res.data.message === "Account saved"){
+      if(res.data.message === "Account saved" || res.data.message === "Account Saved"){
         setApprovalPrompt(true);
         setApprovalMsg(`Approval email sent to ${request.Email}`);
         setErrorPrompt(false);

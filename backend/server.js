@@ -16,6 +16,8 @@ import accReqNotif from './accReqNotif.js';
 import admissionNotif from './admissionNotif.js';
 import getFreshmenConfirmedSlots from './getFreshmenConfirmedSlots.js';
 import getShiftingRequestsNotif from './getShiftingRequestsNotif.js';
+import socOfficerProgram from './socOfficerProgram.js';
+import DCSHeadProgram from './DCSHeadProgram.js';
 
 
 dotenv.config();
@@ -73,6 +75,8 @@ app.use('/accReqNotif', accReqNotif);
 app.use('/admissionNotif', admissionNotif);
 app.use('/getFreshmenConfirmedSlots', getFreshmenConfirmedSlots);
 app.use('/getShiftingRequestsNotif', getShiftingRequestsNotif);
+app.use('/socOfficerProgram', socOfficerProgram);
+app.use('/DCSHeadProgram', DCSHeadProgram);
 
 app.post('/rejectTransfereeAdmissionReq', (req, res) =>{
     const getEmpID = `SELECT * FROM employee where Email = ?`;
@@ -685,14 +689,40 @@ app.get('/getFreshmenAdmissionReq', (req, res) => {
 })
 
 app.get('/getTotalShiftingReq', (req, res) => {
-    const sql = `SELECT COUNT(*) AS shiftingReqCount from shiftingform WHERE ShiftingStatus = 'Submitted'`;
-    db.query(sql, (err, result) => {
+    const getProgramQuery = `SELECT * FROM employee WHERE Email = ?`;
+    db.query(getProgramQuery, req.session.email, (err, programRes) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if (programRes.length > 0) {
+            const programID = programRes[0].ProgramID;
+
+            const sql = `
+            SELECT 
+                s.CvSUStudentID,
+                COUNT(sf.StudentID) AS studentCount
+            FROM 
+                student s
+            LEFT JOIN 
+                shiftingform sf
+            ON 
+                s.CvSUStudentID = sf.StudentID
+            WHERE
+                s.RegStatus = 'Accepted' 
+                AND s.StudentType = 'Shiftee' 
+                AND sf.ShiftingStatus = 'Submitted'
+                AND s.ProgramID = ? 
+            GROUP BY 
+                s.CvSUStudentID`;
+
+    db.query(sql, programID, (err, result) => {
         if (err) {
             return res.json({ message: "Error in server: " + err });
         } else {
-            return res.json({ shiftingReqCount: result[0].shiftingReqCount });
+            return res.json({ shiftingReqCount: result.length });
         }
-    })
+    });
+        }
+});
 })
 
 app.post('/rejectShiftingReq', (req, res) => {
@@ -837,26 +867,60 @@ app.post('/approveShiftingReq', (req, res) => {
 })
 
 app.get('/shiftingRequests', (req, res) => {
-    const query = `
-        SELECT 
-            s.CvSUStudentID, s.Email, s.Firstname, s.Middlename, s.Lastname, s.PrevProgram, 
-            sf.PrevProgramAdviser, sf.AcadYear, sf.Reasons, sf.Date 
-        FROM student s
-        JOIN shiftingform sf ON s.CvSUStudentID = sf.StudentID
-        WHERE sf.ShiftingStatus = ?`;
-
-    db.query(query, ["Submitted"], (err, results) => {
+    const getAdminProgram = `SELECT * FROM employee WHERE Email = ?`;
+    db.query(getAdminProgram, req.session.email, (err, adminRes) => {
         if (err) {
             return res.json({ message: "Error in server: " + err });
-        }
+        } else if(adminRes.length > 0 ){
+            const programID = adminRes[0].ProgramID;
 
-        if (results.length > 0) {
-            return res.json({
-                message: "Fetched records successfully",
-                records: results,
-            });
-        } else {
-            return res.json({ message: "No records found" });
+            if(programID === 1){
+                    const query = `
+                    SELECT 
+                        s.CvSUStudentID, s.ProgramID, s.Email, s.Firstname, s.Middlename, s.Lastname, s.PrevProgram, 
+                        sf.PrevProgramAdviser, sf.AcadYear, sf.Reasons, sf.Date 
+                    FROM student s
+                    JOIN shiftingform sf ON s.CvSUStudentID = sf.StudentID
+                    WHERE sf.ShiftingStatus = ? AND s.ProgramID = 1`;
+
+                db.query(query, ["Submitted"], (err, results) => {
+                    if (err) {
+                        return res.json({ message: "Error in server: " + err });
+                    }
+
+                    if (results.length > 0) {
+                        return res.json({
+                            message: "Fetched records successfully",
+                            records: results,
+                        });
+                    } else {
+                        return res.json({ message: "No records found" });
+                    }
+                });
+            } else if(programID === 2){
+                const query = `
+                    SELECT 
+                        s.CvSUStudentID, s.ProgramID, s.Email, s.Firstname, s.Middlename, s.Lastname, s.PrevProgram, 
+                        sf.PrevProgramAdviser, sf.AcadYear, sf.Reasons, sf.Date 
+                    FROM student s
+                    JOIN shiftingform sf ON s.CvSUStudentID = sf.StudentID
+                    WHERE sf.ShiftingStatus = ? AND s.ProgramID = 2`;
+
+                db.query(query, ["Submitted"], (err, results) => {
+                    if (err) {
+                        return res.json({ message: "Error in server: " + err });
+                    }
+
+                    if (results.length > 0) {
+                        return res.json({
+                            message: "Fetched records successfully",
+                            records: results,
+                        });
+                    } else {
+                        return res.json({ message: "No records found" });
+                    }
+                });
+            }
         }
     });
 });

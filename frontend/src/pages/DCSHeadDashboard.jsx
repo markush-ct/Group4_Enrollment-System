@@ -27,6 +27,7 @@ function DCSHeadDashboard() {
   const [reqCount, setReqCount] = useState(0);
   const [announcements, setAnnouncements] = useState([]); // LIST ANNOUNCEMENT
   const [accName, setAccName] = useState("");
+  const [program, setProgram] = useState("");
 
 
   useEffect(() => {
@@ -85,6 +86,17 @@ useEffect(() => {
     []
   );
 
+  useEffect(() => {
+    axios.get("http://localhost:8080/DCSHeadProgram")
+    .then((res) => {
+      console.log(res.data.program);
+      setProgram(res.data.program);
+    })
+    .catch((err) => {
+      console.error("Error getting program:", err);
+    });
+  }, []);
+
   //GET NUMBER OF REGULAR STUDENTS ENROLLED IN BSCS
   useEffect(() => {
     axios.get("http://localhost:8080/getCS")
@@ -137,8 +149,10 @@ useEffect(() => {
                   <h3>{accName}</h3>
                 </div>
                 <div className={styles.logos}>
-                  <img src="/src/assets/ACS-ICON.png" alt="Logo 1" className={styles.logo} />
-                  <img src="/src/assets/ITS-ICON.png" alt="Logo 2" className={styles.logo} />
+                  <img src={program === 1 ? "/src/assets/ACS-ICON.png" 
+                            : program === 2 ? "/src/assets/ITS-ICON.png"
+                            : ""
+                          } alt="society logo" className={styles.logo} />
                 </div>
               </div>
 

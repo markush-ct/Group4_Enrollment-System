@@ -3,9 +3,7 @@ import styles from "/src/styles/DCSHeadDash.module.css";
 import axios from "axios";
 import Header from "/src/components/AdminDashHeader.jsx";
 import { Doughnut } from "react-chartjs-2";
-
-
-
+import { useNavigate } from "react-router-dom";
 
 import {
   Chart as ChartJS,
@@ -27,7 +25,31 @@ function SocOfficerDashboard() {
   const [ITcount, setITcount] = useState(0);
   const [announcementText, setAnnouncementText] = useState(""); // Announcement 
   const [announcements, setAnnouncements] = useState([]); // List of announcements
+  const [accName, setAccName] = useState("");
   
+  const [program, setProgram] = useState("");
+
+
+  //Reuse in other pages that requires logging in
+const navigate = useNavigate();
+axios.defaults.withCredentials = true;
+//RETURNING ACCOUNT NAME IF LOGGED IN
+useEffect(() => {
+  axios
+    .get("http://localhost:8080")
+    .then((res) => {
+      if (res.data.valid) {
+        setAccName(res.data.name);
+      } else {
+        navigate("/LoginPage");
+      }
+    })
+    //RETURNING ERROR IF NOT
+    .catch((err) => {
+      console.error("Error validating user session:", err);
+    });
+}, []);
+//Reuse in other pages that requires logging in
 
   useEffect(() => {
     document.body.style.overflow = SideBar ? "hidden" : "auto";
@@ -43,6 +65,17 @@ function SocOfficerDashboard() {
     }
   };
 
+
+  useEffect(() => {
+    axios.get("http://localhost:8080/socOfficerProgram")
+    .then((res) => {
+      console.log(res.data.program);
+      setProgram(res.data.program);
+    })
+    .catch((err) => {
+      console.error("Error getting program:", err);
+    });
+  }, []);
 
 
   // BILOG NA ANO
@@ -111,33 +144,32 @@ function SocOfficerDashboard() {
     <div className={styles.nameCard}>
       <div className={styles.nameSection}>
         <p>HI</p>
-        <h3>NAME NG ACC</h3>
+        <h3>{accName}</h3>
       </div>
       <div className={styles.logos}>
-        <img src="/src/assets/ACS-ICON.png" alt="Logo 1" className={styles.logo} />
-        <img src="/src/assets/ITS-ICON.png" alt="Logo 2" className={styles.logo} />
+        <img src={program === 1 ? "/src/assets/ACS-ICON.png" 
+          : program === 2 ? "/src/assets/ITS-ICON.png"
+          : ""
+        } alt="society logo" className={styles.logo} />
       </div>
     </div>
 
     {/* Announcement Section */}
     <div className={styles.announcementContainer}>
       <div className={styles.announcementHeader}>
-        <h2 className={styles.announcementTitle}>Post an announcement</h2>
-
-        {/* Audience Dropdown */}
-        <select className={styles.audienceDropdown}>
-          <option value="everyone">Everyone</option>
-          <option value="students">Students</option>
-          <option value="teachers">Admin</option>
-          <option value="teachers">Regular</option>
-          <option value="teachers">Irregular</option>
-          <option value="teachers">Transferee</option>
-          <option value="teachers">Shiftee</option>
-          <option value="teachers">Freshmen</option>
-        </select>
+        <h2 className={styles.announcementTitle}>Schedule Enrollment for {program === 1? "BSCS"
+        : program === 2 ? "BSIT"
+      : ""}</h2>
       </div>
 
       {/* Announcement Input */}
+
+      <label htmlFor="">Start</label>
+      <input name="start" className={styles.announcementInput} type="datetime-local" placeholder="Title" />
+
+      <label htmlFor="">End</label>
+      <input name="end" className={styles.announcementInput} type="datetime-local" placeholder="Title" />
+
       <textarea
         className={styles.announcementInput}
         placeholder="Write your announcement here..."
@@ -166,15 +198,15 @@ function SocOfficerDashboard() {
             <div className={styles.Stats}>
               <div className={styles.DCScount}>
               <h3>Total DCS Students</h3>
-              <p>70</p>
+              <p>{ITcount + CScount}</p>
               </div>
               <div className={styles.CsStats}>
               <h3>Computer Science</h3>
-              <p>35</p>
+              <p>{CScount}</p>
               </div>
               <div className={styles.ItStats}>
               <h3>Information Technology</h3>
-              <p>35</p>
+              <p>{ITcount}</p>
               </div>
             </div>
           </div>

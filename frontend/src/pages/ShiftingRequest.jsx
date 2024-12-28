@@ -185,7 +185,6 @@ function ShiftingRequest() {
   const closePrompt = () => {
     setApprovalPrompt(false);
     setRejectionPrompt(false);
-    window.location.reload();
   };
 
 
@@ -250,7 +249,7 @@ function ShiftingRequest() {
         <div data-aos="zoom-out" data-aos-duration="500" className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}>
           <div className={styles.popupContent}>
             <div className={styles.popupHeader}>
-              <button onClick={closePopup} className={styles.closeButton}>✖</button>
+              <button onClick={closePrompt} className={styles.closeButton}>✖</button>
               <h3>Send Reason for Shifting Request Rejection</h3>
             </div>
 
@@ -410,6 +409,9 @@ function ShiftingRequest() {
               <p><strong>Previous Program:</strong> {selectedRequest.PrevProgram}</p>
               <p><strong>Current Academic Year:</strong> {selectedRequest.AcadYear}</p>
               <p><strong>Reasons:</strong> {selectedRequest.Reasons}</p>
+              <p><strong>Preferred Program:</strong> {selectedRequest.ProgramID === 1 ? "Bachelor of Science in Computer Science"
+              : selectedRequest.ProgramID === 2 ? "Bachelor of Science in Information Technology"
+            : ""}</p>
               <p><strong>Submitted on: </strong>
                 {selectedRequest.Date === "0000-00-00" || !selectedRequest.Date ?
                   "" :

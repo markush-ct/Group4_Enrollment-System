@@ -27,8 +27,13 @@ function CreateAcc() {
     position: "",
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log('Submitting data:', values);
+
+    setIsLoading(true);
 
     axios
       .post("http://localhost:8080/CreateAcc", values)
@@ -52,14 +57,18 @@ function CreateAcc() {
             regIrreg: "",
             position: "",
           });
+
+          setIsLoading(false);
         } else {
           setsignUpPrompt(false);
           setErrorPrompt(true);
           setErrorMsg(res.data.message);
+          setIsLoading(false);
         }
       })
       .catch((err) => {
         alert("Error: " + err);
+        setIsLoading(false);
       });
   };
 
@@ -212,7 +221,6 @@ function CreateAcc() {
                 Given Name <span className={styles.required}>*</span>
               </label>
               <input
-                data-testid="ri-firstname"
                 type="text"
                 name="firstname"
                 value={values.firstname}
@@ -224,7 +232,6 @@ function CreateAcc() {
 
               <label>Middle Name</label>
               <input
-                data-testid="ri-middlename"
                 type="text"
                 placeholder="if applicable"
                 name="middlename"
@@ -238,7 +245,6 @@ function CreateAcc() {
                 Last Name <span className={styles.required}>*</span>
               </label>
               <input
-                data-testid="ri-lastname"
                 type="text"
                 name="lastname"
                 value={values.lastname}
@@ -252,7 +258,6 @@ function CreateAcc() {
                 Student ID <span className={styles.required}>*</span>
               </label>
               <input
-                data-testid="ri-stdID"
                 type="text"
                 name="studentID"
                 value={values.studentID}
@@ -266,7 +271,6 @@ function CreateAcc() {
                 CvSU Email <span className={styles.required}>*</span>
               </label>
               <input
-                data-testid="ri-email"
                 type="email"
                 name="email"
                 value={values.email}
@@ -280,7 +284,6 @@ function CreateAcc() {
                 Phone Number <span className={styles.required}>*</span>
               </label>
               <input
-                data-testid="ri-contactnum"
                 type="text"
                 name="contactnum"
                 value={values.contactnum}
@@ -294,10 +297,10 @@ function CreateAcc() {
                 Program <span className={styles.required}>*</span>
               </label>
               <select
-                data-testid="ri-program"
                 name="program"
                 value={values.program}
                 onChange={(e) =>
+                  console.log(e.target.value) ||  
                   setValues({ ...values, program: e.target.value })
                 }
                 required
@@ -317,11 +320,11 @@ function CreateAcc() {
               <label>
                 Regular or Irregular <span className={styles.required}>*</span>
               </label>
-              <select
-                data-testid="ri-regIrreg"
+              <select                
                 name="regIrreg"
                 value={values.regIrreg}
                 onChange={(e) =>
+                  console.log(e.target.value) ||
                   setValues({ ...values, regIrreg: e.target.value })
                 }
                 required
@@ -341,7 +344,6 @@ function CreateAcc() {
                 Given Name <span className={styles.required}>*</span>
               </label>
               <input
-                data-testid="s-firstname"
                 type="text"
                 name="firstname"
                 value={values.firstname}
@@ -353,7 +355,6 @@ function CreateAcc() {
 
               <label>Middle Name</label>
               <input
-                data-testid="s-middlename"
                 type="text"
                 placeholder="if applicable"
                 name="middlename"
@@ -367,7 +368,6 @@ function CreateAcc() {
                 Last Name <span className={styles.required}>*</span>
               </label>
               <input
-                data-testid="s-lastname"
                 type="text"
                 name="lastname"
                 value={values.lastname}
@@ -381,7 +381,6 @@ function CreateAcc() {
                 Personal Email <span className={styles.required}>*</span>
               </label>
               <input
-                data-testid="s-email"
                 type="email"
                 name="email"
                 value={values.email}
@@ -395,7 +394,6 @@ function CreateAcc() {
                 Phone Number <span className={styles.required}>*</span>
               </label>
               <input
-                data-testid="s-contactnum"
                 type="tel"
                 name="contactnum"
                 value={values.contactnum}
@@ -409,7 +407,6 @@ function CreateAcc() {
                 Program <span className={styles.required}>*</span>
               </label>
               <select
-                data-testid="s-program"
                 name="program"
                 value={values.program}
                 onChange={(e) =>
@@ -436,7 +433,6 @@ function CreateAcc() {
                     Position <span className={styles.required}>*</span>
                   </label>
                   <select
-                    data-testid="s-position2"
                     name="position"
                     value={values.position}
                     onChange={(e) =>
@@ -477,7 +473,6 @@ function CreateAcc() {
                     Position <span className={styles.required}>*</span>
                   </label>
                   <select
-                    data-testid="s-position1"
                     name="position"
                     value={values.position}
                     onChange={(e) =>
@@ -522,7 +517,6 @@ function CreateAcc() {
                 Given Name <span className={styles.required}>*</span>
               </label>
               <input
-                data-testid="e-firstname"
                 type="text"
                 name="firstname"
                 value={values.firstname}
@@ -534,7 +528,6 @@ function CreateAcc() {
 
               <label>Middle Name</label>
               <input
-                data-testid="e-middlename"
                 type="text"
                 placeholder="if applicable"
                 name="middlename"
@@ -658,7 +651,7 @@ function CreateAcc() {
               className={styles.registerButton}
               data-testid="register-button"
             >
-              <span>Register</span>
+              <span>{isLoading ? "Loading..." : "Register"}</span>
             </button>
           </div>
         </form>
