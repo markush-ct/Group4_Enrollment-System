@@ -11,8 +11,8 @@ function SocFee() {
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const [accountRequests, setAccountRequests] = useState([]);
-  const [filteredRequests, setFilteredRequests] = useState(accountRequests);
-  const [filterType, setFilterType] = useState("All");
+  const [filteredRequests, setfilteredRequests] = useState(accountRequests);
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [popUpVisible, setPopUpVisible] = useState(false);
   const [approvalPrompt, setApprovalPrompt] = useState(false);
@@ -77,20 +77,14 @@ function SocFee() {
   }, []);
 
 
-  useEffect(() => { // dropwdonw function
-    if (!accountRequests || accountRequests.length === 0) {
-      setFilteredRequests([]);
-      return;
-    }
-  
-    if (filterType === "All") {      
-      setFilteredRequests(accountRequests);
-    } else {
-      setFilteredRequests(
-        accountRequests.filter((request) => request.Year === filterType)
-      );
-    }
-  }, [filterType, accountRequests]);
+  const visibleRequests = accountRequests.filter((request) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      request.Firstname.toLowerCase().includes(query) ||
+      request.Lastname.toLowerCase().includes(query) ||
+      request.CvSUStudentID.toString().includes(query)
+    );
+  });
 
 
 
@@ -354,31 +348,18 @@ const closePrompt = () => {
           Society Fee Status
         </div>
 
-        {/* Dropdown  */}
-        <div className={styles.filterSection} data-aos="fade-up">
-          <label htmlFor="filter" className={styles.filterLabel}>Filter by Year and Section:</label>
-          <select
-            id="filter"
-            className={styles.filterDropdown}
-            value={filterType}
-            onChange={(e) => setFilterType(e.target.value)}
-          >
-            <option value="All">All</option>
-            <option value="1 - 1">1 - 1</option>
-            <option value="1 - 2">1 - 2</option>
-            <option value="1 - 3">1 - 3</option>
-            <option value="2-1">2 - 1</option>
-            <option value="2-1">2-1</option>
-            <option value="1-1">1-1</option>
-            <option value="1-1">1-1</option>
-            <option value="1-1">1-1</option>
-            <option value="1-1">1-1</option>
-            <option value="1-1">1-1</option>
-           
-          </select>
+        <div className={styles.searchBar} data-aos="fade-up">
+          
+          <input
+            type="text"
+            id="search"
+            placeholder="Search by name or student ID..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className={styles.searchInput}
+          />
         </div>
 
-        {/* Table */}
         <div className={styles.tableContainer} data-aos="fade-up">
           <table className={styles.requestsTable}>
             <thead>
@@ -390,49 +371,42 @@ const closePrompt = () => {
               </tr>
             </thead>
             <tbody>
-  {filteredRequests && filteredRequests.length > 0 ? (
-    filteredRequests.map((request) => (
-      <tr key={request.StudentID} onClick={() => handleRowClick(request)}>
-        <td>{request.CvSUStudentID}</td>
-        <td>{request.Firstname} {request.Lastname}</td>
-        <td>{request.Year === "First Year" ? "1"
-        : request.Year === "Second Year" ? "2"
-      : request.Year === "Third Year" ? "3"
-    : request.Year === "Fourth Year" ? "4"
-  : ""} - {request.Section}</td>
-        <td>
-          <button
-            className={styles.approveButton}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleApproveSocFee(request);
-            }}
-          >
-            &#10004;
-          </button>
-          <button
-                                  className={styles.rejectButton}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleRejectSocFee(request);
-                                  }}
-                                >
-                                  {loading ? 'Loading...' : 'X'}
-                                </button>
-        </td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan="4" className={styles.noData}>
-        No Society Fee found.
-      </td>
-    </tr>
-  )}
-</tbody>
-
-
-
+              {filteredRequests.length > 0 ? (
+                filteredRequests.map((request) => (
+                  <tr key={request.StudentID}>
+                    <td>{request.CvSUStudentID}</td>
+                    <td>{request.Firstname} {request.Lastname}</td>
+                    <td>{`${request.Year.charAt(0)} - ${request.Section}`}</td>
+                    <td>
+                      <button
+                        className={styles.approveButton}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleApproveSocFee(request);
+                        }}
+                      >
+                        &#10004;
+                      </button>
+                      <button
+                        className={styles.rejectButton}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRejectSocFee(request);
+                        }}
+                      >
+                        {loading ? 'Loading...' : 'X'}
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className={styles.noData}>
+                    No Society Fee found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
           </table>
         </div>
       </div>
