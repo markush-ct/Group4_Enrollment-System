@@ -38,6 +38,7 @@ import DownloadShiftingForm from './components/DownloadShiftingForm.jsx';
 import FreshmenAdmissionRequest from './pages/FreshmenAdmissionRequests.jsx';
 import TransfereeAdmissionRequest from './pages/TransfereeAdmissionRequests.jsx';
 import AccountManagement from './pages/AccountManagement.jsx';
+import StudentChecklist from './pages/StudentChecklist.jsx';
 
 function App() {
   return (
@@ -83,6 +84,7 @@ function App() {
         <Route path="/FreshmenAdmissionRequest" element={<FreshmenAdmissionRequest />} />
         <Route path="/TransfereeAdmissionRequest" element={<TransfereeAdmissionRequest />} />
         <Route path="/AccountManagement" element={<AccountManagement />} />
+        <Route path="/StudentChecklist" element={<StudentChecklist />} />
 
 
         

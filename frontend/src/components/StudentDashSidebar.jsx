@@ -5,6 +5,7 @@ import closeIcon from "/src/assets/close-button.png";
 import form from "/src/assets/form-icon.png";
 import dashboardIcon from "/src/assets/dashboardicon.png";
 import preEnrollmentIcon from "/src/assets/applicationreq-icon.png";
+import applicantsicon from "/src/assets/applicantsicon.png";
 import settingsIcon from "/src/assets/settingsicon.png";
 import logoutIcon from "/src/assets/logouticon.png";
 import axios from "axios";
@@ -25,12 +26,15 @@ function StudentDashSideBar({ isOpen, toggleSidebar }) {
                     setNavBtn([
                         { name: "Dashboard", icon: dashboardIcon, path: "/RegIrregDashboard" },
                         { name: "Enrollment", icon: preEnrollmentIcon, path: "/EnrollmentRegular" },
+                        { name: "Checklist", icon: applicantsicon, path: "/StudentChecklist" },
                   
                     ]);
                 }  else if(res.data.valid && res.data.role === "Irregular"){
                         setNavBtn([
                         { name: "Dashboard", icon: dashboardIcon, path: "/RegIrregDashboard" },
                         { name: "Enrollment", icon: preEnrollmentIcon, path: "/EnrollmentIrregular" },
+                        { name: "Checklist", icon: applicantsicon, path: "/StudentChecklist" },
+                        
                         ]);
                 } else if(res.data.valid && res.data.role === "Freshman"){
                     setNavBtn([

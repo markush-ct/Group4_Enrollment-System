@@ -1,0 +1,134 @@
+
+.contentSection {
+    padding: 40px 20px 10px 20px;
+    text-align: center;
+    background-color: #f7f7f7;
+    color: #333;
+    margin-top: 100px;
+    margin-bottom: 300px;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+  
+  
+  .PageTitle {
+    margin-top: 20px;
+    font-size: 2.5rem;
+    color: #3d8c4b;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 30px;
+  }
+
+  .Contentt {
+    background-color: transparent;
+  }
+  
+  
+  .Contentt h3{
+    background-color: transparent;
+    color: #333;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  
+  .Contentt p{
+    background-color: transparent;
+    color: #333;
+  }
+  
+  .Contentt h4, h5{
+    background-color: transparent;
+  }
+  
+  .Contentt h3 span{
+    background-color: transparent;
+    color: #3d8c4b;
+  }
+
+  
+  
+.checklistTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background-color: transparent;
+  }
+  
+  .checklistTable th,
+  .checklistTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    width: 20%;
+  }
+  
+  .checklistTable th {
+    color: #ffffff;
+    background-color: #3d8c4b;
+  }
+  
+  .checklistTable td{
+    background-color: white;
+  }
+
+  
+.yearTitle{
+    color: #3d8c4b;
+    margin-top: 50px;
+    text-align: center;
+    background-color: transparent;
+  }
+  
+  .semesterTitle{
+    background-color: transparent;
+  }
+
+  
+
+
+  /* MOBILE */
+@media (max-width: 768px) {
+    .contentSection {
+      margin: 50px auto; 
+    }
+  
+    .PageTitle {
+      font-size: 1.5rem;
+    }
+
+    .Contentt h3 {
+        font-size: 1rem; 
+      }
+    
+      .Contentt p{
+        font-size: 14px;
+      }
+
+      .checklistTable {
+        width: 100%; 
+        border-collapse: collapse; 
+      }
+    
+      .checklistTable th,
+      .checklistTable td {
+        border: 1px solid #ddd;
+        font-size: 14px;
+        padding: 8px; 
+        width: auto; 
+      }
+    }
+
+    @media (max-width: 500px) {
+    
+      .checklistTable th,
+      .checklistTable td {
+       
+        font-size: 10px;
+        padding: 5px; 
+      }
+    
+    
+    
+    
+    }
