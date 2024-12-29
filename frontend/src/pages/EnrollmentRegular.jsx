@@ -63,7 +63,7 @@ useEffect(() => {
     }
   })
   .catch((err) => {
-    alert("Error: ", err);
+    setErrorMsg("Error: " + err);
     setIsEnrollment(false);
   })
 }, []);

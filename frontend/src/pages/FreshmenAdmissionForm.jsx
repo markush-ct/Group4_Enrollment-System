@@ -11,7 +11,10 @@ function FreshmenAdmissionForm() {
   const [accName, setAccName] = useState("");
   const [uploadedImage, setUploadedImage] = useState(null);
   const [activeStep, setActiveStep] = useState(0);
-  const [errorPrompt, setErrorPrompt] = useState(false); //errors
+  const [errorPrompt, setErrorPrompt] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [successPrompt, setSuccessPrompt] = useState(false);
+  const [successMsg, setSuccessMsg] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [prefProgram, setPrefProgram] = useState("");
   const [isConfirmation, setIsConfirmation] = useState(false);
@@ -158,6 +161,7 @@ function FreshmenAdmissionForm() {
 
     if (missingFields.length > 0) {
       setErrorPrompt(true);
+      setErrorMsg("Please fill out all fields.");
       return;
     }
 
@@ -443,14 +447,22 @@ function FreshmenAdmissionForm() {
   };
 
   const handleDownloadForm = () => {
-    if(formData.applicationStatus !== "Approved"){
-      alert("You can only download the form once your application is approved.");
-      return;
+    if (formData.applicationStatus !== "Approved") {
+        setErrorPrompt(true);
+        setErrorMsg("You can only download the form once your application is approved.");
+        return;
     }
 
-    const url = `/download-form/${studentID}`;
-    window.open(url, "_blank");
+    try {
+        const url = `/download-form/${studentID}`;
+        window.open(url, "_blank");
+    } catch {
+        setErrorPrompt(true);
+        setErrorMsg("An error occurred while attempting to download the form. Please try again.");
+    }
 };
+
+
 
   const [SideBar, setSideBar] = useState(false);
   document.body.style.overflow = SideBar ? 'hidden' : 'auto';
@@ -459,7 +471,7 @@ function FreshmenAdmissionForm() {
 e.preventDefault();
 
     if(!isConfirmation){
-      alert("Please check the box to proceed.")
+      errorPrompt("Please check the box to proceed.")
     } else{
       axios.post("http://localhost:8080/submitAdmissionForm")
       .then((res) => {
@@ -1696,7 +1708,32 @@ e.preventDefault();
                   className={styles.messageImage}
                 />
               </div>
-              <p className={styles.popupTextError}>Please fill out all fields.</p>
+              <p className={styles.popupTextError}>{errorMsg}</p>
+            </div>
+          </div>
+        )}
+
+        {/* success PROMPT */}
+        {successPrompt && (
+          <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupError}>
+            <div className={styles.popupContentError}>
+              <button
+                className={styles.closeButton}
+                onClick={() => setSuccessPrompt(false)}
+              >
+                &times;
+              </button>
+              <div className={styles.popupHeaderError}>
+                <h2>Error</h2>
+              </div>
+              <div className={styles.MessageError}>
+                <img
+                  src="/src/assets/errormark.png"
+                  alt="Error Icon"
+                  className={styles.messageImage}
+                />
+              </div>
+              <p className={styles.popupText}>Please fill out all fields.</p>
             </div>
           </div>
         )}

@@ -67,7 +67,7 @@ function CreateAcc() {
         }
       })
       .catch((err) => {
-        alert("Error: " + err);
+        setErrorMsg("Error: " + err);
         setIsLoading(false);
       });
   };
