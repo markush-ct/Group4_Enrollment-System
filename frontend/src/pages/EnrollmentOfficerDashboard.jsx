@@ -120,6 +120,46 @@ useEffect(() => {
       });
   })
 
+  const [CSisEnrollment, setCSIsEnrollment] = useState(false);
+  const [ITisEnrollment, setITIsEnrollment] = useState(false);
+  const [CSenrollment, setCSEnrollment] = useState([]);
+  const [ITenrollment, setITEnrollment] = useState([]);
+
+  useEffect(() => {
+    axios.get("http://localhost:8080/CSEnrollmentPeriod")
+      .then((res) => {
+        const { csEnrollmentRes } = res.data;
+
+        if (res.data.message === "Data fetched") {
+          setCSIsEnrollment(true);
+          setCSEnrollment(csEnrollmentRes);
+        } else {
+          setCSIsEnrollment(false);
+          setCSEnrollment([]);
+        }
+      })
+      .catch((err) => {
+        alert("Error: " + err);
+      })
+  }, []);
+
+  useEffect(() => {
+    axios.get("http://localhost:8080/ITEnrollmentPeriod")
+      .then((res) => {
+        const { itEnrollmentRes } = res.data;
+
+        if (res.data.message === "Data fetched") {
+          setITIsEnrollment(true);
+          setITEnrollment(itEnrollmentRes);
+        } else {
+          setITIsEnrollment(false);
+          setITEnrollment([]);
+        }
+      })
+      .catch((err) => {
+        alert("Error: " + err);
+      })
+  }, []);
 
   return (
     <>
@@ -174,28 +214,87 @@ useEffect(() => {
           </div>
 
 
-          <div className={styles.container3}>
-            <div className={styles.row1}>
-              <div className={styles.headerContainer}>
-                <h2 className={styles.announcementHeader}>View Announcements</h2>
-
-              </div>
-              <div className={styles.announcementList}>
-                {announcements.slice(0, 3).map((announcement, index) => (
-                  <div key={index} className={styles.announcementItem}>
-                    {announcement}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className={styles.row2}>
-              <div className={styles.headerContainer}>
-                <h2 className={styles.announcementHeader}>Class Schedules</h2>
-
-              </div>
-            </div>
-          </div>
+          {CSisEnrollment && (
+                      <div className={styles.container3}>
+                        <div className={styles.row1}>
+                          <div className={styles.headerContainer}>
+                            <h2 className={styles.announcementHeader}>{CSenrollment.Status === "Pending" ? "CS Enrollment Period"
+                              : CSenrollment.Status === "Ongoing" ? "CS Enrollment is On Going"
+                                : ""}</h2>
+                          </div>
+          
+                          <div className={styles.announcementList}>
+                            <div className={styles.announcementCard}>
+                              <div className={styles.announcementText}>
+                                <p>
+                                  {new Date(CSenrollment.Start).toLocaleString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: 'numeric',
+                                    minute: 'numeric',
+                                    hour12: true,
+                                  })}
+                                </p>
+                                <p>to</p>
+                                <p>
+                                  {new Date(CSenrollment.End).toLocaleString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: 'numeric',
+                                    minute: 'numeric',
+                                    hour12: true,
+                                  })}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+          
+                      </div>
+                    )}
+          
+          {ITisEnrollment && (
+                      <div className={styles.container3}>
+                        <div className={styles.row1}>
+                          <div className={styles.headerContainer}>
+                            <h2 className={styles.announcementHeader}>{ITenrollment.Status === "Pending" ? "IT Enrollment Period"
+                              : ITenrollment.Status === "Ongoing" ? "IT Enrollment is On Going"
+                                : ""}</h2>
+                          </div>
+          
+                          <div className={styles.announcementList}>
+                            <div className={styles.announcementCard}>
+                              <div className={styles.announcementText}>
+                                <p>
+                                  {new Date(ITenrollment.Start).toLocaleString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: 'numeric',
+                                    minute: 'numeric',
+                                    hour12: true,
+                                  })}
+                                </p>
+                                <p>to</p>
+                                <p>
+                                  {new Date(ITenrollment.End).toLocaleString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: 'numeric',
+                                    minute: 'numeric',
+                                    hour12: true,
+                                  })}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+          
+                      </div>
+                    )}
 
 
           {/* DONUT  */}

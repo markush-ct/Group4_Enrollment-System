@@ -251,7 +251,7 @@ function FreshmenAdmissionForm() {
           });
 
           setStudentID(res.data.studentID);
-          {formData.applicationStatus === "Pending" ? setActiveStep(0) : setActiveStep(5)}
+          { formData.applicationStatus === "Pending" ? setActiveStep(0) : setActiveStep(5) }
 
         } else if (res.data.preferredProgram === 2) {
           setPrefProgram("Bachelor of Science in Information Technology");
@@ -326,7 +326,7 @@ function FreshmenAdmissionForm() {
             reqSubmission: res.data.reqSubmission || '',
           });
           setStudentID(res.data.studentID);
-          {formData.applicationStatus === "Pending" ? setActiveStep(0) : setActiveStep(5)}
+          { formData.applicationStatus === "Pending" ? setActiveStep(0) : setActiveStep(5) }
         }
       })
       .catch((err) => {
@@ -448,19 +448,19 @@ function FreshmenAdmissionForm() {
 
   const handleDownloadForm = () => {
     if (formData.applicationStatus !== "Approved") {
-        setErrorPrompt(true);
-        setErrorMsg("You can only download the form once your application is approved.");
-        return;
+      setErrorPrompt(true);
+      setErrorMsg("You can only download the form once your application is approved.");
+      return;
     }
 
     try {
-        const url = `/download-form/${studentID}`;
-        window.open(url, "_blank");
+      const url = `/download-form/${studentID}`;
+      window.open(url, "_blank");
     } catch {
-        setErrorPrompt(true);
-        setErrorMsg("An error occurred while attempting to download the form. Please try again.");
+      setErrorPrompt(true);
+      setErrorMsg("An error occurred while attempting to download the form. Please try again.");
     }
-};
+  };
 
 
 
@@ -468,26 +468,60 @@ function FreshmenAdmissionForm() {
   document.body.style.overflow = SideBar ? 'hidden' : 'auto';
 
   const submitForm = (e) => {
-e.preventDefault();
+    e.preventDefault();
 
-    if(!isConfirmation){
+    if (!isConfirmation) {
       errorPrompt("Please check the box to proceed.")
-    } else{
+    } else {
       axios.post("http://localhost:8080/submitAdmissionForm")
+        .then((res) => {
+          if (res.data.message === "Admission Form submitted successfully.") {
+            setStudentID(res.data.studentID)
+            alert(res.data.message);
+            window.location.reload();
+            setActiveStep(5);
+          } else {
+            alert(res.data.message);
+          }
+        })
+        .catch((err) => {
+          alert("Error: " + err);
+        })
+    }
+  }
+
+  const [isSlot, setIsSlot] = useState(false);
+
+  useEffect(() => {
+    axios.get("http://localhost:8080/getFreshmanSlot")
       .then((res) => {
-        if(res.data.message === "Admission Form submitted successfully."){
-          setStudentID(res.data.studentID)
-          alert(res.data.message);
-          window.location.reload();
-          setActiveStep(5);
-        } else{
+        if (res.data.message === "Slot fetched" && res.data.isSlotConfirmed === 0) {
+          setIsSlot(false);
+        } else if (res.data.message === "Slot fetched" && res.data.isSlotConfirmed === 1) {
+          setIsSlot(true);
+        } else {
           alert(res.data.message);
         }
       })
       .catch((err) => {
         alert("Error: " + err);
       })
-    }
+  }, [isSlot]);
+
+  const handleConfirmSlot = () => {
+    axios.post("http://localhost:8080/handleConfirmSlot")
+    .then((res) => {
+      if(res.data.message === "Slot Confirmed"){
+        setIsSlot(true);
+        alert("Slot confirmed");
+      } else{
+        setIsSlot(false);
+        alert(res.data.message);
+      }
+    })
+    .catch((err) => {
+      alert("Error: " + err);
+    })
   }
 
   const formatDate = (dateString) => {
@@ -518,7 +552,7 @@ e.preventDefault();
                   id="applyingFor"
                   name="applyingFor"
                   value={formData.applyingFor}
-                  onChange={handleInputChange}     
+                  onChange={handleInputChange}
                   disabled={formData.applicationStatus !== "Pending"}
                   required
                 >
@@ -1484,14 +1518,14 @@ e.preventDefault();
 
               <div className={styles.formGroup}>
                 <label className={styles.checkboxLabel}>
-                  <input 
-                  type="checkbox" 
-                  className={styles.checkbox} 
-                  name="certify" 
-                  id="certify" 
-                  disabled={formData.applicationStatus !== "Pending"} 
-                  onChange={(e) => setIsConfirmation(e.target.checked)} 
-                  required />
+                  <input
+                    type="checkbox"
+                    className={styles.checkbox}
+                    name="certify"
+                    id="certify"
+                    disabled={formData.applicationStatus !== "Pending"}
+                    onChange={(e) => setIsConfirmation(e.target.checked)}
+                    required />
                   I hereby certify that the information provided is accurate and true.
                 </label>
               </div>
@@ -1502,7 +1536,7 @@ e.preventDefault();
           </div>
         );
 
-      case 5: 
+      case 5:
         return (
           <div className={styles.content}>
             <h3 className={styles.stepTitle}>
@@ -1572,28 +1606,46 @@ e.preventDefault();
                 </button>
               </div>
 
-
-              <h3 className={styles.stepTitle} style={{ marginTop: "50px", marginBottom: "10px" }}>
-  <img src="/src/assets/pending-icon.png" alt="Personal Info Icon" className={styles.icon} />
-  Slot Confirmation
-</h3>
-      <div className={styles.Contentt}>
-
-
-<p>Congratulations! You are accepted. Please click the button to confirm your slot. </p>
+              {isSlot === false ? (
+                <>
+                  <h3 className={styles.stepTitle} style={{ marginTop: "50px", marginBottom: "10px" }}>
+                <img src="/src/assets/pending-icon.png" alt="Personal Info Icon" className={styles.icon} />
+                Slot Confirmation
+              </h3>
+              <div className={styles.Contentt}>
 
 
+                <p>Congratulations! You are accepted. Please click the button to confirm your slot. </p>
 
 
-  <button
-    type="button"
-    className={styles.downloadButton}
-    onClick={handleDownloadForm} // palitan mo nalang ssob
-    style={{ width: "200px" }} 
-  >
-    <span>Confirm Slot</span>
-  </button>
-</div>
+
+                <button
+                  type="button"
+                  className={styles.downloadButton}
+                  onClick={handleConfirmSlot}
+                  style={{ width: "200px" }}
+                >
+                  <span>Confirm Slot</span>
+                </button>
+                <br />
+                <br />
+              </div>
+                </>
+              ) : (
+                <>
+                  <h3 className={styles.stepTitle} style={{ marginTop: "50px", marginBottom: "10px" }}>
+                <img src="/src/assets/pending-icon.png" alt="Personal Info Icon" className={styles.icon} />
+                Slot Confirmed
+              </h3>
+              <div className={styles.Contentt}>
+
+                <p>Congratulations on your slot confirmation! Please come to the campus on your scheduled date.</p>
+                <br />
+                <br />
+
+              </div>
+                </>
+              )}
 
 
 

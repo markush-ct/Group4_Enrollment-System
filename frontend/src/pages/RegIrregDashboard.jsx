@@ -87,7 +87,7 @@ useEffect(() => {
     alert("Error: ", err);
     setIsEnrollment(false);
   })
-}, []);
+}, [isEnrollment, enrollment]);
 
   return (
     <>

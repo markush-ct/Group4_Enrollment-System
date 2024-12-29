@@ -15,9 +15,45 @@ const db = mysql.createConnection({
 db.connect((err) => {
     if (err) {
         console.error('Error connecting to the database:', err.message);
-    } else {
-        console.log('Connected to the database.');
     }
+});
+
+router.get('/CSEnrollmentPeriod', (req, res) => {
+    const sql1 = `SELECT * FROM enrollmentperiod WHERE ProgramID = 1 AND Status != 'Finished'`;
+
+    db.query(sql1, (err, CSResult) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else if(CSResult.length > 0){
+            return res.json({
+                message: "Data fetched",
+                csEnrollmentRes: CSResult[0]
+            })
+        } else{
+            return res.json({
+                message: "No data fetched",
+            })
+        }
+    })
+});
+
+router.get('/ITEnrollmentPeriod', (req, res) => {
+    const sql1 = `SELECT * FROM enrollmentperiod WHERE ProgramID = 2 AND Status != 'Finished'`;
+
+    db.query(sql1, (err, ITResult) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else if(ITResult.length > 0){
+            return res.json({
+                message: "Data fetched",
+                itEnrollmentRes: ITResult[0]
+            })
+        } else{
+            return res.json({
+                message: "No data fetched",
+            })
+        }
+    })
 });
 
 router.get('/viewEnrollmentPeriod', (req, res) => {
