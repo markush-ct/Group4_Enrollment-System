@@ -27,6 +27,24 @@ jest.mock("aos", () => ({
 
 describe("Unit Testing for Sign Up Page", () => {
   beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation((message) => {
+      if (
+        message.includes("Warning: An update to") &&
+        message.includes("was not wrapped in act(...)")
+      ) {
+        // Suppress the specific warning related to act
+        return;
+      }
+      // Call the original console.error for all other messages
+      console.error(message);
+    });
+  });
+
+  afterEach(() => {
+    console.error.mockRestore(); // Restore original console.error after each test
+  });
+
+  beforeEach(() => {
     mockAxios.reset();
   });
 
