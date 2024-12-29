@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import axios from 'axios';
@@ -55,19 +55,18 @@ function AccountManagement() {
     });
   }, []);
 
-  // FETCH ACCOUNT REQUESTS
+  // FETCH ACCOUNTS
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getAccountReq")
+      .get("http://localhost:8080/getAccounts")
       .then((res) => {
-        setAccountRequests(res.data.accReq);
-        setFilteredRequests(res.data.accReq);
+        setAccountRequests(res.data.accountResults);
       })
       .catch((err) => {
         console.warn("Error fetching account requests, using example data:", err);
         setFilteredRequests(accountRequests);
       });
-  }, []);
+  }, [accountRequests]);
 
 
   useEffect(() => {
@@ -76,8 +75,9 @@ function AccountManagement() {
     } else if (filterType === "Society Officer") {
       setFilteredRequests(
         accountRequests.filter(
-          (request) =>
-            ["President",
+          (acc) =>
+            [
+              "President",
               "Vice President",
               "Secretary",
               "Assistant Secretary",
@@ -95,40 +95,45 @@ function AccountManagement() {
               "1st Year Chairperson",
               "2nd Year Chairperson",
               "3rd Year Chairperson",
-              "4th Year Chairperson"].includes(request.AccountType)
+              "4th Year Chairperson",
+            ].includes(acc.socOfficer.position)
         )
       );
-    }
-    else {
+    } else if (["Freshman", "Regular", "Irregular", "Transferee", "Shiftee"].includes(filterType)) {
       setFilteredRequests(
-        accountRequests.filter((request) => request.AccountType === filterType)
+        accountRequests.filter((acc) => acc.student.studentType === filterType)
+      );
+    } else {
+      setFilteredRequests(
+        accountRequests.filter((acc) => acc.account.role === filterType)
       );
     }
   }, [filterType, accountRequests]);
 
 
   // Request
-const handleApprove = async (request) => {
-  console.log('Request received in handleApprove:', request);
+  const handleActivate = async (acc) => {
+    console.log('Request received in handleActivate:', acc.account);
 
-  setLoading(true);
+    setLoading(true);
 
-  if (!request?.Email || !request?.Name || !request?.AccountType) {
+    if (!acc.account.email || !acc.account.name || !acc.account.role) {
       setErrorPrompt(true);
-      setErrorMsg('Email, name, and account type are required.');
+      setErrorMsg('Email, name, and role are required.');
+      setLoading(false); // Ensure loading is stopped
       return;
-  }
+    }
 
-  try {
-      const res = await axios.post('http://localhost:8080/sendApprovalEmail', {
-          email: request.Email,
-          name: request.Name,
-          accountType: request.AccountType,
+    try {
+      const res = await axios.post('http://localhost:8080/activateAccount', {
+        email: acc.account.email,
+        name: acc.account.name,
+        role: acc.account.role
       });
 
-      if(res.data.message === "Account saved"){
+      if (res.data.message === "Account status activated") {
         setApprovalPrompt(true);
-        setApprovalMsg(`Approval email sent to ${request.Email}`);
+        setApprovalMsg(`Account activation email sent to ${acc.account.email}`);
         setErrorPrompt(false);
         setPopUpVisible(false);
         setLoading(false);
@@ -137,62 +142,63 @@ const handleApprove = async (request) => {
         setErrorMsg(`Failed to send approval email:  ${res.data.message}`);
         setLoading(false);
       }
-      
-  } catch (err) {
+
+    } catch (err) {
       console.error('Error:', err);
       setErrorPrompt(true);
       setErrorMsg(`Failed to send approval email:  ${err.response?.data?.message || err.message}`);
       setLoading(false);
-  }
-};
+    }
+  };
 
-const handleReject = async (request) => {
-  console.log('Request received in handleReject:', request);
+  const handleTerminate = async (acc) => {
+    console.log('Request received in handleTerminate:', acc.account);
 
-  setLoading(true);
+    setLoading(true);
 
-  if (!request?.Email || !request?.Name || !request?.AccountType) {
+    if (!acc.account.email || !acc.account.name || !acc.account.role) {
       setErrorPrompt(true);
-      setErrorMsg('Email and name are required.');
+      setErrorMsg('Email, name, and role are required.');
+      setLoading(false); // Ensure loading is stopped
       return;
-  }
+    }
 
-  try {
-      const res = await axios.post('http://localhost:8080/sendEmailRejection', {
-          email: request.Email,
-          name: request.Name,
-          accountType: request.AccountType
+    try {
+      const res = await axios.post('http://localhost:8080/terminateAccount', {
+        email: acc.account.email,
+        name: acc.account.name,
+        role: acc.account.role
       });
 
-      if(res.data.message === "Account request rejected"){
+      if (res.data.message === "Account status terminated") {
         setRejectionPrompt(true);
-        setRejectionMsg(`Rejection email sent to ${request.Email}`);
+        setRejectionMsg(`Account termination email sent to ${acc.account.email}`);
         setErrorPrompt(false);
         setPopUpVisible(false);
-        setLoading(false);
-      } else{
+      } else {
         setErrorPrompt(true);
-        setErrorMsg(`Failed to send rejection email: ${res.data.message}`);
-        setLoading(false);
+        setErrorMsg(`Failed to terminate account: ${res.data.message}`);
       }
-  } catch (err) {
+    } catch (err) {
       console.error('Error:', err);
       setErrorPrompt(true);
-      setErrorMsg(`Failed to send rejection email: ${err.response?.data?.message || err.message}`);
+      setErrorMsg(`Failed to terminate account: ${err.response?.data?.message || err.message}`);
+    } finally {
       setLoading(false);
-  }
-};
+    }
+  };
 
-const closePrompt = () => {
-  setApprovalPrompt(false);
-  setRejectionPrompt(false);
-  window.location.reload();
-};
+
+  const closePrompt = () => {
+    setApprovalPrompt(false);
+    setRejectionPrompt(false);
+    window.location.reload();
+  };
 
 
   //show popup
-  const handleRowClick = (request) => {
-    setSelectedRequest(request);
+  const handleRowClick = (index) => {
+    setSelectedRequest(index);
     setPopUpVisible(true);
   };
 
@@ -207,90 +213,90 @@ const closePrompt = () => {
   return (
     <>
       <Header SideBar={SideBar} setSideBar={setSideBar} />
-{/* PROMPTS */}
+      {/* PROMPTS */}
       {/* APPROVAL PROMPT */}
-{approvalPrompt && (
-    <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPrompt}>
-        <div className={styles.popupPromptContent}>
+      {approvalPrompt && (
+        <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPrompt}>
+          <div className={styles.popupPromptContent}>
             <button
-                className={styles.popupPromptcloseButton}
-                onClick={() => setApprovalPrompt(false)}
+              className={styles.popupPromptcloseButton}
+              onClick={() => setApprovalPrompt(false)}
             >
-                &times;
+              &times;
             </button>
             <div className={styles.popupPromptHeader}>
-                <h2>Approval Success</h2>
+              <h2>Approval Success</h2>
             </div>
             <div className={styles.popupPromptMessage}>
-                <img
-                    src="/src/assets/checkmark.png"
-                    alt="Success Icon"
-                    className={styles.popupPromptmessageImage}
-                />
+              <img
+                src="/src/assets/checkmark.png"
+                alt="Success Icon"
+                className={styles.popupPromptmessageImage}
+              />
             </div>
             <p className={styles.popupPromptText}>{approvalMsg}</p>
             <div className={styles.buttonContainer}>
-            <button
-  className={styles.OKButton}
-  onClick={closePrompt} 
->
-  <span>OK</span>
-</button>
-</div>
-
-        </div>
-    </div>
-)}
-
-{/* REJECTION PROMPT */}
-{rejectionPrompt && (
-    <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPrompt}>
-        <div className={styles.popupPromptContent}>
-            <button
-                className={styles.popupPromptcloseButton}
+              <button
+                className={styles.OKButton}
                 onClick={closePrompt}
+              >
+                <span>OK</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* REJECTION PROMPT */}
+      {rejectionPrompt && (
+        <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPrompt}>
+          <div className={styles.popupPromptContent}>
+            <button
+              className={styles.popupPromptcloseButton}
+              onClick={closePrompt}
             >
-                &times;
+              &times;
             </button>
             <div className={styles.popupPromptHeader}>
-                <h2>Rejection Success</h2>
+              <h2>Rejection Success</h2>
             </div>
             <div className={styles.popupPromptMessage}>
-                <img
-                    src="/src/assets/checkmark.png"
-                    alt="Success Icon"
-                    className={styles.popupPromptmessageImage}
-                />
+              <img
+                src="/src/assets/checkmark.png"
+                alt="Success Icon"
+                className={styles.popupPromptmessageImage}
+              />
             </div>
             <p className={styles.popupPromptText}>{rejectionMsg}</p>
+          </div>
         </div>
-    </div>
-)}
+      )}
 
-{/* ERROR PROMPT */}
-{errorPrompt && (
-    <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPromptError}>
-        <div className={styles.popupPromptContentError}>
+      {/* ERROR PROMPT */}
+      {errorPrompt && (
+        <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPromptError}>
+          <div className={styles.popupPromptContentError}>
             <button
-                className={styles.popupPromptcloseButton}
-                onClick={() => setErrorPrompt(false)}
+              className={styles.popupPromptcloseButton}
+              onClick={() => setErrorPrompt(false)}
             >
-                &times;
+              &times;
             </button>
             <div className={styles.popupPromptHeaderError}>
-                <h2>Error</h2>
+              <h2>Error</h2>
             </div>
             <div className={styles.popupPromptMessageError}>
-                <img
-                    src="/src/assets/errormark.png"
-                    alt="Error Icon"
-                    className={styles.popupPromptmessageImage}
-                />
+              <img
+                src="/src/assets/errormark.png"
+                alt="Error Icon"
+                className={styles.popupPromptmessageImage}
+              />
             </div>
             <p className={styles.popupPromptTextError}>{errorMsg}</p>
+          </div>
         </div>
-    </div>
-)}
+      )}
 
 
       <div className={styles.contentSection}>
@@ -329,38 +335,51 @@ const closePrompt = () => {
                 <th>Name</th>
                 <th>Email</th>
                 <th>Account Type</th>
+                <th>Account Status</th>
                 <th>Options</th>
               </tr>
             </thead>
             <tbody>
               {filteredRequests.length > 0 ? (
-                filteredRequests.map((request) => (
-                  <tr key={request.id} onClick={() => handleRowClick(request)}>
-                    <td data-label="Name">{request.Name}</td>
-                    <td data-label="Email">{request.Email}</td>
-                    <td data-label="Account Type">{request.AccountType}</td>
+                filteredRequests.map((acc, index) => (
+                  <tr key={index} onClick={() => handleRowClick(index)}>
+                    <td data-label="Name">{acc.account.name}</td>
+                    <td data-label="Email">{acc.account.email}</td>
+                    <td data-label="Account Type">{acc.account.role === "Student" ? acc.student.studentType
+                      : acc.account.role === "Society Officer" ? acc.socOfficer.position
+                        : acc.account.role}</td>
+                    <td data-label="Email">{acc.account.accStatus}</td>
                     <td>
                       <button
                         className={styles.approveButton}
                         onClick={(e) => {
-                          e.stopPropagation();
-                          console.log('Request passed to handleApprove:', request);
-                          handleApprove(request); // Pass the entire request object
+                          e.stopPropagation(); // Prevent triggering row click
+                          handleRowClick(index);
                         }}
                       >
-                        {loading ? 'Loading...' : 'Activate'}
+                        {loading ? "Loading..." : "Edit"}
                       </button>
 
-                      <button
-                        className={styles.rejectButton}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          console.log('Request passed to handleReject:', request);
-                          handleReject(request); // Pass the entire request object
-                        }}
-                      >
-                        {loading ? 'Loading...' : 'Terminate'}
-                      </button>
+                      {acc.account.accStatus === "Active" ? (
+                        <button
+                          className={styles.rejectButton}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleTerminate(acc); // Pass the entire request object
+                          }}
+                        >{loading ? 'Loading...' : 'Terminate'}
+                        </button>
+                      ) : (
+                        <button
+                          className={styles.approveButton}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleActivate(acc); // Pass the entire request object
+                          }}
+                        >
+                          {loading ? 'Loading...' : 'Activate'}
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))
@@ -379,7 +398,7 @@ const closePrompt = () => {
       </div>
 
       {/* PopUp */}
-      {popUpVisible && selectedRequest && (
+      {popUpVisible && (
         <div data-aos="zoom-out" data-aos-duration="500" className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}>
           <div className={styles.popupContent}>
             <div className={styles.popupHeader}>
@@ -389,37 +408,47 @@ const closePrompt = () => {
             <div data-aos="fade-up" className={styles.studentType}>
               <span>DETAILS</span>
             </div>
-            {(selectedRequest.AccountType === "Freshman" || selectedRequest.AccountType === "Transferee") && (
+            {(["Freshman", "Shiftee", "Transferee"].includes(filteredRequests[selectedRequest]?.student.studentType)) && (
               <div className={styles.popupText}>
-                <p><strong>Account Type:</strong> {selectedRequest.AccountType}</p>
-                <p><strong>Name:</strong> {selectedRequest.Name}</p>
-                <p><strong>Email:</strong> {selectedRequest.Email}</p>
-                <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
+                <p><strong>Student Type:</strong> {filteredRequests[selectedRequest]?.student.studentType}</p>
+                <p><strong>Name:</strong> {filteredRequests[selectedRequest]?.account.name}</p>
+                <p><strong>Email:</strong> {filteredRequests[selectedRequest]?.account.email}</p>
+                <p><strong>Change to:&nbsp;&nbsp;</strong>
+                  <select name="changeToRegIrreg" id="" required>
+                    <option value={null} selected disabled>Select student type</option>
+                    <option value="Regular">Regular</option>
+                    <option value="Irregular">Irregular</option>
+                  </select>
+                </p>
+
+                <button style={{textAlign: 'center', width: '100%'}} className={styles.approveButton}>
+                  Make Changes
+                </button>
               </div>
             )}
 
-            {(selectedRequest.AccountType === "Regular" || selectedRequest.AccountType === "Irregular") && (
+            {(["Enrollment Officer", "Adviser", "DCS Head", "School Head"].includes(filteredRequests[selectedRequest]?.account.role)) && (
               <div className={styles.popupText}>
-                <p><strong>Account Type:</strong> {selectedRequest.AccountType}</p>
-                <p><strong>Student ID:</strong> {selectedRequest.ID}</p>
-                <p><strong>Program:</strong> {selectedRequest.ProgramID === 1 ? 'Bachelor of Science in Computer Science' : 'Bachelor of Science in Information Technology'}</p>
-                <p><strong>Name:</strong> {selectedRequest.Name}</p>
-                <p><strong>Email:</strong> {selectedRequest.Email}</p>
-                <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
+                <p><strong>Student Type:</strong> {filteredRequests[selectedRequest]?.account.role}</p>
+                <p><strong>Name:</strong> {filteredRequests[selectedRequest]?.account.name}</p>
+                <p><strong>Email:</strong> {filteredRequests[selectedRequest]?.account.email}</p>
+                <p><strong>Change to:&nbsp;&nbsp;</strong>
+                  <select name="changeEmpStatus" id="" required>
+                    <option value={null} selected disabled>Select employee status</option>
+                    <option value="Employed">Employed</option>
+                    <option value="Resigned">Resigned</option>
+                  </select>
+                </p>
+
+                <button style={{textAlign: 'center', width: '100%'}} className={styles.approveButton}>
+                  Make Changes
+                </button>
               </div>
             )}
 
-            {selectedRequest.AccountType === "Shiftee" && (
-              <div className={styles.popupText}>
-                <p><strong>Account Type:</strong> {selectedRequest.AccountType}</p>
-                <p><strong>Student ID:</strong> {selectedRequest.ID}</p>
-                <p><strong>Name:</strong> {selectedRequest.Name}</p>
-                <p><strong>Email:</strong> {selectedRequest.Email}</p>
-                <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
-              </div>
-            )}
 
-            {["President",
+            {[
+              "President",
               "Vice President",
               "Secretary",
               "Assistant Secretary",
@@ -437,36 +466,123 @@ const closePrompt = () => {
               "1st Year Chairperson",
               "2nd Year Chairperson",
               "3rd Year Chairperson",
-              "4th Year Chairperson"].includes(selectedRequest.AccountType) && (
+              "4th Year Chairperson",
+            ].includes(filteredRequests[selectedRequest]?.socOfficer.position) && (
                 <div className={styles.popupText}>
-                  <p><strong>Account Type:</strong> Society Officer</p>
-                  <p><strong>Position:</strong> {selectedRequest.AccountType}</p>
-                  <p><strong>Student ID:</strong> {selectedRequest.ID}</p>
-                  <p><strong>Program:</strong> {selectedRequest.ProgramID === 1 ? 'Bachelor of Science in Computer Science' : 'Bachelor of Science in Information Technology'}</p>
-                  <p><strong>Name:</strong> {selectedRequest.Name}</p>
-                  <p><strong>Email:</strong> {selectedRequest.Email}</p>
-                  <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
+                  <p><strong>Student Type:</strong> {filteredRequests[selectedRequest]?.account.role}</p>
+                <p><strong>Name:</strong> {filteredRequests[selectedRequest]?.account.name}</p>
+                <p><strong>Email:</strong> {filteredRequests[selectedRequest]?.account.email}</p>
+                <p><strong>Program:</strong> {filteredRequests[selectedRequest]?.socOfficer.programID === 1 ? "BSCS"
+                : "BSIT"}</p>
+            
+                
+                {filteredRequests[selectedRequest]?.socOfficer.programID === 1 ? (
+                  <p><strong>Change Position:&nbsp;&nbsp;</strong>
+                  <select name="changePosition" id="" required>
+                    <option value={null} selected disabled>Select position</option>
+                    <option value="President">President</option>
+                    <option value="Vice President">Vice President</option>
+                    <option value="Secretary">Secretary</option>
+                    <option value="Assistant Secretary">
+                      Assistant Secretary
+                    </option>
+                    <option value="Treasurer">Treasurer</option>
+                    <option value="Auditor">Auditor</option>
+                    <option value="P.R.O.">P.R.O.</option>
+                    <option value="Assistant P.R.O.">Assistant P.R.O.</option>
+                    <option value="1st Year Chairperson">
+                      1st Year Chairperson
+                    </option>
+                    <option value="2nd Year Chairperson">
+                      2nd Year Chairperson
+                    </option>
+                    <option value="3rd Year Chairperson">
+                      3rd Year Chairperson
+                    </option>
+                    <option value="4th Year Chairperson">
+                      4th Year Chairperson
+                    </option>
+                  </select>
+                </p>
+                )
+                : (
+                  <p><strong>Change Position:&nbsp;&nbsp;</strong>
+                  <select name="changePosition" id="" required>
+                    <option value={null} selected disabled>Select position</option>
+                    <option value="President">President</option>
+                    <option value="Vice President">Vice President</option>
+                    <option value="Secretary">Secretary</option>
+                    <option value="Assistant Secretary">
+                      Assistant Secretary
+                    </option>
+                    <option value="Treasurer">Treasurer</option>
+                    <option value="Assistant Treasurer">
+                      Assistant Treasurer
+                    </option>
+                    <option value="Business Manager">Business Manager</option>
+                    <option value="Auditor">Auditor</option>
+                    <option value="P.R.O.">P.R.O.</option>
+                    <option value="GAD Representative">
+                      GAD Representative
+                    </option>
+                    <option value="1st Year Senator">1st Year Senator</option>
+                    <option value="2nd Year Senator">2nd Year Senator</option>
+                    <option value="3rd Year Senator">3rd Year Senator</option>
+                    <option value="4th Year Senator">4th Year Senator</option>
+                  </select>
+                </p>
+                )}
+
+
+                <p><strong>Change Status:&nbsp;&nbsp;</strong>
+                  <select name="changeSocOffStatus" id="" required>
+                    <option value={null} selected disabled>Select status</option>
+                    <option value="Elected">Elected</option>
+                    <option value="Resigned">Resigned</option>
+                  </select>
+                </p>
+
+                <button style={{textAlign: 'center', width: '100%'}} className={styles.approveButton}>
+                  Make Changes
+                </button>
                 </div>
               )}
 
-            {["Adviser", "Enrollment Officer", "School Head"].includes(selectedRequest.AccountType) && (
+            {["Regular", "Irregular"].includes(filteredRequests[selectedRequest]?.student.studentType) && (
               <div className={styles.popupText}>
-                <p><strong>Account Type:</strong> {selectedRequest.AccountType}</p>
-                <p><strong>Employee ID:</strong> {selectedRequest.ID}</p>
-                <p><strong>Name:</strong> {selectedRequest.Name}</p>
-                <p><strong>Email:</strong> {selectedRequest.Email}</p>
-                <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
-              </div>
-            )}
+                <p><strong>Student Type:</strong> {filteredRequests[selectedRequest]?.student.studentType}</p>
+                <p><strong>Student ID:</strong> {filteredRequests[selectedRequest]?.student.cvsuStudentID}</p>
+                <p><strong>Name:</strong> {filteredRequests[selectedRequest]?.account.name}</p>
+                <p><strong>Email:</strong> {filteredRequests[selectedRequest]?.account.email}</p>
+                
 
-            {selectedRequest.AccountType === "DCS Head" && (
-              <div className={styles.popupText}>
-                <p><strong>Account Type:</strong> {selectedRequest.AccountType}</p>
-                <p><strong>Employee ID:</strong> {selectedRequest.ID}</p>
-                <p><strong>Program:</strong> {selectedRequest.ProgramID === 1 ? 'Bachelor of Science in Computer Science' : 'Bachelor of Science in Information Technology'}</p>
-                <p><strong>Name:</strong> {selectedRequest.Name}</p>
-                <p><strong>Email:</strong> {selectedRequest.Email}</p>
-                <p><strong>Phone:</strong> {selectedRequest.PhoneNo}</p>
+                <p><strong>Change student type:&nbsp;&nbsp;</strong>
+                  <select name="changeStudentType" id="" required>
+                    <option value={null} selected disabled>Select student type</option>
+                    <option value="Regular">Regular</option>
+                    <option value="Irregular">Irregular</option>
+                  </select>
+                </p>
+
+                <p><strong>Change status:&nbsp;&nbsp;</strong>
+                  <select name="changeStudentType" id="" required>
+                    <option value={null} selected disabled>Select status</option>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                    <option value="Dropped">Dropped</option>
+                    <option value="Graduated">Graduated</option>
+                    <option value="Suspended">Suspended</option>
+                    <option value="Withdrawn">Withdrawn</option>
+                    <option value="On Leave">On Leave</option>
+                    <option value="Alumni">Alumni</option>
+                    <option value="Transfer">Transfer</option>
+                    <option value="Prospective">Prospective</option>
+                  </select>
+                </p>
+
+                <button style={{textAlign: 'center', width: '100%'}} className={styles.approveButton}>
+                  Make Changes
+                </button>
               </div>
             )}
 

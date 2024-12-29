@@ -22,6 +22,7 @@ import postEnrollmentPeriod from './postEnrollmentPeriod.js';
 import handleEnrollment from './handleEnrollment.js';
 import socFee from './socFee.js';
 import FreshmenSlotConfirmation from './FreshmenSlotConfirmation.js';
+import AccountManagement from './AccountManagement.js';
 
 dotenv.config();
 const app = express();
@@ -84,6 +85,7 @@ app.use('/postEnrollmentPeriod', postEnrollmentPeriod);
 app.use('/', handleEnrollment);
 app.use('/', socFee);
 app.use('/', FreshmenSlotConfirmation);
+app.use('/', AccountManagement);
 
 app.post('/rejectTransfereeAdmissionReq', (req, res) =>{
     const getEmpID = `SELECT * FROM employee where Email = ?`;
