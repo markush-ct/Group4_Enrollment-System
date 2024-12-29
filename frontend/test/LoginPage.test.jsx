@@ -97,7 +97,7 @@ describe("Unit Testing for Login Page", () => {
         <LoginPage />
       </Router>
     );
-    const emailInput = screen.getByPlaceholderText("Username");
+    const emailInput = screen.getByPlaceholderText("Email");
     expect(emailInput).toBeInTheDocument();
   });
 
@@ -189,7 +189,7 @@ describe("Unit Testing for Login Page", () => {
         <LoginPage />
       </Router>
     );
-    const emailInput = screen.getByPlaceholderText("Username");
+    const emailInput = screen.getByPlaceholderText("Email");
     const passwordInput = screen.getByPlaceholderText("Password");
     fireEvent.change(emailInput, { target: { value: "jenniekim@oa.com" } });
     fireEvent.change(passwordInput, { target: { value: "ninibear" } });

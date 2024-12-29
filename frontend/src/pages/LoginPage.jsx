@@ -201,7 +201,7 @@ function LoginPage() {
               <input
                 name="email"
                 type="email"
-                placeholder="Username"
+                placeholder="Email"
                 onChange={(e) =>
                   setValues({ ...values, email: e.target.value })
                 }
