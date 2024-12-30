@@ -39,16 +39,14 @@ describe("Unit Testing for Create Account Page", () => {
         message.includes("Warning: An update to") &&
         message.includes("was not wrapped in act(...)")
       ) {
-        // Suppress the specific warning related to act
         return;
       }
-      // Call the original console.error for all other messages
       console.error(message);
     });
   });
 
   afterEach(() => {
-    console.error.mockRestore(); // Restore original console.error after each test
+    console.error.mockRestore();
   });
 
   beforeEach(() => {
