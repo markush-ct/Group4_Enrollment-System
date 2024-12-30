@@ -1,0 +1,549 @@
+.contentSection {
+    padding: 40px 20px 10px 20px;
+    text-align: justify;
+    background-color: #f7f7f7;
+    color: #333;
+    margin-bottom: 300px;
+    margin-top: 100px;
+    margin-left: 0; 
+    margin-right: 0; 
+    width: 100%; 
+    height: auto;
+}
+
+.gridContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    width: 100%; 
+}
+
+
+.container1 {
+    background-color: transparent;
+    padding: 20px;
+    display: flex;
+    grid-template-columns: 1fr 1fr;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.GreetingContainer {
+    display: flex;
+    flex-direction: column; 
+    gap: 15px;
+    width: 100%; 
+}
+
+
+
+.announcementContainer {
+    text-align: center;
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+}
+
+.announcementTitle {
+    font-size: 1.5rem;
+    text-align: left;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #3d8c4b;
+    background-color: transparent;
+}
+
+.enrollmentPeriod{
+    width: 100%;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.announcementInput {
+    width: 100%;
+    height: 80px;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    resize: none;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    background-color: #fff;
+}
+
+.announcementInput:focus {
+    border-color: #3d8c4b;
+    outline: none;
+    box-shadow: 0 0 5px rgba(48, 255, 2, 0.5);
+}
+
+.enrollmentPeriodDiv{
+    background-color: transparent;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-self: center;
+}
+
+.enrollmentPeriodDiv label{
+    font-size: 1rem;
+    font-weight: bold;
+    color: black;
+    background-color: transparent;
+}
+
+.postButton {
+    position: relative; 
+    width: 100%;
+    padding: 0.5rem;
+    height: auto;
+    font: 1rem Poppins bold;
+    color: #ffffff;
+    background-color: #d0943d;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    margin-top: 5px;
+    overflow: hidden; 
+    transition: transform 0.3s ease;
+    z-index: 1; 
+}
+
+.postButton span {
+    position: relative;
+    font: 1rem Poppins bold;
+    background-color: transparent;
+    z-index: 2; 
+}
+
+.postButton::before {
+    content: ''; 
+    position: absolute;
+    top: 0;
+    left: -100%; 
+    width: 100%;
+    height: 100%;
+    background-color: #3d8c4b; 
+    transition: left 0.3s ease; 
+    z-index: 0; 
+}
+
+.postButton:hover::before {
+    left: 0; 
+}
+
+.postButton:hover {
+    color: #ffffff; 
+    transform: scale(1.01); 
+}
+
+.announcementHeader {
+    display: flex;
+    align-items: center; 
+    justify-content: space-between; 
+    margin-bottom: 10px; 
+    background-color: transparent;
+  }
+  
+  .audienceDropdown {
+    margin-left: 10px;
+    padding: 5px;
+    font-size: 1rem; 
+  }
+  
+
+
+
+
+
+
+
+/* STATS */
+
+.container2 {
+    background-color: transparent;
+    padding: 20px;
+}
+
+
+
+
+.Stats {
+    display: grid;
+    grid-template-rows: auto auto;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px; 
+    margin-top: 10;
+    text-align: center;
+    border-radius: 12px; 
+    background-color: transparent;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.CsStats:hover, .ItStats:hover, .DCScount:hover, .nameCard:hover, .yellowCard:hover, .blueCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); 
+}
+
+.Stats h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+    background-color: transparent;
+    padding: 5px;
+    border-radius: 5px; 
+}
+
+.Stats p {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0;
+    background-color: transparent;
+    padding: 5px; 
+    border-radius: 5px; 
+}
+
+.DCScount {
+    grid-column: span 2; 
+    padding: 15px; 
+    border: 1px solid #ddd;
+    background-color: #f0b435;
+    color: #fff;
+    margin-bottom: 10px;
+    border-radius: 12px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.CsStats {
+    background-color: #9b1f1f;
+    color: #fff;
+    margin-bottom: 20px;
+    padding: 15px; 
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ItStats {
+    background-color: #3d8c4b;
+    color: #fff;
+    margin-bottom: 20px;
+    padding: 15px; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.nameCard {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    grid-column: span 2; 
+    padding: 15px; 
+    border: 2px solid #3d8c4b;
+    background-color: white;
+    color: #3d8c4b;
+    margin-bottom: 10px;
+    border-radius: 12px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .nameSection {
+    text-align: left; 
+    background-color: transparent;
+  }
+
+  .logoSection {
+    
+    background-color: transparent;
+  }
+  
+  .logos {
+    display: flex;
+    gap: 10px; 
+    background-color: transparent;
+  }
+  
+  .logo {
+    width: 100px; 
+    height: 100px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+  }
+  
+  .logo:hover {
+    transform: scale(1.1); 
+  }
+  
+
+.nameCard h3{
+    color: #3d8c4b;
+    background-color: transparent;
+}
+
+.nameCard p{
+    color: #3d8c4b;
+    background-color: transparent;
+}
+
+.yellowCard {
+    background-color: #f0b435;;
+    color: #fff;
+    margin-bottom: 20px;
+    padding: 15px; 
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.blueCard {
+    background-color: #6495ED;;
+    color: #fff;
+    margin-bottom: 20px;
+    padding: 15px; 
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+
+
+
+
+/* ANNOUNCEMNTS */
+.container3 {
+    display: grid;
+    grid-template-rows: auto 1fr; 
+    height: 100%; 
+    gap: 10px; 
+    padding: 20px; 
+    background-color: transparent;
+  }
+  
+  .row1 {
+    display: flex; 
+    flex-direction: column; 
+    height: 300px;
+    background-color: white;
+    border: 2px solid #3d8c4b;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .headerContainer{
+    background-color: transparent;
+  }
+  
+  .announcementHeader {
+    margin: 0; 
+    color: #3d8c4b;
+    background-color: transparent;
+    font-size: 24px;
+  }
+
+  .announcementHeader h2{
+    background-color: white;
+  }
+  
+  .announcementList {
+    margin-top: 10px; 
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: transparent;
+  }
+  
+  .announcementItem {
+    background-color: white; 
+    padding: 10px; 
+    margin: 5px 0; 
+    border: 1px solid #ccc; 
+  }
+  
+  
+ .row2 {
+    background-color: white;
+    padding: 20px;
+    border: 2px solid #3d8c4b;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .row1:hover, .row2:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); 
+}
+
+.announcementCard{
+    background-color: transparent;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0px;
+}
+
+.announcementText, .announcementText p{
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.enrollmentControl{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    background-color: transparent;
+}
+
+.enrollmentControl button{
+    background-color: #3d8c4b;
+    color: white;
+    border: none;
+    padding: 10px 50px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: transform 0.3s ease;
+}
+
+
+
+.container4 {
+    background-color: transparent;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.DonutContainer {
+    display: flex;
+    flex-direction: column; 
+    gap: 15px;
+    width: 100%; 
+}
+
+.DonutText {
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+}
+
+.DonutText h3{
+    color: black;
+    background-color: transparent;
+}
+
+
+.Donut {
+    background-color: white;
+    height: 300px;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+}
+
+
+
+
+
+/* MOBILE */
+
+@media screen and (max-width: 768px) {
+    .contentSection {
+        padding: 20px 10px; 
+        margin-top: 50px; 
+        margin-bottom: 100px; 
+    }
+
+    .gridContainer {
+        grid-template-columns: 1fr; 
+        gap: 10px;
+    }
+
+    .Stats {
+        grid-template-columns: 1fr;
+    }
+
+    .DCScount, .CsStats, .ItStats, .nameCard, .yellowCard, .blueCard {
+        grid-column: span 1; 
+    }
+
+    .nameCard {
+        flex-direction: column; 
+        align-items: center;
+    }
+
+    .logos {
+        flex-direction:row;
+    }
+
+    .logo {
+        width: 80px; 
+        height: 80px;
+    }
+
+    .container1, .container2, .container3, .container4 {
+        padding: 10px; 
+    }
+
+    .HiContainer, .announcementContainer, .DonutText, .Donut {
+        padding: 10px; 
+    }
+
+    .postButton {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.7rem;
+    }
+
+    .announcementInput {
+        height: 80px; 
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .GreetingTitle, .announcementTitle, .Stats h3 {
+        font-size: 1.2rem; 
+    }
+
+
+    .Stats p {
+        font-size: 1.5rem; 
+    }
+
+    .HiContainer, .announcementContainer {
+        height: auto;
+    }
+
+    .postButton {
+        font-size: 0.8rem; 
+    }
+
+    .logo {
+        width: 60px; 
+        height: 60px;
+    }
+}
+
+

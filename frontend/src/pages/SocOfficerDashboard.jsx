@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import styles from "/src/styles/DCSHeadDash.module.css";
+import styles from "/src/styles/SocOFFDash.module.css";
 import axios from "axios";
 import Header from "/src/components/AdminDashHeader.jsx";
 import { Doughnut } from "react-chartjs-2";
@@ -24,14 +24,9 @@ function SocOfficerDashboard() {
   const [SideBar, setSideBar] = useState(false);
   const [CScount, setCScount] = useState(0);
   const [ITcount, setITcount] = useState(0);
-  const [announcementText, setAnnouncementText] = useState(""); // Announcement 
-  const [announcements, setAnnouncements] = useState([]); // List of announcements
   const [accName, setAccName] = useState("");
-
   const [program, setProgram] = useState("");
-
   const [isEnrollment, setIsEnrollment] = useState();
-
   const [enrollmentPeriod, setEnrollmentPeriod] = useState({
     start: "",
     end: "",
