@@ -32,6 +32,194 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+router.post('/editOldStudent', (req, res) => {
+    const { email, status, studentType } = req.body;
+
+    const sql1 = `UPDATE student
+    SET StdStatus = ?,
+        StudentType = ?
+    WHERE Email = ?`;
+
+    db.query(sql1, [status, studentType, email], (err, studentRes) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else if(studentRes.affectedRows > 0){
+            if(["Active", "Inactive", "On Leave"].includes(status)){
+                const updateAcc = `UPDATE account
+                SET Status = 'Active'
+                WHERE Email = ?`;
+
+                db.query(updateAcc, email, (err, activateAccRes) => {
+                    if(err){
+                        return res.json({message: "Error in server: " + err});
+                    } else if(activateAccRes.affectedRows > 0){
+                        return res.json({message: "Student updated successfully"});
+                    } else{
+                        return res.json({ message: "Account update failed." });
+                    }
+                })
+            } else {
+                const updateAcc = `UPDATE account
+                SET Status = 'Terminated'
+                WHERE Email = ?`;
+
+                db.query(updateAcc, email, (err, terminateAccRes) => {
+                    if(err){
+                        return res.json({message: "Error in server: " + err});
+                    } else if(terminateAccRes.affectedRows > 0){
+                        return res.json({message: "Student updated successfully"});
+                    } else{
+                        return res.json({ message: "Account update failed." });
+                    }
+                })        
+            }
+        } else {
+            return res.json({message: "No student record updated"});
+        }
+    })
+})
+
+router.post('/editNewStudent', (req, res) => {
+    const { email, studentID, studentType } = req.body;
+
+        const sql1 = `UPDATE student
+        SET CvSUStudentID = ?,
+            StudentType = ?
+        WHERE Email = ?`;
+
+        db.query(sql1, [studentID, studentType, email], (err, shiftRes) => {
+            if(err){
+                return res.json({message: "Error in server: " + err});
+            } else if(shiftRes.affectedRows > 0){
+                return res.json({message: "Student updated successfully"});
+            } else{
+                return res.json({message: "No student record updated"});
+            }
+        })
+
+})
+
+router.post('/editSocOfficerAccount', (req, res) => {
+    const updateSoc = `UPDATE societyofficer
+    SET Position = ?,
+        OfficerStatus = ?
+    WHERE Email = ?`;
+
+    const { email, position, status } = req.body;
+    
+    db.query(updateSoc, [position, status, email], (err, socRes) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else if(socRes.affectedRows > 0){
+            if(status === "Resigned"){
+                const updateAcc = `UPDATE account
+                SET Status = 'Terminated',
+                    Role = 'Society Officer'
+                WHERE Email = ?`;
+
+                db.query(updateAcc, email, (err, resignedRes) => {
+                    if(err){
+                        return res.json({message: "Error in server: " + err});
+                    } else if(resignedRes.affectedRows > 0){
+                        return res.json({message: "Society officer updated successfully"});
+                    } else{
+                        return res.json({ message: "Account update failed." });
+                    }
+                })
+            } else if(status === "Elected"){
+                const updateResigned = `UPDATE account
+                SET Status = 'Active',
+                    Role = 'Society Officer'
+                WHERE Email = ?`;
+
+                db.query(updateResigned, email, (err, activateRes) => {
+                    if(err){
+                        return res.json({message: "Error in server: " + err});
+                    } else if(activateRes.affectedRows > 0){
+                        return res.json({message: "Society officer updated successfully"});
+                    } else{
+                        return res.json({ message: "Account update failed." });
+                    }
+                })
+            } else{
+                return res.json({ message: "Society officer updated successfully" });
+            }
+        } else{
+            return res.json({ message: "No society officer record updated." });
+        }
+    })
+})
+
+router.post('/editEmpAccount', (req, res) => {
+    const updateEmp = `UPDATE employee
+    SET EmpJobRole = ?,
+        EmpStatus = ?
+    WHERE Email = ?`;
+
+    const updateAccRole = `
+    UPDATE account
+    SET Role = ?
+    WHERE Email = ?
+    `;
+
+    const { email, job, status } = req.body;
+
+    const values = [
+        job,
+        status,
+        email
+    ];
+
+    db.query(updateAccRole, [job, email], (err, accRoleRes) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else if(accRoleRes.affectedRows > 0){
+            db.query(updateEmp, values, (err, empRes) => {
+                if(err){
+                    return res.json({message: "Error in server: " + err});
+                } else if(empRes.affectedRows > 0){
+        
+        
+                    if(status === "Resigned"){
+                        const updateAcc = `UPDATE account
+                        SET Status = 'Terminated'
+                        WHERE Email = ?`;
+        
+                        db.query(updateAcc, email, (err, resignedRes) => {
+                            if(err){
+                                return res.json({message: "Error in server: " + err});
+                            } else if(resignedRes.affectedRows > 0){
+                                return res.json({message: "Employee updated successfully"});
+                            } else{
+                                return res.json({ message: "Account update failed." });
+                            }
+                        })
+                    } else if(status === "Employed"){
+                        const updateResigned = `UPDATE account
+                        SET Status = 'Active'
+                        WHERE Email = ?`;
+        
+                        db.query(updateResigned, email, (err, activateRes) => {
+                            if(err){
+                                return res.json({message: "Error in server: " + err});
+                            } else if(activateRes.affectedRows > 0){
+                                return res.json({message: "Employee updated successfully"});
+                            } else{
+                                return res.json({ message: "Account update failed." });
+                            }
+                        })
+                    } else{
+                        return res.json({ message: "Employee updated successfully" });
+                    }
+                } else {
+                    return res.json({ message: "No employee record updated." });
+                }
+            })
+        }
+    })
+})
+
+
 router.post('/activateAccount', async (req, res) => {
     const { email, name, role } = req.body;
 
@@ -148,13 +336,16 @@ a.AccountID,
   a.Name,
   a.Role,
   a.Status,
+  s.ProgramID AS studentProgramID,
   s.StudentID,
   s.CvSUStudentID,
   s.StudentType,
   s.StdStatus,
-  so.ProgramID,  
+  so.ProgramID AS socOfficerProgramID,  
   so.Position,
-  e.EmpStatus
+  so.OfficerStatus,
+  e.EmpStatus,
+  e.ProgramID AS employeeProgramID
 FROM 
   account a
 LEFT JOIN 
@@ -162,7 +353,7 @@ LEFT JOIN
 LEFT JOIN 
   societyofficer so ON a.Email = so.Email
 LEFT JOIN 
-  employee e ON a.Email = e.Email;
+  employee e ON a.Email = e.Email
 `;
 
     db.query(sql1, (err, result) => {
@@ -180,6 +371,7 @@ LEFT JOIN
                         accStatus: row.Status,
                     },
                     student: {
+                        programID: row.studentProgramID,
                         studentID: row.StudentID,
                         cvsuStudentID: row.CvSUStudentID,
                         email: row.Email,
@@ -187,9 +379,14 @@ LEFT JOIN
                         studentStatus: row.StdStatus,
                     },
                     socOfficer: {
-                        programID: row.ProgramID,
+                        programID: row.socOfficerProgramID,
                         position: row.Position,
+                        status: row.OfficerStatus,
                         email: row.Email,
+                    },
+                    employee: {
+                        empStatus: row.EmpStatus,
+                        programID: row.employeeProgramID,
                     }
                 }))
             })

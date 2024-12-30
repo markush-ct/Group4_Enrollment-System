@@ -10,7 +10,7 @@ function AccountManagement() {
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const [accountRequests, setAccountRequests] = useState([]);
-  const [filteredRequests, setFilteredRequests] = useState(accountRequests);
+  const [filteredRequests, setFilteredRequests] = useState([]);
   const [filterType, setFilterType] = useState("All");
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [popUpVisible, setPopUpVisible] = useState(false);
@@ -21,6 +21,7 @@ function AccountManagement() {
   const [errorPrompt, setErrorPrompt] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
+
 
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -54,19 +55,6 @@ function AccountManagement() {
       once: true,
     });
   }, []);
-
-  // FETCH ACCOUNTS
-  useEffect(() => {
-    axios
-      .get("http://localhost:8080/getAccounts")
-      .then((res) => {
-        setAccountRequests(res.data.accountResults);
-      })
-      .catch((err) => {
-        console.warn("Error fetching account requests, using example data:", err);
-        setFilteredRequests(accountRequests);
-      });
-  }, [accountRequests]);
 
 
   useEffect(() => {
@@ -208,6 +196,161 @@ function AccountManagement() {
     setSelectedRequest(null);
   };
 
+  //edit employee values
+  const [editEmp, setEditEmp] = useState({
+    email: filteredRequests[selectedRequest]?.account.email,
+    job: filteredRequests[selectedRequest]?.account.role,
+    status: filteredRequests[selectedRequest]?.employee.empStatus,
+  });
+
+  const handleEmpChange = (e) => {
+    const { name, value } = e.target;
+    setEditEmp((prev) => ({ ...prev, [name]: value }));
+
+    console.log(editEmp);
+  };
+
+  const submitEmpChange = async (request) => {
+    console.log("Request object:", request);  
+    
+    try {
+      const res = await axios.post('http://localhost:8080/editEmpAccount', {
+        email: request?.account?.email,  
+        job: editEmp.job || request?.account?.role,  
+        status: editEmp.status || request?.employee?.empStatus, 
+      });
+      
+      if (res.data.message === "Employee updated successfully") {
+        setPopUpVisible(false);
+        alert(res.data.message);        
+      } else {
+        alert(res.data.message);
+      }
+    } catch (error) {
+      alert("Error: " + error);
+    }
+  };
+
+
+  //edit society officer values
+  const [editSocOff, setEditSocOff] = useState({
+    email: filteredRequests[selectedRequest]?.account.email,
+    position: filteredRequests[selectedRequest]?.socOfficer.position,
+    status: filteredRequests[selectedRequest]?.socOfficer.status,
+  });
+
+  const handleEditSocOffChange = (e) => {
+    const { name, value } = e.target;
+    setEditSocOff((prev) => ({ ...prev, [name]: value }));
+
+  };
+
+  const submitSocOffChange = async (request) => {
+    console.log("Request object:", request);  
+    
+    try {
+      const res = await axios.post('http://localhost:8080/editSocOfficerAccount', {
+        email: request?.account?.email, 
+        position: editSocOff.position || request?.socOfficer?.position,  
+        status: editSocOff.status || request?.socOfficer?.status, 
+      });
+      
+      if (res.data.message === "Society officer updated successfully") {
+        setPopUpVisible(false);        
+        alert(res.data.message);        
+      } else {
+        alert(res.data.message);
+      }
+    } catch (error) {
+      alert("Error: " + error);
+    }
+  };
+
+
+  //edit freshman, transferee or shiftee values
+  const [editNewStd, setEditNewStd] = useState({
+    email: filteredRequests[selectedRequest]?.account.email,
+    studentID: filteredRequests[selectedRequest]?.student.cvsuStudentID,
+    studentType: filteredRequests[selectedRequest]?.student.studentType
+  });
+
+  const handleEditNewStdChange = (e) => {
+    const { name, value } = e.target;
+    setEditNewStd((prev) => ({ ...prev, [name]: value }));
+
+  };
+
+  const submitNewStdChange = async (request) => {
+
+    
+    try {
+      const res = await axios.post('http://localhost:8080/editNewStudent', {
+        email: request?.account?.email, 
+        studentID: editNewStd.studentID || request?.student?.cvsuStudentID,
+        studentType: editNewStd.studentType || request?.student?.studentType,
+      });
+      
+      if (res.data.message === "Student updated successfully") {
+        setPopUpVisible(false);
+        setEditNewStd({ 
+          email: "", 
+          studentID: "", 
+          studentType: ""
+        });
+        alert(res.data.message);        
+      } else {
+        alert(res.data.message);
+      }
+    } catch (error) {
+      alert("Error: " + error);
+    }
+  };
+
+  //edit regular or irregular values
+  const [editOldStd, setEditOldStd] = useState({
+    email: filteredRequests[selectedRequest]?.account.email,
+    status: filteredRequests[selectedRequest]?.student.studentStatus,
+    studentType: filteredRequests[selectedRequest]?.student.studentType
+  });
+
+  const handleEditOldStdChange = (e) => {
+    const { name, value } = e.target;
+    setEditOldStd((prev) => ({ ...prev, [name]: value }));
+
+  };
+
+  const submitOldStdChange = async (request) => {
+    
+    try {
+      const res = await axios.post('http://localhost:8080/editOldStudent', {
+        email: request?.account?.email, 
+        status: editOldStd.status || request?.student?.studentStatus,
+        studentType: editOldStd.studentType || request?.student?.studentType,
+      });
+      
+      if (res.data.message === "Student updated successfully") {
+        setPopUpVisible(false);
+        alert(res.data.message);        
+      } else {
+        alert(res.data.message);
+      }
+    } catch (error) {
+      alert("Error: " + error);
+    }
+  };
+
+  // FETCH ACCOUNTS
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/getAccounts")
+      .then((res) => {
+        setAccountRequests(res.data.accountResults);
+      })
+      .catch((err) => {
+        console.warn("Error fetching account requests, using example data:", err);
+        setFilteredRequests(accountRequests);
+      });
+  }, [accountRequests, editEmp, editSocOff, editNewStd, editOldStd]);
 
 
   return (
@@ -413,15 +556,29 @@ function AccountManagement() {
                 <p><strong>Student Type:</strong> {filteredRequests[selectedRequest]?.student.studentType}</p>
                 <p><strong>Name:</strong> {filteredRequests[selectedRequest]?.account.name}</p>
                 <p><strong>Email:</strong> {filteredRequests[selectedRequest]?.account.email}</p>
+                <p><strong>Preferred Program:</strong> {filteredRequests[selectedRequest]?.student.programID === 1 ? "BSCS" : "BSIT"}</p>
+
+                <p><strong>Student ID:</strong>
+                  <input 
+                    type="tel"
+                    name='studentID'
+                    value={filteredRequests[selectedRequest]?.student.cvsuStudentID !== null ? filteredRequests[selectedRequest]?.student.cvsuStudentID
+                      : editNewStd.studentID
+                    }
+                    onChange={handleEditNewStdChange}
+                    readOnly={filteredRequests[selectedRequest]?.student.cvsuStudentID !== null}
+                    required 
+                  />
+                </p>
                 <p><strong>Change to:&nbsp;&nbsp;</strong>
-                  <select name="changeToRegIrreg" id="" required>
-                    <option value={null} selected disabled>Select student type</option>
+                  <select name="studentType" value={editNewStd.studentType} onChange={handleEditNewStdChange} id="" required>
+                  <option value="">Select student type</option>
                     <option value="Regular">Regular</option>
                     <option value="Irregular">Irregular</option>
                   </select>
                 </p>
 
-                <button style={{textAlign: 'center', width: '100%'}} className={styles.approveButton}>
+                <button style={{textAlign: 'center', width: '100%'}} onClick={() => submitNewStdChange(filteredRequests[selectedRequest])} className={styles.approveButton}>
                   Make Changes
                 </button>
               </div>
@@ -432,15 +589,27 @@ function AccountManagement() {
                 <p><strong>Student Type:</strong> {filteredRequests[selectedRequest]?.account.role}</p>
                 <p><strong>Name:</strong> {filteredRequests[selectedRequest]?.account.name}</p>
                 <p><strong>Email:</strong> {filteredRequests[selectedRequest]?.account.email}</p>
-                <p><strong>Change to:&nbsp;&nbsp;</strong>
-                  <select name="changeEmpStatus" id="" required>
-                    <option value={null} selected disabled>Select employee status</option>
+                <p><strong>Program:</strong> {filteredRequests[selectedRequest]?.employee.programID === 1 ? "BSCS" 
+                : "BSIT"}</p>
+                <p><strong>Change status:&nbsp;&nbsp;</strong>
+                  <select name="status" value={editEmp.status} onChange={handleEmpChange} required>
+                    <option value={filteredRequests[selectedRequest]?.employee.empStatus}>{filteredRequests[selectedRequest]?.employee.empStatus}</option>
                     <option value="Employed">Employed</option>
                     <option value="Resigned">Resigned</option>
                   </select>
                 </p>
 
-                <button style={{textAlign: 'center', width: '100%'}} className={styles.approveButton}>
+                <p><strong>Change position:&nbsp;&nbsp;</strong>
+                  <select name="job" value={editEmp.job} onChange={handleEmpChange} required>
+                    <option value={filteredRequests[selectedRequest]?.account.role}>{filteredRequests[selectedRequest]?.account.role}</option>
+                    <option value="Adviser">Adviser</option>
+                    <option value="DCS Head">DCS Head</option>
+                    <option value="School Head">School Head</option>
+                    <option value="Enrollment Officer">Enrollment Officer</option>
+                  </select>
+                </p>
+
+                <button style={{textAlign: 'center', width: '100%'}} onClick={() => submitEmpChange(filteredRequests[selectedRequest])} className={styles.approveButton}>
                   Make Changes
                 </button>
               </div>
@@ -472,14 +641,13 @@ function AccountManagement() {
                   <p><strong>Student Type:</strong> {filteredRequests[selectedRequest]?.account.role}</p>
                 <p><strong>Name:</strong> {filteredRequests[selectedRequest]?.account.name}</p>
                 <p><strong>Email:</strong> {filteredRequests[selectedRequest]?.account.email}</p>
-                <p><strong>Program:</strong> {filteredRequests[selectedRequest]?.socOfficer.programID === 1 ? "BSCS"
-                : "BSIT"}</p>
-            
-                
+                <p><strong>Program:</strong> {filteredRequests[selectedRequest]?.socOfficer.programID === 1 ? "BSCS" : "BSIT"}</p>
+
+                          
                 {filteredRequests[selectedRequest]?.socOfficer.programID === 1 ? (
                   <p><strong>Change Position:&nbsp;&nbsp;</strong>
-                  <select name="changePosition" id="" required>
-                    <option value={null} selected disabled>Select position</option>
+                  <select name="position" value={editSocOff.position} onChange={handleEditSocOffChange} id="" required>
+                    <option value={filteredRequests[selectedRequest]?.socOfficer.position}>{filteredRequests[selectedRequest]?.socOfficer.position}</option>
                     <option value="President">President</option>
                     <option value="Vice President">Vice President</option>
                     <option value="Secretary">Secretary</option>
@@ -507,8 +675,8 @@ function AccountManagement() {
                 )
                 : (
                   <p><strong>Change Position:&nbsp;&nbsp;</strong>
-                  <select name="changePosition" id="" required>
-                    <option value={null} selected disabled>Select position</option>
+                  <select name="position" value={editSocOff.position} onChange={handleEditSocOffChange} id="" required>
+                    <option value={filteredRequests[selectedRequest]?.socOfficer.position}>{filteredRequests[selectedRequest]?.socOfficer.position}</option>
                     <option value="President">President</option>
                     <option value="Vice President">Vice President</option>
                     <option value="Secretary">Secretary</option>
@@ -535,14 +703,14 @@ function AccountManagement() {
 
 
                 <p><strong>Change Status:&nbsp;&nbsp;</strong>
-                  <select name="changeSocOffStatus" id="" required>
-                    <option value={null} selected disabled>Select status</option>
+                  <select name="status" onChange={handleEditSocOffChange} id="" required>
+                    <option value={filteredRequests[selectedRequest]?.socOfficer.status} >{filteredRequests[selectedRequest]?.socOfficer.status}</option>
                     <option value="Elected">Elected</option>
                     <option value="Resigned">Resigned</option>
                   </select>
                 </p>
 
-                <button style={{textAlign: 'center', width: '100%'}} className={styles.approveButton}>
+                <button style={{textAlign: 'center', width: '100%'}} onClick={() => submitSocOffChange(filteredRequests[selectedRequest])} className={styles.approveButton}>
                   Make Changes
                 </button>
                 </div>
@@ -554,19 +722,19 @@ function AccountManagement() {
                 <p><strong>Student ID:</strong> {filteredRequests[selectedRequest]?.student.cvsuStudentID}</p>
                 <p><strong>Name:</strong> {filteredRequests[selectedRequest]?.account.name}</p>
                 <p><strong>Email:</strong> {filteredRequests[selectedRequest]?.account.email}</p>
+                <p><strong>Program:</strong> {filteredRequests[selectedRequest]?.student.programID === 1 ? "BSCS" : "BSIT"}</p>
                 
-
                 <p><strong>Change student type:&nbsp;&nbsp;</strong>
-                  <select name="changeStudentType" id="" required>
-                    <option value={null} selected disabled>Select student type</option>
+                  <select name="studentType" onChange={handleEditOldStdChange} value={editOldStd.studentType} id="" required>
+                    <option value={filteredRequests[selectedRequest]?.student.studentType}>{filteredRequests[selectedRequest]?.student.studentType}</option>
                     <option value="Regular">Regular</option>
                     <option value="Irregular">Irregular</option>
                   </select>
                 </p>
 
                 <p><strong>Change status:&nbsp;&nbsp;</strong>
-                  <select name="changeStudentType" id="" required>
-                    <option value={null} selected disabled>Select status</option>
+                  <select name="status" value={editOldStd.status} onChange={handleEditOldStdChange} id="" required>
+                    <option value={filteredRequests[selectedRequest]?.student.studentStatus} >{filteredRequests[selectedRequest]?.student.studentStatus}</option>
                     <option value="Active">Active</option>
                     <option value="Inactive">Inactive</option>
                     <option value="Dropped">Dropped</option>
@@ -576,11 +744,10 @@ function AccountManagement() {
                     <option value="On Leave">On Leave</option>
                     <option value="Alumni">Alumni</option>
                     <option value="Transfer">Transfer</option>
-                    <option value="Prospective">Prospective</option>
                   </select>
                 </p>
 
-                <button style={{textAlign: 'center', width: '100%'}} className={styles.approveButton}>
+                <button style={{textAlign: 'center', width: '100%'}} onClick={() => submitOldStdChange(filteredRequests[selectedRequest])} className={styles.approveButton}>
                   Make Changes
                 </button>
               </div>
