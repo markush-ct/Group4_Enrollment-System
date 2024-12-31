@@ -36,6 +36,96 @@
     width: 100%; 
 }
 
+.profilePic {
+    margin-right: 10px; 
+    background-color: transparent;
+  }
+  
+  .profileImage {
+    width: 120px; 
+    height: 120px; 
+    border-radius: 50%; 
+    object-fit: cover; 
+    border: 2px solid #3d8c4b; 
+    background-color: transparent;
+  }
+  
+  .greetingText {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    background-color: transparent;
+  }
+  
+
+.nameCard {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    grid-column: span 2; 
+    padding: 15px; 
+    background-color: #3d8c4b;
+    color: #3d8c4b;
+    margin-bottom: 10px;
+    border-radius: 12px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .logoCard {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    grid-column: span 2; 
+    padding: 15px; 
+    color: #3d8c4b;
+    margin-bottom: 10px;
+    border-radius: 12px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .nameSection {
+    text-align: left; 
+    background-color: transparent;
+  }
+
+  .logoSection {
+    
+    background-color: transparent;
+  }
+  
+  .logos {
+    display: flex;
+    gap: 10px; 
+    background-color: transparent;
+  }
+  
+  .logo {
+    width: 100px; 
+    height: 100px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+  }
+  
+  .logo:hover {
+    transform: scale(1.1); 
+  }
+  
+
+.nameCard h3{
+    color: white;
+    background-color: transparent;
+}
+
+.nameCard p{
+    color: white;
+    background-color: transparent;
+}
+
+
+
+
 
 
 .announcementContainer {
@@ -189,7 +279,7 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.CsStats:hover, .ItStats:hover, .DCScount:hover, .nameCard:hover, .yellowCard:hover, .blueCard:hover {
+.CsStats:hover, .ItStats:hover, .DCScount:hover, .nameCard:hover, .logoCard:hover, .yellowCard:hover, .blueCard:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); 
 }
@@ -244,58 +334,7 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.nameCard {
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    grid-column: span 2; 
-    padding: 15px; 
-    border: 2px solid #3d8c4b;
-    background-color: white;
-    color: #3d8c4b;
-    margin-bottom: 10px;
-    border-radius: 12px; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .nameSection {
-    text-align: left; 
-    background-color: transparent;
-  }
 
-  .logoSection {
-    
-    background-color: transparent;
-  }
-  
-  .logos {
-    display: flex;
-    gap: 10px; 
-    background-color: transparent;
-  }
-  
-  .logo {
-    width: 100px; 
-    height: 100px;
-    object-fit: contain;
-    transition: transform 0.3s ease;
-  }
-  
-  .logo:hover {
-    transform: scale(1.1); 
-  }
-  
-
-.nameCard h3{
-    color: #3d8c4b;
-    background-color: transparent;
-}
-
-.nameCard p{
-    color: #3d8c4b;
-    background-color: transparent;
-}
 
 .yellowCard {
     background-color: #f0b435;;
@@ -486,11 +525,16 @@
         grid-template-columns: 1fr;
     }
 
-    .DCScount, .CsStats, .ItStats, .nameCard, .yellowCard, .blueCard {
+    .DCScount, .CsStats, .ItStats, .nameCard, .logoCard, .yellowCard, .blueCard {
         grid-column: span 1; 
     }
 
     .nameCard {
+        flex-direction: column; 
+        align-items: center;
+    }
+
+    .logoCard {
         flex-direction: column; 
         align-items: center;
     }
