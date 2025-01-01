@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import styles from "/src/styles/DCSHeadDash.module.css";
+import styles from "/src/styles/SocOFFDash.module.css";
 import axios from "axios";
 import Header from "/src/components/AdminDashHeader.jsx";
 import { Doughnut } from "react-chartjs-2";
@@ -24,14 +24,10 @@ function SocOfficerDashboard() {
   const [SideBar, setSideBar] = useState(false);
   const [CScount, setCScount] = useState(0);
   const [ITcount, setITcount] = useState(0);
-  const [announcementText, setAnnouncementText] = useState(""); // Announcement 
-  const [announcements, setAnnouncements] = useState([]); // List of announcements
   const [accName, setAccName] = useState("");
-
   const [program, setProgram] = useState("");
-
+  const [pfp, setPFP] = useState("");
   const [isEnrollment, setIsEnrollment] = useState();
-
   const [enrollmentPeriod, setEnrollmentPeriod] = useState({
     start: "",
     end: "",
@@ -57,7 +53,17 @@ function SocOfficerDashboard() {
       .catch((err) => {
         console.error("Error validating user session:", err);
       });
+  
+  
+      axios.get('http://localhost:8080/getPFP')
+        .then((res) => {
+          setPFP(`http://localhost:8080/${res.data.pfpURL}`);
+        })
+        .catch((err) => {
+          alert("Error: " + err);
+        })
   }, []);
+
   //Reuse in other pages that requires logging in
 
   useEffect(() => {
@@ -111,6 +117,7 @@ function SocOfficerDashboard() {
       });
   }, []);
 
+  
 
 
   useEffect(() => {
@@ -214,23 +221,69 @@ function SocOfficerDashboard() {
 
 
           <div className={styles.container1}>
-            <div className={styles.GreetingContainer}>
-              <div className={styles.nameCard}>
-                <div className={styles.nameSection}>
-                  <p>HI</p>
-                  <h3>{accName}</h3>
-                </div>
-                <div className={styles.logos}>
-                  <img src={program === 1 ? "/src/assets/ACS-ICON.png"
-                    : program === 2 ? "/src/assets/ITS-ICON.png"
-                      : ""
-                  } alt="society logo" className={styles.logo} />
-                </div>
+          <div className={styles.GreetingContainer}>
+  <div className={styles.nameCard}>
+    <div className={styles.profilePic}>
+      <img src={pfp} alt="Profile" className={styles.profileImage} />
+    </div>
+    <div className={styles.greetingText}>
+      <p>HI</p>
+      <h3>{accName}</h3>
+    </div>
+  </div>
+
+  <div className={styles.logoCard} 
+  style={{ backgroundColor: program === 1 ? '#9b1f1f' : program === 2 ? '#3d8c4b' : 'transparent' }}
+>
+  <div className={styles.logos}>
+    <img 
+      src={program === 1 ? "/src/assets/ACS-ICON.png" : program === 2 ? "/src/assets/ITS-ICON.png" : ""}
+      alt="society logo" 
+      className={styles.logo} 
+    />
+  </div>
+  {program === 1 ? (
+    <h3 style={{ color: 'white' }}>Alliance of Computer Scientist</h3>
+  ) : program === 2 ? (
+    <h3 style={{ color: 'white' }}>Information Technology Society</h3>
+  ) : null}
+</div>
+
+
+
+
+             
+
+
+
+            </div>
+          </div>
+
+
+
+
+
+
+          <div className={styles.container2}>
+            {/* STATS */}
+            <div className={styles.Stats}>
+              <div className={styles.DCScount}>
+                <h3>Total DCS Students</h3>
+                <p>{ITcount + CScount}</p>
               </div>
+              <div className={styles.CsStats}>
+                <h3>Computer Science</h3>
+                <p>{CScount}</p>
+              </div>
+              <div className={styles.ItStats}>
+                <h3>Information Technology</h3>
+                <p>{ITcount}</p>
+              </div>
+            </div>
+          </div>
 
-
-              {/* Announcement Section */}
-              {!isEnrollment && (
+           {/* Announcement Section */}
+           {!isEnrollment && (
                 <div className={styles.announcementContainer}>
                   <div className={styles.announcementHeader}>
                     <h2 className={styles.announcementTitle}>Schedule Enrollment for {program === 1 ? "BSCS"
@@ -261,34 +314,6 @@ function SocOfficerDashboard() {
                   </button>
                 </div>
               )}
-
-
-
-            </div>
-          </div>
-
-
-
-
-
-
-          <div className={styles.container2}>
-            {/* STATS */}
-            <div className={styles.Stats}>
-              <div className={styles.DCScount}>
-                <h3>Total DCS Students</h3>
-                <p>{ITcount + CScount}</p>
-              </div>
-              <div className={styles.CsStats}>
-                <h3>Computer Science</h3>
-                <p>{CScount}</p>
-              </div>
-              <div className={styles.ItStats}>
-                <h3>Information Technology</h3>
-                <p>{ITcount}</p>
-              </div>
-            </div>
-          </div>
 
 
           {isEnrollment && (

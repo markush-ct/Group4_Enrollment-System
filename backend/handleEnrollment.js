@@ -56,6 +56,26 @@ router.get('/ITEnrollmentPeriod', (req, res) => {
     })
 });
 
+router.get('/dcsViewEnrollment', (req, res) => {
+    const sql1 = `SELECT * FROM employee WHERE Email = ?`;
+    const sql2 = `SELECT * FROM enrollmentperiod WHERE ProgramID = ?`;
+
+    db.query(sql1, req.session.email, (err, socOffResult) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else if(socOffResult.length > 0){
+            db.query(sql2, socOffResult[0].ProgramID, (err,enrollmentRes) => {
+                if(err){
+                    return res.json({message: "Error in server: " + err});
+                } else if(enrollmentRes.length > 0){
+                    console.log(enrollmentRes[0]);
+                    return res.json({message: "Enrollment fetched successfully", enrollmentPeriod: enrollmentRes[0]});
+                }   
+            })
+        }
+    });
+});
+
 router.get('/viewEnrollmentPeriod', (req, res) => {
     const sql1 = `SELECT * FROM societyofficer WHERE Email = ?`;
     const sql2 = `SELECT * FROM enrollmentperiod WHERE ProgramID = ?`;

@@ -46,7 +46,7 @@
 }
 
 .societySection {
-    flex: 1; /* Takes up 25% of the row */
+    flex: 1; 
     background: #f9f9f9;
     border-radius: 10px;
     padding: 20px;
