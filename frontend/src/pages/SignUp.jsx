@@ -508,17 +508,11 @@ function SignUp() {
                 <option value="Bachelor of Science in Business Management">
                   Bachelor of Science in Business Management
                 </option>
-                <option value="Bachelor of Science in Computer Science">
-                  Bachelor of Science in Computer Science
-                </option>
                 <option value="Bachelor of Science in Criminology">
                   Bachelor of Science in Criminology
                 </option>
                 <option value="Bachelor of Science in Hospitality Management">
                   Bachelor of Science in Hospitality Management
-                </option>
-                <option value="Bachelor of Science in Information Technology">
-                  Bachelor of Science in Information Technology
                 </option>
                 <option value="Bachelor of Science in Psychology">
                   Bachelor of Science in Psychology
