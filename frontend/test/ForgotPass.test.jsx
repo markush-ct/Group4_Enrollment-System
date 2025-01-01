@@ -62,7 +62,7 @@ describe("Unit Testing for Forgot Password Page", () => {
         <ForgotPass />
       </Router>
     );
-    expect(screen.getByText("Trouble Logging in?")).toBeInTheDocument();
+    expect(screen.getByText("Trouble Logging In?")).toBeInTheDocument();
     expect(
       screen.getByText(
         "Enter your email and we will send you a link to reset your password."

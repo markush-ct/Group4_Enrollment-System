@@ -153,7 +153,7 @@ function ForgotPass() {
             <img src="/src/assets/reset-pwlogo.svg" alt="Lock Icon" />
           </div>
 
-          <h2>Trouble Logging in?</h2>
+          <h2>Trouble Logging In?</h2>
           <p>
             Enter your email and we will send you a link to reset your password.
           </p>

@@ -161,10 +161,10 @@ describe("Unit Testing for Forgot Password Function", () => {
     expect(response.body.message).toBe("Invalid PIN");
   });
 
-  it("Should return an error when email or new password is missing", async () => {
+  it("Should return an error when new password is missing", async () => {
     const response = await request(app)
       .post("/resetPass")
-      .send({ email: "", newPassword: "" });
+      .send({ newPassword: "" });
 
     expect(response.status).toBe(400);
     expect(response.body.message).toBe("Email and new password are required.");

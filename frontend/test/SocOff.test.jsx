@@ -90,7 +90,7 @@ describe("Unit Testing for Society Officer Page", () => {
     expect(parallaxSection.classList.contains(styles.parallax1)).toBe(true);
   });
 
-  test("Should render paragraphs with AOS fade-up animation", async () => {
+  test("Should render components with AOS fade-up animation", async () => {
     const { container } = render(<SocOff />);
     await waitFor(() => {
       const aosElements = container.querySelectorAll('[data-aos="fade-up"]');

@@ -34,7 +34,7 @@ describe("Unit Testing for Undergraduate Programs Page", () => {
     expect(parallaxSection.classList.contains(styles.parallax1)).toBe(true);
   });
 
-  test("Should render paragraphs with AOS fade-up animation", async () => {
+  test("Should render components with AOS fade-up animation", async () => {
     const { container } = render(<Undergrad />);
     await waitFor(() => {
       const aosElements = container.querySelectorAll('[data-aos="fade-up"]');

@@ -75,7 +75,7 @@ describe("Unit Testing for Create Account Page", () => {
     });
   });
 
-  test("Renders create Account Page heading correctly", () => {
+  test("Renders Create Account Page heading correctly", () => {
     render(
       <Router>
         <CreateAcc />

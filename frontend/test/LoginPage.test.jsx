@@ -47,7 +47,7 @@ describe("Unit Testing for Login Page", () => {
     expect(require("aos").init).toHaveBeenCalled();
   });
 
-  test("Should render component with AOS fade-up animation", async () => {
+  test("Should render components with AOS fade-up animation", async () => {
     const { container } = render(
       <Router>
         <LoginPage />
@@ -131,7 +131,7 @@ describe("Unit Testing for Login Page", () => {
     expect(forgotPasswordLink).toBeInTheDocument();
   });
 
-  test("Navigates to ForgotPassword page when the link is clicked", () => {
+  test("Navigates to Forgot Password page when the link is clicked", () => {
     render(
       <Router>
         <LoginPage />
@@ -168,17 +168,17 @@ describe("Unit Testing for Login Page", () => {
         <LoginPage />
       </Router>
     );
-    const createAccountLink = screen.getByText(/Create an account/i);
+    const createAccountLink = screen.getByText(/Create an account./i);
     expect(createAccountLink).toBeInTheDocument();
   });
 
-  test("Navigates to CreateAccount page when the link is clicked", () => {
+  test("Navigates to Create Account page when the link is clicked", () => {
     render(
       <Router>
         <LoginPage />
       </Router>
     );
-    const createAccountLink = screen.getByText("Create an account");
+    const createAccountLink = screen.getByText("Create an account.");
     fireEvent.click(createAccountLink);
     expect(window.location.pathname).toBe("/CreateAcc");
   });

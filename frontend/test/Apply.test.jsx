@@ -35,7 +35,7 @@ describe("Unit Testing for Apply Page", () => {
     expect(parallaxSection.classList.contains(styles.parallax1)).toBe(true);
   });
 
-  test("Should render paragraphs with AOS fade-up animation", async () => {
+  test("Should render components with AOS fade-up animation", async () => {
     const { container } = render(<Apply />);
     await waitFor(() => {
       const aosElements = container.querySelectorAll('[data-aos="fade-up"]');
@@ -315,7 +315,7 @@ describe("Unit Testing for Apply Page", () => {
     ).toBeInTheDocument();
 
     expect(screen.getByText(/Accepted SHS strands:/i)).toBeInTheDocument();
-    expect(screen.getByText(/TVI-ICT/i)).toBeInTheDocument();
+    expect(screen.getByText(/TVL-ICT/i)).toBeInTheDocument();
     expect(screen.getByText(/TVL/i)).toBeInTheDocument();
     expect(screen.getByText(/STEM/i)).toBeInTheDocument();
   });

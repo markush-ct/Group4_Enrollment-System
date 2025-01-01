@@ -77,7 +77,7 @@ function Apply() {
 1. It is not guaranteed that you can shift to IT/CS <b>unless the reason is valid</b>.<br>
 2. Your strand in senior high school must be aligned to IT/CS.<br>
 <b>Accepted SHS strands:</b><br>
-&#8226; TVI-ICT<br>
+&#8226; TVL-ICT<br>
 &#8226; TVL<br>
 &#8226; STEM<br>`,
     Regular: `1. Fill out and submit registration form at <a href="/CreateAcc" target="_blank" ><b>signup link</a></b>.<br>
