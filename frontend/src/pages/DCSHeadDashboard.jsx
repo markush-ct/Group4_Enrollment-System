@@ -25,7 +25,7 @@ function DCSHeadDashboard() {
   const [CScount, setCScount] = useState(0);
   const [ITcount, setITcount] = useState(0);
   const [reqCount, setReqCount] = useState(0);
-  const [announcements, setAnnouncements] = useState([]); // LIST ANNOUNCEMENT
+  const [announcements, setAnnouncements] = useState([]);
   const [accName, setAccName] = useState("");
   const [program, setProgram] = useState("");
 
@@ -130,7 +130,33 @@ useEffect(() => {
         alert("Error: " + err);
         console.error("ERROR FETCHING DATA: " + err);
       });
+  });
+
+
+const [isEnrollment, setIsEnrollment] = useState(false);
+const [enrollment, setEnrollment] = useState([]);
+
+useEffect(() => {
+  axios.get("http://localhost:8080/dcsViewEnrollment")
+  .then((res) => {
+    const {enrollmentPeriod} = res.data;
+
+    if(res.data.message === "Enrollment fetched successfully"){
+      if(enrollmentPeriod.Status === "Pending" || enrollmentPeriod.Status === "Ongoing"){
+        setIsEnrollment(true);
+        setEnrollment(enrollmentPeriod);
+      } else {
+        setIsEnrollment(false);
+      }
+    } else{
+      setIsEnrollment(false);
+    }
   })
+  .catch((err) => {
+    alert("Error: ", err);
+    setIsEnrollment(false);
+  })
+}, [isEnrollment, enrollment]);
 
 
   return (
@@ -174,42 +200,60 @@ useEffect(() => {
             <div className={styles.Stats}>
               <div className={styles.DCScount}>
                 <h3>Total DCS Students</h3>
-                <p>70</p>
+                <p>{ITcount + CScount}</p>
               </div>
               <div className={styles.CsStats}>
                 <h3>Computer Science</h3>
-                <p>35</p>
+                <p>{CScount}</p>
               </div>
               <div className={styles.ItStats}>
                 <h3>Information Technology</h3>
-                <p>35</p>
+                <p>{ITcount}</p>
               </div>
             </div>
           </div>
 
 
-          <div className={styles.container3}>
-            <div className={styles.row1}>
-              <div className={styles.headerContainer}>
-                <h2 className={styles.announcementHeader}>View Announcements</h2>
-
-              </div>
-              <div className={styles.announcementList}>
-                {announcements.slice(0, 3).map((announcement, index) => (
-                  <div key={index} className={styles.announcementItem}>
-                    {announcement}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className={styles.row2}>
-              <div className={styles.headerContainer}>
-                <h2 className={styles.announcementHeader}>Class Schedules</h2>
-
-              </div>
-            </div>
-          </div>
+          {isEnrollment && (
+                                <div className={styles.container3}>
+                                  <div className={styles.row1}>
+                                    <div className={styles.headerContainer}>
+                                      <h2 className={styles.announcementHeader}>{enrollment.Status === "Pending" ? "CS Enrollment Period"
+                                        : enrollment.Status === "Ongoing" ? "CS Enrollment is On Going"
+                                          : ""}</h2>
+                                    </div>
+                    
+                                    <div className={styles.announcementList}>
+                                      <div className={styles.announcementCard}>
+                                        <div className={styles.announcementText}>
+                                          <p>
+                                            {new Date(enrollment.Start).toLocaleString('en-US', {
+                                              year: 'numeric',
+                                              month: 'long',
+                                              day: 'numeric',
+                                              hour: 'numeric',
+                                              minute: 'numeric',
+                                              hour12: true,
+                                            })}
+                                          </p>
+                                          <p>to</p>
+                                          <p>
+                                            {new Date(enrollment.End).toLocaleString('en-US', {
+                                              year: 'numeric',
+                                              month: 'long',
+                                              day: 'numeric',
+                                              hour: 'numeric',
+                                              minute: 'numeric',
+                                              hour12: true,
+                                            })}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                    
+                                </div>
+                              )}
 
 
           {/* DONUT  */}

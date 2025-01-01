@@ -11,8 +11,9 @@ function SocFee() {
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const [accountRequests, setAccountRequests] = useState([]);
-  const [filteredRequests, setfilteredRequests] = useState(accountRequests);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredRequests, setFilteredRequests] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [popUpVisible, setPopUpVisible] = useState(false);
   const [approvalPrompt, setApprovalPrompt] = useState(false);
@@ -21,7 +22,6 @@ function SocFee() {
   const [rejectionMsg, setRejectionMsg] = useState('');
   const [errorPrompt, setErrorPrompt] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-  const [loading, setLoading] = useState(false);
   const [submissionDate, setSubmissionDate] = useState('');
   const [rejectionReason, setRejectionReason] = useState('');
 
@@ -58,33 +58,50 @@ function SocFee() {
     });
   }, []);
 
-  // FETCH SHIFTING REQUESTS
+  // FETCH ALL SOCIETY FEES
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getSocFee")
-      .then((res) => {
-        console.log(res.data.records);
-        setAccountRequests(res.data.records);
-        setFilteredRequests(res.data.records);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.warn("Error fetching records, using example data:", err);
-        setFilteredRequests(accountRequests);
-        setAccountRequests([]); // Ensure state is not undefined
-        setFilteredRequests([]);
-      });
-  }, []);
+        .get("http://localhost:8080/getSocFee")
+        .then((res) => {
+            setAccountRequests(res.data.records);
+            setFilteredRequests(res.data.records);
+            setLoading(false);
+        })
+        .catch((err) => {
+            console.error("Error fetching records:", err);
+            setAccountRequests([]);
+            setFilteredRequests([]);
+        });
+}, []);
 
+useEffect(() => {
+    const timeoutId = setTimeout(() => {
+        const query = searchQuery.toLowerCase();
+        setFilteredRequests(
+            accountRequests.filter((request) =>
+                request.Firstname.toLowerCase().includes(query) ||
+                request.Lastname.toLowerCase().includes(query) ||
+                request.CvSUStudentID.toString().includes(query) ||
+                request.SocFeePayment.toLowerCase().includes(query) ||
+                `${request.Year === "First Year" ? 1
+                  : request.Year === "Second Year" ? 2
+                  : request.Year === "Third Year" ? 3
+                  : request.Year === "Fourth Year" ? 4
+                  : "N/A"
+                } - ${request.Section.toLowerCase()}`.includes(query) ||
+                request.SocFeePayment.toLowerCase().includes(query) ||
+                `${request.Year === "First Year" ? 1
+                  : request.Year === "Second Year" ? 2
+                  : request.Year === "Third Year" ? 3
+                  : request.Year === "Fourth Year" ? 4
+                  : "N/A"
+                }-${request.Section.toLowerCase()}`.includes(query)
+            )
+        );
+    }, 300);
 
-  const visibleRequests = accountRequests.filter((request) => {
-    const query = searchQuery.toLowerCase();
-    return (
-      request.Firstname.toLowerCase().includes(query) ||
-      request.Lastname.toLowerCase().includes(query) ||
-      request.CvSUStudentID.toString().includes(query)
-    );
-  });
+    return () => clearTimeout(timeoutId);
+}, [searchQuery, accountRequests]);
 
 
 
@@ -367,46 +384,53 @@ const closePrompt = () => {
                 <th>Student ID</th>
                 <th>Name</th>
                 <th>Year - Section</th>
+                <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {filteredRequests.length > 0 ? (
-                filteredRequests.map((request) => (
-                  <tr key={request.StudentID}>
-                    <td>{request.CvSUStudentID}</td>
-                    <td>{request.Firstname} {request.Lastname}</td>
-                    <td>{`${request.Year.charAt(0)} - ${request.Section}`}</td>
-                    <td>
-                      <button
-                        className={styles.approveButton}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleApproveSocFee(request);
-                        }}
-                      >
-                        &#10004;
-                      </button>
-                      <button
-                        className={styles.rejectButton}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRejectSocFee(request);
-                        }}
-                      >
-                        {loading ? 'Loading...' : 'X'}
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="4" className={styles.noData}>
-                    No Society Fee found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
+        {filteredRequests.length > 0 ? (
+          filteredRequests.map((request) => (
+            <tr key={request.StudentID}>
+              <td>{request.CvSUStudentID}</td>
+              <td>{request.Firstname} {request.Lastname}</td>
+              <td>{`${request.Year === "First Year" ? 1
+                : request.Year === "Second Year" ? 2
+                : request.Year === "Third Year" ? 3
+                : request.Year === "Fourth Year" ? 4
+                : "N/A"
+              } - ${request.Section}`}</td>
+              <td>{request.SocFeePayment}</td>
+              <td>
+                <button
+                  className={styles.approveButton}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleApproveSocFee(request);
+                  }}
+                >
+                  &#10004;
+                </button>
+                <button
+                  className={styles.rejectButton}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRejectSocFee(request);
+                  }}
+                >
+                  {loading ? 'Loading...' : 'X'}
+                </button>
+              </td>
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td colSpan="4" className={styles.noData}>
+              No Society Fee found.
+            </td>
+          </tr>
+        )}
+      </tbody>
           </table>
         </div>
       </div>

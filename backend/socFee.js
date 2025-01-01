@@ -18,6 +18,24 @@ db.connect((err) => {
     }
 });
 
+router.post('/searchSocFee', (req, res) => {
+    const { searchQuery } = req.body;
+    const sql = `
+        SELECT s.StudentID, s.CvSUStudentID, s.Firstname, s.Lastname, s.Year, s.Section, r.SocFeePayment
+        FROM student s
+        JOIN requirements r ON s.StudentID = r.StudentID
+        WHERE CONCAT(s.CvSUStudentID, s.Firstname, s.Lastname, s.Year, s.Section, r.SocFeePayment) LIKE ?`;
+
+    db.query(sql, [`%${searchQuery}%`], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: "Error fetching data: " + err });
+        }
+        res.status(200).json({ records: results });
+    });
+});
+
+
+
 //Get all pending society fees
 router.get('/getSocFee', (req, res) => {
     const sql1 = `SELECT * FROM societyofficer WHERE Email = ?`;
