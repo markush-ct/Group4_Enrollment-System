@@ -562,16 +562,7 @@ function AccountSettingsStudent() {
                           onChange={(e) => setCurrentPassword(e.target.value)}
                           required
                         />
-                        <div
-                          className={styles.togglePasswordIcon}
-                          onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                        >
-                          <img
-                            title="Show/Hide Password"
-                            src={showCurrentPassword ? '/src/assets/showPass.png' : '/src/assets/hidePass.png'}
-                            alt={showCurrentPassword ? 'Hide Password' : 'Show Password'}
-                          />
-                        </div>
+                       
                       </div>
                     </div>
 
@@ -597,16 +588,7 @@ function AccountSettingsStudent() {
                           onChange={(e) => setNewPassword(e.target.value)}
                           required
                         />
-                        <div
-                          className={styles.togglePasswordIcon}
-                          onClick={() => setShowNewPassword(!showNewPassword)}
-                        >
-                          <img
-                            title="Show/Hide Password"
-                            src={showNewPassword ? '/src/assets/showPass.png' : '/src/assets/hidePass.png'}
-                            alt={showNewPassword ? 'Hide Password' : 'Show Password'}
-                          />
-                        </div>
+                        
                       </div>
                     </div>
 
@@ -625,16 +607,7 @@ function AccountSettingsStudent() {
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           required
                         />
-                        <div
-                          className={styles.togglePasswordIcon}
-                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        >
-                          <img
-                            title="Show/Hide Password"
-                            src={showConfirmPassword ? '/src/assets/showPass.png' : '/src/assets/hidePass.png'}
-                            alt={showConfirmPassword ? 'Hide Password' : 'Show Password'}
-                          />
-                        </div>
+                        
                       </div>
                     </div>
 

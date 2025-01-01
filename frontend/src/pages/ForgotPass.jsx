@@ -114,13 +114,9 @@ function ForgotPass() {
     }
   };
 
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
-  };
+  
 
-  const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword((prev) => !prev);
-  };
+  
 
   const handleConfirmChange = () => {
     //confirmation
@@ -254,20 +250,7 @@ function ForgotPass() {
                     setValues({ ...values, newPassword: e.target.value })
                   }
                 />
-                <div
-                  className={styles.toggleNewPasswordIcon}
-                  onClick={togglePasswordVisibility}
-                >
-                  <img
-                    title="Show/Hide Password"
-                    src={
-                      showPassword
-                        ? "/src/assets/showPass.png"
-                        : "/src/assets/hidePass.png"
-                    }
-                    alt={showPassword ? "Hide Password" : "Show Password"}
-                  />
-                </div>
+                
               </div>
             </div>
 
@@ -283,22 +266,7 @@ function ForgotPass() {
                     setValues({ ...values, confirmPassword: e.target.value })
                   }
                 />
-                <div
-                  className={styles.toggleConfirmPasswordIcon}
-                  onClick={toggleConfirmPasswordVisibility}
-                >
-                  <img
-                    title="Show/Hide Password"
-                    src={
-                      showConfirmPassword
-                        ? "/src/assets/showPass.png"
-                        : "/src/assets/hidePass.png"
-                    }
-                    alt={
-                      showConfirmPassword ? "Hide Password" : "Show Password"
-                    }
-                  />
-                </div>
+                
               </div>
             </div>
 

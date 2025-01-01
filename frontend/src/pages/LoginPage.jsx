@@ -221,20 +221,7 @@ function LoginPage() {
                 }
                 required
               />
-              <div
-                className={styles.togglePasswordIcon}
-                onClick={togglePasswordVisibility}
-              >
-                <img
-                  title="Show/Hide Password"
-                  src={
-                    showPassword
-                      ? "/src/assets/showPass.png"
-                      : "/src/assets/hidePass.png"
-                  }
-                  alt={showPassword ? "Hide Password" : "Show Password"}
-                />
-              </div>
+              
             </div>
 
             <div className={styles.options}>
