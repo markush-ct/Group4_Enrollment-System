@@ -393,6 +393,7 @@ function EnrollmentRegular() {
                           value={course.instructor}
                           id={`instructor-${course.courseDetails.courseID}`}
                           type="text"
+                          
                         />
                       </td>
                     </tr>
@@ -405,7 +406,7 @@ function EnrollmentRegular() {
       ))}
 
       <button className={styles.nextButton} onClick={() => submitRequirements(checklistData)}>
-        Submit
+        <span>Submit</span>
       </button>
           </div>
         );
