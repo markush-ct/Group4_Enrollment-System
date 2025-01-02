@@ -38,7 +38,9 @@ router.post('/', (req, res) => {
 
     const updateQuery = `
         UPDATE requirements
-        SET SocFeePayment = 'Pending'
+        SET SocFeePayment = 'Pending',
+            SocietyOfficerID = null,
+            COG = null
         WHERE StudentID IN (SELECT StudentID FROM student WHERE StudentType IN ('Regular', 'Irregular'))
     `;
 

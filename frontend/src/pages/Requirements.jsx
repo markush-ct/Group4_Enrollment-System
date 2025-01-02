@@ -21,6 +21,8 @@ function Requirements() {
   const [errorPrompt, setErrorPrompt] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
+  const [cog, setCOG] = useState(null);
+  const [checklist, setChecklist] = useState([]);
 
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -58,10 +60,10 @@ function Requirements() {
   // FETCH ACCOUNT REQUESTS
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getAccountReq")
+      .get("http://localhost:8080/getReqsForSocOff")
       .then((res) => {
-        setAccountRequests(res.data.accReq);
-        setFilteredRequests(res.data.accReq);
+        setAccountRequests(res.data.students);
+        setFilteredRequests(res.data.students);
       })
       .catch((err) => {
         console.warn("Error fetching account requests, using example data:", err);
@@ -109,64 +111,51 @@ function Requirements() {
 
   // Request
 const handleApprove = async (request) => {
-  console.log('Request received in handleApprove:', request);
 
   setLoading(true);
 
-  if (!request?.Email || !request?.Name || !request?.AccountType) {
+  if (!request?.StudentID) {
       setErrorPrompt(true);
-      setErrorMsg('Email, name, and account type are required.');
+      setErrorMsg('StudentID is required.');
       return;
   }
 
   try {
-      await axios.post('http://localhost:8080/sendApprovalEmail', {
-          email: request.Email,
-          name: request.Name,
-          accountType: request.AccountType,
-      });
-
-      setApprovalPrompt(true);
-      setApprovalMsg(`Approval email sent to ${request.Email}`);
+    const res = await axios.post('http://localhost:8080/socfeeVerifyChecklist', {studentID: request.StudentID}); 
+    console.log('Response:', res.data);
+    setApprovalPrompt(true);
+      setApprovalMsg(`Verification successful for Student ID: ${request.CvSUStudentID}`);
       setErrorPrompt(false);
       setPopUpVisible(false);
       setLoading(false);
-      
   } catch (err) {
-      console.error('Error:', err);
-      setErrorPrompt(true);
-      setErrorMsg(`Failed to send approval email:  ${err.response?.data?.message || err.message}`);
+    setErrorPrompt(true);
+      setErrorMsg(`Failed to verify requirements:  ${err.response?.data?.message || err.message}`);
       setLoading(false);
   }
 };
 
 const handleReject = async (request) => {
-  console.log('Request received in handleReject:', request);
 
   setLoading(true);
 
-  if (!request?.Email || !request?.Name || !request?.AccountType) {
+  if (!request?.StudentID) {
       setErrorPrompt(true);
-      setErrorMsg('Email and name are required.');
+      setErrorMsg('StudentID is required.');
       return;
   }
 
   try {
-      await axios.post('http://localhost:8080/sendEmailRejection', {
-          email: request.Email,
-          name: request.Name,
-          accountType: request.AccountType
-      });
-
-      setRejectionPrompt(true);
-      setRejectionMsg(`Rejection email sent to ${request.Email}`);
+    const res = await axios.post('http://localhost:8080/socfeeRejectChecklist', {studentID: request.StudentID}); 
+    console.log('Response:', res.data);
+    setApprovalPrompt(true);
+      setApprovalMsg(`Rejection successful for Student ID: ${request.CvSUStudentID}`);
       setErrorPrompt(false);
       setPopUpVisible(false);
       setLoading(false);
   } catch (err) {
-      console.error('Error:', err);
-      setErrorPrompt(true);
-      setErrorMsg(`Failed to send rejection email: ${err.response?.data?.message || err.message}`);
+    setErrorPrompt(true);
+      setErrorMsg(`Failed to reject requirements:  ${err.response?.data?.message || err.message}`);
       setLoading(false);
   }
 };
@@ -182,7 +171,45 @@ const closePrompt = () => {
   const handleRowClick = (request) => {
     setSelectedRequest(request);
     setPopUpVisible(true);
+    
+    Promise.all([
+      axios.post(`http://localhost:8080/getCOGForSocOff`, {studentID: request.StudentID}),
+      axios.post(`http://localhost:8080/getChecklistForSocOff`, {studentID: request.StudentID}),
+    ])
+    .then((res) => {
+      if(res[0].data.message === "Success" && res[1].data.message === "Success"){
+        setCOG(`http://localhost:8080/${res[0].data.cogPath}`);
+        setChecklist(res[1].data.checklistData);
+      } else{
+        setCOG(null);
+        setChecklist([]);
+        alert("Failed to fetch COG and Checklist data.");
+      }
+    })
+    .catch((err) => {
+      alert("Error: " + err);
+      setCOG(null);
+      setChecklist([]);
+    });
   };
+
+  const groupedByYearAndSemester = checklist.reduce((acc, course) => {
+    const { yearLevel, semester } = course;
+
+    // Initialize year level object if it doesn't exist
+    if (!acc[yearLevel]) {
+      acc[yearLevel] = {};
+    }
+
+    // Initialize semester array if it doesn't exist for the year level
+    if (!acc[yearLevel][semester]) {
+      acc[yearLevel][semester] = [];
+    }
+
+    // Add the course to the corresponding year level and semester
+    acc[yearLevel][semester].push(course);
+    return acc;
+  }, {});
 
   //close popup
   const closePopup = () => {
@@ -317,39 +344,18 @@ const closePrompt = () => {
               <th>Student ID</th>
                 <th>Name</th>
                 <th>Year - Section</th>
-                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredRequests.length > 0 ? (
                 filteredRequests.map((request) => (
                   <tr key={request.id} onClick={() => handleRowClick(request)}>
-                    <td data-label="Student ID">{request.Name}</td>
-                    <td data-label="Name">{request.Email}</td>
-                    <td data-label="Year and Section">{request.AccountType}</td>
-                    <td>
-                      <button
-                        className={styles.approveButton}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          console.log('Request passed to handleApprove:', request);
-                          handleApprove(request); // Pass the entire request object
-                        }}
-                      >
-                        {loading ? 'Loading...' : 'Approve'}
-                      </button>
-
-                      <button
-                        className={styles.rejectButton}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          console.log('Request passed to handleReject:', request);
-                          handleReject(request); // Pass the entire request object
-                        }}
-                      >
-                        {loading ? 'Loading...' : 'Reject'}
-                      </button>
-                    </td>
+                    <td data-label="Student ID">{request.CvSUStudentID}</td>
+                    <td data-label="Student ID">{request.Firstname} {request.Lastname}</td>
+                    <td data-label="Year and Section">{request.Year === "First Year" ? 1
+                    : request.Year === "Second Year" ? 2
+                    : request.Year === "Third Year" ? 3
+                    : 4} - {request.Section}</td>
                   </tr>
                 ))
               ) : (
@@ -389,10 +395,10 @@ const closePrompt = () => {
         {/* Submission Details */}
        <div className={styles.popupTextReq}>
       
-          <p><strong>Name:</strong> Kai Sotto</p>
-          <p><strong>Student ID:</strong> K4848158</p>
-          <p><strong>Previous Year:</strong> 2nd Year</p>
-          <p><strong>Student Type:</strong> Regular</p>
+          <p><strong>Name:</strong> {selectedRequest.Firstname} {selectedRequest.Lastname}</p>
+          <p><strong>Student ID:</strong> {selectedRequest.StudentID}</p>
+          <p><strong>Student Type:</strong> {selectedRequest.StudentType}</p>
+          
         </div>
 
 
@@ -402,7 +408,7 @@ const closePrompt = () => {
         {/* Document Image */}
         <div className={styles.documentImage}>
           <img
-            src="/src/assets/exampleCOG.png"
+            src={cog}
             alt="Document"
             className={styles.imageStyle}
           />
@@ -410,68 +416,55 @@ const closePrompt = () => {
         </div>
 
       {/* Checklist Table */}
-      <div className={styles.checklistSection}>
-        <h3 className={styles.semesterTitle}>1st Year - First Semester</h3>
-        <table className={styles.checklistTable}>
-          <thead>
-            <tr>
-              <th>COURSE CODE</th>
-              <th>COURSE TITLE</th>
-              <th>UNITS</th>
-              <th>FINAL GRADE</th>
-              <th>INSTRUCTOR</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>CS</td>
-              <td>WALANG MATUTULOG</td>
-              <td>3</td>
-              <td>1.25</td>
-              <td>LEBRON</td>
-              
-              
-            </tr>
-            <tr>
-              <td>CS</td>
-              <td>WALANG MATUTULOG</td>
-              <td>3</td>
-              <td>1.25</td>
-              <td>LEBRON</td>
-              
-            </tr>
-          </tbody>
-        </table>
-
-        <h3 className={styles.semesterTitle}>1st Year - Second Semester</h3>
-        <table className={styles.checklistTable}>
-          <thead>
-            <tr>
-              <th>COURSE CODE</th>
-              <th>COURSE TITLE</th>
-              <th>UNITS</th>
-              <th>FINAL GRADE</th>
-              <th>INSTRUCTOR</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>CS</td>
-              <td>WALANG MATUTULOG</td>
-              <td>3</td>
-              <td>1.25</td>
-              <td>LEBRON</td>
-            </tr>
-            <tr>
-              <td>CS</td>
-              <td>WALANG MATUTULOG</td>
-              <td>3</td>
-              <td>1.25</td>
-              <td>LEBRON</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      {Object.keys(groupedByYearAndSemester).map((yearLevel) => (
+              <div className={styles.Contentt} key={yearLevel}>
+                <h4>{yearLevel}</h4>
+                {Object.keys(groupedByYearAndSemester[yearLevel]).map((semester) => (
+                  <div className={styles.Contentt} key={semester}>
+                    <h5>{semester || ""}</h5>
+                    <table className={styles.checklistTable}>
+                      <thead>
+                        <tr>
+                          <th colSpan="2">COURSE</th>
+                          <th colSpan="2">CREDIT UNIT</th>
+                          <th colSpan="2">CONTACT HRS.</th>
+                          <th rowSpan="2">PRE-REQUISITE</th>
+                          <th rowSpan="2">SY TAKEN</th>
+                          <th rowSpan="2">FINAL GRADE</th>
+                          <th rowSpan="2">INSTRUCTOR</th>
+                        </tr>
+                        <tr>
+                          <th>CODE</th>
+                          <th>TITLE</th>
+                          <th>Lec</th>
+                          <th>Lab</th>
+                          <th>Lec</th>
+                          <th>Lab</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {groupedByYearAndSemester[yearLevel][semester].map((course, index) => (
+                          <tr key={index}>
+                            <td>{course.courseDetails.code}</td>
+                            <td>{course.courseDetails.title}</td>
+                            <td>{course.courseDetails.creditLec === 0 ? '' : course.courseDetails.creditLec}</td>
+                            <td>{course.courseDetails.creditLab === 0 ? '' : course.courseDetails.creditLab}</td>
+                            <td>{course.courseDetails.contactHrsLec === 0 ? '' : course.courseDetails.contactHrsLec}</td>
+                            <td>{course.courseDetails.contactHrsLab === 0 ? '' : course.courseDetails.contactHrsLab}</td>
+                            <td>{course.courseDetails.preReq || ''}</td>
+                            <td>{course.syTaken}</td>
+                            <td>{course.finalGrade}</td>
+                            <td>{course.instructor}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ))}
+              </div>
+            ))}
+      <button className={styles.approveButton} onClick={() => handleApprove(selectedRequest)}>Verify</button>
+          <button className={styles.rejectButton} onClick={() => handleReject(selectedRequest)}>Reject</button>
     </div>
   </div>
 )}

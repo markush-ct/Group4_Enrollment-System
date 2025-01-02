@@ -18,6 +18,20 @@ db.connect((err) => {
     }
 });
 
+router.get('/getStudentSocFeeStatus', (req, res) => {
+    const sql = `SELECT r.StudentID, s.CvSUStudentID, s.Email, s.Year, s.Section, r.SocFeePayment
+    FROM student s
+    JOIN requirements r ON s.StudentID = r.StudentID
+    WHERE s.Email = ?`;
+
+    db.query(sql, req.session.email, (err, results) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        }
+        res.json({ records: results[0] });
+    });
+});
+
 router.post('/searchSocFee', (req, res) => {
     const { searchQuery } = req.body;
     const sql = `
@@ -28,7 +42,7 @@ router.post('/searchSocFee', (req, res) => {
 
     db.query(sql, [`%${searchQuery}%`], (err, results) => {
         if (err) {
-            return res.status(500).json({ message: "Error fetching data: " + err });
+            return res.json({ message: "Error fetching data: " + err });
         }
         res.status(200).json({ records: results });
     });

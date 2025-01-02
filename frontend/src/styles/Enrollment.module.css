@@ -397,8 +397,7 @@ input[type="file"] {
 }
 
 .uploadBox {
-  width: 50%;
-  height: 200px;
+  width: 70%;
   margin: auto;
   border: 2px dashed #4caf50;
   border-radius: 10px;
