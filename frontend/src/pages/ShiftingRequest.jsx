@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
-import axios from 'axios';
-import Header from '/src/components/AdminDashHeader.jsx';
-import styles from '/src/styles/AccountRequest.module.css';
-import { useNavigate } from 'react-router-dom';
-
+import React from "react";
+import { useEffect, useState } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import axios from "axios";
+import Header from "/src/components/AdminDashHeader.jsx";
+import styles from "/src/styles/AccountRequest.module.css";
+import { useNavigate } from "react-router-dom";
 
 function ShiftingRequest() {
   const [SideBar, setSideBar] = useState(false);
@@ -16,14 +16,14 @@ function ShiftingRequest() {
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [popUpVisible, setPopUpVisible] = useState(false);
   const [approvalPrompt, setApprovalPrompt] = useState(false);
-  const [approvalMsg, setApprovalMsg] = useState('');
+  const [approvalMsg, setApprovalMsg] = useState("");
   const [rejectionPrompt, setRejectionPrompt] = useState(false);
-  const [rejectionMsg, setRejectionMsg] = useState('');
+  const [rejectionMsg, setRejectionMsg] = useState("");
   const [errorPrompt, setErrorPrompt] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
-  const [submissionDate, setSubmissionDate] = useState('');
-  const [rejectionReason, setRejectionReason] = useState('');
+  const [submissionDate, setSubmissionDate] = useState("");
+  const [rejectionReason, setRejectionReason] = useState("");
 
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -68,22 +68,24 @@ function ShiftingRequest() {
         setLoading(false);
       })
       .catch((err) => {
-        console.warn("Error fetching account requests, using example data:", err);
+        console.warn(
+          "Error fetching account requests, using example data:",
+          err
+        );
         setFilteredRequests(accountRequests);
         setAccountRequests([]); // Ensure state is not undefined
         setFilteredRequests([]);
       });
   }, []);
 
-
-  useEffect(() => { // dropwdonw function
+  useEffect(() => {
+    // dropwdonw function
     if (!accountRequests || accountRequests.length === 0) {
       setFilteredRequests([]);
       return;
     }
 
     if (filterType === "All") {
-
       setFilteredRequests(accountRequests);
     } else {
       setFilteredRequests(
@@ -91,8 +93,6 @@ function ShiftingRequest() {
       );
     }
   }, [filterType, accountRequests]);
-
-
 
   const handleApprove = async (request) => {
     if (!request || !request.Email) {
@@ -102,17 +102,20 @@ function ShiftingRequest() {
       return;
     }
 
-    console.log('Request received in handleApprove:', request);
-    console.log('Submission Date:', submissionDate);
+    console.log("Request received in handleApprove:", request);
+    console.log("Submission Date:", submissionDate);
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:8080/approveShiftingReq', {
-        email: request.Email,
-        name: request.Firstname + " " + request.Lastname,
-        studentID: request.CvSUStudentID,
-        submissionDate: submissionDate, // Ensure this is passed correctly
-      });
+      const response = await axios.post(
+        "http://localhost:8080/approveShiftingReq",
+        {
+          email: request.Email,
+          name: request.Firstname + " " + request.Lastname,
+          studentID: request.CvSUStudentID,
+          submissionDate: submissionDate, // Ensure this is passed correctly
+        }
+      );
 
       if (response.data.message === "Shifting Request approval sent") {
         setApprovalPrompt(true);
@@ -120,19 +123,22 @@ function ShiftingRequest() {
         setErrorPrompt(false);
         setPopUpVisible(false);
         // Delay the reload
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
-
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       } else {
         console.error(response.data.message);
         setErrorPrompt(true);
-        setErrorMsg('Failed to send approval email');
+        setErrorMsg("Failed to send approval email");
       }
     } catch (err) {
-      console.error('Error:', err);
+      console.error("Error:", err);
       setErrorPrompt(true);
-      setErrorMsg(`Failed to send approval email: ${err.response?.data?.message || err.message}`);
+      setErrorMsg(
+        `Failed to send approval email: ${
+          err.response?.data?.message || err.message
+        }`
+      );
     } finally {
       setLoading(false);
     }
@@ -146,16 +152,19 @@ function ShiftingRequest() {
       return;
     }
 
-    console.log('Request received in handleReject:', request);
+    console.log("Request received in handleReject:", request);
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:8080/rejectShiftingReq', {
-        email: request.Email,
-        name: request.Firstname + " " + request.Lastname,
-        studentID: request.CvSUStudentID,
-        rejectionReason: rejectionReason,
-      });
+      const response = await axios.post(
+        "http://localhost:8080/rejectShiftingReq",
+        {
+          email: request.Email,
+          name: request.Firstname + " " + request.Lastname,
+          studentID: request.CvSUStudentID,
+          rejectionReason: rejectionReason,
+        }
+      );
 
       if (response.data.message === "Shifting Request rejection sent") {
         setRejectionPrompt(true);
@@ -164,20 +173,22 @@ function ShiftingRequest() {
         setPopUpVisible(false);
         setLoading(false);
         // Delay the reload
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
-
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       } else {
         console.error(response.data.message);
         setErrorPrompt(true);
-        setErrorMsg('Failed to send rejection email');
-
+        setErrorMsg("Failed to send rejection email");
       }
     } catch (err) {
-      console.error('Error:', err);
+      console.error("Error:", err);
       setErrorPrompt(true);
-      setErrorMsg(`Failed to send rejection email: ${err.response?.data?.message || err.message}`);
+      setErrorMsg(
+        `Failed to send rejection email: ${
+          err.response?.data?.message || err.message
+        }`
+      );
       setLoading(false);
     }
   };
@@ -186,7 +197,6 @@ function ShiftingRequest() {
     setApprovalPrompt(false);
     setRejectionPrompt(false);
   };
-
 
   //show popup
   const handleRowClick = (request) => {
@@ -197,7 +207,7 @@ function ShiftingRequest() {
   //close popup
   const closePopup = () => {
     setPopUpVisible(false);
-    setApprovalPrompt(false)
+    setApprovalPrompt(false);
     setSelectedRequest(null);
   };
 
@@ -207,10 +217,16 @@ function ShiftingRequest() {
 
       {/* PROMPTS */}
       {approvalPrompt && (
-        <div data-aos="zoom-out" data-aos-duration="500" className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}>
+        <div
+          data-aos="zoom-out"
+          data-aos-duration="500"
+          className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}
+        >
           <div className={styles.popupContent}>
             <div className={styles.popupHeader}>
-              <button onClick={closePopup} className={styles.closeButton}>✖</button>
+              <button onClick={closePopup} className={styles.closeButton}>
+                ✖
+              </button>
               <h3>Send Schedule for Requirements Submission</h3>
             </div>
 
@@ -221,10 +237,11 @@ function ShiftingRequest() {
               <input
                 type="date"
                 id="submissionDate"
-                name='submissionDate'
+                name="submissionDate"
                 value={submissionDate}
                 onChange={(e) => setSubmissionDate(e.target.value)}
                 className={styles.popupPromptInput}
+                required
               />
             </div>
 
@@ -232,24 +249,33 @@ function ShiftingRequest() {
             <div className={styles.buttonContainer}>
               <button
                 className={styles.OKButton}
-                onClick={() => handleApprove(selectedRequest)}
+                onClick={() => {
+                  if (!submissionDate) {
+                    alert("Please select a date for submission.");
+                    return;
+                  }
+                  handleApprove(selectedRequest); // Proceed if date is selected
+                }}
               >
                 <span>Send</span>
               </button>
-
             </div>
           </div>
         </div>
       )}
 
-
       {/* REJECTION PROMPT */}
       {rejectionPrompt && (
-
-        <div data-aos="zoom-out" data-aos-duration="500" className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}>
+        <div
+          data-aos="zoom-out"
+          data-aos-duration="500"
+          className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}
+        >
           <div className={styles.popupContent}>
             <div className={styles.popupHeader}>
-              <button onClick={closePrompt} className={styles.closeButton}>✖</button>
+              <button onClick={closePrompt} className={styles.closeButton}>
+                ✖
+              </button>
               <h3>Send Reason for Shifting Request Rejection</h3>
             </div>
 
@@ -260,10 +286,11 @@ function ShiftingRequest() {
               <input
                 type="textarea"
                 id="rejectionReason"
-                name='rejectionReason'
+                name="rejectionReason"
                 value={rejectionReason}
                 onChange={(e) => setRejectionReason(e.target.value)}
                 className={styles.popupPromptInput}
+                required
               />
             </div>
 
@@ -271,11 +298,16 @@ function ShiftingRequest() {
             <div className={styles.buttonContainer}>
               <button
                 className={styles.OKButton}
-                onClick={() => handleReject(selectedRequest)}
+                onClick={() => {
+                  if (!rejectionReason) {
+                    alert("Please provide a reason for rejection.");
+                    return;
+                  }
+                  handleReject(selectedRequest); // Proceed if reason is provided
+                }}
               >
                 <span>Send</span>
               </button>
-
             </div>
           </div>
         </div>
@@ -283,7 +315,11 @@ function ShiftingRequest() {
 
       {/* ERROR PROMPT */}
       {errorPrompt && (
-        <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPromptError}>
+        <div
+          data-aos="zoom-out"
+          data-aos-duration="500"
+          className={styles.popupPromptError}
+        >
           <div className={styles.popupPromptContentError}>
             <button
               className={styles.popupPromptcloseButton}
@@ -306,15 +342,16 @@ function ShiftingRequest() {
         </div>
       )}
 
-
       <div className={styles.contentSection}>
         <div className={styles.PageTitle} data-aos="fade-up">
-          Shifting Requests
+          Shifting Request
         </div>
 
         {/* Dropdown  */}
         <div className={styles.filterSection} data-aos="fade-up">
-          <label htmlFor="filter" className={styles.filterLabel}>Filter by Program:</label>
+          <label htmlFor="filter" className={styles.filterLabel}>
+            Filter by Program:
+          </label>
           <select
             id="filter"
             className={styles.filterDropdown}
@@ -322,12 +359,21 @@ function ShiftingRequest() {
             onChange={(e) => setFilterType(e.target.value)}
           >
             <option value="All">All</option>
-            <option value="Bachelor of Secondary Education">Bachelor of Secondary Education</option>
-            <option value="Bachelor of Science in Business Management">Bachelor of Science in Business Management</option>
-            <option value="Bachelor of Science in Criminology">Bachelor of Science in Criminology</option>
-            <option value="Bachelor of Science in Hospitality Management">Bachelor of Science in Hospitality Management</option>
-            <option value="Bachelor of Science in Psychology">Bachelor of Science in Psychology</option>
-
+            <option value="Bachelor of Secondary Education">
+              Bachelor of Secondary Education
+            </option>
+            <option value="Bachelor of Science in Business Management">
+              Bachelor of Science in Business Management
+            </option>
+            <option value="Bachelor of Science in Criminology">
+              Bachelor of Science in Criminology
+            </option>
+            <option value="Bachelor of Science in Hospitality Management">
+              Bachelor of Science in Hospitality Management
+            </option>
+            <option value="Bachelor of Science in Psychology">
+              Bachelor of Science in Psychology
+            </option>
           </select>
         </div>
 
@@ -345,9 +391,14 @@ function ShiftingRequest() {
             <tbody>
               {filteredRequests && filteredRequests.length > 0 ? (
                 filteredRequests.map((request) => (
-                  <tr key={request.CvSUStudentID} onClick={() => handleRowClick(request)}>
+                  <tr
+                    key={request.CvSUStudentID}
+                    onClick={() => handleRowClick(request)}
+                  >
                     <td>{request.CvSUStudentID}</td>
-                    <td>{request.Firstname} {request.Lastname}</td>
+                    <td>
+                      {request.Firstname} {request.Lastname}
+                    </td>
                     <td>{request.PrevProgram}</td>
                     <td>
                       <button
@@ -365,10 +416,10 @@ function ShiftingRequest() {
                         onClick={(e) => {
                           e.stopPropagation();
                           setSelectedRequest(request);
-                          setRejectionPrompt(true)
+                          setRejectionPrompt(true);
                         }}
                       >
-                        {loading ? 'Loading...' : 'Reject'}
+                        {loading ? "Loading..." : "Reject"}
                       </button>
                     </td>
                   </tr>
@@ -376,60 +427,81 @@ function ShiftingRequest() {
               ) : (
                 <tr>
                   <td colSpan="4" className={styles.noData}>
-                    No shifting requests found.
+                    No shifting request found.
                   </td>
                 </tr>
               )}
             </tbody>
-
-
-
           </table>
         </div>
       </div>
 
       {/* PopUp */}
       {popUpVisible && selectedRequest && (
-        <div data-aos="zoom-out" data-aos-duration="500" className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}>
+        <div
+          data-aos="zoom-out"
+          data-aos-duration="500"
+          className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}
+        >
           <div className={styles.popupContent}>
             <div className={styles.popupHeader}>
-              <button onClick={closePopup} className={styles.closeButton}>✖</button>
-              <h2>Shifting  Request</h2>
+              <button onClick={closePopup} className={styles.closeButton}>
+                ✖
+              </button>
+              <h2>Shifting Request</h2>
             </div>
             <div data-aos="fade-up" className={styles.studentType}>
               <span>DETAILS</span>
             </div>
 
             <div className={styles.popupText}>
-              <p><strong>Student ID:</strong> {selectedRequest.CvSUStudentID}</p>
-              <p><strong>Email:</strong> {selectedRequest.Email}</p>
-              <p><strong>First Name:</strong> {selectedRequest.Firstname}</p>
-              <p><strong>Middle Name:</strong> {selectedRequest.Middlename}</p>
-              <p><strong>Last Name:</strong> {selectedRequest.Lastname}</p>
-              <p><strong>Previous Program:</strong> {selectedRequest.PrevProgram}</p>
-              <p><strong>Current Academic Year:</strong> {selectedRequest.AcadYear}</p>
-              <p><strong>Reasons:</strong> {selectedRequest.Reasons}</p>
-              <p><strong>Preferred Program:</strong> {selectedRequest.ProgramID === 1 ? "Bachelor of Science in Computer Science"
-              : selectedRequest.ProgramID === 2 ? "Bachelor of Science in Information Technology"
-            : ""}</p>
-              <p><strong>Submitted on: </strong>
-                {selectedRequest.Date === "0000-00-00" || !selectedRequest.Date ?
-                  "" :
-                  new Date(selectedRequest.Date).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })
-                }
+              <p>
+                <strong>Student ID:</strong> {selectedRequest.CvSUStudentID}
+              </p>
+              <p>
+                <strong>Email:</strong> {selectedRequest.Email}
+              </p>
+              <p>
+                <strong>First Name:</strong> {selectedRequest.Firstname}
+              </p>
+              <p>
+                <strong>Middle Name:</strong> {selectedRequest.Middlename}
+              </p>
+              <p>
+                <strong>Last Name:</strong> {selectedRequest.Lastname}
+              </p>
+              <p>
+                <strong>Previous Program:</strong> {selectedRequest.PrevProgram}
+              </p>
+              <p>
+                <strong>Current Academic Year:</strong>{" "}
+                {selectedRequest.AcadYear}
+              </p>
+              <p>
+                <strong>Reasons:</strong> {selectedRequest.Reasons}
+              </p>
+              <p>
+                <strong>Preferred Program:</strong>{" "}
+                {selectedRequest.ProgramID === 1
+                  ? "Bachelor of Science in Computer Science"
+                  : selectedRequest.ProgramID === 2
+                  ? "Bachelor of Science in Information Technology"
+                  : ""}
+              </p>
+              <p>
+                <strong>Submitted on: </strong>
+                {selectedRequest.Date === "0000-00-00" || !selectedRequest.Date
+                  ? ""
+                  : new Date(selectedRequest.Date).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
               </p>
             </div>
-
-
-
           </div>
         </div>
       )}
-
     </>
   );
 }

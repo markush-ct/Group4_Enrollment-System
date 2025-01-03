@@ -49,7 +49,7 @@ function AdminDashHeader() {
   return (
     <>
       <div className={style.nav}>
-        <header className={style.header}>
+        <header className={style.header} data-testid="mock-header">
           <div className={style.navLeft}>
             {/* MENU */}
             <button className={style.menuBtn} onClick={toggleSidebar}>
