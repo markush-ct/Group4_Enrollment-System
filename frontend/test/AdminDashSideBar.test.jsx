@@ -10,7 +10,7 @@ jest.mock("axios");
 
 jest.mock("/src/components/logoutFunction.jsx", () => jest.fn());
 
-describe("Unit Testing for AdminDashSideBar Tests", () => {
+describe("Unit Testing for AdminDashSideBar Component", () => {
   let toggleSidebarMock;
 
   beforeEach(() => {
