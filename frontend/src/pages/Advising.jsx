@@ -321,7 +321,7 @@ const handleCourseChange = (index, courseID) => {
 
       <div className={styles.contentSection}>
         <div className={styles.PageTitle} data-aos="fade-up">
-          Requirements Submission
+          Advising
         </div>
 
         {/* Dropdown  */}
@@ -476,53 +476,63 @@ const handleCourseChange = (index, courseID) => {
             ))}
 
 
-            <div>
-              <div>
+<div className={styles.advising}>
+                    <h5>ADVISING</h5>
+                  </div>
+                  
+                  <div className={styles.formContainer}>
+             <div className={styles.formGroup}>
                 <label htmlFor='adviseMsg'>Advise Message:</label>
                 <input type="textarea" name='adviseMsg' />
               </div>
+              </div>
 
-              <button onClick={handleAddRow} className={styles.approveButton}>Add Row</button>
-      <table border="1">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Course</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>
+
+            <div className={styles.formContainer}>
+            {rows.map((row, index) => (
+              <div key={index} className={styles.dropdownContainer}>
+                <span>{index + 1}.</span>
                 <select
+                  id={`courseDropdown-${index}`}
+                  className={styles.subjectDropdown}
                   value={row.selectedCourse}
                   onChange={(e) => handleCourseChange(index, e.target.value)}
                 >
-                  <option value="" disabled>
-                    -- Select a Course --
-                  </option>
+                  <option value="" disabled>Select a Course</option>
                   {courses.map((course) => (
                     <option key={course.CourseChecklistID} value={course.CourseChecklistID}>
                       {course.CourseCode} - {course.CourseTitle}
                     </option>
                   ))}
                 </select>
-              </td>
-              <td>
-                <button onClick={() => handleDeleteRow(index)} className={styles.rejectButton}>Delete</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-            </div>
-
-
-      <button className={styles.approveButton} onClick={() => handleApprove(selectedRequest)}>Send</button>
+                {index === rows.length - 1 ? (
+                  <button
+                    className={`${styles.btn} ${styles.addBtn}`}
+                    onClick={handleAddRow}
+                  >
+                    <span>ADD</span>
+                  </button>
+                ) : (
+                  <button
+                    className={`${styles.btn} ${styles.removeBtn}`}
+                    onClick={() => handleDeleteRow(index)}
+                  >
+                <span>REMOVE</span>
+                  </button>
+                )}
     </div>
-  </div>
+  ))}
+
+ <div className={styles.buttonSection} >
+  <button className={styles.submitBtn} onClick={() => handleApprove(selectedRequest)}>
+    <span>SEND</span>
+  </button>
+</div>
+</div>
+
+    </div>
+    </div>
+
 )}
 
 

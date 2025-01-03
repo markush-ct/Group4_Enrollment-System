@@ -463,8 +463,10 @@ const closePrompt = () => {
                 ))}
               </div>
             ))}
-      <button className={styles.approveButton} onClick={() => handleApprove(selectedRequest)}>Verify</button>
-          <button className={styles.rejectButton} onClick={() => handleReject(selectedRequest)}>Reject</button>
+            <div className={styles.popupButtons}>
+      <button className={styles.approveButton} onClick={() => handleApprove(selectedRequest)}><span>Verify</span></button>
+          <button className={styles.rejectButton} onClick={() => handleReject(selectedRequest)}><span>Reject</span></button>
+    </div>
     </div>
   </div>
 )}

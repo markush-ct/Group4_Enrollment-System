@@ -227,24 +227,78 @@
   margin-top: 20px; 
 }
 
-.approveButton, .rejectButton {
-  padding: 10px 20px;
+
+button.approveButton, button.rejectButton {
+  padding: 12px 24px; 
+  margin-top: 50px;
   font-size: 1rem;
-  background-color: #4CAF50; 
+  width: 30%;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 40px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  position: relative;
+  overflow: hidden; 
+  transition: transform 0.3s ease, background-color 0.2s ease; 
 }
 
-.rejectButton {
-  background-color: #f44336; 
+
+button.approveButton {
+  background-color: #3d8c4b;
 }
 
-.approveButton:hover, .rejectButton:hover {
-  opacity: 0.8;
+
+button.rejectButton {
+  background-color: #AA0000; 
 }
+
+
+button.approveButton span, button.rejectButton span {
+  position: relative;
+  font-family: 'Poppins', sans-serif;
+  font-weight: bold;
+  font-size: 20px;
+  background-color: transparent;
+  z-index: 2;
+}
+
+
+button.approveButton::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: #03C03C;
+  transition: left 0.3s ease;
+  z-index: 0;
+}
+
+button.rejectButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: #f44336;
+  transition: left 0.3s ease;
+  z-index: 0;
+}
+
+
+button.approveButton:hover::before, button.rejectButton:hover::before {
+  left: 0;
+}
+
+button.approveButton:hover, button.rejectButton:hover {
+  color: #ffffff;
+  transform: scale(1.01); 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+}
+
+
 
 
 .closeButton {
@@ -503,6 +557,302 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
 }
 
+button.addButton {
+  padding: 12px 24px; 
+  margin-bottom: 20px;
+  font-size: 1rem;
+  width: 30%;
+  color: white;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden; 
+  transition: transform 0.3s ease, background-color 0.2s ease; 
+}
+
+
+button.addButton {
+  background-color: #d0943d;
+}
+
+
+
+
+
+button.addButton span {
+  position: relative;
+  font-family: 'Poppins', sans-serif;
+  font-weight: bold;
+  font-size: 20px;
+  background-color: transparent;
+  z-index: 2;
+}
+
+
+button.addButton::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: #3d8c4b;
+  transition: left 0.3s ease;
+  z-index: 0;
+}
+
+
+
+
+button.addButton:hover::before {
+  left: 0;
+}
+
+button.addButton:hover{
+  color: #ffffff;
+  transform: scale(1.01); 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+}
+
+
+.advising {
+  display: flex;
+  margin-top: 100px;
+  color: #3d8c4b;
+  text-transform: uppercase;
+  font-size: 2rem;
+  font-weight: 800;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+.advising h5{
+  color: #3d8c4b;
+}
+
+.advising::before,
+.advising::after {
+  content: "";
+  flex: 1; 
+  border-bottom: 1px solid #3d8c4b; 
+  margin: 0 10px; 
+}
+
+.formContainer {
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
+  text-align: left;
+  background-color: transparent;
+ 
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  background-color: transparent;
+}
+
+.formGroup label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #3d8c4b;
+  background-color: transparent;
+}
+
+.formGroup input,
+.formGroup select, .formGroup textarea {
+  padding: 10px;
+  font-size: 16px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.formGroup input:focus,
+.formGroup select:focus {
+  border-color: #3d8c4b;
+}
+
+
+.dropdownContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+
+.dropdownLabel {
+  font-size: 1rem;
+  color: #333;
+}
+
+
+.subjectDropdown {
+  position: relative; 
+  padding: 10px;
+  font-size: 1rem;
+  border: 2px solid #3d8c4b;
+  border-radius: 4px;
+  width: 100%;
+}
+
+
+.btn {
+  padding: 8px 15px;
+  border-radius: 50px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  overflow: hidden;
+}
+
+.addBtn {
+  background-color: #3d8c4b;
+  width: 150px;
+  transition: transform 0.3s ease, background-color 0.2s ease; 
+
+}
+
+.addBtn:hover {
+
+  transform: scale(1.05);
+  
+}
+
+.removeBtn {
+  background-color: #cb1103;
+  width: 150px;
+  transition: transform 0.3s ease, background-color 0.2s ease; 
+
+}
+
+.removeBtn:hover {
+
+  transform: scale(1.05);
+}
+
+.addBtn span, .removeBtn  span {
+  position: relative;
+font-size: 1rem;
+  background-color: transparent;
+  z-index: 2; 
+}
+
+.addBtn::before {
+  content: ''; 
+  position: absolute;
+  top: 0;
+  left: -100%; 
+  width: 100%;
+  height: 100%;
+  background-color: #03C03C;
+  transition: left 0.3s ease; 
+  z-index: 0; 
+}
+
+.removeBtn::before {
+  content: ''; 
+  position: absolute;
+  top: 0;
+  left: -100%; 
+  width: 100%;
+  height: 100%;
+  background-color: #f44336;
+  transition: left 0.3s ease; 
+  z-index: 0; 
+}
+
+.addBtn:hover::before {
+  left: 0; 
+}
+
+.addBtn:hover {
+  color: #ffffff; 
+  transform: scale(1.01); 
+}
+
+.removeBtn:hover::before {
+  left: 0; 
+}
+
+.removeBtn:hover {
+  color: #ffffff; 
+  transform: scale(1.01); 
+}
+
+
+
+.submitBtn  {
+    position: relative; 
+    width: 50%;
+    padding: 0.5rem;
+    height: 50px;
+    font: 20px Poppins bold;
+    color: #ffffff;
+    background-color: #3d8c4b;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    margin-top: 1rem;
+    overflow: hidden; 
+    transition: transform 0.3s ease;
+    z-index: 1; 
+}
+
+.submitBtn span {
+    position: relative;
+    font: 20px Poppins bold;
+    background-color: transparent;
+    z-index: 2; 
+}
+
+.submitBtn::before {
+    content: ''; 
+    position: absolute;
+    top: 0;
+    left: -100%; 
+    width: 100%;
+    height: 100%;
+    background-color: #d0943d;
+    transition: left 0.3s ease; 
+    z-index: 0; 
+}
+
+.submitBtn:hover::before {
+    left: 0; 
+}
+
+.submitBtn:hover {
+    color: #ffffff; 
+    transform: scale(1.01); 
+}
+
+.advisingContainer {
+  display: flex;
+  justify-content: center;
+  flex-direction:column;
+  align-items: center;
+  padding: 20px;
+
+}
+
+
 
 .popupContentReq {
   padding: 20px;
@@ -557,6 +907,8 @@
   padding: 10px;
   border: 1px solid #ddd;
   text-align: center;
+  width: 10%;
+
 }
 
 .checklistTable th {
@@ -573,7 +925,7 @@
 .buttonSection {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 200px;
 }
 
 .setEnrollmentButton {
