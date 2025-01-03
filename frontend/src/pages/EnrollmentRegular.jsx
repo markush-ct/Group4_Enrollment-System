@@ -187,6 +187,7 @@ function EnrollmentRegular() {
   const [uploadedImage, setUploadedImage] = useState(null);
   const [cogChecklist, setCogChecklist] = useState({
     cog: '',
+    cogURL: '',
   });
   const [isReqsSubmitted, setIsReqsSubmitted] = useState(false);
   const [checklistData, setChecklistData] = useState([]);
@@ -206,7 +207,15 @@ function EnrollmentRegular() {
         if(response[1].data.message === 'Success') {
           if(response[1].data.cogPath !== null){
             setUploadedImage(`http://localhost:8080/${response[1].data.cogPath}`);
+            setCogChecklist({
+              cog: response[1].data.cogPath,
+              cogURL: response[1].data.cogPath,
+            })
           }else{
+            setCogChecklist({
+              cog: '',
+    cogURL: '',
+            });
             setUploadedImage(null);
           }
         } else{
@@ -250,6 +259,7 @@ function EnrollmentRegular() {
       const fileInput = document.getElementById('cog'); // Get the file input element
       formData.append('cog', fileInput.files[0]); // Append the file directly
     }
+    formData.append('cogURL', cogChecklist.cogURL);
   
     const checklistEntries = checklistData.flatMap((course) => {
       const courseChecklistID = course.courseDetails.courseID;
@@ -280,7 +290,7 @@ function EnrollmentRegular() {
         },
       })
       .then((res) => {
-        if (res.data.message === 'Requirements submitted') {
+        if (res.data.message === 'Checklist submitted successfully.') {
           setIsReqsSubmitted(true);
           alert('Requirements successfully submitted');
         } else {

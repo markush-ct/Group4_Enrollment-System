@@ -199,12 +199,7 @@ router.post('/submitCOGChecklist', upload.single('cog'), (req, res) => {
             const studentID = stdRes[0].StudentID;
 
             const { checklist } = req.body;
-            const cogImage = req.file;
-
-            let cogImagePath = null;
-            if (cogImage) {
-                cogImagePath = cogImage.path;
-            }
+            const cogImagePath = req.file ? req.file.path : req.body.cogURL;
 
             const checklistEntries = JSON.parse(checklist);
 
@@ -216,41 +211,53 @@ router.post('/submitCOGChecklist', upload.single('cog'), (req, res) => {
                 if (err) {
                     return res.json({ message: "Error in server: " + err });
                 } else if (cogRes.affectedRows > 0) {
+                    const deleteDuplicatesQuery = `
+                        DELETE FROM studentcoursechecklist
+                        WHERE StudentID = ?
+                    `;
 
-
-                    // Filter out entries where any of the fields are empty or null
-                    const validEntries = checklistEntries.filter(entry =>
-                        entry.semTaken?.trim() && entry.finalGrade?.trim() && entry.instructor?.trim()
-                    );
-
-                    if (validEntries.length > 0) {
-                        const insertChecklistQuery = `
-                            INSERT INTO studentcoursechecklist (StudentID, CourseChecklistID, SYTaken, FinalGrade, InstructorName)
-                            VALUES ?
-                        `;
-
-                        const checklistValues = validEntries.map((entry) => [
-                            studentID,
-                            entry.CourseChecklistID,
-                            entry.semTaken,
-                            entry.finalGrade,
-                            entry.instructor,
-                        ]);
-
-                        console.log("Insert Query Values:", checklistValues);
-
-                        db.query(insertChecklistQuery, [checklistValues], (err, checklistRes) => {
-                            if (err) {
-                                return res.json({ message: "Error in server: " + err });
-                            } else if (checklistRes.affectedRows > 0) {
-                                return res.json({ message: "Requirements submitted." });
-                            } else {
-                                return res.json({ message: "Failed to submit checklist." });
-                            }
-                        });
-                    } else {
-                        return res.json({ message: "No valid checklist entries to submit." });
-                    }
+                    db.query(deleteDuplicatesQuery, [studentID], (err, deleteRes) => {
+                        if (err) {
+                            return res.json({ message: "Error in deleting duplicates: " + err });
+                        }
+        
+                        // Step 2: Filter valid entries and prepare for insert or update
+                        const validEntries = checklistEntries.filter(entry =>
+                            entry.semTaken?.trim() && entry.finalGrade?.trim() && entry.instructor?.trim()
+                        );
+        
+                        if (validEntries.length > 0) {
+                            const checklistValues = validEntries.map(entry => [
+                                studentID,
+                                entry.CourseChecklistID,
+                                entry.semTaken,
+                                entry.finalGrade,
+                                entry.instructor,
+                                'Submitted' // Status
+                            ]);
+        
+                            console.log("Checklist Insert Values:", checklistValues);
+        
+                            // Step 3: Insert new rows or update existing rows with ON DUPLICATE KEY UPDATE
+                            const insertChecklistQuery = `
+                                INSERT INTO studentcoursechecklist 
+                                (StudentID, CourseChecklistID, SYTaken, FinalGrade, InstructorName, StdChecklistStatus)
+                                VALUES ?
+                            `;
+        
+                            db.query(insertChecklistQuery, [checklistValues], (err, checklistRes) => {
+                                if (err) {
+                                    return res.json({ message: "Error in server: " + err });
+                                } else if (checklistRes.affectedRows > 0) {
+                                    return res.json({ message: "Checklist submitted successfully." });
+                                } else {
+                                    return res.json({ message: "No rows were updated or inserted." });
+                                }
+                            });
+                        } else {
+                            return res.json({ message: "No valid checklist entries to submit." });
+                        }
+                    });        
                 } else {
                     return res.json({ message: "Failed to submit COG." });
                 }
@@ -258,6 +265,9 @@ router.post('/submitCOGChecklist', upload.single('cog'), (req, res) => {
         }
     });
 });
+
+
+
 
 router.get('/getSubmittedCOG', (req, res) => {
     const getStudent = `SELECT * FROM student WHERE Email = ?`;
