@@ -41,30 +41,6 @@ function EnrollmentRegular() {
   }, []);
   //Reuse in other pages that requires logging in
 
-  const [isEnrollment, setIsEnrollment] = useState(false);
-  const [enrollment, setEnrollment] = useState([]);
-
-  useEffect(() => {
-    axios.get("http://localhost:8080/getEnrollment")
-      .then((res) => {
-        const { enrollmentPeriod } = res.data;
-
-        if (res.data.message === "Enrollment fetched successfully") {
-          if (enrollmentPeriod.Status === "Pending" || enrollmentPeriod.Status === "Ongoing") {
-            setIsEnrollment(true);
-            setEnrollment(enrollmentPeriod);
-          } else {
-            setIsEnrollment(false);
-          }
-        } else {
-          setIsEnrollment(false);
-        }
-      })
-      .catch((err) => {
-        setErrorMsg("Error: " + err);
-        setIsEnrollment(false);
-      })
-  }, []);
 
   {/* FOR ANIMATION */ }
   useEffect(() => {
@@ -74,8 +50,6 @@ function EnrollmentRegular() {
     });
   }, []);
 
-  // INITIALIZER
-  const studentProgram = "CS";
 
   const steps = [
     "Society Fee Status",
@@ -85,37 +59,6 @@ function EnrollmentRegular() {
     "Enrollment Status",
   ];
 
-  const [digitalChecklist, setDigitalChecklist] = useState({
-    CS: {
-      "1st Year": {
-        "First Semester": [
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-        ],
-        "Second Semester": [
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-        ],
-      },
-    },
-    IT: {
-      "1st Year": {
-        "First Semester": [
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-        ],
-        "Second Semester": [
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-          { code: "CS", courseTitle: "WALANG MATUTULOG", units: "3", grade: "", instructor: "" },
-        ],
-      },
-
-    },
-  });
 
   // Subjects list
   const subjects = [
@@ -171,18 +114,45 @@ function EnrollmentRegular() {
     }
   };
 
+  const [isEnrollment, setIsEnrollment] = useState(false);
+  const [enrollment, setEnrollment] = useState([]);
   const [SocFeestatus, setSocFeeStatus] = useState(''); 
 
   useEffect(() => {
-    axios.get("http://localhost:8080/getStudentSocFeeStatus")
-    .then((res) => {
-      console.log(res.data.records.SocFeePayment);
-      setSocFeeStatus(res.data.records.SocFeePayment);
-    })
-    .catch((err) => {
-      alert("Error: " + err);
-    });
+    axios.get("http://localhost:8080/getEnrollment")
+      .then((res) => {
+        const { enrollmentPeriod } = res.data;
+
+        if (res.data.message === "Enrollment fetched successfully") {
+          if (enrollmentPeriod.Status === "Pending" || enrollmentPeriod.Status === "Ongoing") {
+            setIsEnrollment(true);
+            setEnrollment(enrollmentPeriod);
+
+            axios.get("http://localhost:8080/getStudentSocFeeStatus")
+            .then((res) => {
+              console.log(res.data.records.SocFeePayment);
+              setSocFeeStatus(res.data.records.SocFeePayment);
+            })
+            .catch((err) => {
+              alert("Error: sa socfee" + err);
+            });
+
+          } else {
+            setIsEnrollment(false);
+            setSocFeeStatus('');
+          }
+        } else {
+          setIsEnrollment(false);
+          setSocFeeStatus('');
+        }
+      })
+      .catch((err) => {
+        setErrorMsg("Error: " + err);
+        setIsEnrollment(false);
+        setSocFeeStatus('');
+      })
   }, []);
+
 
   const [uploadedImage, setUploadedImage] = useState(null);
   const [cogChecklist, setCogChecklist] = useState({
@@ -320,7 +290,13 @@ function EnrollmentRegular() {
     };
   }, [SideBar]);
 
-  const handleNext = () => setActiveStep((prevStep) => Math.min(prevStep + 1, steps.length - 1));
+  const handleNext = () => {
+    if(SocFeestatus !== "Paid" && activeStep === 0){
+      setActiveStep(0);
+    } else{
+      setActiveStep((prevStep) => Math.min(prevStep + 1, steps.length - 1))
+    }
+  };
   const handleBack = () => setActiveStep((prevStep) => Math.max(prevStep - 1, 0));
 
   const renderContent = () => {

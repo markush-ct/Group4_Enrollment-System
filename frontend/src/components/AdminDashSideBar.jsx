@@ -113,8 +113,7 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
                     ],
                     "Adviser": [
                         { name: 'Dashboard', icon: dashboardIcon, path: '/AdviserDashboard' },
-                        { name: 'Advising', icon: societyFeeIcon, path: '/advising' },
-                        { name: 'Requirements', icon: requirementsIcon, path: '/Requirements' },
+                        { name: 'Advising', icon: societyFeeIcon, path: '/Advising' },
                     ],
                     "DCS Head": [
                         { name: 'Dashboard', icon: dashboardIcon, path: '/DCSHeadDashboard' },
