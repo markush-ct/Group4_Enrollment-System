@@ -10,15 +10,17 @@ import { useNavigate } from "react-router-dom";
 function EnrollmentRegular() {
   const [SideBar, setSideBar] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
-  const [Advisingstatus, setAdvisingStatus] = useState("Approved"); //value ng advising
   const [Enrollmentstatus, setEnrollmentStatus] = useState("Enrolled"); //value ng enrollmentstatus
-  const [dropdowns, setDropdowns] = useState([{ id: Date.now(), selected: "" }]); //mock subjects
   const [successPrompt, setSuccessPrompt] = useState(false);
   const [errorPrompt, setErrorPrompt] = useState(false); //errors
   const [errorMsg, setErrorMsg] = useState("");
   const [selectedSubjects, setSelectedSubjects] = useState([]);
   const [accName, setAccName] = useState("");
-
+  const [rows, setRows] = useState([]);
+  const [eligibleCourses, setEligibleCourses] = useState([]);
+  const [totalUnits, setTotalUnits] = useState(0);
+  const [isPreEnrollmentSubmitted, setIsPreEnrollmentSubmitted] = useState();
+  const [preEnrollmentValues, setPreEnrollmentValues] = useState([]);
 
   //Reuse in other pages that requires logging in
   const navigate = useNavigate();
@@ -60,63 +62,121 @@ function EnrollmentRegular() {
   ];
 
 
-  // Subjects list
-  const subjects = [
-    { code: "COSC 101", title: "CS Elective", units: 3 },
-    { code: "DCIT 65", title: "SE1", units: 3 },
-    { code: "COSC 75", title: "SE2", units: 3 },
-  ];
-
-  // AADD
-  const handleAdd = () => {
-    setDropdowns([...dropdowns, { id: Date.now(), selected: "" }]);
+  // Add a new row
+  const handleAddRow = () => {
+    setRows((prevRows) => [...prevRows, { selectedCourse: "" }]);
   };
 
-  // REMOVE
-  const handleRemove = (id) => {
-    setDropdowns(dropdowns.filter((dropdown) => dropdown.id !== id));
+  // Delete a row
+  const handleDeleteRow = (index) => {
+    setRows((prevRows) => prevRows.filter((_, i) => i !== index));
   };
 
-  const handleSelectionChange = (id, value) => {
-    setDropdowns(
-      dropdowns.map((dropdown) =>
-        dropdown.id === id ? { ...dropdown, selected: value } : dropdown
-      )
+// Handle course selection
+const handleCourseChange = (index, courseID) => {
+  const updatedRows = [...rows];
+  updatedRows[index].selectedCourse = courseID;
+  setRows(updatedRows);
+};
+
+const calculateTotalUnits = () => {
+  const total = rows.reduce((acc, row) => {
+    const selectedCourse = eligibleCourses.find(
+      (course) => course.CourseChecklistID === Number(row.selectedCourse)
     );
-  };
-
-  const handleSubmit = () => {
-    const addedSubjects = dropdowns
-      .filter((dropdown) => dropdown.selected) // Filter for selected dropdowns
-      .map((dropdown) => {
-        const subject = subjects.find((s) => s.code === dropdown.selected);
-        return subject
-          ? { code: subject.code, title: subject.title, units: subject.units }
-          : null;
-      })
-      .filter(Boolean); // Remove null values
-
-    // Calculate the total units of selected subjects
-    const totalUnits = addedSubjects.reduce((acc, subject) => acc + subject.units, 0);
-
-    if (totalUnits > 23) {
-      setErrorPrompt(true);
-      setErrorMsg(`Maximum units exceeded. You have selected ${totalUnits} units, but the limit is 23 units.`);
-
+    if (selectedCourse) {
+      acc += selectedCourse.CreditUnitLec + selectedCourse.CreditUnitLab;
     }
+    return acc;
+  }, 0);
+  setTotalUnits(total);
+};
 
-    if (addedSubjects.length > 0) {
-      setSelectedSubjects(addedSubjects); // Save the added subjects
-      setSuccessPrompt(true); // Show the success prompt
-    } else {
+// UseEffect to recalculate total units when rows or eligibleCourses change
+useEffect(() => {
+  calculateTotalUnits();
+}, [rows, eligibleCourses]);
+  
+
+const handleSubmit = async () => {
+  const addedSubjects = rows
+    .filter((row) => row.selectedCourse) // Only include rows with a selected course
+    .map((row) => {
+      console.log("Selected course ID: ", row.selectedCourse); // Log selected course ID
+      const subject = eligibleCourses.find(
+        (s) => s.CourseChecklistID === Number(row.selectedCourse) // Convert string to number
+      );
+      console.log("Matched subject: ", subject); // Log the matched subject
+      return subject
+        ? {
+            code: subject.CourseCode,
+            title: subject.CourseTitle,
+            units: subject.CreditUnitLec + subject.CreditUnitLab,
+          }
+        : null;
+    })
+    .filter(Boolean); // Remove null values
+
+  if (addedSubjects.length === 0) {
+    setErrorPrompt(true);
+    setErrorMsg("You need to add at least 1 subject");
+    return; // Stop the submission process
+  }
+
+  // Calculate the total units of selected subjects
+  const totalUnits = addedSubjects.reduce((acc, subject) => acc + subject.units, 0);
+
+  if (totalUnits > 23) {
+    setErrorPrompt(true);
+    setErrorMsg(`Maximum units exceeded. You have selected ${totalUnits} units, but the limit is 23 units.`);
+    return;
+  } else if(totalUnits < 10){
+    setErrorPrompt(true);
+    setErrorMsg(`Minimum units not reached. You have selected ${totalUnits} units, but the minimum requirement is 10 units.`);
+    return;
+  } else {
+    try {
+      // Prepare the data to save
+      const selectedCourses = rows.map((row) => row.selectedCourse);
+      console.log("Selected Courses: ", selectedCourses);
+      console.log("Selected Courses: ", rows);
+  
+      const res = await axios.post('http://localhost:8080/submitPreEnrollment', {
+        courses: selectedCourses,
+      });
+  
+      if (res.data.message === "Pre enrollment submitted.") {
+        setSuccessPrompt(true);
+        setSelectedSubjects(addedSubjects); 
+        setIsPreEnrollmentSubmitted(true);
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+        
+      } else {
+        setIsPreEnrollmentSubmitted(false);
+        setSuccessPrompt(false);
+        setErrorPrompt(true);
+        setErrorMsg('Failed to submit pre enrollment. Please try again.');
+      }
+    } catch (err) {
+      setSuccessPrompt(false);
+      setIsPreEnrollmentSubmitted(false);
       setErrorPrompt(true);
-      setErrorMsg("You need to add atleast 1 subject");
+      setErrorMsg(`FFailed to submit pre enrollment: ${err.response?.data?.message || err.message}`);
     }
-  };
+  }
+};
+
+  
 
   const [isEnrollment, setIsEnrollment] = useState(false);
   const [enrollment, setEnrollment] = useState([]);
   const [SocFeestatus, setSocFeeStatus] = useState(''); 
+  const [reqStatus, setReqStatus] = useState('');
+  const [advisingStatus, setAdvisingStatus] = useState('');
+  const [preEnrollmentStatus, setPreEnrollmentStatus] = useState('');
 
   useEffect(() => {
     axios.get("http://localhost:8080/getEnrollment")
@@ -135,6 +195,19 @@ function EnrollmentRegular() {
             })
             .catch((err) => {
               alert("Error: sa socfee" + err);
+            });
+
+            axios.get("http://localhost:8080/getEligibleCourse")
+            .then((res) => {
+              if(res.data.message === "Success") {
+                console.log(res.data.courses);
+                setEligibleCourses(res.data.courses);
+              } else{
+                console.log(res.data.message)
+              }
+            })
+            .catch((err) => {
+              alert("Error: " + err);
             });
 
           } else {
@@ -166,6 +239,10 @@ function EnrollmentRegular() {
     Promise.all([
       axios.get('http://localhost:8080/getCourseChecklist'),
       axios.get('http://localhost:8080/getSubmittedCOG'),
+      axios.get('http://localhost:8080/getAdvisingResult'),
+      axios.get('http://localhost:8080/getChecklistStatus'),
+      axios.get('http://localhost:8080/getPreEnrollmentStatus'),
+      axios.get('http://localhost:8080/getPreEnrollmentValues'),
     ])
       .then((response) => {
         if (response[0].data.message === 'Success') {
@@ -191,6 +268,36 @@ function EnrollmentRegular() {
         } else{
           setUploadedImage(null);
         }
+
+        if(response[2].data.message === 'Advising is approved. Proceed to pre-enrollment.') {
+          setAdvisingStatus(response[2].data.advisingStatus);
+        } else {
+          setAdvisingStatus('Pending');
+        }
+
+        if(response[3].data.message === 'Requirements verified.') {
+          setReqStatus(response[3].data.checklistStatus);
+        } else {
+          setReqStatus('Pending');
+        }
+
+        if (response[4].data.message === 'Pre-enrollment is approved') {
+          setPreEnrollmentStatus(response[4].data.status);                        
+          
+        } else {
+          setPreEnrollmentStatus('Pending');
+        }
+
+        if(response[5].data.message !== "No record found"){
+          console.log("sadsadsadasd ", response[5].data.data);
+          const preEnrollmentData = response[5].data.data;
+          setPreEnrollmentValues(preEnrollmentData);
+          setIsPreEnrollmentSubmitted(true);
+        } else {
+          setPreEnrollmentValues([]);
+          setIsPreEnrollmentSubmitted(false);
+        }
+        
       })
       .catch((err) => {
         alert('An error occurred while fetching data.');
@@ -293,11 +400,19 @@ function EnrollmentRegular() {
   const handleNext = () => {
     if(SocFeestatus !== "Paid" && activeStep === 0){
       setActiveStep(0);
+    } else if(reqStatus !== "Verified" && activeStep === 1){
+      setActiveStep(1);
+    } else if(advisingStatus !== "Approved" && activeStep === 2){
+      setActiveStep(2);
+    } else if(preEnrollmentStatus !== "Approved" && activeStep === 3){
+      setActiveStep(3);
     } else{
       setActiveStep((prevStep) => Math.min(prevStep + 1, steps.length - 1))
     }
   };
   const handleBack = () => setActiveStep((prevStep) => Math.max(prevStep - 1, 0));
+
+  const totalPreEnrollUnits = preEnrollmentValues.reduce((acc, row) => acc + (row.CreditUnitLec + row.CreditUnitLab), 0);
 
   const renderContent = () => {
     switch (steps[activeStep]) {
@@ -420,17 +535,17 @@ function EnrollmentRegular() {
           <div className={styles.Contentt}>
             <img
               src={
-                Advisingstatus === "Approved"
+                advisingStatus === "Approved"
                   ? "src/assets/paid-icon.png"
-                  : SocFeestatus === "Pending"
+                  : advisingStatus === "Pending"
                     ? "src/assets/pending-icon.png"
                     : "src/assets/unpaid-icon.png"
               }
               alt="Fee Status Icon"
               className={styles.uploadIcon}
             />
-            <h3>Advising Status: <span>{Advisingstatus}</span></h3>
-            <p>Kindly check your gmail for my course recommendations blah blah</p>
+            <h3>Advising Status: <span>{advisingStatus}</span></h3>
+            <p>Please check your Gmail for advice on eligible courses you can take.</p>
 
           </div>)
       case "Pre-Enrollment Form":
@@ -443,49 +558,78 @@ function EnrollmentRegular() {
             />
             <h3>Pre-Enrollment Form</h3>
             <p></p>
+
+          {Array.isArray(preEnrollmentValues) && preEnrollmentValues.length > 0 ? (
             <div className={styles.formContainer}>
-              {dropdowns.map((dropdown, index) => (
-                <div key={dropdown.id} className={styles.dropdownContainer}>
-                  <select
-                    id={`subjectDropdown-${dropdown.id}`}
-                    className={styles.subjectDropdown}
-                    value={dropdown.selected}
-                    onChange={(e) => handleSelectionChange(dropdown.id, e.target.value)}
-                  >
-                    <option value="">Select a Subject</option>
-                    {subjects.map((subject, i) => (
-                      <option key={i} value={subject.code}>
-                        {subject.code} - {subject.title} {subject.units} units
-                      </option>
-                    ))}
-                  </select>
-                  {index === dropdowns.length - 1 ? (
-                    <button
-                      className={`${styles.btn} ${styles.addBtn}`}
-                      onClick={handleAdd}
-                    >
-                      ADD
-                    </button>
-                  ) : (
-                    <button
-                      className={`${styles.btn} ${styles.removeBtn}`}
-                      onClick={() => handleRemove(dropdown.id)}
-                    >
-                      REMOVE
-                    </button>
-                  )}
+
+              {preEnrollmentValues.map((row) => (
+                
+                <div key={row.CourseChecklistID}>
+                  <p>{row.CourseCode} - {row.CourseTitle} ({row.CreditUnitLec + row.CreditUnitLab} units)</p>                  
                 </div>
-
               ))}
+              <p>Total Units: <span>{totalPreEnrollUnits}</span></p>
 
-              {/* Submit Button */}
-              <button
-                className={styles.submitBtn}
-                onClick={handleSubmit}
+            <br />
+            <p>Wait for your pre enrollment to be approved</p>      
+          </div>
+          ) : (
+            <div className={styles.formContainer}>
+    <button onClick={handleAddRow} className={`${styles.btn} ${styles.addBtn}`}>
+      Add Row
+    </button>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Course</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row, index) => (
+          <tr key={index}>
+            <td>{index + 1}</td>
+            <td>
+              <select
+                value={row.selectedCourse}
+                onChange={(e) => handleCourseChange(index, e.target.value)}
               >
-                <span>SUBMIT</span>
+                <option value="" disabled>
+                  -- Select a Course --
+                </option>
+                {eligibleCourses.map((course) => (
+                  <option
+                    key={course.CourseChecklistID}
+                    value={course.CourseChecklistID}
+                  >
+                    {course.CourseCode} - {course.CourseTitle} ({course.CreditUnitLab + course.CreditUnitLec} units)
+                  </option>
+                ))}
+              </select>
+            </td>
+            <td>
+              <button
+                onClick={() => handleDeleteRow(index)}
+                className={`${styles.btn} ${styles.removeBtn}`}
+              >
+                Remove
               </button>
-            </div>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <p>Total Units: <span>{totalUnits}</span></p> {/* Display updated total units */}
+
+    {/* Submit Button */}
+    <button className={styles.submitBtn} onClick={handleSubmit}>
+      <span>SUBMIT</span>
+    </button>
+  </div>
+          )}
+      
           </div>
         );
 

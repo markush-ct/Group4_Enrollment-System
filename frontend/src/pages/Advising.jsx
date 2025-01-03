@@ -23,6 +23,8 @@ function Requirements() {
   const [loading, setLoading] = useState(false);
   const [cog, setCOG] = useState(null);
   const [checklist, setChecklist] = useState([]);
+  const [courses, setCourses] = useState([]);
+  const [rows, setRows] = useState([]);
 
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -60,7 +62,7 @@ function Requirements() {
   // FETCH ACCOUNT REQUESTS
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getReqsForSocOff")
+      .get("http://localhost:8080/getReqsForAdviser")
       .then((res) => {
         setAccountRequests(res.data.students);
         setFilteredRequests(res.data.students);
@@ -110,55 +112,44 @@ function Requirements() {
 
 
   // Request
-const handleApprove = async (request) => {
-
-  setLoading(true);
-
-  if (!request?.StudentID) {
+  const handleApprove = async (request) => {
+    setLoading(true);
+  
+    if (!request?.StudentID) {
       setErrorPrompt(true);
       setErrorMsg('StudentID is required.');
       return;
-  }
-
-  try {
-    const res = await axios.post('http://localhost:8080/socfeeVerifyChecklist', {studentID: request.StudentID}); 
-    console.log('Response:', res.data);
-    setApprovalPrompt(true);
-      setApprovalMsg(`Verification successful for Student ID: ${request.CvSUStudentID}`);
-      setErrorPrompt(false);
-      setPopUpVisible(false);
-      setLoading(false);
-  } catch (err) {
-    setErrorPrompt(true);
-      setErrorMsg(`Failed to verify requirements:  ${err.response?.data?.message || err.message}`);
-      setLoading(false);
-  }
-};
-
-const handleReject = async (request) => {
-
-  setLoading(true);
-
-  if (!request?.StudentID) {
+    }
+  
+    try {
+      // Prepare the data to save
+      const selectedCourses = rows.map((row) => row.selectedCourse);
+      console.log("Selected Courses: ", selectedCourses);
+      console.log("Selected Courses: ", rows);
+      const adviseMessage = document.querySelector('input[name="adviseMsg"]').value;
+  
+      const res = await axios.post('http://localhost:8080/sendEmailAdvise', {
+        studentID: request.StudentID,
+        courses: selectedCourses,
+        adviseMessage,
+      });
+  
+      if (res.data.message === "Courses saved and email sent successfully.") {
+        setApprovalPrompt(true);
+        setApprovalMsg(`Courses successfully saved for Student ID: ${request.CvSUStudentID}`);
+        setPopUpVisible(false);
+      } else {
+        setErrorPrompt(true);
+        setErrorMsg('Failed to save courses. Please try again.');
+      }
+    } catch (err) {
       setErrorPrompt(true);
-      setErrorMsg('StudentID is required.');
-      return;
-  }
-
-  try {
-    const res = await axios.post('http://localhost:8080/socfeeRejectChecklist', {studentID: request.StudentID}); 
-    console.log('Response:', res.data);
-    setApprovalPrompt(true);
-      setApprovalMsg(`Rejection successful for Student ID: ${request.CvSUStudentID}`);
-      setErrorPrompt(false);
-      setPopUpVisible(false);
+      setErrorMsg(`Failed to verify requirements: ${err.response?.data?.message || err.message}`);
+    } finally {
       setLoading(false);
-  } catch (err) {
-    setErrorPrompt(true);
-      setErrorMsg(`Failed to reject requirements:  ${err.response?.data?.message || err.message}`);
-      setLoading(false);
-  }
-};
+    }
+  };
+  
 
 const closePrompt = () => {
   setApprovalPrompt(false);
@@ -173,23 +164,27 @@ const closePrompt = () => {
     setPopUpVisible(true);
     
     Promise.all([
-      axios.post(`http://localhost:8080/getCOGForSocOff`, {studentID: request.StudentID}),
-      axios.post(`http://localhost:8080/getChecklistForSocOff`, {studentID: request.StudentID}),
+      axios.post(`http://localhost:8080/getCOGForAdviser`, {studentID: request.StudentID}),
+      axios.post(`http://localhost:8080/getChecklistForAdviser`, {studentID: request.StudentID}),
+      axios.post(`http://localhost:8080/getCoursesForAdviser`, {studentID: request.StudentID}),
     ])
     .then((res) => {
-      if(res[0].data.message === "Success" && res[1].data.message === "Success"){
+      if(res[0].data.message === "Success" && res[1].data.message === "Success" && res[2].data.message === "Success"){
         setCOG(`http://localhost:8080/${res[0].data.cogPath}`);
         setChecklist(res[1].data.checklistData);
+        setCourses(res[2].data.courses);
       } else{
         setCOG(null);
         setChecklist([]);
         alert("Failed to fetch COG and Checklist data.");
+        setCourses([]);
       }
     })
     .catch((err) => {
       alert("Error: " + err);
       setCOG(null);
       setChecklist([]);
+      setCourses([]);
     });
   };
 
@@ -217,6 +212,22 @@ const closePrompt = () => {
     setSelectedRequest(null);
   };
 
+// Add a new row
+const handleAddRow = () => {
+  setRows((prevRows) => [...prevRows, { selectedCourse: "" }]);
+};
+
+// Delete a row
+const handleDeleteRow = (index) => {
+  setRows((prevRows) => prevRows.filter((_, i) => i !== index));
+};
+
+// Handle course selection
+const handleCourseChange = (index, courseID) => {
+  const updatedRows = [...rows];
+  updatedRows[index].selectedCourse = courseID; // Ensure this is the CourseChecklistID
+  setRows(updatedRows);
+};
 
 
   return (
@@ -463,8 +474,53 @@ const closePrompt = () => {
                 ))}
               </div>
             ))}
-      <button className={styles.approveButton} onClick={() => handleApprove(selectedRequest)}>Verify</button>
-          <button className={styles.rejectButton} onClick={() => handleReject(selectedRequest)}>Reject</button>
+
+
+            <div>
+              <div>
+                <label htmlFor='adviseMsg'>Advise Message:</label>
+                <input type="textarea" name='adviseMsg' />
+              </div>
+
+              <button onClick={handleAddRow} className={styles.approveButton}>Add Row</button>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Course</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, index) => (
+            <tr key={index}>
+              <td>{index + 1}</td>
+              <td>
+                <select
+                  value={row.selectedCourse}
+                  onChange={(e) => handleCourseChange(index, e.target.value)}
+                >
+                  <option value="" disabled>
+                    -- Select a Course --
+                  </option>
+                  {courses.map((course) => (
+                    <option key={course.CourseChecklistID} value={course.CourseChecklistID}>
+                      {course.CourseCode} - {course.CourseTitle}
+                    </option>
+                  ))}
+                </select>
+              </td>
+              <td>
+                <button onClick={() => handleDeleteRow(index)} className={styles.rejectButton}>Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+            </div>
+
+
+      <button className={styles.approveButton} onClick={() => handleApprove(selectedRequest)}>Send</button>
     </div>
   </div>
 )}

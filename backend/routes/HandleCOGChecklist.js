@@ -34,6 +34,27 @@ const upload = multer({ storage });
 
 router.use("/uploads", express.static("uploads"));
 
+router.get('/getChecklistStatus', (req, res) => {
+    const sql1 = `SELECT * FROM student WHERE Email = ?`;
+    const sql2 = `SELECT * FROM studentcoursechecklist WHERE StudentID = ?`;
+
+    db.query(sql1, req.session.email, (err, studentRes) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if (studentRes.length > 0){
+            db.query(sql2, studentRes[0].StudentID, (err, checklistRes) => {
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else if(checklistRes.length === 0 || checklistRes[0].StdChecklistStatus !== "Verified") {
+                    return res.json({ message: "Requirements not yet verified.", checklistStatus: "Pending" });
+                } else {
+                    return res.json({ message: "Requirements verified.", checklistStatus: checklistRes[0].StdChecklistStatus });
+                }
+            })
+        }
+    })
+})
+
 router.post('/socfeeRejectChecklist', (req, res) => {
     const { studentID } = req.body;
     const updateChecklist = `UPDATE studentcoursechecklist SET StdChecklistStatus = 'Rejected' WHERE StudentID = ? AND StdChecklistStatus = 'Submitted'`;
@@ -192,7 +213,7 @@ router.get('/getReqsForSocOff', (req, res) => {
             INNER JOIN (
                 SELECT DISTINCT StudentID
                 FROM studentcoursechecklist
-                WHERE StdChecklistStatus = 'submitted'
+                WHERE StdChecklistStatus = 'Submitted'
             ) c ON s.StudentID = c.StudentID
             WHERE s.ProgramID = ?
             `;
