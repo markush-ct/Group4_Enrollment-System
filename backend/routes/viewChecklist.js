@@ -46,7 +46,7 @@ router.get('/getCourseChecklist', (req, res) => {
         AND scc.StudentID = ?
     WHERE 
         cc.ProgramID = ?
-        AND (scc.CourseChecklistID IS NULL OR scc.FinalGrade IS NOT NULL) -- Include unmatched or those with grades
+        AND (scc.CourseChecklistID IS NULL OR scc.FinalGrade IS NOT NULL)
     ORDER BY 
         CASE 
             WHEN cc.YearLevel = 'First Year' THEN 1

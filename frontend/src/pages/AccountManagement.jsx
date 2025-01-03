@@ -271,7 +271,10 @@ function AccountManagement() {
   const [editNewStd, setEditNewStd] = useState({
     email: filteredRequests[selectedRequest]?.account.email,
     studentID: filteredRequests[selectedRequest]?.student.cvsuStudentID,
-    studentType: filteredRequests[selectedRequest]?.student.studentType
+    studentType: filteredRequests[selectedRequest]?.student.studentType,
+    year: '',
+    section: '',
+    semester: '',
   });
 
   const handleEditNewStdChange = (e) => {
@@ -281,13 +284,15 @@ function AccountManagement() {
   };
 
   const submitNewStdChange = async (request) => {
-
-    
+    console.log("Request object:", request);
     try {
       const res = await axios.post('http://localhost:8080/editNewStudent', {
         email: request?.account?.email, 
         studentID: editNewStd.studentID || request?.student?.cvsuStudentID,
         studentType: editNewStd.studentType || request?.student?.studentType,
+        year: editNewStd.year,
+        section: editNewStd.section,
+        semester: editNewStd.semester,
       });
       
       if (res.data.message === "Student updated successfully") {
@@ -575,6 +580,28 @@ function AccountManagement() {
                   <option value="">Select student type</option>
                     <option value="Regular">Regular</option>
                     <option value="Irregular">Irregular</option>
+                  </select>
+                </p>
+
+                <p><strong>Year:&nbsp;&nbsp;</strong>
+                  <select name="year" value={editNewStd.year} onChange={handleEditNewStdChange} id="" required>
+                  <option value="">Select year</option>
+                    <option value="First Year">First Year</option>
+                    <option value="Second Year">Second Year</option>
+                    <option value="Third Year">Third Year</option>
+                    <option value="Fourth Year">Fourth Year</option>
+                  </select>
+                </p>
+
+                <p><strong>Section:&nbsp;&nbsp;</strong>
+                  <input type="tel" name='section' value={editNewStd.section} placeholder='e.g. 3' onChange={handleEditNewStdChange} id="" required />
+                </p>
+
+                <p><strong>Semester:&nbsp;&nbsp;</strong>
+                  <select name="semester" value={editNewStd.semester} onChange={handleEditNewStdChange} id="" required>
+                  <option value="">Select semester</option>
+                    <option value="First Semester">First Semester</option>
+                    <option value="Second Semester">Second Semester</option>
                   </select>
                 </p>
 

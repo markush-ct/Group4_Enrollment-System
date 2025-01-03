@@ -44,6 +44,8 @@ router.post('/', (req, res) => {
         WHERE StudentID IN (SELECT StudentID FROM student WHERE StudentType IN ('Regular', 'Irregular'))
     `;
 
+    const deleteAdvising = `DELETE FROM advising`;
+
     db.query(sql1, [req.session.email], (err, socOffResult) => {
         if(err){
             return res.json({message: "Error in server: " + err});
@@ -69,7 +71,14 @@ router.post('/', (req, res) => {
                                 if(err){
                                     return res.json({message: "Error in server: " + err});
                                 } else if(updateRes.affectedRows > 0){
-                                    return res.json({message: "Enrollment period posted successfully."});
+                                    db.query(deleteAdvising, (err, deleteRes) => {
+                                        if(err){
+                                            return res.json({message: "Error in server: " + err});
+                                        } else{
+                                            return res.json({message: "Enrollment period posted successfully."});
+                                        }
+                                    });
+
                                 }
                             });
                         } else{
@@ -77,7 +86,13 @@ router.post('/', (req, res) => {
                                 if(err){
                                     return res.json({message: "Error in server: " + err});
                                 } else if(updateRes.affectedRows > 0){
-                                    return res.json({message: "Enrollment period posted successfully."});
+                                    db.query(deleteAdvising, (err, deleteRes) => {
+                                        if(err){
+                                            return res.json({message: "Error in server: " + err});
+                                        } else{
+                                            return res.json({message: "Enrollment period posted successfully."});
+                                        }
+                                    });
                                 }
                             });
                         }

@@ -34,6 +34,27 @@ const upload = multer({ storage });
 
 router.use("/uploads", express.static("uploads"));
 
+router.get('/getChecklistStatus', (req, res) => {
+    const sql1 = `SELECT * FROM student WHERE Email = ?`;
+    const sql2 = `SELECT * FROM studentcoursechecklist WHERE StudentID = ?`;
+
+    db.query(sql1, req.session.email, (err, studentRes) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else if (studentRes.length > 0){
+            db.query(sql2, studentRes[0].StudentID, (err, checklistRes) => {
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else if(checklistRes.length === 0 || checklistRes[0].StdChecklistStatus !== "Verified") {
+                    return res.json({ message: "Requirements not yet verified.", checklistStatus: "Pending" });
+                } else {
+                    return res.json({ message: "Requirements verified.", checklistStatus: checklistRes[0].StdChecklistStatus });
+                }
+            })
+        }
+    })
+})
+
 router.post('/socfeeRejectChecklist', (req, res) => {
     const { studentID } = req.body;
     const updateChecklist = `UPDATE studentcoursechecklist SET StdChecklistStatus = 'Rejected' WHERE StudentID = ? AND StdChecklistStatus = 'Submitted'`;
@@ -50,18 +71,37 @@ router.post('/socfeeRejectChecklist', (req, res) => {
 })
 
 router.post('/socfeeVerifyChecklist', (req, res) => {
-    const { studentID } = req.body;
-    const updateChecklist = `UPDATE studentcoursechecklist SET StdChecklistStatus = 'Verified' WHERE StudentID = ? AND StdChecklistStatus = 'Submitted'`;
+    const getID = `SELECT * FROM societyofficer WHERE Email = ?`;
 
-    db.query(updateChecklist, studentID, (err, updateRes) => {
+    db.query(getID, req.session.email, (err, idRes) => {
         if (err) {
             return res.json({ message: "Error in server: " + err });
-        } else if (updateRes.affectedRows > 0) {
-            return res.json({ message: "Requirements verified." });
+        } else if(idRes.length > 0) {
+            const id = idRes[0].SocietyOfficerID;
+
+            const { studentID } = req.body;
+            const updateChecklist = `
+            UPDATE studentcoursechecklist 
+            SET StdChecklistStatus = 'Verified',
+                SocietyOfficerID = ?
+            WHERE StudentID = ? 
+            AND StdChecklistStatus = 'Submitted'`;
+
+            db.query(updateChecklist, [id, studentID], (err, updateRes) => {
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else if (updateRes.affectedRows > 0) {
+                    console.log(idRes);
+                    console.log(updateRes);
+                    return res.json({ message: "Requirements verified." });
+                } else {
+                    return res.json({ message: "Failed to verify checklist." });
+                }
+            })
         } else {
-            return res.json({ message: "Failed to verify checklist." });
+            return res.json({ message: "Society Officer not found." });
         }
-    })
+    });
 })
 
 router.post('/getChecklistForSocOff', (req, res) => {
@@ -115,32 +155,32 @@ router.post('/getChecklistForSocOff', (req, res) => {
             ELSE 3
         END ASC`;
 
-        db.query(getStdChecklist, [studentID, programID], (err, checklistRes) => {
-            if (err) {
-                return res.json({ message: "Error in server: " + err });
-            } else if (checklistRes.length > 0) {
-                return res.json({
-                    message: "Success",
-                    checklistData: checklistRes.map(row => ({
-                        yearLevel: row.YearLevel,
-                        semester: row.Semester,
-                        courseDetails: {
-                            courseID: row.CourseChecklistID,
-                            code: row.CourseCode,
-                            title: row.CourseTitle,
-                            creditLec: row.CreditUnitLec,
-                            creditLab: row.CreditUnitLab,
-                            contactHrsLec: row.ContactHrsLec,
-                            contactHrsLab: row.ContactHrsLab,
-                            preReq: row.PreRequisite
-                        },
-                        finalGrade: row.FinalGrade,
-                        instructor: row.InstructorName,
-                        syTaken: row.SYTaken
-                    }))
-                });
-            }
-        });
+            db.query(getStdChecklist, [studentID, programID], (err, checklistRes) => {
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else if (checklistRes.length > 0) {
+                    return res.json({
+                        message: "Success",
+                        checklistData: checklistRes.map(row => ({
+                            yearLevel: row.YearLevel,
+                            semester: row.Semester,
+                            courseDetails: {
+                                courseID: row.CourseChecklistID,
+                                code: row.CourseCode,
+                                title: row.CourseTitle,
+                                creditLec: row.CreditUnitLec,
+                                creditLab: row.CreditUnitLab,
+                                contactHrsLec: row.ContactHrsLec,
+                                contactHrsLab: row.ContactHrsLab,
+                                preReq: row.PreRequisite
+                            },
+                            finalGrade: row.FinalGrade,
+                            instructor: row.InstructorName,
+                            syTaken: row.SYTaken
+                        }))
+                    });
+                }
+            });
         }
     });
 });
@@ -173,7 +213,7 @@ router.get('/getReqsForSocOff', (req, res) => {
             INNER JOIN (
                 SELECT DISTINCT StudentID
                 FROM studentcoursechecklist
-                WHERE StdChecklistStatus = 'submitted'
+                WHERE StdChecklistStatus = 'Submitted'
             ) c ON s.StudentID = c.StudentID
             WHERE s.ProgramID = ?
             `;
@@ -199,12 +239,7 @@ router.post('/submitCOGChecklist', upload.single('cog'), (req, res) => {
             const studentID = stdRes[0].StudentID;
 
             const { checklist } = req.body;
-            const cogImage = req.file;
-
-            let cogImagePath = null;
-            if (cogImage) {
-                cogImagePath = cogImage.path;
-            }
+            const cogImagePath = req.file ? req.file.path : req.body.cogURL;
 
             const checklistEntries = JSON.parse(checklist);
 
@@ -216,41 +251,53 @@ router.post('/submitCOGChecklist', upload.single('cog'), (req, res) => {
                 if (err) {
                     return res.json({ message: "Error in server: " + err });
                 } else if (cogRes.affectedRows > 0) {
+                    const deleteDuplicatesQuery = `
+                        DELETE FROM studentcoursechecklist
+                        WHERE StudentID = ?
+                    `;
 
+                    db.query(deleteDuplicatesQuery, [studentID], (err, deleteRes) => {
+                        if (err) {
+                            return res.json({ message: "Error in deleting duplicates: " + err });
+                        }
 
-                    // Filter out entries where any of the fields are empty or null
-                    const validEntries = checklistEntries.filter(entry =>
-                        entry.semTaken?.trim() && entry.finalGrade?.trim() && entry.instructor?.trim()
-                    );
+                        // Step 2: Filter valid entries and prepare for insert or update
+                        const validEntries = checklistEntries.filter(entry =>
+                            entry.semTaken?.trim() && entry.finalGrade?.trim() && entry.instructor?.trim()
+                        );
 
-                    if (validEntries.length > 0) {
-                        const insertChecklistQuery = `
-                            INSERT INTO studentcoursechecklist (StudentID, CourseChecklistID, SYTaken, FinalGrade, InstructorName)
-                            VALUES ?
-                        `;
+                        if (validEntries.length > 0) {
+                            const checklistValues = validEntries.map(entry => [
+                                studentID,
+                                entry.CourseChecklistID,
+                                entry.semTaken,
+                                entry.finalGrade,
+                                entry.instructor,
+                                'Submitted' // Status
+                            ]);
 
-                        const checklistValues = validEntries.map((entry) => [
-                            studentID,
-                            entry.CourseChecklistID,
-                            entry.semTaken,
-                            entry.finalGrade,
-                            entry.instructor,
-                        ]);
+                            console.log("Checklist Insert Values:", checklistValues);
 
-                        console.log("Insert Query Values:", checklistValues);
+                            // Step 3: Insert new rows or update existing rows with ON DUPLICATE KEY UPDATE
+                            const insertChecklistQuery = `
+                                INSERT INTO studentcoursechecklist 
+                                (StudentID, CourseChecklistID, SYTaken, FinalGrade, InstructorName, StdChecklistStatus)
+                                VALUES ?
+                            `;
 
-                        db.query(insertChecklistQuery, [checklistValues], (err, checklistRes) => {
-                            if (err) {
-                                return res.json({ message: "Error in server: " + err });
-                            } else if (checklistRes.affectedRows > 0) {
-                                return res.json({ message: "Requirements submitted." });
-                            } else {
-                                return res.json({ message: "Failed to submit checklist." });
-                            }
-                        });
-                    } else {
-                        return res.json({ message: "No valid checklist entries to submit." });
-                    }
+                            db.query(insertChecklistQuery, [checklistValues], (err, checklistRes) => {
+                                if (err) {
+                                    return res.json({ message: "Error in server: " + err });
+                                } else if (checklistRes.affectedRows > 0) {
+                                    return res.json({ message: "Checklist submitted successfully." });
+                                } else {
+                                    return res.json({ message: "No rows were updated or inserted." });
+                                }
+                            });
+                        } else {
+                            return res.json({ message: "No valid checklist entries to submit." });
+                        }
+                    });
                 } else {
                     return res.json({ message: "Failed to submit COG." });
                 }
@@ -258,6 +305,9 @@ router.post('/submitCOGChecklist', upload.single('cog'), (req, res) => {
         }
     });
 });
+
+
+
 
 router.get('/getSubmittedCOG', (req, res) => {
     const getStudent = `SELECT * FROM student WHERE Email = ?`;

@@ -25,6 +25,8 @@ import FreshmenSlotConfirmation from './routes/FreshmenSlotConfirmation.js';
 import AccountManagement from './routes/AccountManagement.js';
 import viewChecklist from './routes/viewChecklist.js';
 import HandleCOGChecklist from './routes/HandleCOGChecklist.js';
+import HandleAdvising from './routes/HandleAdvising.js';
+import HandlePreEnrollment from './routes/HandlePreEnrollment.js';
 
 dotenv.config();
 const app = express();
@@ -90,6 +92,8 @@ app.use('/', FreshmenSlotConfirmation);
 app.use('/', AccountManagement);
 app.use('/', viewChecklist);
 app.use('/', HandleCOGChecklist);
+app.use('/', HandleAdvising);
+app.use('/', HandlePreEnrollment);
 
 app.post('/rejectTransfereeAdmissionReq', (req, res) =>{
     const getEmpID = `SELECT * FROM employee where Email = ?`;
