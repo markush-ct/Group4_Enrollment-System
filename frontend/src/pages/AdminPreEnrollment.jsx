@@ -353,9 +353,9 @@ function Requirements() {
         <div
           data-aos="zoom-out"
           data-aos-duration="500"
-          className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}
+          className={`${styles.popup2} ${popUpVisible ? styles.visible : ""}`}
         >
-          <div className={styles.popupContentReq}>
+          <div className={styles.popupContentPre}>
             {/* Popup Header */}
             <div className={styles.popupHeader}>
               <button onClick={closePopup} className={styles.closeButton}>✖</button>
@@ -387,16 +387,20 @@ function Requirements() {
 
                 {preEnrollmentValues.map((row) => (
 
-                  <div key={row.CourseChecklistID}>
-                    <p>{row.CourseCode} - {row.CourseTitle} ({row.CreditUnitLec + row.CreditUnitLab} units)</p>
+                  <div className={styles.popupPromptTextPre} key={row.CourseChecklistID}>
+                    <p><span style={{ fontWeight: "bold", color: "#3d8c4b" }}>{row.CourseCode}</span> - {row.CourseTitle} <span style={{ fontWeight: "bold", color: "#AA0000" }}>{row.CreditUnitLec + row.CreditUnitLab} units</span></p>
                   </div>
                 ))}
-                <p>Total Units: <span>{totalPreEnrollUnits}</span></p>
+                <br></br>
+                <p style={{ textAlign: "center" }}><span style={{ fontWeight: "bold", color: "#3d8c4b" }}> Total Units: </span>{totalPreEnrollUnits}</p>
+
 
                 <br />
+                <div className={styles.buttonSection}>
+                <button className={`${styles.btn} ${styles.addBtn}`} onClick={() => handleApprove(preEnrollmentValues)}><span>Approve</span></button>
 
-                <button className={`${styles.btn} ${styles.addBtn}`} onClick={() => handleApprove(preEnrollmentValues)}>Approve</button>
-                <button className={`${styles.btn} ${styles.removeBtn}`} onClick={() => handleReject(preEnrollmentValues)}>Reject</button>
+                <button className={`${styles.btn} ${styles.removeBtn}`} onClick={() => handleReject(preEnrollmentValues)}><span>Reject</span></button>
+              </div>
               </div>
             ) : ("")}
 

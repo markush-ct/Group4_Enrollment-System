@@ -143,11 +143,36 @@
   z-index: 2000;
 }
 
+.popup2 {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.7); 
+  z-index: 2000;
+}
+
 .popupContent {
   padding: 20px;
   border-radius: 20px;
   width: 100%;
   max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  text-align: left;
+  position: relative;
+}
+
+.popupContentPre {
+  padding: 20px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 800px;
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
@@ -390,6 +415,12 @@ button.approveButton:hover, button.rejectButton:hover {
 .popupPromptText{
   font-size: 1.0rem;
   text-align: center;
+}
+
+.popupPromptTextPre{
+  font-size: 1.0rem;
+  text-align: left;
+  margin-left: 150px;
 }
 .popupPromptHeader h2 {
   font-size: 2.0rem;
@@ -676,7 +707,8 @@ button.addButton:hover{
   padding: 10px;
   font-size: 16px;
   width: 100%;
-  border: 1px solid #ccc;
+  border-color: #3d8c4b;
+  box-shadow: 0 0 4px rgba(61, 140, 75, 0.5);
   border-radius: 5px;
   outline: none;
   transition: border-color 0.2s ease;
@@ -925,7 +957,9 @@ font-size: 1rem;
 .buttonSection {
   display: flex;
   justify-content: center;
-  margin-top: 200px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  gap: 5px;
 }
 
 .setEnrollmentButton {
@@ -968,6 +1002,35 @@ font-size: 1rem;
   border-color: #3d8c4b;
   box-shadow: 0 0 8px rgba(61, 140, 75, 0.5);
 }
+
+
+
+.checkTable {
+  width: 100%;
+  border-collapse: collapse; 
+}
+
+.checkTable th,
+.checkTable td {
+  padding: 10px;
+  border: none; 
+  text-align: center;
+  width: 33%;
+}
+
+.checkTable th {
+  background-color: transparent;
+  color: #3d8c4b;
+}
+
+.checkTable select {
+  width: 100%;
+  padding: 5px;
+  text-align: center;
+  border-color: #3d8c4b;
+  box-shadow: 0 0 4px rgba(61, 140, 75, 0.5);
+}
+
 
 
 
@@ -1082,6 +1145,34 @@ font-size: 1rem;
     margin-top: 10px;
     width: 90%;              
 }
+
+.formGroup {
+  margin-bottom: 5px;
+}
+
+.formGroup label {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.formGroup input,
+ .formGroup textarea {
+  font-size: 14px;
+}
+
+.formGroup select {
+  font-size: 10px;
+}
+
+.btn {
+  width: 85%; 
+  padding: 8px 15px;
+}
+.btn span {
+  font-size: 12px; 
+}
+
+
 }
 
 
@@ -1112,6 +1203,14 @@ font-size: 1rem;
 
   .checklistTable th,
   .checklistTable td {
+   
+    font-size: 10px;
+    padding: 5px; 
+  }
+
+
+  .checkTable th,
+  .checkTable td {
    
     font-size: 10px;
     padding: 5px; 

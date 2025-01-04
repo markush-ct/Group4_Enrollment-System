@@ -615,14 +615,16 @@ const handleSubmit = async () => {
 
               {preEnrollmentValues.map((row) => (
                 
-                <div key={row.CourseChecklistID}>
-                  <p>{row.CourseCode} - {row.CourseTitle} ({row.CreditUnitLec + row.CreditUnitLab} units)</p>                  
-                </div>
-              ))}
-              <p>Total Units: <span>{totalPreEnrollUnits}</span></p>
+                 <div className={styles.popupPromptTextPre} key={row.CourseChecklistID}>
+                                    <p><span style={{ fontWeight: "bold", color: "#3d8c4b" }}>{row.CourseCode}</span> - {row.CourseTitle} <span style={{ fontWeight: "bold", color: "#AA0000" }}>{row.CreditUnitLec + row.CreditUnitLab} units</span></p>
+                                  </div>
+                                ))}
+                                <br></br>
+                                <p style={{ textAlign: "center" }}><span style={{ fontWeight: "bold", color: "#3d8c4b", backgroundColor: "transparent", }}> Total Units: </span>{totalPreEnrollUnits}</p>
+                
 
             <br />
-            <p>
+            <p style={{ textAlign: "center", fontSize: "1.25rem", fontWeight: "bold", color: "#3d8c4b", backgroundColor: "transparent", }}>
               {preEnrollmentStatus === "Approved" ? (
                 "Pre-enrollment is approved. You may now proceed."
               ) : (
@@ -632,10 +634,19 @@ const handleSubmit = async () => {
           </div>
           ) : (
             <div className={styles.formContainer}>
-    <button onClick={handleAddRow} className={`${styles.btn} ${styles.addBtn}`}>
-      Add Row
-    </button>
-    <table className={styles.checklistTable}>
+    <div className={styles.buttonSection} >
+               <button
+                       className={`${styles.btn} ${styles.addBtn}`}
+                       onClick={handleAddRow}
+                     >
+                       <span>ADD</span>
+                     </button>
+                     </div>
+
+
+
+
+    <table className={styles.checkTable}>
       <thead>
         <tr>
           <th>#</th>
@@ -666,12 +677,7 @@ const handleSubmit = async () => {
               </select>
             </td>
             <td>
-              <button
-                onClick={() => handleDeleteRow(index)}
-                className={`${styles.btn} ${styles.removeBtn}`}
-              >
-                Remove
-              </button>
+               <button onClick={() => handleDeleteRow(index)} className={`${styles.btn} ${styles.removeBtn}`}><span>Delete</span></button>
             </td>
           </tr>
         ))}

@@ -491,11 +491,11 @@ function Requirements() {
 
                                     {preEnrollmentValues.map((row) => (
 
-                                        <div key={row.CourseChecklistID}>
-                                            <p>{row.CourseCode} - {row.CourseTitle} ({row.CreditUnitLec + row.CreditUnitLab} units)</p>
-                                        </div>
-                                    ))}
-                                    <p>Total Units: <span>{totalPreEnrollUnits}</span></p>
+<div key={row.CourseChecklistID}>
+<p>{row.CourseCode} - {row.CourseTitle} ({row.CreditUnitLec + row.CreditUnitLab} units)</p>                  
+</div>
+))}
+<p>Total Units: <span>{totalPreEnrollUnits}</span></p>
 
 
                                 </div>

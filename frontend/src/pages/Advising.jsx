@@ -489,19 +489,24 @@ const handleCourseChange = (index, courseID) => {
              <div className={styles.formGroup}>
                 <label htmlFor='adviseMsg'>Advise Message:</label>
                 <input type="textarea" name='adviseMsg' required />
+
+                <p style={{ textAlign: "center" }}>Select eligible courses for student {selectedRequest.CvSUStudentID} to take</p>
               </div>
               </div>
 
               <div className={styles.formContainer}>
-            <p>Select eligible courses for student {selectedRequest.CvSUStudentID} to take</p>
+   
 
+            
+ <div className={styles.buttonSection} >
             <button
                     className={`${styles.btn} ${styles.addBtn}`}
                     onClick={handleAddRow}
                   >
                     <span>ADD</span>
                   </button>
-                  <table className={styles.checklistTable}>
+                  </div>
+                  <table className={styles.checkTable}>
         <thead>
           <tr>
             <th>#</th>
@@ -529,7 +534,8 @@ const handleCourseChange = (index, courseID) => {
                 </select>
               </td>
               <td>
-                <button onClick={() => handleDeleteRow(index)} className={styles.rejectButton}><span>Delete</span></button>
+                
+                <button onClick={() => handleDeleteRow(index)} className={`${styles.btn} ${styles.removeBtn}`}><span>Delete</span></button>
               </td>
             </tr>
           ))}
