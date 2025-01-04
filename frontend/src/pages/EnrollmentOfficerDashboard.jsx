@@ -161,6 +161,20 @@ useEffect(() => {
       })
   }, []);
 
+const [accReqNotif, setAccReqNotif] = useState(0);
+  useEffect(() => {
+    const fetchAccReqNotif = async () => {
+        try {
+            const accReqRes = await axios.get("http://localhost:8080/accReqNotif");
+            setAccReqNotif(accReqRes.data.studentCount + accReqRes.data.empCount + accReqRes.data.societyCount);
+        } catch (err) {
+            console.error("Error getting account request notifications:", err);
+        }
+    };
+
+    fetchAccReqNotif();
+  }, []);
+
   return (
     <>
       <Header SideBar={SideBar} setSideBar={setSideBar} />
@@ -188,8 +202,8 @@ useEffect(() => {
                 <p>{ITcount + CScount}</p>
               </div>
               <div className={styles.blueCard}>
-                <h3>Shifting Request</h3>
-                <p>{reqCount}</p>
+                <h3>Account Request</h3>
+                <p>{accReqNotif}</p>
               </div>
             </div>
           </div>
@@ -200,15 +214,15 @@ useEffect(() => {
             <div className={styles.Stats}>
               <div className={styles.DCScount}>
                 <h3>Total DCS Students</h3>
-                <p>70</p>
+                <p>{ITcount + CScount}</p>
               </div>
               <div className={styles.CsStats}>
                 <h3>Computer Science</h3>
-                <p>35</p>
+                <p>{CScount}</p>
               </div>
               <div className={styles.ItStats}>
                 <h3>Information Technology</h3>
-                <p>35</p>
+                <p>{ITcount}</p>
               </div>
             </div>
           </div>

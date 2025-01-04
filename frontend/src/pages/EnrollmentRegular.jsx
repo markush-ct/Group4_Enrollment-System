@@ -57,7 +57,10 @@ function EnrollmentRegular() {
       setActiveStep(3);
     } else if(completedSteps === 4){
       setActiveStep(4);
-    } else{
+    } else if(completedSteps === 5){
+      setActiveStep(4);
+    } 
+    else{
       setActiveStep(0);
     }
   }, [socFeeProg, reqsProg, adviseProg, preEnrollProg, enrollProg]);
@@ -217,6 +220,7 @@ const handleSubmit = async () => {
   const [reqStatus, setReqStatus] = useState('');
   const [advisingStatus, setAdvisingStatus] = useState('');
   const [preEnrollmentStatus, setPreEnrollmentStatus] = useState('');
+  const [stdEnrollStatus, setStdEnrollStatus] = useState('');
 
   useEffect(() => {
     axios.get("http://localhost:8080/getEnrollment")
@@ -230,21 +234,28 @@ const handleSubmit = async () => {
 
             axios.get("http://localhost:8080/getStudentSocFeeStatus")
             .then((res) => {
-              console.log(res.data.records.SocFeePayment);
               setSocFeeStatus(res.data.records.SocFeePayment);
             })
             .catch((err) => {
-              alert("Error: sa socfee" + err);
+              alert("Error: " + err);
             });
 
             axios.get("http://localhost:8080/getEligibleCourse")
             .then((res) => {
               if(res.data.message === "Success") {
-                console.log(res.data.courses);
                 setEligibleCourses(res.data.courses);
               } else{
                 console.log(res.data.message)
               }
+            })
+            .catch((err) => {
+              alert("Error: " + err);
+            });
+
+
+            axios.get("http://localhost:8080/getStdEnrollmentStatus")
+            .then((res) => {
+              setStdEnrollStatus(res.data.enrollStatus);
             })
             .catch((err) => {
               alert("Error: " + err);
@@ -624,7 +635,7 @@ const handleSubmit = async () => {
     <button onClick={handleAddRow} className={`${styles.btn} ${styles.addBtn}`}>
       Add Row
     </button>
-    <table border="1">
+    <table className={styles.checklistTable}>
       <thead>
         <tr>
           <th>#</th>
@@ -685,17 +696,19 @@ const handleSubmit = async () => {
           <div className={styles.Contentt}>
             <img
               src={
-                Enrollmentstatus === "Enrolled"
+                stdEnrollStatus === "Enrolled"
                   ? "src/assets/paid-icon.png"
-                  : SocFeestatus === "Pending"
+                  : stdEnrollStatus === "Pending"
                     ? "src/assets/pending-icon.png"
                     : "src/assets/unpaid-icon.png"
               }
               alt="Fee Status Icon"
               className={styles.uploadIcon}
             />
-            <h3>Enrollment Status: <span>{Enrollmentstatus}</span></h3>
-            <p>Kindly go to Registrar’s Office to claim your Certificate of Registration</p>
+            <h3>Enrollment Status: <span>{stdEnrollStatus}</span></h3>
+            <p>{stdEnrollStatus === "Enrolled" ? "Kindly go to Registrar’s Office to claim your Certificate of Registration"
+            : stdEnrollStatus === "Pending" ? "Your enrollment is currently under review. Please wait for further updates regarding your status."
+          : "It seems you are not enrolled. Please contact the Registrar’s Office for assistance."}</p>
 
           </div>)
       default:

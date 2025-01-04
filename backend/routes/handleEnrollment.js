@@ -119,6 +119,27 @@ router.post('/startEnrollment', (req, res) => {
     SET Status = 'Ongoing'
     WHERE ProgramID = ?`;
 
+    const insertQuery = `
+        INSERT INTO requirements (StudentID)
+        SELECT StudentID
+        FROM student
+        WHERE StudentType IN ('Regular', 'Irregular') 
+        AND RegStatus = 'Accepted'
+        AND StudentID NOT IN (SELECT StudentID FROM requirements);
+    `;
+
+    const updateQuery = `
+        UPDATE requirements
+        SET SocFeePayment = 'Pending',
+            SocietyOfficerID = null,
+            COG = null
+        WHERE StudentID IN (SELECT StudentID FROM student WHERE StudentType IN ('Regular', 'Irregular'))
+    `;
+
+    const deleteAdvising = `DELETE FROM advising`;
+    const deletePreEnrollment = `DELETE FROM preenrollment`;
+    const deleteEnrollment = `DELETE FROM enrollment`;
+
     db.query(sql1, req.session.email, (err, emailRes) => {
         if(err){
             return res.json({message: "Error in server: " + err});
@@ -127,7 +148,68 @@ router.post('/startEnrollment', (req, res) => {
                 if(err){
                     return res.json({message: "Error in server: " + err});
                 } else if(updateRes.affectedRows > 0){
-                    return res.json({message: "Enrollment is now ongoing"});
+                    db.query(insertQuery, (err, insertRes) => {
+                        if(err){
+                            return res.json({message: "Error in server: " + err});
+                        } else if(insertRes.affectedRows > 0){
+                            
+                            db.query(updateQuery, (err, updateRes) => {
+                                if(err){
+                                    return res.json({message: "Error in server: " + err});
+                                } else if(updateRes.affectedRows > 0){
+                                    db.query(deleteAdvising, (err, deleteRes) => {
+                                        if(err){
+                                            return res.json({message: "Error in server: " + err});
+                                        } else{
+                                            db.query(deletePreEnrollment, (err, deletePreEnrollmentRes) => {
+                                                if(err){
+                                                    return res.json({message: "Error in server: " + err});
+                                                } else{
+                                                    db.query(deleteEnrollment, (err, deleteEnrollmentRes) => {
+                                                        if(err){
+                                                            return res.json({message: "Error in server: " + err});
+                                                        } else{
+                                                            return res.json({message: "Enrollment is now ongoing"});
+                                                        }
+                                                    });
+                                                }
+                                            });
+
+                                        }
+                                    });
+
+                                }
+                            });
+                        } else{
+                            db.query(updateQuery, (err, updateRes) => {
+                                if(err){
+                                    return res.json({message: "Error in server: " + err});
+                                } else if(updateRes.affectedRows > 0){
+                                    db.query(deleteAdvising, (err, deleteRes) => {
+                                        if(err){
+                                            return res.json({message: "Error in server: " + err});
+                                        } else{
+                                            db.query(deletePreEnrollment, (err, deletePreEnrollmentRes) => {
+                                                if(err){
+                                                    return res.json({message: "Error in server: " + err});
+                                                } else{
+                                                    db.query(deleteEnrollment, (err, deleteEnrollmentRes) => {
+                                                        if(err){
+                                                            return res.json({message: "Error in server: " + err});
+                                                        } else{
+                                                            return res.json({message: "Enrollment is now ongoing"});
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });     
+                } else{
+                    return res.json({message: "Failed to start enrollment"});
                 }
             })
         }
@@ -143,6 +225,16 @@ router.post('/finishEnrollment', (req, res) => {
         Status = 'Finished'
     WHERE ProgramID = ?`;
 
+    // New SQL query to select all student IDs with the specified conditions
+    const sql3 = `SELECT StudentID FROM student WHERE (StudentType = 'Regular' OR StudentType = 'Irregular') 
+                  AND StdStatus = 'Active' AND RegStatus = 'Accepted' AND ProgramID = ?`;
+
+    // New SQL query to check if a student is in the enrollment table
+    const sql4 = `SELECT * FROM enrollment WHERE StudentID = ?`;
+
+    // New SQL query to insert the student into the enrollment table if not already enrolled
+    const sql5 = `INSERT INTO enrollment (StudentID, EnrollmentStatus) VALUES (?, 'Not Enrolled')`;
+
     db.query(sql1, req.session.email, (err, emailRes) => {
         if(err){
             return res.json({message: "Error in server: " + err});
@@ -151,11 +243,35 @@ router.post('/finishEnrollment', (req, res) => {
                 if(err){
                     return res.json({message: "Error in server: " + err});
                 } else if(updateRes.affectedRows > 0){
+                    // After finishing the enrollment period, check student enrollment status
+                    db.query(sql3, emailRes[0].ProgramID, (err, studentsRes) => {
+                        if(err){
+                            return res.json({message: "Error in fetching students: " + err});
+                        } else {
+                            studentsRes.forEach(student => {
+                                db.query(sql4, [student.StudentID], (err, enrollmentRes) => {
+                                    if(err){
+                                        return res.json({message: "Error in checking enrollment: " + err});
+                                    } else if(enrollmentRes.length === 0) {
+                                        // If the student is not in the enrollment table, insert them
+                                        db.query(sql5, [student.StudentID], (err, insertRes) => {
+                                            if(err){
+                                                return res.json({message: "Error in enrolling student: " + err});
+                                            }
+                                        });
+                                    }
+                                });
+                            });
+                        }
+                    });
                     return res.json({message: "Enrollment ended"});
                 }
             })
         }
     })
-})
+});
+
+
+
 
 export default router;

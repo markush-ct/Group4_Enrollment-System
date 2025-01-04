@@ -103,7 +103,7 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
                                 </div>
                               ) : null
                             },
-                        { name: 'Enrollment', icon: preEnrollmentIcon, path: '/AdminPreEnrollment' },
+                        { name: 'Enrollment', icon: preEnrollmentIcon, path: '/AdminEnrollment' },
                         { name: 'Account Management', icon: preEnrollmentIcon, path: '/AccountManagement' },
                     ],
                     "Society Officer": [

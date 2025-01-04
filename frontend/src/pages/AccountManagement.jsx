@@ -222,12 +222,20 @@ function AccountManagement() {
       
       if (res.data.message === "Employee updated successfully") {
         setPopUpVisible(false);
-        alert(res.data.message);        
+        setEditEmp({
+          email: "",
+          job: "",
+          status: ""
+        })
+        setApprovalMsg(res.data.message);
+      setApprovalPrompt(true);       
       } else {
-        alert(res.data.message);
+        setErrorPrompt(true);
+        setErrorMsg(res.data.message);
       }
     } catch (error) {
-      alert("Error: " + error);
+      setErrorPrompt(true);
+      setErrorMsg("Error: " + error);
     }
   };
 
@@ -257,12 +265,20 @@ function AccountManagement() {
       
       if (res.data.message === "Society officer updated successfully") {
         setPopUpVisible(false);        
-        alert(res.data.message);        
+        setEditSocOff({
+          email: "",
+          position: "",
+          status: ""
+        });
+        setApprovalMsg(res.data.message);
+      setApprovalPrompt(true);      
       } else {
-        alert(res.data.message);
+        setErrorPrompt(true);
+        setErrorMsg(res.data.message);
       }
     } catch (error) {
-      alert("Error: " + error);
+      setErrorPrompt(true);
+      setErrorMsg("Error: " + error);
     }
   };
 
@@ -297,17 +313,23 @@ function AccountManagement() {
       
       if (res.data.message === "Student updated successfully") {
         setPopUpVisible(false);
-        setEditNewStd({ 
-          email: "", 
-          studentID: "", 
-          studentType: ""
-        });
-        alert(res.data.message);        
+        setEditNewStd({
+          email: "",
+          studentID: "",
+          studentType: "",
+          year: "",
+          section: "",
+          semester: "",
+      });
+      setApprovalMsg(res.data.message);
+      setApprovalPrompt(true);  
       } else {
-        alert(res.data.message);
+        setErrorPrompt(true);
+        setErrorMsg(res.data.message);
       }
     } catch (error) {
-      alert("Error: " + error);
+      setErrorPrompt(true);
+      setErrorMsg("Error: " + error);
     }
   };
 
@@ -335,12 +357,20 @@ function AccountManagement() {
       
       if (res.data.message === "Student updated successfully") {
         setPopUpVisible(false);
-        alert(res.data.message);        
-      } else {
-        alert(res.data.message);
+        setEditOldStd({
+          email: "",
+          status: "",
+          studentType: ""
+        });
+        setApprovalMsg(res.data.message);
+        setApprovalPrompt(true);                
+      } else {        
+        setErrorPrompt(true);
+        setErrorMsg(res.data.message);
       }
     } catch (error) {
-      alert("Error: " + error);
+      setErrorPrompt(true);
+      setErrorMsg("Error: " + error);
     }
   };
 

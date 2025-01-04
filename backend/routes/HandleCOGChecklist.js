@@ -41,19 +41,27 @@ router.get('/getChecklistStatus', (req, res) => {
     db.query(sql1, req.session.email, (err, studentRes) => {
         if (err) {
             return res.json({ message: "Error in server: " + err });
-        } else if (studentRes.length > 0){
+        } else if (studentRes.length > 0) {
             db.query(sql2, studentRes[0].StudentID, (err, checklistRes) => {
                 if (err) {
                     return res.json({ message: "Error in server: " + err });
-                } else if(checklistRes.length === 0 || checklistRes[0].StdChecklistStatus !== "Verified") {
+                } else if (checklistRes.length === 0) {
                     return res.json({ message: "Requirements not yet verified.", checklistStatus: "Pending" });
                 } else {
-                    return res.json({ message: "Requirements verified.", checklistStatus: checklistRes[0].StdChecklistStatus });
+                    // Check if all checklist entries have StdChecklistStatus as "Verified"
+                    const allVerified = checklistRes.every(row => row.StdChecklistStatus === "Verified");
+
+                    if (!allVerified) {
+                        return res.json({ message: "Requirements not yet verified.", checklistStatus: "Pending" });
+                    } else {
+                        return res.json({ message: "Requirements verified.", checklistStatus: "Verified" });
+                    }
                 }
             })
         }
     })
 })
+
 
 router.post('/socfeeRejectChecklist', (req, res) => {
     const { studentID } = req.body;

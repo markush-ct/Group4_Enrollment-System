@@ -28,6 +28,7 @@ import HandleCOGChecklist from './routes/HandleCOGChecklist.js';
 import HandleAdvising from './routes/HandleAdvising.js';
 import HandlePreEnrollment from './routes/HandlePreEnrollment.js';
 import RegIrregEnrollProgress from './routes/RegIrregDashboardProgress.js';
+import HandleEnrollmentStatus from './routes/HandleEnrollmentStatus.js';
 
 
 dotenv.config();
@@ -99,7 +100,7 @@ app.use('/', HandleCOGChecklist);
 app.use('/', HandleAdvising);
 app.use('/', HandlePreEnrollment);
 app.use('/', RegIrregEnrollProgress);
-
+app.use('/', HandleEnrollmentStatus);
 
 
 app.post('/rejectTransfereeAdmissionReq', (req, res) =>{

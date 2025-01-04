@@ -31,51 +31,106 @@ const transporter = nodemailer.createTransport({
 
 
 // Approve pre-enrollment
-router.post("/adviserApprovePreEnrollment", async (req, res) => {
-    try {
-      const { preEnrollmentValues } = req.body;
-  
-      if (!Array.isArray(preEnrollmentValues) || preEnrollmentValues.length === 0) {
-        return res.json({ message: "Invalid data" });
-      }
-  
-      // Update each course as approved in the database
-      for (const course of preEnrollmentValues) {
-        await db.query(
-          "UPDATE preenrollment SET PreEnrollmentStatus = ? WHERE CourseChecklistID = ? AND StudentID = ?",
-          ["Approved", course.CourseChecklistID, course.StudentID]
-        );
-      }
-  
-      res.json({ message: "Success" });
-    } catch (error) {
-      console.error("Error approving pre-enrollment:", error);
-      res.json({ message: "Failed to approve pre-enrollment" });
-    }
-  });
+router.post("/adviserApprovePreEnrollment", (req, res) => {
+    const getID = "SELECT EmployeeID FROM employee WHERE Email = ?";
+    const email = req.session.email;
+
+    db.query(getID, [email], (err, idRes) => {
+        if (err) {
+            console.error("Error fetching adviser ID:", err);
+            return res.json({ message: "Server error" });
+        }
+
+        if (idRes.length === 0) {
+            return res.json({ message: "Adviser not found" });
+        }
+
+        const { preEnrollmentValues } = req.body;
+
+        if (!Array.isArray(preEnrollmentValues) || preEnrollmentValues.length === 0) {
+            return res.json({ message: "Invalid data" });
+        }
+
+        // Process each pre-enrollment item
+        let completed = 0;
+        let hasError = false;
+
+        preEnrollmentValues.forEach((course) => {
+            const updateQuery = `
+                UPDATE preenrollment 
+                SET PreEnrollmentStatus = 'Approved', EmployeeID = ? 
+                WHERE CourseChecklistID = ? AND StudentID = ?
+            `;
+            db.query(updateQuery, [idRes[0].EmployeeID, course.CourseChecklistID, course.StudentID], (updateErr) => {
+                if (updateErr) {
+                    console.error("Error updating pre-enrollment:", updateErr);
+                    hasError = true;
+                }
+
+                completed++;
+
+                // Send response after processing all updates
+                if (completed === preEnrollmentValues.length) {
+                    if (hasError) {
+                        return res.json({ message: "Some updates failed" });
+                    }
+                    res.json({ message: "Success" });
+                }
+            });
+        });
+    });
+});
+
   
   // Reject pre-enrollment
   router.post("/adviserRejectPreEnrollment", async (req, res) => {
-    try {
-      const { preEnrollmentValues } = req.body;
-  
-      if (!Array.isArray(preEnrollmentValues) || preEnrollmentValues.length === 0) {
-        return res.json({ message: "Invalid data" });
-      }
-  
-      // Update each course as rejected in the database
-      for (const course of preEnrollmentValues) {
-        await db.query(
-          "UPDATE preenrollment SET PreEnrollmentStatus = ? WHERE CourseChecklistID = ? AND StudentID = ?",
-          ["Not Approved", course.CourseChecklistID, course.StudentID]
-        );
-      }
-  
-      res.json({ message: "Success" });
-    } catch (error) {
-      console.error("Error rejecting pre-enrollment:", error);
-      res.json({ message: "Failed to reject pre-enrollment" });
-    }
+    const getID = "SELECT EmployeeID FROM employee WHERE Email = ?";
+    const email = req.session.email;
+
+    db.query(getID, [email], (err, idRes) => {
+        if (err) {
+            console.error("Error fetching adviser ID:", err);
+            return res.json({ message: "Server error" });
+        }
+
+        if (idRes.length === 0) {
+            return res.json({ message: "Adviser not found" });
+        }
+
+        const { preEnrollmentValues } = req.body;
+
+        if (!Array.isArray(preEnrollmentValues) || preEnrollmentValues.length === 0) {
+            return res.json({ message: "Invalid data" });
+        }
+
+        // Process each pre-enrollment item
+        let completed = 0;
+        let hasError = false;
+
+        preEnrollmentValues.forEach((course) => {
+            const updateQuery = `
+                UPDATE preenrollment 
+                SET PreEnrollmentStatus = 'Not Approved', EmployeeID = ? 
+                WHERE CourseChecklistID = ? AND StudentID = ?
+            `;
+            db.query(updateQuery, [idRes[0].EmployeeID, course.CourseChecklistID, course.StudentID], (updateErr) => {
+                if (updateErr) {
+                    console.error("Error updating pre-enrollment:", updateErr);
+                    hasError = true;
+                }
+
+                completed++;
+
+                // Send response after processing all updates
+                if (completed === preEnrollmentValues.length) {
+                    if (hasError) {
+                        return res.json({ message: "Some updates failed" });
+                    }
+                    res.json({ message: "Success" });
+                }
+            });
+        });
+    });
   });
 
 
@@ -132,16 +187,16 @@ router.post('/getPreEnrollmentValuesForAdmin', (req, res) => {
 
 
 router.get('/getPreEnrollForAdviser', (req, res) => {
-    const getStudents = `SELECT s.StudentID, s.CvSUStudentID, s.Firstname, s.Lastname, s.Year, s.Section, s.StudentType, r.SocFeePayment
-        FROM student s
-        JOIN requirements r ON s.StudentID = r.StudentID
-        INNER JOIN (
-            SELECT DISTINCT StudentID
-            FROM studentcoursechecklist
-            WHERE StdChecklistStatus = 'Verified'
-        ) c ON s.StudentID = c.StudentID
-        LEFT JOIN preenrollment a ON s.StudentID = a.StudentID AND a.PreEnrollmentStatus = 'Approved'
-        WHERE a.StudentID IS NULL
+    const getStudents = `SELECT DISTINCT s.StudentID, s.CvSUStudentID, s.Firstname, s.Lastname, s.Year, s.Section, s.StudentType, r.SocFeePayment
+FROM student s
+JOIN requirements r ON s.StudentID = r.StudentID
+INNER JOIN (
+    SELECT DISTINCT StudentID
+    FROM studentcoursechecklist
+    WHERE StdChecklistStatus = 'Verified'
+) c ON s.StudentID = c.StudentID
+INNER JOIN preenrollment a ON s.StudentID = a.StudentID
+WHERE a.PreEnrollmentStatus = 'Pending'
             `;
 
     db.query(getStudents, (err, studentsRes) => {

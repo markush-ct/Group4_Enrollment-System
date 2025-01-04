@@ -27,25 +27,6 @@ router.post('/', (req, res) => {
         Status = ?
     WHERE ProgramID = ?`;
 
-    const insertQuery = `
-        INSERT INTO requirements (StudentID)
-        SELECT StudentID
-        FROM student
-        WHERE StudentType IN ('Regular', 'Irregular') 
-        AND RegStatus = 'Accepted'
-        AND StudentID NOT IN (SELECT StudentID FROM requirements);
-    `;
-
-    const updateQuery = `
-        UPDATE requirements
-        SET SocFeePayment = 'Pending',
-            SocietyOfficerID = null,
-            COG = null
-        WHERE StudentID IN (SELECT StudentID FROM student WHERE StudentType IN ('Regular', 'Irregular'))
-    `;
-
-    const deleteAdvising = `DELETE FROM advising`;
-
     db.query(sql1, [req.session.email], (err, socOffResult) => {
         if(err){
             return res.json({message: "Error in server: " + err});
@@ -62,49 +43,7 @@ router.post('/', (req, res) => {
                 if(err){
                     return res.json({message: "Error in server: " + err});
                 } else if(postingRes.affectedRows > 0){ 
-                    db.query(insertQuery, (err, insertRes) => {
-                        if(err){
-                            return res.json({message: "Error in server: " + err});
-                        } else if(insertRes.affectedRows > 0){
-                            
-                            db.query(updateQuery, (err, updateRes) => {
-                                if(err){
-                                    return res.json({message: "Error in server: " + err});
-                                } else if(updateRes.affectedRows > 0){
-                                    db.query(deleteAdvising, (err, deleteRes) => {
-                                        if(err){
-                                            return res.json({message: "Error in server: " + err});
-                                        } else{
-                                            const deletePreEnrollment = `DELETE FROM preenrollment`;
-                                            db.query(deletePreEnrollment, (err, deletePreEnrollmentRes) => {
-                                                if(err){
-                                                    return res.json({message: "Error in server: " + err});
-                                                } else{
-                                                    return res.json({message: "Enrollment period posted successfully."});
-                                                }
-                                            });
-
-                                        }
-                                    });
-
-                                }
-                            });
-                        } else{
-                            db.query(updateQuery, (err, updateRes) => {
-                                if(err){
-                                    return res.json({message: "Error in server: " + err});
-                                } else if(updateRes.affectedRows > 0){
-                                    db.query(deleteAdvising, (err, deleteRes) => {
-                                        if(err){
-                                            return res.json({message: "Error in server: " + err});
-                                        } else{
-                                            return res.json({message: "Enrollment period posted successfully."});
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    });                
+                    return res.json({message: "Enrollment period posted successfully."});                    
                 } else{
                     return res.json({message: "Error inserting in requirements table."});
                 }

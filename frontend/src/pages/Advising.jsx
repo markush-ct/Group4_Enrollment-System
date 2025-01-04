@@ -138,13 +138,16 @@ function Requirements() {
         setApprovalPrompt(true);
         setApprovalMsg(`Courses successfully saved for Student ID: ${request.CvSUStudentID}`);
         setPopUpVisible(false);
+        setLoading(false);
       } else {
         setErrorPrompt(true);
-        setErrorMsg('Failed to save courses. Please try again.');
+        setErrorMsg(res.data.message);
+        setLoading(false);
       }
     } catch (err) {
       setErrorPrompt(true);
       setErrorMsg(`Failed to verify requirements: ${err.response?.data?.message || err.message}`);
+      setLoading(false);
     } finally {
       setLoading(false);
     }
@@ -485,52 +488,61 @@ const handleCourseChange = (index, courseID) => {
                   <div className={styles.formContainer}>
              <div className={styles.formGroup}>
                 <label htmlFor='adviseMsg'>Advise Message:</label>
-                <input type="textarea" name='adviseMsg' />
+                <input type="textarea" name='adviseMsg' required />
               </div>
               </div>
 
+              <div className={styles.formContainer}>
+            <p>Select eligible courses for student {selectedRequest.CvSUStudentID} to take</p>
 
-            <div className={styles.formContainer}>
-            {rows.map((row, index) => (
-              <div key={index} className={styles.dropdownContainer}>
-                <span>{index + 1}.</span>
-                <select
-                  id={`courseDropdown-${index}`}
-                  className={styles.subjectDropdown}
+            <button
+                    className={`${styles.btn} ${styles.addBtn}`}
+                    onClick={handleAddRow}
+                  >
+                    <span>ADD</span>
+                  </button>
+                  <table className={styles.checklistTable}>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Course</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, index) => (
+            <tr key={index}>
+              <td>{index + 1}</td>
+              <td>
+                <select 
                   value={row.selectedCourse}
                   onChange={(e) => handleCourseChange(index, e.target.value)}
                 >
-                  <option value="" disabled>Select a Course</option>
+                  <option value="" disabled>
+                    -- Select a Course --
+                  </option>
                   {courses.map((course) => (
                     <option key={course.CourseChecklistID} value={course.CourseChecklistID}>
                       {course.CourseCode} - {course.CourseTitle}
                     </option>
                   ))}
                 </select>
-                {index === rows.length - 1 ? (
-                  <button
-                    className={`${styles.btn} ${styles.addBtn}`}
-                    onClick={handleAddRow}
-                  >
-                    <span>ADD</span>
-                  </button>
-                ) : (
-                  <button
-                    className={`${styles.btn} ${styles.removeBtn}`}
-                    onClick={() => handleDeleteRow(index)}
-                  >
-                <span>REMOVE</span>
-                  </button>
-                )}
-    </div>
-  ))}
+              </td>
+              <td>
+                <button onClick={() => handleDeleteRow(index)} className={styles.rejectButton}><span>Delete</span></button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
- <div className={styles.buttonSection} >
-  <button className={styles.submitBtn} onClick={() => handleApprove(selectedRequest)}>
-    <span>SEND</span>
+      <div className={styles.buttonSection} >
+  <button className={styles.submitBtn} onClick={() => handleApprove(selectedRequest)} disabled={loading}>
+    <span>{loading ? "Sending..." : "SEND"}</span>
   </button>
 </div>
-</div>
+              </div>
+
 
     </div>
     </div>

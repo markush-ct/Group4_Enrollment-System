@@ -40,6 +40,7 @@ import TransfereeAdmissionRequest from './pages/TransfereeAdmissionRequests.jsx'
 import AccountManagement from './pages/AccountManagement.jsx';
 import StudentChecklist from './pages/StudentChecklist.jsx';
 import Advising from './pages/Advising.jsx';
+import AdminEnrollment from './pages/AdminEnrollment.jsx';
 
 function App() {
   return (
@@ -87,7 +88,7 @@ function App() {
         <Route path="/AccountManagement" element={<AccountManagement />} />
         <Route path="/StudentChecklist" element={<StudentChecklist />} />
         <Route path="/Advising" element={<Advising />} />
-      
+        <Route path="/AdminEnrollment" element={<AdminEnrollment />} />
 
 
         

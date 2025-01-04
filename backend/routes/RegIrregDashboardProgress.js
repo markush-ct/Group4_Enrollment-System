@@ -27,7 +27,7 @@ router.get('/enrollStatusProgress', (req, res) => {
         if(err){
             return res.json({message: "Error in server: " + err});
         } else if(stdRes.length > 0){
-            const enroll = `SELECT * FROM preenrollment WHERE StudentID = ${stdRes[0].StudentID} AND EnrollmentStatus = 'Enrolled'`;
+            const enroll = `SELECT * FROM enrollment WHERE StudentID = ${stdRes[0].StudentID} AND EnrollmentStatus = 'Enrolled'`;
             db.query(enroll, (err, enrollRes) => {
                 if(err){
                     return res.json({message: "Error in server: " + err});
@@ -91,22 +91,27 @@ router.get('/reqsProgress', (req, res) => {
 
     db.query(stdID, req.session.email, (err, stdRes) => {
         if(err){
-            return res.json({message: "Error in server: " + err});
-        } else if(stdRes.length > 0){
-            const reqs = `SELECT * FROM studentcoursechecklist WHERE StudentID = ${stdRes[0].StudentID} AND StdChecklistStatus = 'Verified'`;
+            return res.json({ message: "Error in server: " + err });
+        } else if (stdRes.length > 0) {
+            const reqs = `SELECT * FROM studentcoursechecklist WHERE StudentID = ${stdRes[0].StudentID}`;
             db.query(reqs, (err, reqsRes) => {
                 if(err){
-                    return res.json({message: "Error in server: " + err});
-                } else if(reqsRes.length > 0){
-                    return res.json({message: "Success"});
+                    return res.json({ message: "Error in server: " + err });
                 } else {
-                    return res.json({message: "Requirements are not yet verified"});
+                    // Check if there is any row with StdChecklistStatus not 'Verified'
+                    const unverifiedRows = reqsRes.some(row => row.StdChecklistStatus !== 'Verified');
+                    
+                    if (unverifiedRows) {
+                        return res.json({ message: "Requirements are not yet verified" });
+                    } else {
+                        return res.json({ message: "Success" });
+                    }
                 }
             });
-
         }
     });
-})
+});
+
 
 router.get('/socFeeProgress', (req, res) => {
     const stdID = `SELECT * FROM student WHERE Email = ?`;
