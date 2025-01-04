@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom'; 
 import style from '/src/styles/AdminDashHeader.module.css'; 
 import closeIcon from '/src/assets/close-button.png';
@@ -60,7 +61,7 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
     const fetchAdmissionNotif = async () => {
         try {
             const admissionReqRes = await axios.get("http://localhost:8080/admissionNotif");
-            console.log("Fetched admission notifications:", admissionReqRes.data);
+            // console.log("Fetched admission notifications:", admissionReqRes.data);
             setFreshmenAdmissionNotif(admissionReqRes.data.freshmenCount);
             setTransfereeAdmissionNotif(admissionReqRes.data.transfereeCount);
         } catch (err) {
@@ -95,7 +96,7 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
                 const menuItems = {
                     "Enrollment Officer": [
                         { name: 'Dashboard', icon: dashboardIcon, path: '/EnrollmentOfficerDashboard' },
-                        { name: 'Account Requests', icon: accountRequestsIcon, path: '/AccountRequest', 
+                        { name: 'Account Request', icon: accountRequestsIcon, path: '/AccountRequest', 
                             notification: accReqNotif > 0 ? (
                                 <div className={style.sidebarNotif}>
                                   {accReqNotif}
