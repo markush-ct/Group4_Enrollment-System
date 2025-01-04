@@ -26,7 +26,6 @@ router.get('/', (req, res) => {
             console.error('Error getting society officer:', err.message);
             return res.json('Error getting society officer.');
         } else if(result.length > 0) {
-            console.log('result:', result[0].ProgramID);
             return res.json({program: result[0].ProgramID});
         }
     });

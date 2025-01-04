@@ -68,7 +68,6 @@ router.get('/dcsViewEnrollment', (req, res) => {
                 if(err){
                     return res.json({message: "Error in server: " + err});
                 } else if(enrollmentRes.length > 0){
-                    console.log(enrollmentRes[0]);
                     return res.json({message: "Enrollment fetched successfully", enrollmentPeriod: enrollmentRes[0]});
                 }   
             })
@@ -88,7 +87,6 @@ router.get('/viewEnrollmentPeriod', (req, res) => {
                 if(err){
                     return res.json({message: "Error in server: " + err});
                 } else if(enrollmentRes.length > 0){
-                    console.log(enrollmentRes[0]);
                     return res.json({enrollmentPeriod: enrollmentRes[0]});
                 }   
             })
@@ -108,7 +106,6 @@ router.get('/getEnrollment', (req, res) =>{
                 if(err){
                     return res.json({message: "Error in server: " + err});
                 } else if(enrollmentRes.length > 0){
-                    console.log(enrollmentRes[0]);
                     return res.json({message: "Enrollment fetched successfully", enrollmentPeriod: enrollmentRes[0]});
                 }
             })

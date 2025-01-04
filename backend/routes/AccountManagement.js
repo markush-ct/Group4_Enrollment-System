@@ -267,7 +267,6 @@ router.post('/activateAccount', async (req, res) => {
     const { email, name, role } = req.body;
 
     if (!email || !name || !role) {
-        console.error('Missing email or name:', req.body);
         return res.json({ message: 'Email and name are required.' });
     }
 
@@ -294,9 +293,8 @@ router.post('/activateAccount', async (req, res) => {
 
 
     try {
-        console.log('Sending email to:', email);
+        console.log('Sending email', emailBody);
         await transporter.sendMail(mailOptions);
-        console.log('Email sent successfully', emailBody);
 
         const terminateQuery = `UPDATE account
         SET Status = 'Active',
@@ -312,7 +310,6 @@ router.post('/activateAccount', async (req, res) => {
         })
 
     } catch (error) {
-        console.error('Error in /activateAccount:', error);
         res.json({
             message: 'Internal server error. Please check your internet connection.',
             error: error.message,
@@ -324,7 +321,6 @@ router.post('/terminateAccount', async (req, res) => {
     const { email, name, role } = req.body;
 
     if (!email || !name || !role) {
-        console.error('Missing email or name:', req.body);
         return res.json({ message: 'Email and name are required.' });
     }
 
@@ -348,7 +344,6 @@ router.post('/terminateAccount', async (req, res) => {
     try {
         console.log('Sending email to:', email);
         await transporter.sendMail(mailOptions);
-        console.log('Email sent successfully');
 
         const terminateQuery = `UPDATE account
         SET Status = 'Terminated'

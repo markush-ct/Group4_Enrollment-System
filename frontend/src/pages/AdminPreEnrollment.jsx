@@ -21,6 +21,8 @@ function Requirements() {
   const [errorPrompt, setErrorPrompt] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
+  const [preEnrollmentValues, setPreEnrollmentValues] = useState([]);
+  const [rows, setRows] = useState([]);
 
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -58,10 +60,10 @@ function Requirements() {
   // FETCH ACCOUNT REQUESTS
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getAccountReq")
+      .get("http://localhost:8080/getPreEnrollForAdviser")
       .then((res) => {
-        setAccountRequests(res.data.accReq);
-        setFilteredRequests(res.data.accReq);
+        setAccountRequests(res.data.students);
+        setFilteredRequests(res.data.students);
       })
       .catch((err) => {
         console.warn("Error fetching account requests, using example data:", err);
@@ -107,82 +109,78 @@ function Requirements() {
   }, [filterType, accountRequests]);
 
 
-  // Request
-const handleApprove = async (request) => {
-  console.log('Request received in handleApprove:', request);
-
-  setLoading(true);
-
-  if (!request?.Email || !request?.Name || !request?.AccountType) {
-      setErrorPrompt(true);
-      setErrorMsg('Email, name, and account type are required.');
-      return;
-  }
-
-  try {
-      await axios.post('http://localhost:8080/sendApprovalEmail', {
-          email: request.Email,
-          name: request.Name,
-          accountType: request.AccountType,
+  const handleApprove = async (preEnrollmentValues) => {
+    try {
+      console.log("Approving the following values:", preEnrollmentValues);
+  
+      // Send the data to the backend API
+      const response = await axios.post("http://localhost:8080/adviserApprovePreEnrollment", {
+        preEnrollmentValues, // Pass the array to the backend
       });
-
-      setApprovalPrompt(true);
-      setApprovalMsg(`Approval email sent to ${request.Email}`);
-      setErrorPrompt(false);
-      setPopUpVisible(false);
-      setLoading(false);
-      
-  } catch (err) {
-      console.error('Error:', err);
+  
+      // Check the response from the backend
+      if (response.data.message === "Success") {
+        setApprovalPrompt(true);
+        setApprovalMsg(`Pre-enrollment Approved Successfully.`);
+        setPopUpVisible(false);
+      } else {
+        setErrorPrompt(true);
+        setErrorMsg('Failed approve pre-enrollment. Please try again.');
+      }
+    } catch (err) {
       setErrorPrompt(true);
-      setErrorMsg(`Failed to send approval email:  ${err.response?.data?.message || err.message}`);
-      setLoading(false);
-  }
-};
-
-const handleReject = async (request) => {
-  console.log('Request received in handleReject:', request);
-
-  setLoading(true);
-
-  if (!request?.Email || !request?.Name || !request?.AccountType) {
-      setErrorPrompt(true);
-      setErrorMsg('Email and name are required.');
-      return;
-  }
-
-  try {
-      await axios.post('http://localhost:8080/sendEmailRejection', {
-          email: request.Email,
-          name: request.Name,
-          accountType: request.AccountType
+      setErrorMsg(`Failed to approve pre-enrollment: ${err.response?.data?.message || err.message}`);
+    }
+  };
+  
+  const handleReject = async (preEnrollmentValues) => {
+    try {
+      const response = await axios.post("http://localhost:8080/adviserRejectPreEnrollment", {
+        preEnrollmentValues,
       });
-
-      setRejectionPrompt(true);
-      setRejectionMsg(`Rejection email sent to ${request.Email}`);
-      setErrorPrompt(false);
-      setPopUpVisible(false);
-      setLoading(false);
-  } catch (err) {
-      console.error('Error:', err);
+  
+      if (response.data.message === "Success") {
+        setApprovalPrompt(true);
+        setApprovalMsg(`Pre-enrollment Rejected Successfully.`);
+        setPopUpVisible(false);
+      } else {
+        setErrorPrompt(true);
+        setErrorMsg('Failed reject pre-enrollment. Please try again.');
+      }
+    } catch (err) {
       setErrorPrompt(true);
-      setErrorMsg(`Failed to send rejection email: ${err.response?.data?.message || err.message}`);
-      setLoading(false);
-  }
-};
+      setErrorMsg(`Failed to reject pre-enrollment: ${err.response?.data?.message || err.message}`);
+    }
+  };
 
-const closePrompt = () => {
-  setApprovalPrompt(false);
-  setRejectionPrompt(false);
-  window.location.reload();
-};
+
+  const closePrompt = () => {
+    setApprovalPrompt(false);
+    setRejectionPrompt(false);
+    window.location.reload();
+  };
 
 
   //show popup
   const handleRowClick = (request) => {
     setSelectedRequest(request);
     setPopUpVisible(true);
+
+    try {
+      axios.post(`http://localhost:8080/getPreEnrollmentValuesForAdmin`, { studentID: request.StudentID })
+        .then((res) => {
+          if (res.data.message === "Waiting for pre-enrollment approval") {
+            setPreEnrollmentValues(res.data.data)
+          } else {
+            setPreEnrollmentValues([]);
+          }
+        })
+    } catch (err) {
+      alert("Error: " + err);
+      setPreEnrollmentValues([]);
+    }
   };
+
 
   //close popup
   const closePopup = () => {
@@ -190,100 +188,101 @@ const closePrompt = () => {
     setSelectedRequest(null);
   };
 
+  const totalPreEnrollUnits = preEnrollmentValues.reduce((acc, row) => acc + (row.CreditUnitLec + row.CreditUnitLab), 0);
 
 
   return (
     <>
       <Header SideBar={SideBar} setSideBar={setSideBar} />
-{/* PROMPTS */}
+      {/* PROMPTS */}
       {/* APPROVAL PROMPT */}
-{approvalPrompt && (
-    <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPrompt}>
-        <div className={styles.popupPromptContent}>
+      {approvalPrompt && (
+        <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPrompt}>
+          <div className={styles.popupPromptContent}>
             <button
-                className={styles.popupPromptcloseButton}
-                onClick={() => setApprovalPrompt(false)}
+              className={styles.popupPromptcloseButton}
+              onClick={() => setApprovalPrompt(false)}
             >
-                &times;
+              &times;
             </button>
             <div className={styles.popupPromptHeader}>
-                <h2>Approval Success</h2>
+              <h2>Approval Success</h2>
             </div>
             <div className={styles.popupPromptMessage}>
-                <img
-                    src="/src/assets/checkmark.png"
-                    alt="Success Icon"
-                    className={styles.popupPromptmessageImage}
-                />
+              <img
+                src="/src/assets/checkmark.png"
+                alt="Success Icon"
+                className={styles.popupPromptmessageImage}
+              />
             </div>
             <p className={styles.popupPromptText}>{approvalMsg}</p>
             <div className={styles.buttonContainer}>
-            <button
-  className={styles.OKButton}
-  onClick={closePrompt} 
->
-  <span>OK</span>
-</button>
-</div>
-
-        </div>
-    </div>
-)}
-
-{/* REJECTION PROMPT */}
-{rejectionPrompt && (
-    <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPrompt}>
-        <div className={styles.popupPromptContent}>
-            <button
-                className={styles.popupPromptcloseButton}
+              <button
+                className={styles.OKButton}
                 onClick={closePrompt}
+              >
+                <span>OK</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* REJECTION PROMPT */}
+      {rejectionPrompt && (
+        <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPrompt}>
+          <div className={styles.popupPromptContent}>
+            <button
+              className={styles.popupPromptcloseButton}
+              onClick={closePrompt}
             >
-                &times;
+              &times;
             </button>
             <div className={styles.popupPromptHeader}>
-                <h2>Rejection Success</h2>
+              <h2>Rejection Success</h2>
             </div>
             <div className={styles.popupPromptMessage}>
-                <img
-                    src="/src/assets/checkmark.png"
-                    alt="Success Icon"
-                    className={styles.popupPromptmessageImage}
-                />
+              <img
+                src="/src/assets/checkmark.png"
+                alt="Success Icon"
+                className={styles.popupPromptmessageImage}
+              />
             </div>
             <p className={styles.popupPromptText}>{rejectionMsg}</p>
+          </div>
         </div>
-    </div>
-)}
+      )}
 
-{/* ERROR PROMPT */}
-{errorPrompt && (
-    <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPromptError}>
-        <div className={styles.popupPromptContentError}>
+      {/* ERROR PROMPT */}
+      {errorPrompt && (
+        <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPromptError}>
+          <div className={styles.popupPromptContentError}>
             <button
-                className={styles.popupPromptcloseButton}
-                onClick={() => setErrorPrompt(false)}
+              className={styles.popupPromptcloseButton}
+              onClick={() => setErrorPrompt(false)}
             >
-                &times;
+              &times;
             </button>
             <div className={styles.popupPromptHeaderError}>
-                <h2>Error</h2>
+              <h2>Error</h2>
             </div>
             <div className={styles.popupPromptMessageError}>
-                <img
-                    src="/src/assets/errormark.png"
-                    alt="Error Icon"
-                    className={styles.popupPromptmessageImage}
-                />
+              <img
+                src="/src/assets/errormark.png"
+                alt="Error Icon"
+                className={styles.popupPromptmessageImage}
+              />
             </div>
             <p className={styles.popupPromptTextError}>{errorMsg}</p>
+          </div>
         </div>
-    </div>
-)}
+      )}
 
 
       <div className={styles.contentSection}>
         <div className={styles.PageTitle} data-aos="fade-up">
-          Enrollment
+          Pre-Enrollment
         </div>
 
         {/* Dropdown  */}
@@ -296,10 +295,16 @@ const closePrompt = () => {
             onChange={(e) => setFilterType(e.target.value)}
           >
             <option value="All">All</option>
-            <option value="Regular">Regular</option>
-            <option value="Irregular">Irregular</option>
-            <option value="Shiftee">Shiftee</option>
-            
+            <option value="1-1">1-1</option>
+            <option value="1-2">1-2</option>
+            <option value="1-3">1-3</option>
+            <option value="2-1">2-1</option>
+            <option value="2-1">2-1</option>
+            <option value="1-1">1-1</option>
+            <option value="1-1">1-1</option>
+            <option value="1-1">1-1</option>
+            <option value="1-1">1-1</option>
+            <option value="1-1">1-1</option>
           </select>
         </div>
 
@@ -308,48 +313,29 @@ const closePrompt = () => {
           <table className={styles.requestsTable}>
             <thead>
               <tr>
-              <th>Student ID</th>
+                <th>Student ID</th>
                 <th>Name</th>
+                <th>Year - Section</th>
                 <th>Student Type</th>
-                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredRequests.length > 0 ? (
                 filteredRequests.map((request) => (
                   <tr key={request.id} onClick={() => handleRowClick(request)}>
-                    <td data-label="Student ID">{request.Name}</td>
-                    <td data-label="Name">{request.Email}</td>
-                    <td data-label="Student Type">{request.AccountType}</td>
-                    <td>
-                      <button
-                        className={styles.approveButton}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          console.log('Request passed to handleApprove:', request);
-                          handleApprove(request); // Pass the entire request object
-                        }}
-                      >
-                        {loading ? 'Loading...' : 'Approve'}
-                      </button>
-
-                      <button
-                        className={styles.rejectButton}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          console.log('Request passed to handleReject:', request);
-                          handleReject(request); // Pass the entire request object
-                        }}
-                      >
-                        {loading ? 'Loading...' : 'Reject'}
-                      </button>
-                    </td>
+                    <td data-label="Student ID">{request.CvSUStudentID}</td>
+                    <td data-label="Student ID">{request.Firstname} {request.Lastname}</td>
+                    <td data-label="Year and Section">{request.Year === "First Year" ? 1
+                      : request.Year === "Second Year" ? 2
+                        : request.Year === "Third Year" ? 3
+                          : 4} - {request.Section}</td>
+                    <td data-label="Student ID">{request.StudentType}</td>
                   </tr>
                 ))
               ) : (
                 <tr>
                   <td colSpan="4" className={styles.noData}>
-                    No enrollment found.
+                    No submissions found.
                   </td>
                 </tr>
               )}
@@ -362,114 +348,62 @@ const closePrompt = () => {
 
 
 
-    {/* PopUp */}
-{popUpVisible && selectedRequest && (
-  <div
-    data-aos="zoom-out"
-    data-aos-duration="500"
-    className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}
-  >
-    <div className={styles.popupContentReq}>
-      {/* Popup Header */}
-      <div className={styles.popupHeader}>
-        <button onClick={closePopup} className={styles.closeButton}>✖</button>
-        <h2>Enrollment</h2>
-      </div>
-
-      {/* Details Section */}
-      <div data-aos="fade-up" className={styles.studentType}>
-        <span>DETAILS</span>
-      </div>
-
-      {/* Submission Details */}
-      <div className={styles.popupTextReq}>
-        <p><strong>Name:</strong> Kai Sotto</p>
-        <p><strong>Student ID:</strong> K4848158</p>
-        <p><strong>Course/Program:</strong> BS Computer Science</p>
-        <p><strong>Student Type:</strong> Regular</p>
-      </div>
-      <div className={styles.popupTextReq}>
-        <p><strong>SOC FEE STATUS:</strong> Paid</p>
-        <p><strong>REQUIREMENT SUBMISSION:</strong> Complete</p>
-        <p><strong>ADVISING:</strong> Approved</p>
-        <p><strong>PRE-ENROLLMENT FORM:</strong> Submitted</p>
-      </div>
-
-      {/* Checklist Table */}
-      <div className={styles.checklistSection}>
-        <h3 className={styles.semesterTitle}>1st Year - First Semester</h3>
-        <table className={styles.checklistTable}>
-          <thead>
-            <tr>
-              <th>COURSE CODE</th>
-              <th>COURSE TITLE</th>
-              <th>UNITS</th>
-              <th>FINAL GRADE</th>
-              <th>INSTRUCTOR</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>CS</td>
-              <td>WALANG MATUTULOG</td>
-              <td>3</td>
-              <td>1.25</td>
-              <td>LEBRON</td>
-            </tr>
-            <tr>
-              <td>CS</td>
-              <td>WALANG MATUTULOG</td>
-              <td>3</td>
-              <td>1.25</td>
-              <td>LEBRON</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <h3 className={styles.semesterTitle}>1st Year - Second Semester</h3>
-        <table className={styles.checklistTable}>
-          <thead>
-            <tr>
-              <th>COURSE CODE</th>
-              <th>COURSE TITLE</th>
-              <th>UNITS</th>
-              <th>FINAL GRADE</th>
-              <th>INSTRUCTOR</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>CS</td>
-              <td>WALANG MATUTULOG</td>
-              <td>3</td>
-              <td>1.25</td>
-              <td>LEBRON</td>
-            </tr>
-            <tr>
-              <td>CS</td>
-              <td>WALANG MATUTULOG</td>
-              <td>3</td>
-              <td>1.25</td>
-              <td>LEBRON</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      {/* Button Section */}
-      <div className={styles.buttonSection}>
-        <button
-          className={styles.setEnrollmentButton}
-          
+      {/* PopUp */}
+      {popUpVisible && selectedRequest && (
+        <div
+          data-aos="zoom-out"
+          data-aos-duration="500"
+          className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}
         >
-          Set Enrollment Status
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+          <div className={styles.popupContentReq}>
+            {/* Popup Header */}
+            <div className={styles.popupHeader}>
+              <button onClick={closePopup} className={styles.closeButton}>✖</button>
+              <h2>Pre-Enrollment Form</h2>
+            </div>
+            <div data-aos="fade-up" className={styles.studentType}>
+              <span>DETAILS</span>
+            </div>
 
 
+            {/* Submission Details */}
+            <div className={styles.popupTextReq}>
+
+              <p><strong>Name:</strong> {selectedRequest.Firstname} {selectedRequest.Lastname}</p>
+              <p><strong>Student ID:</strong> {selectedRequest.CvSUStudentID}</p>
+              <p><strong>Student Type:</strong> {selectedRequest.StudentType}</p>
+
+            </div>
+
+
+
+            {/* Details Section */}
+            <div data-aos="fade-up" className={styles.detailsSection}>
+            </div>
+
+
+            {Array.isArray(preEnrollmentValues) && preEnrollmentValues.length > 0 ? (
+              <div className={styles.formContainer}>                
+
+                {preEnrollmentValues.map((row) => (
+
+                  <div key={row.CourseChecklistID}>
+                    <p>{row.CourseCode} - {row.CourseTitle} ({row.CreditUnitLec + row.CreditUnitLab} units)</p>
+                  </div>
+                ))}
+                <p>Total Units: <span>{totalPreEnrollUnits}</span></p>
+
+                <br />
+
+                <button className={`${styles.btn} ${styles.addBtn}`} onClick={() => handleApprove(preEnrollmentValues)}>Approve</button>
+                <button className={`${styles.btn} ${styles.removeBtn}`} onClick={() => handleReject(preEnrollmentValues)}>Reject</button>
+              </div>
+            ) : ("")}
+
+          </div>
+        </div>
+
+      )}
 
 
     </>

@@ -116,7 +116,6 @@ router.post('/sendEmailAdvise', (req, res) => {
 
                     Promise.all(promises)
                         .then(() => {
-                            console.log("Courses received in backend:", courses);
                             return res.json({ message: "Courses saved and email sent successfully." });
                         })
                         .catch(saveErr => {

@@ -355,6 +355,7 @@ const handleCourseChange = (index, courseID) => {
               <th>Student ID</th>
                 <th>Name</th>
                 <th>Year - Section</th>
+                <th>Student Type</th>
               </tr>
             </thead>
             <tbody>
@@ -367,6 +368,7 @@ const handleCourseChange = (index, courseID) => {
                     : request.Year === "Second Year" ? 2
                     : request.Year === "Third Year" ? 3
                     : 4} - {request.Section}</td>
+                    <td data-label="Student ID">{request.StudentType}</td>
                   </tr>
                 ))
               ) : (
@@ -396,7 +398,7 @@ const handleCourseChange = (index, courseID) => {
       {/* Popup Header */}
       <div className={styles.popupHeader}>
                     <button onClick={closePopup} className={styles.closeButton}>✖</button>
-                    <h2>Requirement</h2>
+                    <h2>Requirements</h2>
                   </div>
                   <div data-aos="fade-up" className={styles.studentType}>
                     <span>DETAILS</span>
@@ -407,7 +409,7 @@ const handleCourseChange = (index, courseID) => {
        <div className={styles.popupTextReq}>
       
           <p><strong>Name:</strong> {selectedRequest.Firstname} {selectedRequest.Lastname}</p>
-          <p><strong>Student ID:</strong> {selectedRequest.StudentID}</p>
+          <p><strong>Student ID:</strong> {selectedRequest.CvSUStudentID}</p>
           <p><strong>Student Type:</strong> {selectedRequest.StudentType}</p>
           
         </div>

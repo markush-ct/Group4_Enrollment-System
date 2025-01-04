@@ -27,9 +27,12 @@ import viewChecklist from './routes/viewChecklist.js';
 import HandleCOGChecklist from './routes/HandleCOGChecklist.js';
 import HandleAdvising from './routes/HandleAdvising.js';
 import HandlePreEnrollment from './routes/HandlePreEnrollment.js';
+import RegIrregEnrollProgress from './routes/RegIrregDashboardProgress.js';
+
 
 dotenv.config();
 const app = express();
+
 app.use(express.json());
 app.use(cors({
     origin: ["http://localhost:5173"],
@@ -79,6 +82,7 @@ const upload = multer({ storage });
 
 app.use("/uploads", express.static("uploads"));
 
+
 app.use('/accReqNotif', accReqNotif);
 app.use('/admissionNotif', admissionNotif);
 app.use('/getFreshmenConfirmedSlots', getFreshmenConfirmedSlots);
@@ -94,6 +98,9 @@ app.use('/', viewChecklist);
 app.use('/', HandleCOGChecklist);
 app.use('/', HandleAdvising);
 app.use('/', HandlePreEnrollment);
+app.use('/', RegIrregEnrollProgress);
+
+
 
 app.post('/rejectTransfereeAdmissionReq', (req, res) =>{
     const getEmpID = `SELECT * FROM employee where Email = ?`;
@@ -103,7 +110,6 @@ app.post('/rejectTransfereeAdmissionReq', (req, res) =>{
             return res.json({ message: "Error in server: " + err });
         } else if (idRes.length > 0) {
             const empID = idRes[0].EmployeeID;
-            console.log('Request Body:', req.body);
 
             const { email, name, studentID, rejectionReason } = req.body;
 
@@ -153,14 +159,12 @@ app.post('/rejectTransfereeAdmissionReq', (req, res) =>{
                     try {
                         console.log("Sending email with options:", mailOptions);
                         transporter.sendMail(mailOptions);
-                        console.log("Email sent successfully.");
                         return res.json({ message: "Transfer request rejection sent" });
                     } catch (emailError) {
                         console.error('Error sending email:', emailError);
                         return res.json({ message: "Error sending email", error: emailError.message });
                     }
                 } else {
-                    console.log('Request Body:', req.body);
                     return res.json({ message: "Failed to reject transfer request" });
                 }
             })
@@ -176,7 +180,6 @@ app.post('/approveTransfereeAdmissionReq', (req, res) => {
             return res.json({ message: "Error in server: " + err });
         } else if (idRes.length > 0) {
             const empID = idRes[0].EmployeeID;
-            console.log('Request Body:', req.body);
 
             const { email, name, studentID, submissionDate } = req.body;
 
@@ -236,14 +239,12 @@ app.post('/approveTransfereeAdmissionReq', (req, res) => {
                     try {
                         console.log("Sending email with options:", mailOptions);
                         transporter.sendMail(mailOptions);
-                        console.log("Email sent successfully.");
                         return res.json({ message: "Transfer Approval sent" });
                     } catch (emailError) {
                         console.error('Error sending email:', emailError);
                         return res.json({ message: "Error sending email", error: emailError.message });
                     }
                 } else {
-                    console.log('Request Body:', req.body);
                     return res.json({ message: "Failed to approve transfer request" });
                 }
             })
@@ -260,16 +261,12 @@ app.get('/getTransfereeAdmissionReq', (req, res) => {
         AND s.StudentType = 'Transferee'`;
 
     db.query(query, (err, results) => {
-        console.log("Executing query:", query);
-        console.log("Query parameters:", ["Submitted"]);
-        console.log("Query results:", results);
 
         if (err) {
             return res.json({ message: "Error in server: " + err });
         }
 
         if (results === undefined || results.length === 0) {
-            console.log("No records found or results are undefined.");
             return res.json({ message: "No records found" });
         }
 
@@ -279,7 +276,6 @@ app.get('/getTransfereeAdmissionReq', (req, res) => {
                 records: results,
             });
         } else {
-            console.log(results);
             return res.json({ message: "No records found" });
         }
     });
@@ -489,7 +485,6 @@ app.post('/rejectFreshmenAdmissionReq', (req, res) =>{
             return res.json({ message: "Error in server: " + err });
         } else if (idRes.length > 0) {
             const empID = idRes[0].EmployeeID;
-            console.log('Request Body:', req.body);
 
             const { email, name, studentID, rejectionReason } = req.body;
 
@@ -539,14 +534,12 @@ app.post('/rejectFreshmenAdmissionReq', (req, res) =>{
                     try {
                         console.log("Sending email with options:", mailOptions);
                         transporter.sendMail(mailOptions);
-                        console.log("Email sent successfully.");
                         return res.json({ message: "Admission request rejection sent" });
                     } catch (emailError) {
                         console.error('Error sending email:', emailError);
                         return res.json({ message: "Error sending email", error: emailError.message });
                     }
                 } else {
-                    console.log('Request Body:', req.body);
                     return res.json({ message: "Failed to reject admission request" });
                 }
             })
@@ -562,7 +555,6 @@ app.post('/approveFreshmenAdmissionReq', (req, res) => {
             return res.json({ message: "Error in server: " + err });
         } else if (idRes.length > 0) {
             const empID = idRes[0].EmployeeID;
-            console.log('Request Body:', req.body);
 
             const { email, name, studentID, submissionDate, examDatetime } = req.body;
 
@@ -639,8 +631,6 @@ app.post('/approveFreshmenAdmissionReq', (req, res) => {
                     try {
                         console.log("Sending email with options:", mailOptions);
                         transporter.sendMail(mailOptions);
-                        console.log("Email sent successfully.");
-                        console.log('Exam DateTime:', examDatetime);
 
                         const getAdmissionID = `SELECT * FROM admissionform WHERE StudentID = ?`;
                         db.query(getAdmissionID, studentID, (err, admissionIDRes) => {
@@ -663,7 +653,6 @@ app.post('/approveFreshmenAdmissionReq', (req, res) => {
                         return res.json({ message: "Error sending email", error: emailError.message });
                     }
                 } else {
-                    console.log('Request Body:', req.body);
                     return res.json({ message: "Failed to approve admission request" });
                 }
             })
@@ -680,16 +669,12 @@ app.get('/getFreshmenAdmissionReq', (req, res) => {
         AND s.StudentType = 'Freshman'`;
 
     db.query(query, (err, results) => {
-        console.log("Executing query:", query);
-        console.log("Query parameters:", ["Submitted"]);
-        console.log("Query results:", results);
 
         if (err) {
             return res.json({ message: "Error in server: " + err });
         }
 
         if (results === undefined || results.length === 0) {
-            console.log("No records found or results are undefined.");
             return res.json({ message: "No records found" });
         }
 
@@ -699,7 +684,6 @@ app.get('/getFreshmenAdmissionReq', (req, res) => {
                 records: results,
             });
         } else {
-            console.log(results);
             return res.json({ message: "No records found" });
         }
     });
@@ -750,7 +734,6 @@ app.post('/rejectShiftingReq', (req, res) => {
             return res.json({ message: "Error in server: " + err });
         } else if (idRes.length > 0) {
             const empID = idRes[0].EmployeeID;
-            console.log('Request Body:', req.body);
 
             const { email, name, studentID, rejectionReason } = req.body;
 
@@ -794,14 +777,12 @@ app.post('/rejectShiftingReq', (req, res) => {
                     try {
                         console.log("Sending email with options:", mailOptions);
                         transporter.sendMail(mailOptions);
-                        console.log("Email sent successfully.");
                         return res.json({ message: "Shifting Request rejection sent" });
                     } catch (emailError) {
                         console.error('Error sending email:', emailError);
                         return res.json({ message: "Error sending email", error: emailError.message });
                     }
                 } else {
-                    console.log('Request Body:', req.body);
                     return res.json({ message: "Failed to reject shifting request" });
                 }
             })
@@ -817,7 +798,6 @@ app.post('/approveShiftingReq', (req, res) => {
             return res.json({ message: "Error in server: " + err });
         } else if (idRes.length > 0) {
             const empID = idRes[0].EmployeeID;
-            console.log('Request Body:', req.body);
 
             const { email, name, studentID, submissionDate } = req.body;
 
@@ -868,14 +848,12 @@ app.post('/approveShiftingReq', (req, res) => {
                     try {
                         console.log("Sending email with options:", mailOptions);
                         transporter.sendMail(mailOptions);
-                        console.log("Email sent successfully.");
                         return res.json({ message: "Shifting Request approval sent" });
                     } catch (emailError) {
                         console.error('Error sending email:', emailError);
                         return res.json({ message: "Error sending email", error: emailError.message });
                     }
                 } else {
-                    console.log('Request Body:', req.body);
                     return res.json({ message: "Failed to approve shifting request" });
                 }
             })
@@ -1486,8 +1464,7 @@ app.get('/getAccountReq', (req, res) => {
 app.post('/sendEmailRejection', async (req, res) => {
     const { email, name, accountType } = req.body;
 
-    if (!email || !name || !accountType) {
-        console.error('Missing email or name:', req.body);
+    if (!email || !name || !accountType) {        
         return res.status(400).json({ message: 'Email and name are required.' });
     }
 
@@ -1511,7 +1488,6 @@ app.post('/sendEmailRejection', async (req, res) => {
     try {
         console.log('Sending email to:', email);
         await transporter.sendMail(mailOptions);
-        console.log('Email sent successfully');
 
         if (["Regular", "Irregular", "Freshman", "Transferee", "Shiftee"].includes(accountType)) {
             const updateQuery = `UPDATE student SET RegStatus = 'Rejected' WHERE Email = ?`;
@@ -1572,12 +1548,10 @@ app.post('/sendEmailRejection', async (req, res) => {
 //SEND ACCOUNT APPROVAL
 app.post('/sendApprovalEmail', async (req, res) => {
 
-    console.log('Received data:', req.body);
 
     const { email, name, accountType } = req.body;
 
     if (!email || !name || !accountType) {
-        console.error('Missing email or name:', req.body);
         return res.status(400).json({ message: 'Email and name are required.' });
     }
 
@@ -1609,7 +1583,6 @@ app.post('/sendApprovalEmail', async (req, res) => {
     try {
         console.log('Sending email to:', email, "With account type of: ", accountType);
         await transporter.sendMail(mailOptions);
-        console.log('Email sent successfully');
 
         //QUERY FOR CREATING THE ACCOUNT IN ACCOUNT TABLE
         const createAcc = `INSERT INTO account (Name, Email, Password, Role, Status)
@@ -1902,7 +1875,6 @@ app.get('/programs', (req, res) => {
     const sql = `SELECT * FROM program`;
     db.query(sql, (err, result) => {
         if (err) {
-            console.log('Error getting programs: ' + err)
             return res.json({ message: 'Error' + err })
         } else {
             const programs = result.map(row => ({
@@ -2026,7 +1998,6 @@ app.post('/CreateAcc', (req, res) => {
                                         return res.json({ message: 'Error sending email' });
                                     }
 
-                                    console.log('Email sent successfully');
 
                                     const updateStudent = `UPDATE student SET PhoneNo = ?, RegStatus = 'Accepted' WHERE Email = ?`;
                                     const createOldStudentAcc = `INSERT INTO account (Name, Email, Password, Role) 
@@ -2054,20 +2025,7 @@ app.post('/CreateAcc', (req, res) => {
                                         }
                                     })
                                 });
-                            } else {
-                                console.log(oldStudentResult[0].ProgramID + "\n" + oldStudentResult[0].CvSUStudentID + "\n" + oldStudentResult[0].Email + "\n" + oldStudentResult[0].StudentType);
-                                console.log(req.body.program + "\n" + req.body.studentID + "\n" + req.body.email + "\n" + req.body.regIrreg);
-
-                                console.log("Frontend input types:");
-                                console.log(typeof req.body.program, typeof req.body.studentID, typeof req.body.email, typeof req.body.regIrreg);
-
-                                console.log("Database result types:");
-                                console.log(
-                                    typeof student.ProgramID,
-                                    typeof student.CvSUStudentID,
-                                    typeof student.Email,
-                                    typeof student.StudentType
-                                );
+                            } else {                                
                                 return res.json({ message: "Error: " + err });
                             }
                         }
@@ -2267,10 +2225,8 @@ app.post('/sendPin', (req, res) => {
     const emailQuery = `SELECT * FROM account WHERE Email = ?`;
     db.query(emailQuery, [email], (err, result) => {
         if (err) {
-            console.log("Error in server: " + err);
             return res.json({ message: "Error in server: " } + err);
         } else if (result.length === 0) {
-            console.log("Email doesn't exist");
             return res.json({ message: "Email doesn't exist" });
         } else if (result.length > 0) {
             const randomPin = Array.from({ length: 4 }, () => Math.floor(Math.random() * 10)).join('');
@@ -2292,7 +2248,6 @@ app.post('/sendPin', (req, res) => {
 
             try {
                 transporter.sendMail(mailOptions);
-                console.log("Verification code sent");
                 return res.json({ message: "Verification code sent" });
             } catch (emailError) {
                 return res.json({ message: "Error sending email", error: emailError.message });
@@ -2612,7 +2567,6 @@ app.post("/logoutFunction", (req, res) => {
     if (req.session) {
         req.session.destroy((err) => {
             if (err) {
-                console.error("Error destroying session:", err);
                 return res.json({ valid: false, message: "Logout failed." });
             }
             res.clearCookie("connect.sid"); // Session cookie
