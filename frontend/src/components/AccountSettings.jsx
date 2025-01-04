@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import styles from "/src/styles/AccountSettings.module.css";
 import Header from "/src/components/AdminDashHeader.jsx";
@@ -18,29 +19,28 @@ function AccountSettingsStudent() {
   const [successMsg, setsuccessMsg] = useState("");
   const [errorPrompt, setErrorPrompt] = useState(false); //errors
   const [errorMsg, setErrorMsg] = useState("");
-  const [accRole, setAccRole] = useState('');
+  const [accRole, setAccRole] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [isChangePasswordView, setIsChangePasswordView] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const [pfp, setPFP] = useState({
     uploadPFP: null,
-    pfpURL: '',
+    pfpURL: "",
   });
   const [uploadedPFP, setUploadedPFP] = useState(null);
   const [accInfo, setAccInfo] = useState({
-    firstName: '',
-    middleName: '',
-    lastName: '',
-    email: '',
-    gender: '',
-    age: '',
-    phoneNo: '',
-    address: '',
-    dob: '',
-    position: '',
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    email: "",
+    gender: "",
+    age: "",
+    phoneNo: "",
+    address: "",
+    dob: "",
+    position: "",
   });
-
 
   //Reuse in other pages that requires logging in
   const navigate = useNavigate();
@@ -72,14 +72,14 @@ function AccountSettingsStudent() {
     };
   }, [SideBar]);
 
-
   const handleToggleView = () => {
     setIsChangePasswordView(!isChangePasswordView);
   };
 
   //FETCH ACCOUNT INFO
   useEffect(() => {
-    axios.get('http://localhost:8080/getAccInfo')
+    axios
+      .get("http://localhost:8080/getAccInfo")
       .then((res) => {
         if (res.data.message === "Fetch successful") {
           setAccInfo({
@@ -87,7 +87,7 @@ function AccountSettingsStudent() {
             middleName: res.data.middleName,
             lastName: res.data.lastName,
             email: res.data.email,
-            gender: res.data.gender === 'F' ? 'Female' : 'Male',
+            gender: res.data.gender === "F" ? "Female" : "Male",
             age: res.data.age,
             phoneNo: res.data.phoneNo,
             address: res.data.address,
@@ -95,62 +95,63 @@ function AccountSettingsStudent() {
             position: res.data.position,
           });
 
-          console.log(res.data);
+          // console.log(res.data);
         } else {
           alert("Error fetching account info");
         }
       })
       .catch((err) => {
         alert("Error: " + err);
-      })
+      });
 
-      axios.get('http://localhost:8080/getPFP')
+    axios
+      .get("http://localhost:8080/getPFP")
       .then((res) => {
         setUploadedPFP(res.data.pfpURL);
         setPFP({
           uploadPFP: res.data.uploadPFP || null,
-          pfpURL: res.data.pfpURL || '',
+          pfpURL: res.data.pfpURL || "",
         });
       })
       .catch((err) => {
         alert("Error: " + err);
-      })
-  }, [])
+      });
+  }, []);
 
-    //AUTOSAVE PFP
-    useEffect(() => {
-      const timer = setTimeout(() => {
-        autoSave();
-      }, 1000);
-  
-      return () => clearTimeout(timer);
-    }, [pfp]);
+  //AUTOSAVE PFP
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      autoSave();
+    }, 1000);
 
-    const autoSave = () => {
-      setIsSaving(true);
+    return () => clearTimeout(timer);
+  }, [pfp]);
 
-      const data = new FormData();
-      if (pfp.uploadPFP) {
-        data.append("uploadPFP", pfp.uploadPFP);
-      }
-      data.append("pfpURL", pfp.pfpURL);
+  const autoSave = () => {
+    setIsSaving(true);
 
+    const data = new FormData();
+    if (pfp.uploadPFP) {
+      data.append("uploadPFP", pfp.uploadPFP);
+    }
+    data.append("pfpURL", pfp.pfpURL);
 
-      axios.post("http://localhost:8080/changePFP", data, {
-        headers: { "Content-Type": "multipart/form-data", },
+    axios
+      .post("http://localhost:8080/changePFP", data, {
+        headers: { "Content-Type": "multipart/form-data" },
       })
       .then((res) => {
-        console.log("Student saved successfully:", res.data);
+        // console.log("Student saved successfully:", res.data);
         setUploadedPFP(`http://localhost:8080/${res.data.pfpURL}`);
       })
       .catch((err) => {
-        alert("Error: " + err)
-      })
-    }
-  
-    const handleUploadChange = (e) => {
-      setPFP({ ...pfp, uploadPFP: e.target.files[0] });
-    };
+        alert("Error: " + err);
+      });
+  };
+
+  const handleUploadChange = (e) => {
+    setPFP({ ...pfp, uploadPFP: e.target.files[0] });
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -160,16 +161,16 @@ function AccountSettingsStudent() {
     }));
   };
 
-
   const handleSaveChanges = () => {
-    axios.post('http://localhost:8080/saveAccInfo', accInfo)
+    axios
+      .post("http://localhost:8080/saveAccInfo", accInfo)
       .then((res) => {
         if (res.data.message === "Account updated successfully") {
           setErrorMsg("");
           setErrorPrompt(false);
           setsuccessMsg(res.data.message);
           setsuccessPrompt(true);
-          console.log(res.data);
+          // console.log(res.data);
           setTimeout(() => {
             window.location.reload();
           }, 1000);
@@ -185,14 +186,15 @@ function AccountSettingsStudent() {
         setErrorPrompt(true);
         setsuccessMsg("");
         setsuccessPrompt(false);
-      })
-  }
+      });
+  };
 
   // Handle current password submission
   const handleCurrentPasswordSubmit = (event) => {
     event.preventDefault();
 
-    axios.post('http://localhost:8080/matchPass', { currentPassword })
+    axios
+      .post("http://localhost:8080/matchPass", { currentPassword })
       .then((res) => {
         if (res.data.message === "Account found") {
           setIsCurrentPasswordValid(true);
@@ -202,12 +204,11 @@ function AccountSettingsStudent() {
           setErrorPrompt(true);
           setErrorMsg(res.data.message);
           setIsCurrentPasswordValid(false);
-
         }
       })
       .catch((err) => {
         alert("Error: " + err);
-      })
+      });
   };
 
   const submitNewPassword = (event) => {
@@ -219,8 +220,11 @@ function AccountSettingsStudent() {
       setErrorPrompt(true);
       setErrorMsg("Password do not match");
     } else {
-
-      axios.post('http://localhost:8080/changePass', { newPassword, confirmPassword })
+      axios
+        .post("http://localhost:8080/changePass", {
+          newPassword,
+          confirmPassword,
+        })
         .then((res) => {
           if (res.data.message === "Password changed successfully") {
             setsuccessPrompt(true);
@@ -241,19 +245,15 @@ function AccountSettingsStudent() {
         })
         .catch((err) => {
           alert("Error: " + err);
-          
-        })
+        });
     }
-  }
+  };
 
   return (
     <>
       <Header SideBar={SideBar} setSideBar={setSideBar} />
       <div className={styles.contentSection}>
         <div className={styles.PageTitle}>Account Settings</div>
-
-
-
 
         <div className={styles.accountContainer}>
           {/* Left Column - Profile Section */}
@@ -264,12 +264,14 @@ function AccountSettingsStudent() {
                   src={uploadedPFP}
                   alt="Profile"
                   className={styles.profileImage}
+                  data-testid="profile-image"
                 />
               </div>
               <label
                 htmlFor="uploadPFP"
                 className={styles.uploadButton}
                 aria-label="Upload Profile Picture"
+                data-testid="upload-button"
               >
                 <span>Upload Profile Picture</span>
               </label>
@@ -280,13 +282,15 @@ function AccountSettingsStudent() {
                 className={styles.fileInput}
                 accept="image/*"
                 onChange={handleUploadChange}
+                data-testid="file-input"
               />
-              <h3>{accName}</h3>
-              <p>{accRole}</p>
+              <h3 data-testid="account-name">{accName}</h3>
+              <p data-testid="account-role">{accRole}</p>
             </div>
             <button
               className={styles.changePasswordButton}
               onClick={handleToggleView}
+              data-testid="toggle-button"
             >
               {isChangePasswordView ? "Edit Profile" : "Change Password"}
             </button>
@@ -294,7 +298,11 @@ function AccountSettingsStudent() {
 
           {/* SUCCESS PROMPT */}
           {successPrompt && (
-            <div data-aos="zoom-out" data-aos-duration="500" className={styles.popup}>
+            <div
+              data-aos="zoom-out"
+              data-aos-duration="500"
+              className={styles.popup}
+            >
               <div className={styles.popupContent}>
                 <button
                   className={styles.closeButton}
@@ -306,7 +314,11 @@ function AccountSettingsStudent() {
                   <h2>Success</h2>
                 </div>
                 <div className={styles.Message}>
-                  <img src="/src/assets/checkmark.png" alt="Success Icon" className={styles.messageImage} />
+                  <img
+                    src="/src/assets/checkmark.png"
+                    alt="Success Icon"
+                    className={styles.messageImage}
+                  />
                 </div>
                 <p className={styles.popupText}>{successMsg}</p>
               </div>
@@ -315,7 +327,11 @@ function AccountSettingsStudent() {
 
           {/* ERROR PROMPT */}
           {errorPrompt && (
-            <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupError}>
+            <div
+              data-aos="zoom-out"
+              data-aos-duration="500"
+              className={styles.popupError}
+            >
               <div className={styles.popupContentError}>
                 <button
                   className={styles.closeButton}
@@ -326,22 +342,36 @@ function AccountSettingsStudent() {
                 <div className={styles.popupHeaderError}>
                   <h2>Error</h2>
                 </div>
-                <div className={styles.MessageError} >
-                  <img src="/src/assets/errormark.png" alt="Error Icon" className={styles.messageImage} />
+                <div className={styles.MessageError}>
+                  <img
+                    src="/src/assets/errormark.png"
+                    alt="Error Icon"
+                    className={styles.messageImage}
+                  />
                 </div>
                 <p className={styles.popupTextError}>{errorMsg}</p>
               </div>
             </div>
           )}
 
-
-
-          <div className={styles.rightColumn}>
+          <div
+            className={styles.rightColumn}
+            data-testid="account-settings-form"
+          >
             {!isChangePasswordView ? (
-              <div className={styles.profileEditSection}>
-                <h3 className={styles.subHeading}>Personal Info</h3>
-                <div className={styles.editButtonContainer}>
+              <div
+                className={styles.profileEditSection}
+                data-testid="profile-edit-section"
+              >
+                <h3 className={styles.subHeading} data-testid="sub-heading">
+                  Personal Information
+                </h3>
+                <div
+                  className={styles.editButtonContainer}
+                  data-testid="edit-button-container"
+                >
                   <button
+                    data-testid="edit-button"
                     className={styles.editButton}
                     onClick={() => {
                       if (isEditing) {
@@ -352,22 +382,29 @@ function AccountSettingsStudent() {
                     }}
                   >
                     {isEditing ? (
-                      <>
-                        Save Changes
-                      </>
+                      <>Save Changes</>
                     ) : (
                       <>
-                        Edit <img src="/src/assets/edit-icon.png" className={styles.editIcon} alt="Edit" />
+                        Edit{" "}
+                        <img
+                          data-testid="edit-icon"
+                          src="/src/assets/edit-icon.png"
+                          className={styles.editIcon}
+                          alt="Edit"
+                        />
                       </>
                     )}
                   </button>
-
                 </div>
 
-                <div className={styles.profileInfo}>
-
-                  <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>First Name:</span>
+                <div className={styles.profileInfo} data-testid="profile-info">
+                  <div className={styles.infoRow} data-testid="first-name-row">
+                    <span
+                      className={styles.infoLabel}
+                      data-testid="first-name-label"
+                    >
+                      First Name:
+                    </span>
                     {isEditing ? (
                       <input
                         type="text"
@@ -377,15 +414,25 @@ function AccountSettingsStudent() {
                         placeholder="Enter First Name"
                         value={accInfo.firstName}
                         onChange={handleInputChange}
+                        data-testid="first-name-input"
                       />
                     ) : (
-                      <span className={styles.infoValue}>{accInfo.firstName}</span>
+                      <span
+                        className={styles.infoValue}
+                        data-testid="first-name-value"
+                      >
+                        {accInfo.firstName}
+                      </span>
                     )}
                   </div>
 
-
-                  <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>Middle Name:</span>
+                  <div className={styles.infoRow} data-testid="middle-name-row">
+                    <span
+                      className={styles.infoLabel}
+                      data-testid="middle-name-label"
+                    >
+                      Middle Name:
+                    </span>
                     {isEditing ? (
                       <input
                         type="text"
@@ -395,15 +442,25 @@ function AccountSettingsStudent() {
                         placeholder="Enter Middle Name"
                         value={accInfo.middleName}
                         onChange={handleInputChange}
+                        data-testid="middle-name-input"
                       />
                     ) : (
-                      <span className={styles.infoValue}>{accInfo.middleName}</span>
+                      <span
+                        className={styles.infoValue}
+                        data-testid="middle-name-value"
+                      >
+                        {accInfo.middleName}
+                      </span>
                     )}
                   </div>
 
-
-                  <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>Last Name:</span>
+                  <div className={styles.infoRow} data-testid="last-name-row">
+                    <span
+                      className={styles.infoLabel}
+                      data-testid="last-name-label"
+                    >
+                      Last Name:
+                    </span>
                     {isEditing ? (
                       <input
                         type="text"
@@ -413,15 +470,25 @@ function AccountSettingsStudent() {
                         placeholder="Enter Last Name"
                         value={accInfo.lastName}
                         onChange={handleInputChange}
+                        data-testid="last-name-input"
                       />
                     ) : (
-                      <span className={styles.infoValue}>{accInfo.lastName}</span>
+                      <span
+                        className={styles.infoValue}
+                        data-testid="last-name-value"
+                      >
+                        {accInfo.lastName}
+                      </span>
                     )}
                   </div>
 
-
-                  <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>Email:</span>
+                  <div className={styles.infoRow} data-testid="email-row">
+                    <span
+                      className={styles.infoLabel}
+                      data-testid="email-label"
+                    >
+                      Email:
+                    </span>
                     {isEditing ? (
                       <input
                         type="email"
@@ -430,16 +497,26 @@ function AccountSettingsStudent() {
                         className={styles.editInput}
                         value={accInfo.email}
                         onChange={handleInputChange}
+                        data-testid="email-input"
                         disabled
                       />
                     ) : (
-                      <span className={styles.infoValue}>{accInfo.email}</span>
+                      <span
+                        className={styles.infoValue}
+                        data-testid="email-value"
+                      >
+                        {accInfo.email}
+                      </span>
                     )}
                   </div>
 
-
-                  <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>Gender:</span>
+                  <div className={styles.infoRow} data-testid="gender-row">
+                    <span
+                      className={styles.infoLabel}
+                      data-testid="gender-label"
+                    >
+                      Gender:
+                    </span>
                     {isEditing ? (
                       <select
                         name="gender"
@@ -447,19 +524,31 @@ function AccountSettingsStudent() {
                         className={styles.editInput}
                         value={accInfo.gender}
                         onChange={handleInputChange}
+                        data-testid="gender-select"
                       >
-                        <option value={accInfo.gender} selected disabled>{accInfo.gender}</option>
+                        <option value="" disabled>
+                          Select Gender
+                        </option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                       </select>
                     ) : (
-                      <span className={styles.infoValue}>{accInfo.gender}</span>
+                      <span
+                        className={styles.infoValue}
+                        data-testid="gender-value"
+                      >
+                        {accInfo.gender}
+                      </span>
                     )}
                   </div>
 
-
-                  <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>Phone Number:</span>
+                  <div className={styles.infoRow} data-testid="phone-row">
+                    <span
+                      className={styles.infoLabel}
+                      data-testid="phone-label"
+                    >
+                      Phone Number:
+                    </span>
                     {isEditing ? (
                       <input
                         type="tel"
@@ -469,15 +558,25 @@ function AccountSettingsStudent() {
                         placeholder="Enter Phone Number"
                         value={accInfo.phoneNo}
                         onChange={handleInputChange}
+                        data-testid="phone-input"
                       />
                     ) : (
-                      <span className={styles.infoValue}>{accInfo.phoneNo}</span>
+                      <span
+                        className={styles.infoValue}
+                        data-testid="phone-value"
+                      >
+                        {accInfo.phoneNo}
+                      </span>
                     )}
                   </div>
 
-
-                  <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>Address:</span>
+                  <div className={styles.infoRow} data-testid="address-row">
+                    <span
+                      className={styles.infoLabel}
+                      data-testid="address-label"
+                    >
+                      Address:
+                    </span>
                     {isEditing ? (
                       <input
                         type="text"
@@ -487,44 +586,59 @@ function AccountSettingsStudent() {
                         placeholder="Enter Address"
                         value={accInfo.address}
                         onChange={handleInputChange}
+                        data-testid="address-input"
                       />
                     ) : (
-                      <span className={styles.infoValue}>{accInfo.address}</span>
+                      <span
+                        className={styles.infoValue}
+                        data-testid="address-value"
+                      >
+                        {accInfo.address}
+                      </span>
                     )}
                   </div>
 
-
-                  <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>Date of Birth:</span>
+                  <div className={styles.infoRow} data-testid="dob-row">
+                    <span className={styles.infoLabel} data-testid="dob-label">
+                      Date of Birth:
+                    </span>
                     {isEditing ? (
                       <input
                         type="date"
                         id="dob"
                         name="dob"
                         className={styles.editInput}
-                        value={accInfo.dob === "0000-00-00" || !accInfo.dob ? 
-                          "" : accInfo.dob
+                        value={
+                          accInfo.dob === "0000-00-00" || !accInfo.dob
+                            ? ""
+                            : accInfo.dob
                         }
                         onChange={handleInputChange}
+                        data-testid="dob-input"
                       />
                     ) : (
-                      <span className={styles.infoValue}>
-                        {
-                          accInfo.dob === "0000-00-00" || !accInfo.dob ? 
-                          "" : 
-                          new Date(accInfo.dob).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                        })
-                        }
+                      <span
+                        className={styles.infoValue}
+                        data-testid="dob-value"
+                      >
+                        {accInfo.dob === "0000-00-00" || !accInfo.dob
+                          ? ""
+                          : new Date(accInfo.dob).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })}
                       </span>
                     )}
                   </div>
 
-
-                  <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>{accRole === "Society Officer" ? "Position" : "Job"}:</span>
+                  <div className={styles.infoRow} data-testid="position-row">
+                    <span
+                      className={styles.infoLabel}
+                      data-testid="position-label"
+                    >
+                      {accRole === "Society Officer" ? "Position" : "Job"}:
+                    </span>
                     {isEditing ? (
                       <input
                         type="text"
@@ -533,28 +647,39 @@ function AccountSettingsStudent() {
                         className={styles.editInput}
                         value={accInfo.position}
                         onChange={handleInputChange}
+                        data-testid="position-input"
                         disabled
                       />
                     ) : (
-                      <span className={styles.infoValue}>{accInfo.position}</span>
+                      <span
+                        className={styles.infoValue}
+                        data-testid="position-value"
+                      >
+                        {accInfo.position}
+                      </span>
                     )}
                   </div>
                 </div>
               </div>
             ) : (
-
               <div className={styles.profileEditSection}>
                 <h3 className={styles.subHeading}>Change Password</h3>
                 {!isCurrentPasswordValid ? (
-                  <form className={styles.passwordForm}>
+                  <form
+                    className={styles.passwordForm}
+                    data-testid="password-form"
+                  >
                     {/* Current Password */}
                     <div className={styles.formGroup}>
-                      <label htmlFor="currentPassword" className={styles.formLabel}>
+                      <label
+                        htmlFor="currentPassword"
+                        className={styles.formLabel}
+                      >
                         Current Password
                       </label>
                       <div className={styles.inputContainer}>
                         <input
-                          type={showCurrentPassword ? 'text' : 'password'}
+                          type={showCurrentPassword ? "text" : "password"}
                           id="currentPassword"
                           className={styles.formInput}
                           placeholder=""
@@ -562,25 +687,30 @@ function AccountSettingsStudent() {
                           onChange={(e) => setCurrentPassword(e.target.value)}
                           required
                         />
-                       
                       </div>
                     </div>
 
                     {/* Submit Button */}
-                    <button type="submit" className={styles.submitButton} onClick={handleCurrentPasswordSubmit}>
+                    <button
+                      type="submit"
+                      className={styles.submitButton}
+                      onClick={handleCurrentPasswordSubmit}
+                    >
                       <span>Confirm</span>
                     </button>
                   </form>
                 ) : (
-                  <form className={styles.passwordForm} onSubmit={submitNewPassword}>
-
+                  <form
+                    className={styles.passwordForm}
+                    onSubmit={submitNewPassword}
+                  >
                     <div className={styles.formGroup}>
                       <label htmlFor="newPassword" className={styles.formLabel}>
                         New Password
                       </label>
                       <div className={styles.inputContainer}>
                         <input
-                          type={showNewPassword ? 'text' : 'password'}
+                          type={showNewPassword ? "text" : "password"}
                           id="newPassword"
                           className={styles.formInput}
                           placeholder=""
@@ -588,18 +718,19 @@ function AccountSettingsStudent() {
                           onChange={(e) => setNewPassword(e.target.value)}
                           required
                         />
-                        
                       </div>
                     </div>
 
-
                     <div className={styles.formGroup}>
-                      <label htmlFor="confirmPassword" className={styles.formLabel}>
+                      <label
+                        htmlFor="confirmPassword"
+                        className={styles.formLabel}
+                      >
                         Confirm New Password
                       </label>
                       <div className={styles.inputContainer}>
                         <input
-                          type={showConfirmPassword ? 'text' : 'password'}
+                          type={showConfirmPassword ? "text" : "password"}
                           id="confirmPassword"
                           className={styles.formInput}
                           placeholder=""
@@ -607,11 +738,8 @@ function AccountSettingsStudent() {
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           required
                         />
-                        
                       </div>
                     </div>
-
-
 
                     <button type="submit" className={styles.submitButton}>
                       <span>Update Password</span>
@@ -627,4 +755,3 @@ function AccountSettingsStudent() {
   );
 }
 export default AccountSettingsStudent;
-  
