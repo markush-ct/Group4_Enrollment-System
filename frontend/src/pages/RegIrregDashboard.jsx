@@ -10,7 +10,8 @@ function RegIrregDashboard() {
   const [accName, setAccName] = useState("");
   const [program, setProgram] = useState("");
   const [pfp, setPFP] = useState("");
-  //TODO: CONDITION SA FRONTEND. IF PROGRAM === 1, ACS LOGO AND TEXT LALABAS. IF PROGRAM === 2, ITS LOGO AND TEXT LALABAS SA DASHBOARD
+
+
   useEffect(() => {
     axios.get("http://localhost:8080/getStudentProgram")
     .then((res) => {
@@ -32,6 +33,38 @@ function RegIrregDashboard() {
       document.body.style.overflow = "auto";
     };
   }, [SideBar]);
+
+  //Enrollment Progress
+  const [socFeeProg, setSocFeeProg] = useState(false);
+  const [reqsProg, setReqsProg] = useState(false);
+  const [adviseProg, setAdviseProg] = useState(false);
+  const [preEnrollProg, setPreEnrollProg] = useState(false);
+  const [enrollProg, setEnrollProg] = useState(false);
+  const [progressWidth, setProgressWidth] = useState("0%");
+
+  useEffect(() => {
+    Promise.all([
+      axios.get("http://localhost:8080/socFeeProgress"),
+      axios.get("http://localhost:8080/reqsProgress"),
+      axios.get("http://localhost:8080/adviseProgress"),
+      axios.get("http://localhost:8080/preEnrollProgress"),
+      axios.get("http://localhost:8080/enrollStatusProgress"),
+    ])
+      .then((res) => {
+        setSocFeeProg(res[0].data.message === "Success");
+        setReqsProg(res[1].data.message === "Success");
+        setAdviseProg(res[2].data.message === "Success");
+        setPreEnrollProg(res[3].data.message === "Success");
+        setEnrollProg(res[4].data.message === "Success");
+      });
+  }, []);
+
+  useEffect(() => {
+    // Calculate progress percentage
+    const completedSteps = [socFeeProg, reqsProg, adviseProg, preEnrollProg, enrollProg].filter(Boolean).length;
+    const percentage = (completedSteps / 5) * 100;
+    setProgressWidth(`${percentage}%`);
+  }, [socFeeProg, reqsProg, adviseProg, preEnrollProg, enrollProg]);
 
 
 //Reuse in other pages that requires logging in
@@ -165,21 +198,23 @@ useEffect(() => {
           )}
           
   
-       
-          <div className={styles.enrollmentProgress}>
-            <h2>Enrollment Progress</h2>
-            <div className={styles.progressBar}>
-              <div className={styles.progressFill} style={{ width: "50%" }}></div>
-              <span>50%</span>
-            </div>
-            <ul className={styles.progressSteps}>
-              <li>✔ Step 1: Society Fee Payment</li>
-              <li>✔ Step 2: Submit Attendance Proof</li>
-              <li>✔ Step 3: Submit Certificate of Grades</li>
-              <li>❌ Step 4: Fill out and Submit Digital Checklist</li>
-              <li>❌ Step 5: Fill out the Pre-enrollment Form and Submit</li>
-            </ul>
-          </div>
+       {isEnrollment === true ? (
+        <div className={styles.enrollmentProgress}>
+        <h2>Enrollment Progress</h2>
+        <div className={styles.progressBar}>
+          <div className={styles.progressFill} style={{ width: progressWidth }}></div>
+          <span>{progressWidth}</span>
+        </div>
+        <ul className={styles.progressSteps}>
+          <li>{socFeeProg ? "✔" : "❌"} Step 1: Society Fee Payment</li>
+          <li>{reqsProg ? "✔" : "❌"} Step 2: COG and Checklist</li>
+          <li>{adviseProg ? "✔" : "❌"} Step 3: Advising</li>
+          <li>{preEnrollProg ? "✔" : "❌"} Step 4: Pre-Enrollment</li>
+          <li>{enrollProg ? "✔" : "❌"} Step 5: Enrollment</li>
+        </ul>
+      </div>
+       ) : ('')}
+          
   
           <div className={styles.linksSection}>
   <img src="\src\assets\calendar-icon.png" alt="Calendar" />

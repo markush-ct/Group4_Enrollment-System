@@ -75,7 +75,15 @@ router.post('/', (req, res) => {
                                         if(err){
                                             return res.json({message: "Error in server: " + err});
                                         } else{
-                                            return res.json({message: "Enrollment period posted successfully."});
+                                            const deletePreEnrollment = `DELETE FROM preenrollment`;
+                                            db.query(deletePreEnrollment, (err, deletePreEnrollmentRes) => {
+                                                if(err){
+                                                    return res.json({message: "Error in server: " + err});
+                                                } else{
+                                                    return res.json({message: "Enrollment period posted successfully."});
+                                                }
+                                            });
+
                                         }
                                     });
 

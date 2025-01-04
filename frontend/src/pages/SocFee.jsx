@@ -385,6 +385,7 @@ const closePrompt = () => {
                 <th>Name</th>
                 <th>Year - Section</th>
                 <th>Status</th>
+                <th>Type</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -401,6 +402,7 @@ const closePrompt = () => {
                 : "N/A"
               } - ${request.Section}`}</td>
               <td>{request.SocFeePayment}</td>
+              <td>{request.StudentType}</td>
               <td>
                 <button
                   className={styles.approveButton}

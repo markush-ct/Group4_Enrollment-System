@@ -22,6 +22,46 @@ function EnrollmentRegular() {
   const [isPreEnrollmentSubmitted, setIsPreEnrollmentSubmitted] = useState();
   const [preEnrollmentValues, setPreEnrollmentValues] = useState([]);
 
+  //Enrollment Progress
+  const [socFeeProg, setSocFeeProg] = useState(false);
+  const [reqsProg, setReqsProg] = useState(false);
+  const [adviseProg, setAdviseProg] = useState(false);
+  const [preEnrollProg, setPreEnrollProg] = useState(false);
+  const [enrollProg, setEnrollProg] = useState(false);
+
+  useEffect(() => {
+    Promise.all([
+      axios.get("http://localhost:8080/socFeeProgress"),
+      axios.get("http://localhost:8080/reqsProgress"),
+      axios.get("http://localhost:8080/adviseProgress"),
+      axios.get("http://localhost:8080/preEnrollProgress"),
+      axios.get("http://localhost:8080/enrollStatusProgress"),
+    ])
+      .then((res) => {
+        setSocFeeProg(res[0].data.message === "Success");
+        setReqsProg(res[1].data.message === "Success");
+        setAdviseProg(res[2].data.message === "Success");
+        setPreEnrollProg(res[3].data.message === "Success");
+        setEnrollProg(res[4].data.message === "Success");
+      });
+  }, []);
+
+  useEffect(() => {
+    // Calculate progress percentage
+    const completedSteps = [socFeeProg, reqsProg, adviseProg, preEnrollProg, enrollProg].filter(Boolean).length;
+    if(completedSteps === 1){
+      setActiveStep(1);
+    } else if(completedSteps === 2){
+      setActiveStep(2);
+    } else if(completedSteps === 3){
+      setActiveStep(3);
+    } else if(completedSteps === 4){
+      setActiveStep(4);
+    } else{
+      setActiveStep(0);
+    }
+  }, [socFeeProg, reqsProg, adviseProg, preEnrollProg, enrollProg]);
+
   //Reuse in other pages that requires logging in
   const navigate = useNavigate();
   axios.defaults.withCredentials = true;
@@ -571,7 +611,13 @@ const handleSubmit = async () => {
               <p>Total Units: <span>{totalPreEnrollUnits}</span></p>
 
             <br />
-            <p>Wait for your pre enrollment to be approved</p>      
+            <p>
+              {preEnrollmentStatus === "Approved" ? (
+                "Pre-enrollment is approved. You may now proceed."
+              ) : (
+                "Wait for your pre enrollment to be approved"
+              )}
+              </p>      
           </div>
           ) : (
             <div className={styles.formContainer}>

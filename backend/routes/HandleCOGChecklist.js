@@ -90,9 +90,7 @@ router.post('/socfeeVerifyChecklist', (req, res) => {
             db.query(updateChecklist, [id, studentID], (err, updateRes) => {
                 if (err) {
                     return res.json({ message: "Error in server: " + err });
-                } else if (updateRes.affectedRows > 0) {
-                    console.log(idRes);
-                    console.log(updateRes);
+                } else if (updateRes.affectedRows > 0) {                    
                     return res.json({ message: "Requirements verified." });
                 } else {
                     return res.json({ message: "Failed to verify checklist." });
@@ -276,7 +274,6 @@ router.post('/submitCOGChecklist', upload.single('cog'), (req, res) => {
                                 'Submitted' // Status
                             ]);
 
-                            console.log("Checklist Insert Values:", checklistValues);
 
                             // Step 3: Insert new rows or update existing rows with ON DUPLICATE KEY UPDATE
                             const insertChecklistQuery = `

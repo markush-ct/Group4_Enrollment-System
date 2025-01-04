@@ -54,7 +54,7 @@ router.post('/searchSocFee', (req, res) => {
 router.get('/getSocFee', (req, res) => {
     const sql1 = `SELECT * FROM societyofficer WHERE Email = ?`;
 
-    const sql2 = `SELECT s.StudentID, s.CvSUStudentID, s.Firstname, s.Lastname, s.Year, s.Section, r.SocFeePayment
+    const sql2 = `SELECT s.StudentID, s.CvSUStudentID, s.Firstname, s.Lastname, s.Year, s.Section, s.StudentType, r.SocFeePayment
     FROM student s
     JOIN requirements r ON s.StudentID = r.StudentID
     WHERE s.ProgramID = ? AND r.SocFeePayment = 'Pending'`;
