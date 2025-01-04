@@ -193,6 +193,12 @@ function AccountSettingsStudent() {
   const handleCurrentPasswordSubmit = (event) => {
     event.preventDefault();
 
+    if (!currentPassword) {
+      // Display custom error or validation message
+      alert("Current password is required.");
+      return;
+    }
+
     axios
       .post("http://localhost:8080/matchPass", { currentPassword })
       .then((res) => {
@@ -754,4 +760,5 @@ function AccountSettingsStudent() {
     </>
   );
 }
+
 export default AccountSettingsStudent;
