@@ -101,8 +101,6 @@ router.get('/getCourseChecklist', (req, res) => {
                     return res.json({ message: "No courses found for the specified criteria." });
                 }
             });
-        } else {
-            return res.json({ message: "Student not found with the given email." });
         }
     });
 });

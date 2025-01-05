@@ -133,7 +133,20 @@ router.post('/getCoursesForAdviser', (req, res) => {
     const { studentID } = req.body;
 
     const sql1 = `SELECT * FROM student WHERE StudentID = ?`;
-    const sql2 = `SELECT * FROM coursechecklist WHERE ProgramID = ?`;
+    const sql2 = `
+        SELECT 
+            cc.* 
+        FROM 
+            coursechecklist cc
+        LEFT JOIN 
+            studentcoursechecklist scc
+        ON 
+            cc.CourseChecklistID = scc.CourseChecklistID 
+            AND scc.StudentID = ?
+            AND scc.StdChecklistStatus = 'Verified'
+        WHERE 
+            cc.ProgramID = ? 
+            AND scc.CourseChecklistID IS NULL`;
 
     db.query(sql1, studentID, (err, studentRes) => {
         if (err) {
@@ -141,16 +154,19 @@ router.post('/getCoursesForAdviser', (req, res) => {
         } else if (studentRes.length > 0) {
             const programID = studentRes[0].ProgramID;
 
-            db.query(sql2, programID, (err, coursesRes) => {
+            db.query(sql2, [studentID, programID], (err, coursesRes) => {
                 if (err) {
                     return res.json({ message: "Error in server: " + err });
                 } else {
                     return res.json({ message: "Success", courses: coursesRes });
                 }
             });
+        } else {
+            return res.json({ message: "Student not found." });
         }
-    })
+    });
 });
+
 
 router.post('/getChecklistForAdviser', (req, res) => {
     const getProgram = `SELECT * FROM student WHERE StudentID = ?`;

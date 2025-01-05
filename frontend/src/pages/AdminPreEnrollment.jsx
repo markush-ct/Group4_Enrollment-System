@@ -24,6 +24,8 @@ function Requirements() {
   const [preEnrollmentValues, setPreEnrollmentValues] = useState([]);
   const [rows, setRows] = useState([]);
 
+  const [searchQuery, setSearchQuery] = useState("");
+
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
   //RETURNING ACCOUNT NAME IF LOGGED IN
@@ -71,42 +73,6 @@ function Requirements() {
       });
   }, []);
 
-
-  useEffect(() => {
-    if (filterType === "All") {
-      setFilteredRequests(accountRequests);
-    } else if (filterType === "Society Officer") {
-      setFilteredRequests(
-        accountRequests.filter(
-          (request) =>
-            ["President",
-              "Vice President",
-              "Secretary",
-              "Assistant Secretary",
-              "Treasurer",
-              "Assistant Treasurer",
-              "Business Manager",
-              "Auditor",
-              "P.R.O.",
-              "Assistant P.R.O.",
-              "GAD Representative",
-              "1st Year Senator",
-              "2nd Year Senator",
-              "3rd Year Senator",
-              "4th Year Senator",
-              "1st Year Chairperson",
-              "2nd Year Chairperson",
-              "3rd Year Chairperson",
-              "4th Year Chairperson"].includes(request.AccountType)
-        )
-      );
-    }
-    else {
-      setFilteredRequests(
-        accountRequests.filter((request) => request.AccountType === filterType)
-      );
-    }
-  }, [filterType, accountRequests]);
 
 
   const handleApprove = async (preEnrollmentValues) => {
@@ -189,6 +155,36 @@ function Requirements() {
   };
 
   const totalPreEnrollUnits = preEnrollmentValues.reduce((acc, row) => acc + (row.CreditUnitLec + row.CreditUnitLab), 0);
+
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+        const query = searchQuery.toLowerCase();
+        setFilteredRequests(
+            accountRequests.filter((request) =>
+                request.Firstname.toLowerCase().includes(query) ||
+                request.Lastname.toLowerCase().includes(query) ||
+                request.CvSUStudentID.toString().includes(query) ||
+                request.SocFeePayment.toLowerCase().includes(query) ||
+                `${request.Year === "First Year" ? 1
+                  : request.Year === "Second Year" ? 2
+                  : request.Year === "Third Year" ? 3
+                  : request.Year === "Fourth Year" ? 4
+                  : "N/A"
+                } - ${request.Section.toLowerCase()}`.includes(query) ||
+                request.SocFeePayment.toLowerCase().includes(query) ||
+                `${request.Year === "First Year" ? 1
+                  : request.Year === "Second Year" ? 2
+                  : request.Year === "Third Year" ? 3
+                  : request.Year === "Fourth Year" ? 4
+                  : "N/A"
+                }-${request.Section.toLowerCase()}`.includes(query)
+            )
+        );
+    }, 300);
+  
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery, accountRequests]);
 
 
   return (
@@ -285,28 +281,17 @@ function Requirements() {
           Pre-Enrollment
         </div>
 
-        {/* Dropdown  */}
-        <div className={styles.filterSection} data-aos="fade-up">
-          <label htmlFor="filter" className={styles.filterLabel}>Filter by Type:</label>
-          <select
-            id="filter"
-            className={styles.filterDropdown}
-            value={filterType}
-            onChange={(e) => setFilterType(e.target.value)}
-          >
-            <option value="All">All</option>
-            <option value="1-1">1-1</option>
-            <option value="1-2">1-2</option>
-            <option value="1-3">1-3</option>
-            <option value="2-1">2-1</option>
-            <option value="2-1">2-1</option>
-            <option value="1-1">1-1</option>
-            <option value="1-1">1-1</option>
-            <option value="1-1">1-1</option>
-            <option value="1-1">1-1</option>
-            <option value="1-1">1-1</option>
-          </select>
-        </div>
+                <div className={styles.searchBar} data-aos="fade-up">
+                          
+                          <input
+                            type="text"
+                            id="search"
+                            placeholder="Search by name or student ID..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className={styles.searchInput}
+                          />
+                        </div>
 
         {/* Table */}
         <div className={styles.tableContainer} data-aos="fade-up">

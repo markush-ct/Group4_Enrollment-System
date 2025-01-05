@@ -101,7 +101,7 @@ router.get('/reqsProgress', (req, res) => {
                     // Check if there is any row with StdChecklistStatus not 'Verified'
                     const unverifiedRows = reqsRes.some(row => row.StdChecklistStatus !== 'Verified');
                     
-                    if (unverifiedRows) {
+                    if (unverifiedRows || reqsRes.length === 0) {
                         return res.json({ message: "Requirements are not yet verified" });
                     } else {
                         return res.json({ message: "Success" });

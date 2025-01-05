@@ -48,19 +48,29 @@ router.get('/getChecklistStatus', (req, res) => {
                 } else if (checklistRes.length === 0) {
                     return res.json({ message: "Requirements not yet verified.", checklistStatus: "Pending" });
                 } else {
-                    // Check if all checklist entries have StdChecklistStatus as "Verified"
+                    // Check for verified, pending, and rejected rows
                     const allVerified = checklistRes.every(row => row.StdChecklistStatus === "Verified");
+                    const rejectedRows = checklistRes.filter(row => row.StdChecklistStatus === "Rejected");
 
-                    if (!allVerified) {
+                    if (rejectedRows.length > 0) {
+                        return res.json({
+                            message: "Some requirements were rejected.",
+                            checklistStatus: "Rejected",
+                            rejected: rejectedRows, // Include rejected rows in the response
+                        });
+                    } else if (!allVerified) {
                         return res.json({ message: "Requirements not yet verified.", checklistStatus: "Pending" });
                     } else {
                         return res.json({ message: "Requirements verified.", checklistStatus: "Verified" });
                     }
                 }
-            })
+            });
+        } else {
+            return res.json({ message: "Student not found.", checklistStatus: "Error" });
         }
-    })
-})
+    });
+});
+
 
 
 router.post('/socfeeRejectChecklist', (req, res) => {

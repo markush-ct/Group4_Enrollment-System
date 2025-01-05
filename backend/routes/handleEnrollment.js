@@ -18,6 +18,20 @@ db.connect((err) => {
     }
 });
 
+router.get('/getEnrolledStdInfo', (req, res) => {
+    const sql1 = `SELECT * FROM student WHERE Email = ?`;
+    db.query(sql1, req.session.email, (err, stdRes) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else{
+            return res.json({
+                message: "Success",
+                studentData: stdRes[0]
+            });
+        }
+    })
+})
+
 router.get('/CSEnrollmentPeriod', (req, res) => {
     const sql1 = `SELECT * FROM enrollmentperiod WHERE ProgramID = 1 AND Status != 'Finished'`;
 
