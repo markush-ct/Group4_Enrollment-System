@@ -512,14 +512,29 @@ function EnrollmentRegular() {
             </div>
 
             <h3>Digital Checklist</h3>
-            {reqStatus === "Rejected" && (
-              <div>
-                <h4 style={{ color: "red", marginBottom: "10px" }}>⚠️ Attention Required</h4>
-                <p>
-                  Some of your submitted requirements were <strong>rejected</strong>. Please review the details below and correct the issues.
-                </p>
-              </div>
-            )}
+           
+
+<div className={styles.Contentt}>
+  {reqStatus === "Rejected" && (
+    <>
+      <img
+        src="/src/assets/warning-icon.png"
+        alt="Warning Icon"
+        className={styles.uploadIcon}
+      />
+      <h4 style={{ color: "red", marginBottom: "10px", fontSize: "1.5rem" }}> Attention Required</h4>
+      <h4 style={{ color: "red", marginBottom: "10px", fontSize: "1rem" }}>
+        Some of your submitted requirements were <strong>rejected</strong>. Please review the details below and correct the issues.
+      </h4>
+    </>
+  )}
+</div>
+
+              
+          
+            
+
+
 
             {Object.keys(groupedByYearAndSemester).map((yearLevel) => (
               <div className={styles.Contentt} key={yearLevel}>
