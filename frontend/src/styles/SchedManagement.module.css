@@ -72,12 +72,12 @@
     background-color: #d0943d;
     color: white;
     border: none;
-    padding: 0.8rem 1rem;
+    padding: 0.8rem 12px;
     border-radius: 30px;
     font-size: 1rem;
     cursor: pointer;
     overflow: hidden; 
-    width: 50%;
+    width: 48%; 
     transition: transform 0.3s ease, color 0.3s ease; 
     z-index: 1; 
   }

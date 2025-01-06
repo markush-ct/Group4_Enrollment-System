@@ -44,7 +44,7 @@ function SchedManagement() {
     { full: "Friday", short: "Fri" },
     { full: "Saturday", short: "Sat" },
   ];
-  const times = Array.from({ length: 14 }, (_, i) => {
+  const times = Array.from({ length: 15 }, (_, i) => {
     const hour = 7 + i;
     return hour.toString().padStart(2, "0") + ":00";
   });
@@ -68,52 +68,6 @@ function SchedManagement() {
       once: true,
     });
 
-    
-
-    const mockData = [
-      {
-        courseCode: "COSC 101",
-        startTime: "12:00",
-        endTime: "14:00",
-        room: "CL5",
-        year: "3",
-        section: "5",
-        day: "Wednesday",
-        classType: "Laboratory",
-      },
-      {
-        courseCode: "DCIT 26",
-        startTime: "16:00",
-        endTime: "17:00",
-        room: "CL2",
-        year: "3",
-        section: "5",
-        day: "Monday",
-        classType: "Lecture",
-      },
-      {
-        courseCode: "DCIT 26",
-        startTime: "17:00",
-        endTime: "19:00",
-        room: "CL2",
-        year: "3",
-        section: "5",
-        day: "Monday",
-        classType: "Laboratory",
-      },
-      {
-        courseCode: "DCIT 65",
-        startTime: "14:00",
-        endTime: "16:00",
-        room: "ACCRE",
-        year: "3",
-        section: "5",
-        day: "Wednesday",
-        classType: "Lecture",
-      },
-    ];
-
-    setSchedule(mockData); // mock data
   }, []);
 
   const handleInputChange = (e) => {
@@ -134,34 +88,60 @@ function SchedManagement() {
     }
 
     axios.post('http://localhost:8080/postClassSched', formData)
-    .then((res) => {
-      if(res.data.message === "Success"){
-        setSchedule((prev) => [...prev, formData]);
-        setViewMode("table");
-        setFormData({
-          courseCode: "",
-          startTime: "",
-          endTime: "",
-          room: "",
-          year: "",
-          section: "",
-          day: "",
-          classType: "",
-        });
-      } else {
-        setErrorMsg(res.data.message);
+      .then((res) => {
+        if (res.data.message === "Success") {
+          setSchedule((prev) => [...prev, formData]);
+          setViewMode("table");
+          setFormData({
+            courseCode: "",
+            startTime: "",
+            endTime: "",
+            room: "",
+            year: "",
+            section: "",
+            day: "",
+            classType: "",
+          });
+        } else {
+          setErrorMsg(res.data.message);
+          setErrorPrompt(true);
+        }
+      })
+      .catch((err) => {
         setErrorPrompt(true);
-      }
-    })    
-    .catch((err) => {
-      setErrorPrompt(true);
-      setErrorMsg("Error: " + err);
-    })
+        setErrorMsg("Error: " + err);
+      })
   };
 
-  const handleSectionClick = (section) => {
-    setSelectedSection(section); // section
-    setPopUpVisible(true);
+  const [schedInfo, setSchedInfo] = useState([]);
+
+  const handleSectionClick = (request) => {
+    setSelectedSection(request);
+
+    axios.post('http://localhost:8080/getClassSched/popup', {
+      year: request.YearLevel,
+      section: request.Section
+    })
+      .then((res) => {
+        if (res.data.message === "Success") {
+          const { schedInfo } = res.data;
+          setSchedInfo(schedInfo);
+
+          schedInfo.map((row, index) => {
+            console.log(`Row ${index}:`, row);
+          });
+
+          setPopUpVisible(true);
+        } else {
+          setErrorMsg(res.data.message);
+          setErrorPrompt(true);
+        }
+      })
+      .catch((err) => {
+        setErrorPrompt(true);
+        setErrorMsg("Error: " + err);
+      })
+
   };
 
   const closePopup = () => {
@@ -173,10 +153,23 @@ function SchedManagement() {
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:8080/getOptionsForSched')
+
+    Promise.all([
+      axios.get('http://localhost:8080/getOptionsForSched'),
+      axios.get('http://localhost:8080/getClassSched/table'),
+    ])
       .then((res) => {
-        if (res.data.message === "Success") {
-          setCourses(res.data.courseData);
+        if (res[0].data.message === "Success") {
+          setCourses(res[0].data.courseData);
+          setErrorMsg("");
+          setErrorPrompt(false);
+        } else {
+          setErrorMsg("Error fetching courses");
+          setErrorPrompt(true);
+        }
+
+        if (res[1].data.message === "Success") {
+          setSchedule(res[1].data.sections);
           setErrorMsg("");
           setErrorPrompt(false);
         } else {
@@ -188,7 +181,7 @@ function SchedManagement() {
         setErrorPrompt(true);
         setErrorMsg("Error: " + err);
       })
-  }, [])
+  }, [schedule]);
 
   return (
     <>
@@ -233,9 +226,9 @@ function SchedManagement() {
               <tbody>
                 {schedule.length > 0 ? (
                   schedule.map((sched, index) => (
-                    <tr key={index} onClick={() => handleSectionClick(sched.section)}>
-                      <td>{sched.year}</td>
-                      <td>{sched.section}</td>
+                    <tr key={index} onClick={() => handleSectionClick(sched)}>
+                      <td>{sched.YearLevel}</td>
+                      <td>{sched.Section}</td>
                     </tr>
                   ))
                 ) : (
@@ -352,70 +345,70 @@ function SchedManagement() {
                 <h2>CLASS SCHEDULE</h2>
               </div>
               <div data-aos="fade-up" className={styles.studentType}>
-                <span>BSCS 2-3</span>
+                <span>{schedInfo[0]?.ProgramID === 1 ? "BSCS" : "BSIT"} {selectedSection.YearLevel === "First Year" ? 1
+                  : selectedSection.YearLevel === "Second Year" ? 2
+                    : selectedSection.YearLevel === "Third Year" ? 3
+                      : selectedSection.YearLevel === "Fourth Year" ? 4
+                        : ""} - {selectedSection.Section}</span>
               </div>
 
               {/* Calendar */}
               <div data-aos="fade-up" className={styles.detailsSection}>
-                <div className={styles.table}>
-                  <div className={styles.header}>
-                    <div className={styles.th}>Time</div>
-                    {days.map((day) => (
-                      <div className={styles.th} key={day.full}>
-                        <span className={styles.fullDay}>{day.full}</span>
-                        <span className={styles.shortDay}>{day.short}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className={styles.body}>
-                    {times.map((time, rowIndex) => {
-                      const nextTime = times[rowIndex + 1] || "21:00 PM";
-                      const timeRange = `${time} - ${nextTime}`;
-
-                      return (
-                        <div key={time} className={styles.timeRow}>
-                          <div className={styles.timeCell}>{timeRange}</div>
-                          {days.map((day) => (
-                            <div key={day.full} className={styles.dayCell}>
-                              {schedule
-                                .filter(
-                                  (sched) =>
-                                    sched.day === day.full &&
-                                    times.indexOf(sched.startTime) <= rowIndex &&
-                                    times.indexOf(sched.endTime) > rowIndex
-                                )
-                                .map((sched) => {
-                                  const startIndex = times.indexOf(sched.startTime);
-                                  const endIndex = times.indexOf(sched.endTime);
-                                  const blockColor =
-                                    sched.classType === "Lecture"
-                                      ? styles.lectureBlock
-                                      : styles.labBlock;
-
-                                  return (
-                                    <div
-                                      key={sched.courseCode}
-                                      className={`${styles.scheduleBlock} ${blockColor}`}
-                                      style={{
-                                        gridRow: `${startIndex + 1} / ${endIndex + 1}`,
-                                      }}
-                                    >
-                                      <div className={styles.blox}>{sched.courseCode}</div>
-                                      <div className={styles.blox}>{sched.room}</div>
-                                      <div className={styles.blox}>
-                                        {sched.year}-{sched.section}
-                                      </div>
-                                    </div>
-                                  );
-                                })}
-                            </div>
-                          ))}
+                {schedInfo && schedInfo.length > 0 ? (
+                  <div className={styles.table}>
+                    <div className={styles.header}>
+                      <div className={styles.th}>Time</div>
+                      {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((day) => (
+                        <div className={styles.th} key={day}>
+                          {day}
                         </div>
-                      );
-                    })}
+                      ))}
+                    </div>
+                    <div className={styles.body}>
+                      {times.map((time, rowIndex) => {
+                        const nextTime = times[rowIndex + 1] || "21:00 PM";
+                        const timeRange = `${time} - ${nextTime}`;
+
+                        return (
+                          <div key={`${time}-${rowIndex}`} className={styles.timeRow}>
+                            <div className={styles.timeCell}>{timeRange}</div>
+                            {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((day) => (
+                              <div key={day} className={styles.dayCell}>
+                                {schedInfo
+                                  .filter(
+                                    (sched) =>
+                                      sched.Day === day &&
+                                      sched.StartTime <= time &&
+                                      sched.EndTime > time
+                                  )
+                                  .map((sched, index) => (
+                                    <div
+                                      key={`${sched.CourseCode}-${index}`}
+                                      className={`${styles.scheduleBlock} ${sched.ClassType === "Lecture" ? styles.lectureBlock : styles.labBlock
+                                        }`}
+                                    >
+                                      <div className={styles.blox}>{sched.CourseCode}</div>
+                                      <div className={styles.blox}>{sched.Room}</div>
+                                      <div className={styles.blox}>{sched.InstructorName}</div>
+                                      <div className={styles.blox}>{selectedSection.YearLevel === "First Year" ? 1
+                                        : selectedSection.YearLevel === "Second Year" ? 2
+                                          : selectedSection.YearLevel === "Third Year" ? 3
+                                            : selectedSection.YearLevel === "Fourth Year" ? 4
+                                              : ""} - {selectedSection.Section}</div>
+                                    </div>
+                                  ))}
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div>No schedule data available</div>
+                )}
               </div>
+
             </div>
           </div>
         )}

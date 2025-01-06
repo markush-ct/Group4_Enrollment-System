@@ -28,6 +28,71 @@ const transporter = nodemailer.createTransport({
 
 });
 
+router.post('/getClassSched/popup', (req, res) => {
+    const getProgram = `SELECT * FROM societyofficer WHERE Email = ?`;
+    const getSched = `
+    SELECT
+        c.CourseChecklistID,
+        c.CourseCode,
+        c.CourseTitle,
+        cs.ClassType,
+        cs.ProgramID,
+        cs.Day,
+        cs.StartTime,
+        cs.EndTime,
+        cs.InstructorName
+    FROM coursechecklist c
+    JOIN classschedule cs
+    ON c.CourseChecklistID = cs.CourseChecklistID
+    WHERE cs.YearLevel = ? AND cs.Section = ? AND cs.ProgramID = ?
+    `;
+
+    db.query(getProgram, req.session.email, (err, programRes) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else {
+            const { year, section } = req.body;
+            const program = programRes[0].ProgramID;
+
+            db.query(getSched, [year, section, program], (err, schedRes) => {
+                if(err){
+                    return res.json({message: "Error in server: " + err});
+                } else if (schedRes.length > 0){
+                    return res.json({
+                        message: "Success",
+                        schedInfo: schedRes
+                    })
+                } else {
+                    return res.json({message: "No schedule found"});
+                }
+            })
+        }
+    })
+})
+
+router.get('/getClassSched/table', (req, res) => {
+    const getProgram = `SELECT * FROM societyofficer WHERE Email = ?`;
+    const getSections = `SELECT DISTINCT YearLevel, Section FROM classschedule WHERE ProgramID = ?`
+
+    db.query(getProgram, req.session.email, (err, programRes) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else {
+            db.query(getSections, programRes[0].ProgramID, (err, sectionRes) => {
+                if(err){
+                    return res.json({message: "Error in server: " + err});
+                } else if(sectionRes.length > 0){
+                    return res.json({
+                        message: "Success",
+                        sections: sectionRes
+                    });
+                } else {
+                    return res.json({message: "No sections found"});
+                }
+            })
+        }
+    })
+})
 
 router.post('/postClassSched', (req, res) => {
     const getID = `SELECT * FROM societyofficer WHERE Email = ?`;
