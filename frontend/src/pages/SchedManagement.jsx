@@ -3,6 +3,8 @@ import Header from "/src/components/AdminDashHeader.jsx";
 import styles from "/src/styles/SchedManagement.module.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function SchedManagement() {
   const [SideBar, setSideBar] = useState(false);
@@ -11,6 +13,28 @@ function SchedManagement() {
   const [viewMode, setViewMode] = useState("table");
   const [popUpVisible, setPopUpVisible] = useState(false);
   const [selectedSection, setSelectedSection] = useState("");
+  const [accName, setAccName] = useState("");
+
+  //Reuse in other pages that requires logging in
+  const navigate = useNavigate();
+  axios.defaults.withCredentials = true;
+  //RETURNING ACCOUNT NAME IF LOGGED IN
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080")
+      .then((res) => {
+        if (res.data.valid) {
+          setAccName(res.data.name);
+        } else {
+          navigate("/LoginPage");
+        }
+      })
+      //RETURNING ERROR IF NOT
+      .catch((err) => {
+        console.error("Error validating user session:", err);
+      });
+  }, []);
+  //Reuse in other pages that requires logging in
 
   const days = [
     { full: "Monday", short: "Mon" },
@@ -35,6 +59,7 @@ function SchedManagement() {
     section: "",
     day: "",
     classType: "",
+    instructor: "",
   });
 
   useEffect(() => {
@@ -42,6 +67,8 @@ function SchedManagement() {
       duration: 1000,
       once: true,
     });
+
+    
 
     const mockData = [
       {
@@ -106,18 +133,30 @@ function SchedManagement() {
       return;
     }
 
-    setSchedule((prev) => [...prev, formData]);
-    setViewMode("table");
-    setFormData({
-      courseCode: "",
-      startTime: "",
-      endTime: "",
-      room: "",
-      year: "",
-      section: "",
-      day: "",
-      classType: "",
-    });
+    axios.post('http://localhost:8080/postClassSched', formData)
+    .then((res) => {
+      if(res.data.message === "Success"){
+        setSchedule((prev) => [...prev, formData]);
+        setViewMode("table");
+        setFormData({
+          courseCode: "",
+          startTime: "",
+          endTime: "",
+          room: "",
+          year: "",
+          section: "",
+          day: "",
+          classType: "",
+        });
+      } else {
+        setErrorMsg(res.data.message);
+        setErrorPrompt(true);
+      }
+    })    
+    .catch((err) => {
+      setErrorPrompt(true);
+      setErrorMsg("Error: " + err);
+    })
   };
 
   const handleSectionClick = (section) => {
@@ -129,6 +168,27 @@ function SchedManagement() {
     setPopUpVisible(false);
     setSelectedSection("");
   };
+
+  //FETCH COURSES (COURSE CODE)
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:8080/getOptionsForSched')
+      .then((res) => {
+        if (res.data.message === "Success") {
+          setCourses(res.data.courseData);
+          setErrorMsg("");
+          setErrorPrompt(false);
+        } else {
+          setErrorMsg("Error fetching courses");
+          setErrorPrompt(true);
+        }
+      })
+      .catch((err) => {
+        setErrorPrompt(true);
+        setErrorMsg("Error: " + err);
+      })
+  }, [])
 
   return (
     <>
@@ -191,15 +251,16 @@ function SchedManagement() {
         ) : (
           <div className={styles.form}>
             <div className={styles.formGroup}>
-              <input
-                type="text"
-                name="courseCode"
-                placeholder="Course Code"
-                value={formData.courseCode}
-                onChange={handleInputChange}
-              />
+              <select name="courseCode" id="" value={formData.courseCode} onChange={handleInputChange}>
+                <option value="" disabled>Select course code</option>
+                {courses.map((row) => (
+                  <option key={row.CourseChecklistID} value={row.CourseChecklistID}>
+                    {row.CourseCode}
+                  </option>
+                ))}
+              </select>
               <select name="day" value={formData.day} onChange={handleInputChange}>
-                <option value="">Select Day</option>
+                <option value="" disabled>Select Day</option>
                 {days.map((day) => (
                   <option key={day.full} value={day.full}>
                     {day.full}
@@ -207,7 +268,7 @@ function SchedManagement() {
                 ))}
               </select>
               <select name="startTime" value={formData.startTime} onChange={handleInputChange}>
-                <option value="">Start Time</option>
+                <option value="" disabled>Start Time</option>
                 {times.map((time) => (
                   <option key={time} value={time}>
                     {time}
@@ -215,13 +276,27 @@ function SchedManagement() {
                 ))}
               </select>
               <select name="endTime" value={formData.endTime} onChange={handleInputChange}>
-                <option value="">End Time</option>
+                <option value="" disabled>End Time</option>
                 {times.map((time) => (
                   <option key={time} value={time}>
                     {time}
                   </option>
                 ))}
               </select>
+              <select name="year" id="" value={formData.year} onChange={handleInputChange}>
+                <option value="" disabled>Select Year</option>
+                <option value="First Year">First Year</option>
+                <option value="Second Year">Second Year</option>
+                <option value="Third Year">Third Year</option>
+                <option value="Fourth Year">Fourth Year</option>
+              </select>
+              <input
+                type="tel"
+                name="section"
+                placeholder="Section"
+                value={formData.section}
+                onChange={handleInputChange}
+              />
               <input
                 type="text"
                 name="room"
@@ -229,25 +304,18 @@ function SchedManagement() {
                 value={formData.room}
                 onChange={handleInputChange}
               />
-              <input
-                type="text"
-                name="year"
-                placeholder="Year"
-                value={formData.year}
-                onChange={handleInputChange}
-              />
-              <input
-                type="text"
-                name="section"
-                placeholder="Section"
-                value={formData.section}
-                onChange={handleInputChange}
-              />
               <select name="classType" value={formData.classType} onChange={handleInputChange}>
                 <option value="">Class Type</option>
                 <option value="Lecture">Lecture</option>
                 <option value="Laboratory">Laboratory</option>
               </select>
+              <input
+                type="text"
+                name="instructor"
+                placeholder="Instructor"
+                value={formData.instructor}
+                onChange={handleInputChange}
+              />
               <button className={styles.addButton} onClick={addSchedule}>
                 <span>Add Schedule</span>
               </button>

@@ -153,6 +153,7 @@ router.post('/startEnrollment', (req, res) => {
     const deleteAdvising = `DELETE FROM advising`;
     const deletePreEnrollment = `DELETE FROM preenrollment`;
     const deleteEnrollment = `DELETE FROM enrollment`;
+    const deleteSched = `DELETE FROM classschedule`;
 
     db.query(sql1, req.session.email, (err, emailRes) => {
         if(err){
@@ -183,7 +184,13 @@ router.post('/startEnrollment', (req, res) => {
                                                         if(err){
                                                             return res.json({message: "Error in server: " + err});
                                                         } else{
-                                                            return res.json({message: "Enrollment is now ongoing"});
+                                                            db.query(deleteSched, (err, deleteSchedRes) => {
+                                                                if(err){
+                                                                    return res.json({message: "Error in server: " + err});
+                                                                } else {
+                                                                    return res.json({message: "Enrollment is now ongoing"});
+                                                                }
+                                                            })
                                                         }
                                                     });
                                                 }
