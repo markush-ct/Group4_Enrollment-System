@@ -60,6 +60,7 @@ function SocOfficerDashboard() {
           setPFP(`http://localhost:8080/${res.data.pfpURL}`);
         })
         .catch((err) => {
+          //TODO: Error prompt
           alert("Error: " + err);
         })
   }, []);
@@ -82,15 +83,18 @@ function SocOfficerDashboard() {
       .post("http://localhost:8080/postEnrollmentPeriod", enrollmentPeriod)
       .then((res) => {
         if (res.data.message === "Enrollment period posted successfully.") {
+          //TODO: Success prompt
           alert("Announcement posted successfully");
           window.location.reload();
           setIsEnrollment(true);
         } else {
-          alert("Error posting" + res.data.message);
+          //TODO: Error prompt
+          alert("Error posting: " + res.data.message);
         }
       })
       .catch((err) => {
-        console.error("Error posting announcement:", err);
+        //TODO: Error prompt
+        alert("Error: ", err);
       });
   };
 
@@ -179,6 +183,7 @@ function SocOfficerDashboard() {
         setITcount(res.data.ITcount);
       })
       .catch((err) => {
+        //TODO: Error prompt
         alert("Error: " + err);
         console.error("ERROR FETCHING DATA: " + err);
       });
@@ -190,11 +195,13 @@ function SocOfficerDashboard() {
     axios.post("http://localhost:8080/startEnrollment")
     .then((res) => {
       if(res.data.message === "Enrollment is now ongoing"){
+        //TODO: Success prompt
         alert(res.data.message);
       }
       window.location.reload();
     })
     .catch((err) => {
+      //TODO: Error prompt
       alert("Error: " + err.message);
     })
   }
@@ -204,11 +211,13 @@ function SocOfficerDashboard() {
     axios.post("http://localhost:8080/finishEnrollment")
     .then((res) => {
       if(res.data.message === "Enrollment ended"){
+        //TODO: Success prompt
         alert(res.data.message);
       }
       window.location.reload();
     })
     .catch((err) => {
+      //TODO: Error prompt
       alert("Error: " + err.message);
     })
   }
