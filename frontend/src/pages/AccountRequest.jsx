@@ -348,7 +348,7 @@ const closePrompt = () => {
                           handleApprove(request); // Pass the entire request object
                         }}
                       >
-                        {loading ? 'Loading...' : 'Approve'}
+                        {loading ? <span style={{fontWeight: 300, fontSize: '14px'}}>Loading...</span> : <span style={{fontWeight: 400, fontSize: '1rem'}}>Approve</span>}
                       </button>
 
                       <button
@@ -359,7 +359,7 @@ const closePrompt = () => {
                           handleReject(request); // Pass the entire request object
                         }}
                       >
-                        {loading ? 'Loading...' : 'Reject'}
+                       {loading ? <span style={{fontWeight: 300, fontSize: '14px'}}>Loading...</span> : <span style={{fontWeight: 400, fontSize: '1rem'}}>Reject</span>}
                       </button>
                     </td>
                   </tr>

@@ -194,7 +194,8 @@ function ShifteeForm() {
 
   const handleDownloadForm = () => {
     if(formValues.shiftingStatus !== "Approved"){
-      alert("You can only download the form once your application is approved.");
+      setErrorPrompt(true);
+      setErrorMsg("You can only download the form once your application is approved.");
       return;
     }
 
@@ -317,25 +318,35 @@ function ShifteeForm() {
 
         return (
           <div className={styles.Contentt}>
-            <img
-              src={
-                formValues.shiftingStatus === "Approved" ?
-                  "src/assets/check-icon.png"
-                  : formValues.shiftingStatus === "Submitted" ?
-                    "src/assets/pending-icon.png"
-                    : formValues.shiftingStatus === "Rejected" ?
-                      "src/assets/rejected-icon.png"
-                      : "src/assets/pending-icon.png"
-              }
-              alt="Fee Status Icon"
-              className={styles.uploadIcon}
-            />
-            <h3>
-              Shifting Status: <span>{formValues.shiftingStatus}</span>
-            </h3>
-            <p>
-              Please proceed to the Department of Computer Studies on your scheduled date to submit your requirements.
-            </p>
+    <img
+        src={
+            formValues.shiftingStatus === "Approved"
+                ? "src/assets/check-icon.png"
+                : formValues.shiftingStatus === "Submitted"
+                ? "src/assets/pending-icon.png"
+                : formValues.shiftingStatus === "Rejected"
+                ? "src/assets/rejected-icon.png"
+                : "src/assets/pending-icon.png"
+        }
+        alt="Fee Status Icon"
+        className={styles.uploadIcon}
+    />
+    <h3>
+        Shifting Status: <span>{formValues.shiftingStatus}</span>
+    </h3>
+    <p>
+    {formValues.shiftingStatus === "Approved"
+    ? "Please proceed to the Department of Computer Studies on your scheduled date to submit your requirements."
+    : formValues.shiftingStatus === "Submitted" || formValues.shiftingStatus === "Pending"
+    ? "Your shifting application is under review. Please wait for updates."
+    : formValues.shiftingStatus === "Rejected"
+    ? "Unfortunately, your shifting request was rejected. Please contact the office for more details."
+    : ""
+}
+
+    </p>
+
+
             <form className={styles.form}>
               <div className={styles.formGroup}>
                 <label htmlFor="dateSubmitted">Submitted on:</label>
