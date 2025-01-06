@@ -505,6 +505,220 @@
 
 
 
+.popup {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7); 
+    z-index: 2000;
+}
+
+.popupContent {
+    padding: 20px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    text-align: left;
+    position: relative;
+}
+
+.popupContent::-webkit-scrollbar {
+    width: 20px;
+}
+
+.popupHeader {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    height: 30px;
+    color: #d0943d;;
+    margin-bottom: 50px;
+    padding-bottom: 10px;
+
+}
+
+.Message {
+    display: flex;
+    color: #3d8c4b;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    font-weight: 800;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+
+.Message::before,
+.Message::after {
+    content: "";
+    flex: 1; 
+    border-bottom: 1px solid #3d8c4b; 
+    margin: 0 10px; 
+}
+
+
+.messageImage {
+    width: 60px; 
+    vertical-align: middle; 
+}
+
+
+
+.popupText{
+    font-size: 1.0rem;
+    text-align: center;
+}
+.popupHeader h2 {
+    font-size: 2.0rem;
+    margin: 0;
+    text-align: center;
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.2s;
+    position: absolute; 
+    top: 0;             
+    right: 0;          
+    padding: 10px;     
+}
+.closeButton:hover {
+    color: #900;
+}
+
+
+.popupError {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7); 
+    z-index: 2000;
+}
+
+.popupContentError {
+    padding: 20px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    text-align: left;
+    position: relative;
+}
+
+.popupContentError::-webkit-scrollbar {
+    width: 20px;
+}
+
+.popupHeaderError {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    height: 30px;
+    color:  #FF0000;;
+    margin-bottom: 50px;
+    padding-bottom: 10px;
+
+}
+
+.MessageError {
+    display: flex;
+    color:  #FF0000;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    font-weight: 800;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.MessageError::before,
+.MessageError::after {
+    content: "";
+    flex: 1; 
+    border-bottom: 1px solid #3d8c4b; 
+    margin: 0 10px; 
+}
+
+.popupTextError{
+    font-size: 1.0rem;
+    text-align: center;
+}
+.popupHeaderError h2 {
+    font-size: 2.0rem;
+    margin: 0;
+    text-align: center;
+}
+
+.resetButton {
+    position: relative; 
+    background-color: #d0943d;
+    color: white;
+    border: none;
+    padding: 0.8rem 1rem;
+    border-radius: 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    overflow: hidden; 
+    width: 100%;
+    transition: transform 0.3s ease, color 0.3s ease; 
+    z-index: 1; 
+  }
+  
+  .resetButton span {
+    position: relative;
+    z-index: 2; 
+    font-size: 18px;
+    font-weight: bold;
+    background-color: transparent;
+  }
+  
+  .resetButton::before {
+    content: ''; 
+    position: absolute;
+    top: 0;
+    left: -100%; 
+    width: 100%;
+    height: 100%;
+    background-color: #3d8c4b; 
+    transition: left 0.3s ease; 
+    z-index: 0; 
+  }
+  
+  .resetButton:hover::before {
+    left: 0; 
+  }
+  
+  .resetButton:hover {
+    color: white; 
+    transform: scale(1.02); 
+  }
+  
+
+
+
+
 
 
 /* MOBILE */

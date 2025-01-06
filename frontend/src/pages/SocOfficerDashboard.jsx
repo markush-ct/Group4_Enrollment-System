@@ -4,6 +4,8 @@ import axios from "axios";
 import Header from "/src/components/AdminDashHeader.jsx";
 import { Doughnut } from "react-chartjs-2";
 import { useNavigate } from "react-router-dom";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 import {
   Chart as ChartJS,
@@ -28,6 +30,12 @@ function SocOfficerDashboard() {
   const [program, setProgram] = useState("");
   const [pfp, setPFP] = useState("");
   const [isEnrollment, setIsEnrollment] = useState();
+
+  const [successPrompt, setsuccessPrompt] = useState(false); //success
+    const [successMsg, setsuccessMsg] = useState("");
+    const [errorPrompt, setErrorPrompt] = useState(false); //errors
+    const [errorMsg, setErrorMsg] = useState("");
+
   const [enrollmentPeriod, setEnrollmentPeriod] = useState({
     start: "",
     end: "",
@@ -65,6 +73,10 @@ function SocOfficerDashboard() {
         })
   }, []);
 
+  useEffect(() => {
+      AOS.init({ duration: 1000, once: true });
+    }, []);
+
   //Reuse in other pages that requires logging in
 
   useEffect(() => {
@@ -84,17 +96,24 @@ function SocOfficerDashboard() {
       .then((res) => {
         if (res.data.message === "Enrollment period posted successfully.") {
           //TODO: Success prompt
-          alert("Announcement posted successfully");
-          window.location.reload();
+          setsuccessPrompt(true);
+          setsuccessMsg("Announcement posted successfully");
+          setErrorPrompt(false);
+          setErrorMsg(res.data.message);
+       
           setIsEnrollment(true);
         } else {
-          //TODO: Error prompt
-          alert("Error posting: " + res.data.message);
+          setsuccessPrompt(false);
+          setsuccessMsg(res.data.message);
+          setErrorPrompt(true);
+          setErrorMsg("Error posting announcement");
+          
         }
       })
       .catch((err) => {
         //TODO: Error prompt
-        alert("Error: ", err);
+        setErrorPrompt(true);
+          setErrorMsg("Error: ", err);
       });
   };
 
@@ -196,9 +215,13 @@ function SocOfficerDashboard() {
     .then((res) => {
       if(res.data.message === "Enrollment is now ongoing"){
         //TODO: Success prompt
-        alert(res.data.message);
+        setsuccessPrompt(true);
+          setsuccessMsg(res.data.message);
+          setErrorPrompt(false);
+          setErrorMsg(res.data.message);
+
       }
-      window.location.reload();
+      
     })
     .catch((err) => {
       //TODO: Error prompt
@@ -212,9 +235,14 @@ function SocOfficerDashboard() {
     .then((res) => {
       if(res.data.message === "Enrollment ended"){
         //TODO: Success prompt
-        alert(res.data.message);
+        setsuccessPrompt(true);
+          setsuccessMsg(res.data.message);
+          setErrorPrompt(false);
+          setErrorMsg(res.data.message);
+
+   
       }
-      window.location.reload();
+      
     })
     .catch((err) => {
       //TODO: Error prompt
@@ -225,6 +253,91 @@ function SocOfficerDashboard() {
   return (
     <>
       <Header SideBar={SideBar} setSideBar={setSideBar} />
+
+
+{/* SIGN UP PROMPT */}
+      {/* SUCCESS PROMPT */}
+      {successPrompt && (
+        <div
+          data-aos="zoom-out"
+          data-aos-duration="500"
+          className={styles.popup}
+        >
+          <div className={styles.popupContent}>
+            <button
+              className={styles.closeButton}
+              onClick={() => setsuccessPrompt(false)}
+            >
+              &times;
+            </button>
+            <div className={styles.popupHeader}>
+              <h2>Success</h2>
+            </div>
+            <div className={styles.Message}>
+              <img
+                src="/src/assets/checkmark.png"
+                alt="Success Icon"
+                className={styles.messageImage}
+              />
+            </div>
+            <p className={styles.popupText}>{successMsg}</p>
+            <button
+                          className={styles.resetButton}
+                          onClick={() => {
+                            window.location.reload();
+                           
+                          }}
+                        >
+                          <span>OK</span>
+                        </button>
+          </div>
+        </div>
+      )}
+
+      {/* ERROR PROMPT */}
+      {errorPrompt && (
+        <div
+          data-aos="zoom-out"
+          data-aos-duration="500"
+          className={styles.popupError}
+        >
+          <div className={styles.popupContentError}>
+            <button
+              className={styles.closeButton}
+              onClick={() => setErrorPrompt(false)}
+            >
+              &times;
+            </button>
+            <div className={styles.popupHeaderError}>
+              <h2>Error</h2>
+            </div>
+            <div className={styles.MessageError}>
+              <img
+                src="/src/assets/errormark.png"
+                alt="Error Icon"
+                className={styles.messageImage}
+              />
+            </div>
+            <p className={styles.popupTextError}>{errorMsg}</p>
+            <button
+                          className={styles.resetButton}
+                          onClick={() => {
+                            window.location.reload();
+                           
+                          }}
+                        >
+                          <span>OK</span>
+                        </button>
+          </div>
+        </div>
+      )}
+
+
+
+
+
+
+
       <div className={styles.contentSection}>
         <div className={styles.gridContainer}>
 
