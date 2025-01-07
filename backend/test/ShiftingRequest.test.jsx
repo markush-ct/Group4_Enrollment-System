@@ -115,7 +115,7 @@ describe("Unit Testing for Shifting Request Function", () => {
           PrevProgramAdviser: "Ms. Kim Jisoo",
           AcadYear: "2024-2025",
           Reasons: "Trip lang",
-          Date: "2025-07-01",
+          Date: "2025-01-07",
         },
       ];
 
@@ -185,7 +185,7 @@ describe("Unit Testing for Shifting Request Function", () => {
           email: "nini@bp.com",
           name: "Jennie Kim",
           studentID: "123",
-          submissionDate: "2025-07-01",
+          submissionDate: "2025-01-07",
         })
         .set("Cookie", "session_id=someSessionId");
 
@@ -211,7 +211,7 @@ describe("Unit Testing for Shifting Request Function", () => {
           email: "nini@bp.com",
           name: "Jennie Kim",
           studentID: "123",
-          submissionDate: "2025-07-01",
+          submissionDate: "2025-01-07",
         })
         .set("Cookie", "session_id=someSessionId");
 
