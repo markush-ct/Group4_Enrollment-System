@@ -387,8 +387,8 @@ function SchedManagement() {
                                   .filter(
                                     (sched) =>
                                       sched.Day === day &&
-                                      sched.StartTime <= time &&
-                                      sched.EndTime > time
+                                        sched.StartTime < nextTime &&  
+                                        sched.EndTime > nextTime    
                                   )
                                   .map((sched, index) => (
                                     <div

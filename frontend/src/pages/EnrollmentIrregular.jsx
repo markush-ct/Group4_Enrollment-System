@@ -21,6 +21,7 @@ function EnrollmentIrregular() {
   const [preEnrollmentValues, setPreEnrollmentValues] = useState([]);
   const [preEnrollSched, setPreEnrollSched] = useState([]);
   const [filterType, setFilterType] = useState("");
+  const [draggedCourse, setDraggedCourse] = useState(null); //draglord function design
 
   
   // In your state, make sure rows is initialized with this structure
@@ -89,6 +90,26 @@ function EnrollmentIrregular() {
       });
   }, []);
   //Reuse in other pages that requires logging in
+
+
+
+  const handleDragStart = (course) => {
+    setDraggedCourse(course);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault(); // Allow the drop
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    if (draggedCourse) {
+      console.log("Dropped course:", draggedCourse);
+      // You can handle drop logic here, like adding the course to a schedule
+    }
+    setDraggedCourse(null); // Reset after drop
+  };
+
 
 
   {/* FOR ANIMATION */ }
@@ -697,7 +718,7 @@ function EnrollmentIrregular() {
       case "Pre-Enrollment Form":
         return (
           <div className={styles.Contentt}>
-            <h3>Class Schedule</h3>
+        <h3>Class Schedule</h3>
             <div className={styles.filterSection} data-aos="fade-up">
               <label htmlFor="filter" className={styles.filterLabel}>Filter by Course:</label>
               <select
@@ -718,46 +739,61 @@ function EnrollmentIrregular() {
               </select>
             </div>
 
-
-            <div className={styles.tableContainer} data-aos="fade-up">
-              <table className={styles.requestsTable}>
-                <thead>
-                  <tr>
-                    <th>Course Code</th>
-                    <th>Course Title</th>
-                    <th>Section</th>
-                    <th>Day</th>
-                    <th>Time</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredRequests.length > 0 ? (
-                    filteredRequests.map((acc, index) => (
-                      <tr key={index}>
-                        <td data-label="Course Code">{acc.CourseCode}</td>
-                        <td data-label="Course Title">{acc.CourseTitle}</td>
-                        <td data-label="Section">{acc.YearLevel === "First Year" ? 1
-                          : acc.YearLevel === "Second Year" ? 2
-                            : acc.YearLevel === "Third Year" ? 3
-                              : acc.YearLevel === "Fourth Year" ? 4
-                                : "Mid-Year"} - {acc.Section}</td>
-                        <td data-label="Course Code">{acc.Day}</td>
-                        <td data-label="Time">
-                          {formatTime(acc.StartTime)} to {formatTime(acc.EndTime)}
-                        </td>
-
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="4" className={styles.noData}>
-                        No accounts found.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+      <div
+        className={styles.tableContainer}
+        data-aos="fade-up"
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+      >
+        <table className={styles.checklistTable}>
+          <thead>
+            <tr>
+              <th>Course Code</th>
+              <th>Course Title</th>
+              <th>Section</th>
+              <th>Day</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredRequests.length > 0 ? (
+              filteredRequests.map((acc, index) => (
+                <tr
+                  key={index}
+                  draggable
+                  onDragStart={() => handleDragStart(acc)}
+                  className={styles.checklistTable}
+                >
+                  <td data-label="Course Code">{acc.CourseCode}</td>
+                  <td data-label="Course Title">{acc.CourseTitle}</td>
+                  <td data-label="Section">
+                    {acc.YearLevel === "First Year"
+                      ? 1
+                      : acc.YearLevel === "Second Year"
+                      ? 2
+                      : acc.YearLevel === "Third Year"
+                      ? 3
+                      : acc.YearLevel === "Fourth Year"
+                      ? 4
+                      : "Mid-Year"}{" "}
+                    - {acc.Section}
+                  </td>
+                  <td data-label="Day">{acc.Day}</td>
+                  <td data-label="Time">
+                    {formatTime(acc.StartTime)} to {formatTime(acc.EndTime)}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className={styles.noData}>
+                  No courses available.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+        </div>
 
 
             <img
