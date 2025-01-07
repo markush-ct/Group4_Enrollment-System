@@ -21,7 +21,8 @@ function Requirements() {
   const [errorPrompt, setErrorPrompt] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
-  const [preEnrollmentValues, setPreEnrollmentValues] = useState([]);
+  const [preRegEnrollmentValues, setRegPreEnrollmentValues] = useState([]);
+  const [preIrregEnrollmentValues, setIrregPreEnrollmentValues] = useState([]);
   const [rows, setRows] = useState([]);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -132,19 +133,26 @@ function Requirements() {
     setSelectedRequest(request);
     setPopUpVisible(true);
 
-    try {
-      axios.post(`http://localhost:8080/getPreEnrollmentValuesForAdmin`, { studentID: request.StudentID })
-        .then((res) => {
-          if (res.data.message === "Waiting for pre-enrollment approval") {
-            setPreEnrollmentValues(res.data.data)
-          } else {
-            setPreEnrollmentValues([]);
-          }
-        })
-    } catch (err) {
-      alert("Error: " + err);
-      setPreEnrollmentValues([]);
-    }
+    axios
+    .post(`http://localhost:8080/getPreEnrollmentValuesForAdmin`, { studentID: request.StudentID })
+    .then((res) => {
+      if (res.data.message === "Waiting for pre-enrollment reg approval") {
+        setRegPreEnrollmentValues(res.data.data);
+        setIrregPreEnrollmentValues([]);
+      } else if (res.data.message === "Waiting for pre-enrollment irreg approval") {
+        setIrregPreEnrollmentValues(res.data.data);
+        setRegPreEnrollmentValues([]);
+      } else {
+        setRegPreEnrollmentValues([]);
+        setIrregPreEnrollmentValues([]);
+      }
+    })
+    .catch((err) => {      
+      setErrorMsg("Error: " + err);
+      setErrorPrompt(true);
+      setRegPreEnrollmentValues([]);
+      setIrregPreEnrollmentValues([]);
+    });
   };
 
 
@@ -153,8 +161,7 @@ function Requirements() {
     setPopUpVisible(false);
     setSelectedRequest(null);
   };
-
-  const totalPreEnrollUnits = preEnrollmentValues.reduce((acc, row) => acc + (row.CreditUnitLec + row.CreditUnitLab), 0);
+  
 
 
   useEffect(() => {
@@ -185,6 +192,15 @@ function Requirements() {
   
     return () => clearTimeout(timeoutId);
   }, [searchQuery, accountRequests]);
+
+
+  function formatTime(time) {
+    const currentDate = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+    const formattedTime = `${currentDate}T${time}`; // Combine current date with the time
+
+    const validDate = new Date(formattedTime); // Create a valid Date object
+    return validDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Format the time
+  }
 
 
   return (
@@ -293,6 +309,8 @@ function Requirements() {
                           />
                         </div>
 
+        
+
         {/* Table */}
         <div className={styles.tableContainer} data-aos="fade-up">
           <table className={styles.requestsTable}>
@@ -329,6 +347,9 @@ function Requirements() {
 
           </table>
         </div>
+
+
+
       </div>
 
 
@@ -365,29 +386,71 @@ function Requirements() {
             {/* Details Section */}
             <div data-aos="fade-up" className={styles.detailsSection}>
             </div>
-
-
-            {Array.isArray(preEnrollmentValues) && preEnrollmentValues.length > 0 ? (
-              <div className={styles.formContainer}>                
-
-                {preEnrollmentValues.map((row) => (
-
-                  <div className={styles.popupPromptTextPre} key={row.CourseChecklistID}>
-                    <p><span style={{ fontWeight: "bold", color: "#3d8c4b" }}>{row.CourseCode}</span> - {row.CourseTitle} <span style={{ fontWeight: "bold", color: "#AA0000" }}>{row.CreditUnitLec + row.CreditUnitLab} units</span></p>
-                  </div>
-                ))}
-                <br></br>
-                <p style={{ textAlign: "center" }}><span style={{ fontWeight: "bold", color: "#3d8c4b" }}> Total Units: </span>{totalPreEnrollUnits}</p>
-
-
-                <br />
-                <div className={styles.buttonSection}>
-                <button className={`${styles.btn} ${styles.addBtn}`} onClick={() => handleApprove(preEnrollmentValues)}><span>Approve</span></button>
-
-                <button className={`${styles.btn} ${styles.removeBtn}`} onClick={() => handleReject(preEnrollmentValues)}><span>Reject</span></button>
+            
+            {selectedRequest.StudentType === "Regular" ? (
+              <div className={styles.formContainer}>
+              {preRegEnrollmentValues.map((row) => (
+                <div className={styles.popupPromptTextPre} key={row.CourseChecklistID}>
+                  <p>
+                    <span style={{ fontWeight: "bold", color: "#3d8c4b" }}>{row.CourseCode}</span> -{" "}
+                    {row.CourseTitle}{" "}
+                    <span style={{ fontWeight: "bold", color: "#AA0000" }}>
+                      {row.CreditUnitLec + row.CreditUnitLab} units
+                    </span>
+                  </p>
+                </div>
+              ))}
+              <p style={{ textAlign: "center" }}>
+                <span style={{ fontWeight: "bold", color: "#3d8c4b" }}> Total Units: </span>
+                {preRegEnrollmentValues.reduce((acc, row) => acc + (row.CreditUnitLec + row.CreditUnitLab), 0)}
+              </p>
+              <div className={styles.buttonSection}>
+                <button className={`${styles.btn} ${styles.addBtn}`} onClick={() => handleApprove(preRegEnrollmentValues)}>
+                  <span>Approve</span>
+                </button>
+                <button className={`${styles.btn} ${styles.removeBtn}`} onClick={() => handleReject(preRegEnrollmentValues)}>
+                  <span>Reject</span>
+                </button>
               </div>
-              </div>
-            ) : ("")}
+            </div>
+            ) : (
+              <div className={styles.formContainer}>
+        {preIrregEnrollmentValues.map((row) => (
+          <div className={styles.popupPromptTextPreIrreg} key={row.CourseChecklistID}>
+            <p>
+              <span style={{ fontWeight: "bold", color: "#3d8c4b" }}>{row.CourseCode}</span> -{" "}
+              {row.CourseTitle}{" "}
+              <span style={{ fontWeight: "bold", color: "#AA0000" }}>
+                {row.CreditUnitLec + row.CreditUnitLab} units
+              </span>
+              
+              <span style={{ fontWeight: "normal", color: "black" , marginLeft: "5px"}}>
+                ({row.YearLevel === "First Year" ? 1
+                                                : row.YearLevel === "Second Year" ? 2
+                                                : row.YearLevel === "Third Year" ? 3
+                                                : row.YearLevel === "Fourth Year" ? 4
+                                                : "Mid-Year"} - {row.Section} {row.Day} {formatTime(row.StartTime)} to {formatTime(row.EndTime)})
+              </span>
+            </p>
+          </div>
+        ))}
+        <p style={{ textAlign: "center" }}>
+          <span style={{ fontWeight: "bold", color: "#3d8c4b" }}> Total Units: </span>
+          {preIrregEnrollmentValues.reduce((acc, row) => acc + (row.CreditUnitLec + row.CreditUnitLab), 0)}
+        </p>
+        <div className={styles.buttonSection}>
+          <button className={`${styles.btn} ${styles.addBtn}`} onClick={() => handleApprove(preIrregEnrollmentValues)}>
+            <span>Approve</span>
+          </button>
+          <button className={`${styles.btn} ${styles.removeBtn}`} onClick={() => handleReject(preIrregEnrollmentValues)}>
+            <span>Reject</span>
+          </button>
+        </div>
+      </div>
+            )}
+
+
+            
 
           </div>
         </div>

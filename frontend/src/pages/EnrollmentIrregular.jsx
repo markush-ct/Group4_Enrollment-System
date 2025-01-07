@@ -14,15 +14,17 @@ function EnrollmentIrregular() {
   const [successPrompt, setSuccessPrompt] = useState(false);
   const [errorPrompt, setErrorPrompt] = useState(false); //errors
   const [errorMsg, setErrorMsg] = useState("");
-  const [selectedSubjects, setSelectedSubjects] = useState([]);
   const [accName, setAccName] = useState("");
-  const [rows, setRows] = useState([]);
   const [eligibleCourses, setEligibleCourses] = useState([]);
   const [totalUnits, setTotalUnits] = useState(0);
   const [isPreEnrollmentSubmitted, setIsPreEnrollmentSubmitted] = useState();
   const [preEnrollmentValues, setPreEnrollmentValues] = useState([]);
   const [preEnrollSched, setPreEnrollSched] = useState([]);
   const [filterType, setFilterType] = useState("");
+
+  
+  // In your state, make sure rows is initialized with this structure
+  const [rows, setRows] = useState([]);
 
   //Enrollment Progress
   const [socFeeProg, setSocFeeProg] = useState(false);
@@ -119,10 +121,53 @@ function EnrollmentIrregular() {
 
   // Handle course selection
   const handleCourseChange = (index, courseID) => {
-    const updatedRows = [...rows];
-    updatedRows[index].selectedCourse = courseID;
-    setRows(updatedRows);
+    setRows(prevRows => {
+      const updatedRows = [...prevRows];
+      updatedRows[index] = { 
+        ...updatedRows[index], 
+        selectedCourse: courseID, 
+        selectedSectionID: null, // Reset selected section when course changes
+        sections: [] // Empty sections initially
+      };
+      return updatedRows;
+    });
+  
+    // Fetch new sections based on the selected course
+    axios.post('http://localhost:8080/schedOnCourseChange', { courseID: courseID })
+      .then((res) => {
+        if (res.data.message === "Success") {
+          const sections = res.data.schedInfo; // Assuming the sections are returned here
+          
+          setRows(prevRows => {
+            const updatedRows = [...prevRows];
+            updatedRows[index] = {
+              ...updatedRows[index],
+              sections: sections, // Update sections here
+            };
+            return updatedRows;
+          });
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching sections:", err);
+      });
   };
+
+  // Track the selected section for each row
+  const handleSectionChange = (index, selectedSectionID) => {
+    setRows(prevRows => {
+      const updatedRows = [...prevRows];
+      updatedRows[index] = {
+        ...updatedRows[index],
+        selectedSectionID: selectedSectionID, // Store just the section ID if needed
+      };
+      return updatedRows;
+    });
+  };
+  
+  
+  
+
 
   const calculateTotalUnits = () => {
     const total = rows.reduce((acc, row) => {
@@ -143,69 +188,34 @@ function EnrollmentIrregular() {
   }, [rows, eligibleCourses]);
 
 
-  const handleSubmit = async () => {
-    const addedSubjects = rows
-      .filter((row) => row.selectedCourse) // Only include rows with a selected course
-      .map((row) => {
-        console.log("Selected course ID: ", row.selectedCourse); // Log selected course ID
-        const subject = eligibleCourses.find(
-          (s) => s.CourseChecklistID === Number(row.selectedCourse) // Convert string to number
-        );
-        console.log("Matched subject: ", subject); // Log the matched subject
-        return subject
-          ? {
-            code: subject.CourseCode,
-            title: subject.CourseTitle,
-            units: subject.CreditUnitLec + subject.CreditUnitLab,
-          }
-          : null;
-      })
-      .filter(Boolean); // Remove null values
+  const handleSubmit = async() => {
+    const selectedCoursesAndSections = rows.map(row => ({
+      courseID: row.selectedCourse,
+      schedID: row.selectedSectionID
+    }));
+    console.log("values", selectedCoursesAndSections);
 
-    if (addedSubjects.length === 0) {
-      setErrorPrompt(true);
-      setErrorMsg("You need to add at least 1 subject");
-      return; // Stop the submission process
-    }
+    try {
+      const res = await axios.post('http://localhost:8080/submitIrregPreEnrollment', {
+        values: selectedCoursesAndSections,
+      });
 
-    // Calculate the total units of selected subjects
-    const totalUnits = addedSubjects.reduce((acc, subject) => acc + subject.units, 0);
-
-    if (totalUnits > 23) {
-      setErrorPrompt(true);
-      setErrorMsg(`Maximum units exceeded. You have selected ${totalUnits} units, but the limit is 23 units.`);
-      return;
-    } else if (totalUnits < 10) {
-      setErrorPrompt(true);
-      setErrorMsg(`Minimum units not reached. You have selected ${totalUnits} units, but the minimum requirement is 10 units.`);
-      return;
-    } else {
-      try {
-        // Prepare the data to save
-        const selectedCourses = rows.map((row) => row.selectedCourse);
-
-        const res = await axios.post('http://localhost:8080/submitPreEnrollment', {
-          courses: selectedCourses,
-        });
-
-        if (res.data.message === "Pre enrollment submitted.") {
-          setSuccessPrompt(true);
-          setSelectedSubjects(addedSubjects);
+      if(res.data.message === "Pre enrollment submitted."){
+          setSuccessPrompt(true);          
           setIsPreEnrollmentSubmitted(true);
-
-        } else {
-          setIsPreEnrollmentSubmitted(false);
-          setSuccessPrompt(false);
-          setErrorPrompt(true);
-          setErrorMsg('Failed to submit pre enrollment. Please try again.');
-        }
-      } catch (err) {
+      } else {
+        setIsPreEnrollmentSubmitted(false);
         setSuccessPrompt(false);
+        setErrorPrompt(true);
+        setErrorMsg(res.data.message);
+      }
+    } catch (err) {
+      setSuccessPrompt(false);
         setIsPreEnrollmentSubmitted(false);
         setErrorPrompt(true);
         setErrorMsg(`FFailed to submit pre enrollment: ${err.response?.data?.message || err.message}`);
-      }
     }
+
   };
 
 
@@ -473,23 +483,23 @@ function EnrollmentIrregular() {
   const [enrolledStdData, SetEnrolledStdData] = useState([]);
   useEffect(() => {
     axios.get('http://localhost:8080/getEnrolledStdInfo')
-    .then((res) => {
-      if(res.data.message === "Success"){
-        console.log(res.data.studentData);
-        SetEnrolledStdData(res.data.studentData);
-      }
-    })
-    .catch((err) => {
-      setErrorMsg("Error: " + err);
-      setErrorPrompt(true);
-    })
-  },[]);
+      .then((res) => {
+        if (res.data.message === "Success") {
+          console.log(res.data.studentData);
+          SetEnrolledStdData(res.data.studentData);
+        }
+      })
+      .catch((err) => {
+        setErrorMsg("Error: " + err);
+        setErrorPrompt(true);
+      })
+  }, []);
 
 
   function formatTime(time) {
     const currentDate = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
     const formattedTime = `${currentDate}T${time}`; // Combine current date with the time
-  
+
     const validDate = new Date(formattedTime); // Create a valid Date object
     return validDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Format the time
   }
@@ -497,10 +507,10 @@ function EnrollmentIrregular() {
 
   const filteredRequests = filterType
     ? preEnrollSched.filter(
-        (sched) => `${sched.CourseChecklistID}` === filterType
-      )
+      (sched) => `${sched.CourseChecklistID}` === filterType
+    )
     : preEnrollSched;
-  
+
 
 
   const renderContent = () => {
@@ -537,26 +547,26 @@ function EnrollmentIrregular() {
             </div>
 
             <h3>Digital Checklist</h3>
-           
 
-<div className={styles.Contentt}>
-  {reqStatus === "Rejected" && (
-    <>
-      <img
-        src="/src/assets/warning-icon.png"
-        alt="Warning Icon"
-        className={styles.uploadIcon}
-      />
-      <h4 style={{ color: "red", marginBottom: "10px", fontSize: "1.5rem" }}> Attention Required</h4>
-      <h4 style={{ color: "red", marginBottom: "10px", fontSize: "1rem" }}>
-        Some of your submitted requirements were <strong>rejected</strong>. Please review the details below and correct the issues.
-      </h4>
-    </>
-  )}
-</div>
-                            
 
-{Object.keys(groupedByYearAndSemester).map((yearLevel) => (
+            <div className={styles.Contentt}>
+              {reqStatus === "Rejected" && (
+                <>
+                  <img
+                    src="/src/assets/warning-icon.png"
+                    alt="Warning Icon"
+                    className={styles.uploadIcon}
+                  />
+                  <h4 style={{ color: "red", marginBottom: "10px", fontSize: "1.5rem" }}> Attention Required</h4>
+                  <h4 style={{ color: "red", marginBottom: "10px", fontSize: "1rem" }}>
+                    Some of your submitted requirements were <strong>rejected</strong>. Please review the details below and correct the issues.
+                  </h4>
+                </>
+              )}
+            </div>
+
+
+            {Object.keys(groupedByYearAndSemester).map((yearLevel) => (
               <div className={styles.Contentt} key={yearLevel}>
                 <h4>{yearLevel}</h4>
                 {Object.keys(groupedByYearAndSemester[yearLevel]).map((semester) => (
@@ -689,63 +699,65 @@ function EnrollmentIrregular() {
           <div className={styles.Contentt}>
             <h3>Class Schedule</h3>
             <div className={styles.filterSection} data-aos="fade-up">
-    <label htmlFor="filter" className={styles.filterLabel}>Filter by Course:</label>
-    <select
-        id="filter"
-        className={styles.filterDropdown}
-        value={filterType}
-        onChange={(e) => setFilterType(e.target.value)} // Updates filterType
-    >
-        <option value="">All Courses</option> {/* Option to reset filter */}
-        {eligibleCourses.map((course) => (
-            <option
-                key={course.CourseChecklistID}
-                value={course.CourseChecklistID}
-            >
-                {course.CourseCode} {/* Display Course Code */}
-            </option>
-        ))}
-    </select>
-</div>
+              <label htmlFor="filter" className={styles.filterLabel}>Filter by Course:</label>
+              <select
+                id="filter"
+                className={styles.filterDropdown}
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)} // Updates filterType
+              >
+                <option value="">All Courses</option> {/* Option to reset filter */}
+                {eligibleCourses.map((course) => (
+                  <option
+                    key={course.CourseChecklistID}
+                    value={course.CourseChecklistID}
+                  >
+                    {course.CourseCode} {/* Display Course Code */}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-            
+
             <div className={styles.tableContainer} data-aos="fade-up">
-                      <table className={styles.requestsTable}>
-                        <thead>
-                          <tr>
-                            <th>Course Code</th>
-                            <th>Course Title</th>
-                            <th>Section</th>
-                            <th>Time</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {filteredRequests.length > 0 ? (
-                            filteredRequests.map((acc, index) => (
-                              <tr key={index}>
-                                <td data-label="Course Code">{acc.CourseCode}</td>
-                                <td data-label="Course Title">{acc.CourseTitle}</td>
-                                <td data-label="Section">{acc.YearLevel === "First Year" ? 1
-                                : acc.YearLevel === "Second Year" ? 2
-                                : acc.YearLevel === "Third Year" ? 3
-                                : acc.YearLevel === "Fourth Year" ? 4
+              <table className={styles.requestsTable}>
+                <thead>
+                  <tr>
+                    <th>Course Code</th>
+                    <th>Course Title</th>
+                    <th>Section</th>
+                    <th>Day</th>
+                    <th>Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredRequests.length > 0 ? (
+                    filteredRequests.map((acc, index) => (
+                      <tr key={index}>
+                        <td data-label="Course Code">{acc.CourseCode}</td>
+                        <td data-label="Course Title">{acc.CourseTitle}</td>
+                        <td data-label="Section">{acc.YearLevel === "First Year" ? 1
+                          : acc.YearLevel === "Second Year" ? 2
+                            : acc.YearLevel === "Third Year" ? 3
+                              : acc.YearLevel === "Fourth Year" ? 4
                                 : "Mid-Year"} - {acc.Section}</td>
-                                <td data-label="Time">
-  {formatTime(acc.StartTime)} to {formatTime(acc.EndTime)}
-</td>
-                            
-                              </tr>
-                            ))
-                          ) : (
-                            <tr>
-                              <td colSpan="4" className={styles.noData}>
-                                No accounts found.
-                              </td>
-                            </tr>
-                          )}
-                        </tbody>                        
-                      </table>
-                    </div>
+                        <td data-label="Course Code">{acc.Day}</td>
+                        <td data-label="Time">
+                          {formatTime(acc.StartTime)} to {formatTime(acc.EndTime)}
+                        </td>
+
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="4" className={styles.noData}>
+                        No accounts found.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
 
 
             <img
@@ -793,48 +805,69 @@ function EnrollmentIrregular() {
 
 
                 <table className={styles.checkTable}>
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Course</th>
-                      <th>Section</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {rows.map((row, index) => (
-                      <tr key={index}>
-                        <td>{index + 1}</td>
-                        <td>
-                          <select
-                            value={row.selectedCourse}
-                            onChange={(e) => handleCourseChange(index, e.target.value)}
-                          >
-                            <option value="" disabled>
-                              -- Select a Course --
-                            </option>
-                            {eligibleCourses.map((course) => (
-                              <option
-                                key={course.CourseChecklistID}
-                                value={course.CourseChecklistID}
-                              >
-                                {course.CourseCode} - {course.CourseTitle} ({course.CreditUnitLab + course.CreditUnitLec} units)
-                              </option>
-                            ))}
-                          </select>
-                        </td>
-                        <td>
-                          <select name="" id="">
-                            <option value="">Meow</option>
-                          </select>
-                        </td>
-                        <td>
-                          <button onClick={() => handleDeleteRow(index)} className={`${styles.btn} ${styles.removeBtn}`}><span>Delete</span></button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Course</th>
+      <th>Section</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {rows.map((row, index) => (
+      <tr key={index}>
+        <td>{index + 1}</td>
+        <td>
+          <select
+            value={row.selectedCourse} // Ensure selectedCourse is the value here
+            onChange={(e) => handleCourseChange(index, e.target.value)}
+          >
+            <option value="" disabled>
+              -- Select a Course --
+            </option>
+            {eligibleCourses.map((course) => (
+              <option
+                key={course.CourseChecklistID}
+                value={course.CourseChecklistID}
+              >
+                {course.CourseCode} - {course.CourseTitle} ({course.CreditUnitLab + course.CreditUnitLec} units)
+              </option>
+            ))}
+          </select>
+        </td>
+        <td>
+        <select 
+  value={row.selectedSectionID || ""} // Set the selected section value based on the section ID
+  onChange={(e) => handleSectionChange(index, e.target.value)} // Pass the ClassSchedID
+>
+  <option value="" disabled>-- Select Section --</option>
+  {row.sections?.length > 0 ? (
+    row.sections.map((section, idx) => (
+      <option key={idx} value={section.ClassSchedID}>
+        {section.YearLevel === "First Year" ? 1
+        : section.YearLevel === "Second Year" ? 2
+        : section.YearLevel === "Third Year" ? 3
+        : section.YearLevel === "Fourth Year" ? 4
+        : "Mid-Year"} - {section.Section}
+      </option>
+    ))
+  ) : (
+    <option value="" disabled>No sections available</option>
+  )}
+</select>
+
+
+        </td>
+        <td>
+          <button onClick={() => handleDeleteRow(index)} className={`${styles.btn} ${styles.removeBtn}`}>
+            <span>Delete</span>
+          </button>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
 
                 <p>Total Units: <span>{totalUnits}</span></p> {/* Display updated total units */}
 
@@ -858,35 +891,35 @@ function EnrollmentIrregular() {
                   ? "src/assets/paid-icon.png"
                   : stdEnrollStatus === "Pending"
                     ? "src/assets/pending-icon.png"
-                    : stdEnrollStatus === "Not Enrolled" 
-                    ? "src/assets/unpaid-icon.png"
-                    : "src/assets/pending-icon.png"
+                    : stdEnrollStatus === "Not Enrolled"
+                      ? "src/assets/unpaid-icon.png"
+                      : "src/assets/pending-icon.png"
               }
               alt="Fee Status Icon"
               className={styles.uploadIcon}
             />
 
             <h3>Enrollment Status: <span>{stdEnrollStatus}</span></h3>
-            
+
             <p>{stdEnrollStatus === "Enrolled" ? "Kindly go to Registrar’s Office to claim your Certificate of Registration"
               : stdEnrollStatus === "Pending" ? "Your enrollment is currently under review. Please wait for further updates regarding your status."
                 : stdEnrollStatus === "Not Enrolled" ? "It seems you are not enrolled. Please contact the Registrar’s Office for assistance."
-              : "Your enrollment is currently under review. Please wait for further updates regarding your status."}</p>
+                  : "Your enrollment is currently under review. Please wait for further updates regarding your status."}</p>
 
 
-{stdEnrollStatus === "Enrolled" && enrolledStdData && (
-  <div>
-    <h3>Details</h3>
-    <p>Student ID: <span>{enrolledStdData.CvSUStudentID}</span></p>
-    <p>Student Type: <span>{enrolledStdData.StudentType}</span></p>
-    <p>Program Year-Section: <span>{enrolledStdData.ProgramID === 1 ? "BSCS" : "BSIT"} {enrolledStdData.Year === "First Year" ? 1 
-    : enrolledStdData.Year === "Second Year" ? 2 
-  : enrolledStdData.Year === "Third Year" ? 3 
- : enrolledStdData.Year === "Fourth Year" ? 4
- : "Mid-Year"}
- {enrolledStdData.Section !== null ? ` - ${enrolledStdData.Section}` : ""}</span></p>
-  </div>
-)}
+            {stdEnrollStatus === "Enrolled" && enrolledStdData && (
+              <div>
+                <h3>Details</h3>
+                <p>Student ID: <span>{enrolledStdData.CvSUStudentID}</span></p>
+                <p>Student Type: <span>{enrolledStdData.StudentType}</span></p>
+                <p>Program Year-Section: <span>{enrolledStdData.ProgramID === 1 ? "BSCS" : "BSIT"} {enrolledStdData.Year === "First Year" ? 1
+                  : enrolledStdData.Year === "Second Year" ? 2
+                    : enrolledStdData.Year === "Third Year" ? 3
+                      : enrolledStdData.Year === "Fourth Year" ? 4
+                        : "Mid-Year"}
+                  {enrolledStdData.Section !== null ? ` - ${enrolledStdData.Section}` : ""}</span></p>
+              </div>
+            )}
 
           </div>)
       default:

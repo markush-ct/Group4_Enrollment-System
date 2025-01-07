@@ -29,6 +29,74 @@ const transporter = nodemailer.createTransport({
 
 });
 
+router.post('/submitIrregPreEnrollment', (req, res) => {
+    const {values} = req.body;
+
+    const getStudent = `SELECT * FROM student WHERE Email = ?`;
+    db.query(getStudent, req.session.email, (err, stdRes) => {
+        if(err){
+            return res.json({message: "Error in server: " + err}) ;
+        } else {
+            const studentID = stdRes[0].StudentID;
+            const yearSection = 
+    (stdRes[0].ProgramID === 1 ? "BSCS" : "BSIT") + " " +
+    (stdRes[0].Year === "First Year" ? 1
+    : stdRes[0].Year === "Second Year" ? 2
+    : stdRes[0].Year === "Third Year" ? 3
+    : stdRes[0].Year === "Fourth Year" ? 4
+    : "Mid-Year") +
+    " - " + stdRes[0].Section;
+
+
+            const sql = `INSERT INTO preenrollment (CourseChecklistID, ClassSchedID, StudentID, YearSection) VALUES (?, ?, ?, ?)`;
+
+            // Insert advised courses into the database
+            const promises = values.map(course =>
+                new Promise((resolve, reject) => {
+                    db.query(sql, [course.courseID, course.schedID, studentID, yearSection], (err) => { // Pass 'course' directly
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve();
+                        }
+                    });
+                })
+            );
+
+            Promise.all(promises)
+                .then(() => {
+                    return res.json({ message: "Pre enrollment submitted." });
+                })
+                .catch(saveErr => {
+                    return res.json({ message: "Error saving courses: " + saveErr.message });
+                });
+
+        }
+    })
+});
+
+router.post('/schedOnCourseChange', (req, res) => {
+    const {courseID} = req.body;
+
+    const sql1 = `SELECT * FROM student WHERE Email = ?`;
+    const sql2 = `SELECT * FROM classschedule WHERE CourseChecklistID = ? AND ProgramID = ?`;
+
+    db.query(sql1, req.session.email, (err, stdRes) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else {
+            db.query(sql2, [courseID, stdRes[0].ProgramID], (err, schedRes) => {
+                if(err){
+                    return res.json({message: "Error in server: " + err});
+                } else {
+                    return res.json({message: "Success", schedInfo: schedRes});
+                }
+            })
+        }
+    })
+})
+
+
 router.get('/classSchedIrreg/preEnroll', (req, res) => {
     const sql1 = `SELECT * FROM student WHERE Email = ?`;
     const sql2 = `
@@ -182,8 +250,9 @@ router.post('/getPreEnrollmentValuesForAdmin', (req, res) => {
             return res.json({ message: "Error in server: " + err });
         } else {
             const studentID = idRes[0].StudentID;
-            
-            const getStatus = `
+
+            if(idRes[0].StudentType === "Regular"){
+                const getStatus = `
             SELECT p.CourseChecklistID, 
                    p.StudentID, 
                    c.CourseCode, 
@@ -204,7 +273,7 @@ router.post('/getPreEnrollmentValuesForAdmin', (req, res) => {
                     const status = statusRes[0].PreEnrollmentStatus;
                     if (status === "Pending") {
                         return res.json({
-                            message: "Waiting for pre-enrollment approval",
+                            message: "Waiting for pre-enrollment reg approval",
                             data: statusRes
                         });
                     } else if (status === "Approved") {
@@ -219,6 +288,51 @@ router.post('/getPreEnrollmentValuesForAdmin', (req, res) => {
                     message: "No record found",
                 });
             });
+            }else if(idRes[0].StudentType === "Irregular") {
+                const getStatus = `
+            SELECT p.CourseChecklistID, 
+                   p.StudentID, 
+                   c.CourseCode, 
+                   c.CourseTitle, 
+                   c.CreditUnitLec, 
+                   c.CreditUnitLab,
+                   p.PreEnrollmentStatus,
+                   cs.Day,
+                   cs.StartTime,
+                   cs.EndTime,
+                   cs.YearLevel,
+                   cs.Section                   
+            FROM preenrollment p
+            JOIN classschedule cs
+            ON p.CourseChecklistID = cs.CourseChecklistID AND p.ClassSchedID = cs.ClassSchedID
+            JOIN coursechecklist c
+            ON cs.CourseChecklistID = c.CourseChecklistID
+            WHERE p.StudentID = ?
+            `;
+
+            db.query(getStatus, studentID, (err, statusRes) => {
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else if (statusRes.length > 0) {
+                    const status = statusRes[0].PreEnrollmentStatus;
+                    if (status === "Pending") {
+                        return res.json({
+                            message: "Waiting for pre-enrollment irreg approval",
+                            data: statusRes
+                        });
+                    } else if (status === "Approved") {
+                        return res.json({
+                            message: "Pre-enrollment is approved",
+                            data: statusRes,
+                            status: status
+                        });
+                    }
+                }
+                return res.json({
+                    message: "No record found",
+                });
+            });
+            }
         }
     });
 });

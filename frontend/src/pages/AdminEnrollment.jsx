@@ -232,6 +232,14 @@ function Requirements() {
 
     const totalPreEnrollUnits = preEnrollmentValues.reduce((acc, row) => acc + (row.CreditUnitLec + row.CreditUnitLab), 0);
 
+    function formatTime(time) {
+        const currentDate = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+        const formattedTime = `${currentDate}T${time}`; // Combine current date with the time
+    
+        const validDate = new Date(formattedTime); // Create a valid Date object
+        return validDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Format the time
+      }
+
     return (
         <>
             <Header SideBar={SideBar} setSideBar={setSideBar} />
@@ -477,22 +485,39 @@ function Requirements() {
 
                         <div className={styles.formContainer}>
 
+                            {selectedRequest.StudentType === "Regular" ? (
+                                    <div className={styles.formContainer}>
+    
+                                        {preEnrollmentValues.map((row) => (
+    
+                                            <div key={row.CourseChecklistID}>
+                                                <p>{row.CourseCode} - {row.CourseTitle} ({row.CreditUnitLec + row.CreditUnitLab} units)</p>
+                                            </div>
+                                        ))}
+                                        <p>Total Units: <span>{totalPreEnrollUnits}</span></p>
+    
+    
+                                    </div>
 
-
-                            {Array.isArray(preEnrollmentValues) && preEnrollmentValues.length > 0 ? (
+                            ) : (
                                 <div className={styles.formContainer}>
-
-                                    {preEnrollmentValues.map((row) => (
-
-                                        <div key={row.CourseChecklistID}>
-                                            <p>{row.CourseCode} - {row.CourseTitle} ({row.CreditUnitLec + row.CreditUnitLab} units)</p>
-                                        </div>
-                                    ))}
-                                    <p>Total Units: <span>{totalPreEnrollUnits}</span></p>
-
-
-                                </div>
-                            ) : ("")}
+    
+                                        {preEnrollmentValues.map((row) => (
+    
+                                            <div key={row.CourseChecklistID}>
+                                                <p>{row.CourseCode} - {row.CourseTitle} ({row.CreditUnitLec + row.CreditUnitLab} units) {row.YearLevel === "First Year" ? 1
+                                                : row.YearLevel === "Second Year" ? 2
+                                                : row.YearLevel === "Third Year" ? 3
+                                                : row.YearLevel === "Fourth Year" ? 4
+                                                : "Mid-Year"} - {row.Section} {row.Day} {formatTime(row.StartTime)} to {formatTime(row.EndTime)}</p>
+                                            </div>
+                                        ))}
+                                        <p>Total Units: <span>{totalPreEnrollUnits}</span></p>
+    
+    
+                                    </div>
+                            )}
+                            
 
                             <div className={styles.formContainer}>
                                 <div className={styles.advising}>

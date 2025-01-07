@@ -14,7 +14,6 @@ function EnrollmentRegular() {
   const [successPrompt, setSuccessPrompt] = useState(false);
   const [errorPrompt, setErrorPrompt] = useState(false); //errors
   const [errorMsg, setErrorMsg] = useState("");
-  const [selectedSubjects, setSelectedSubjects] = useState([]);
   const [accName, setAccName] = useState("");
   const [rows, setRows] = useState([]);
   const [eligibleCourses, setEligibleCourses] = useState([]);
@@ -188,7 +187,6 @@ function EnrollmentRegular() {
 
         if (res.data.message === "Pre enrollment submitted.") {
           setSuccessPrompt(true);
-          setSelectedSubjects(addedSubjects);
           setIsPreEnrollmentSubmitted(true);
 
         } else {

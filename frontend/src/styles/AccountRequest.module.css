@@ -422,6 +422,13 @@ button.approveButton:hover, button.rejectButton:hover {
   text-align: left;
   margin-left: 150px;
 }
+
+.popupPromptTextPreIrreg{
+  font-size: 1.0rem;
+  text-align: left;
+  margin-left: 20px;
+}
+
 .popupPromptHeader h2 {
   font-size: 2.0rem;
   margin: 0;
