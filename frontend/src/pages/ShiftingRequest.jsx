@@ -231,8 +231,8 @@ function ShiftingRequest() {
             </div>
 
             {/* Date Input and Send Button */}
-            <div data-aos="fade-up" className={styles.studentType}>
-              <h5>Date of Submission</h5>
+            <div className={styles.formGroup}>
+              <label>Date of Submission</label>
 
               <input
                 type="date"
@@ -251,7 +251,9 @@ function ShiftingRequest() {
                 className={styles.OKButton}
                 onClick={() => {
                   if (!submissionDate) {
-                    alert("Please select a date for submission.");
+                   
+          setErrorPrompt(true);
+          setErrorMsg("Please select a date for submission.");
                     return;
                   }
                   handleApprove(selectedRequest); // Proceed if date is selected
@@ -280,8 +282,9 @@ function ShiftingRequest() {
             </div>
 
             {/* Date Input and Send Button */}
-            <div data-aos="fade-up" className={styles.studentType}>
-              <h5>Reason</h5>
+          
+              <div className={styles.formGroup}>
+              <label>Reason</label>
 
               <input
                 type="textarea"
@@ -292,6 +295,7 @@ function ShiftingRequest() {
                 className={styles.popupPromptInput}
                 required
               />
+           
             </div>
 
             {/* Buttons */}
@@ -300,7 +304,8 @@ function ShiftingRequest() {
                 className={styles.OKButton}
                 onClick={() => {
                   if (!rejectionReason) {
-                    alert("Please provide a reason for rejection.");
+                    setErrorPrompt(true);
+                    setErrorMsg("Please provide a reason for rejection.");
                     return;
                   }
                   handleReject(selectedRequest); // Proceed if reason is provided
@@ -409,7 +414,8 @@ function ShiftingRequest() {
                           setApprovalPrompt(true);
                         }}
                       >
-                        Approve
+                      
+                      <span style={{fontWeight: 400, fontSize: '1rem'}}>Approve</span>
                       </button>
                       <button
                         className={styles.rejectButton}
@@ -419,7 +425,7 @@ function ShiftingRequest() {
                           setRejectionPrompt(true);
                         }}
                       >
-                        {loading ? "Loading..." : "Reject"}
+                        {loading ? <span style={{fontWeight: 300, fontSize: '14px'}}>Loading...</span> : <span style={{fontWeight: 400, fontSize: '1rem'}}>Reject</span>}
                       </button>
                     </td>
                   </tr>

@@ -535,7 +535,7 @@ function AccountManagement() {
                           handleRowClick(index);
                         }}
                       >
-                        {loading ? "Loading..." : "Edit"}
+                        {loading ? <span style={{fontWeight: 300, fontSize: '14px'}}>Loading...</span> : <span style={{fontWeight: 400, fontSize: '1rem'}}>Edit</span>}
                       </button>
 
                       {acc.account.accStatus === "Active" ? (
@@ -544,8 +544,8 @@ function AccountManagement() {
                           onClick={(e) => {
                             e.stopPropagation();
                             handleTerminate(acc); // Pass the entire request object
-                          }}
-                        >{loading ? 'Loading...' : 'Terminate'}
+                          }}>
+                            {loading ? <span style={{fontWeight: 300, fontSize: '14px'}}>Loading...</span> : <span style={{fontWeight: 400, fontSize: '1rem'}}>Terminate</span>}
                         </button>
                       ) : (
                         <button
