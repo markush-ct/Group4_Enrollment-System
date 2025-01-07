@@ -194,8 +194,8 @@ function AccountSettingsStudent() {
     event.preventDefault();
 
     if (!currentPassword) {
-      // Display custom error or validation message
-      alert("Current password is required.");
+      setErrorPrompt(true);
+      setErrorMsg("Current password is required");
       return;
     }
 
