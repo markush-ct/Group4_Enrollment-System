@@ -1,10 +1,10 @@
+import React from "react";
 import { useState, useEffect, useMemo } from "react";
 import styles from "/src/styles/DCSHeadDash.module.css";
 import axios from "axios";
 import Header from "/src/components/AdminDashHeader.jsx";
 import { Doughnut } from "react-chartjs-2";
 import { useNavigate } from "react-router-dom";
-
 
 import {
   Chart as ChartJS,
@@ -16,9 +16,15 @@ import {
   PointElement,
   LineElement,
 } from "chart.js";
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement);
-
-
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement
+);
 
 function DCSHeadDashboard() {
   const [SideBar, setSideBar] = useState(false);
@@ -29,39 +35,39 @@ function DCSHeadDashboard() {
   const [accName, setAccName] = useState("");
   const [program, setProgram] = useState("");
 
-
   useEffect(() => {
     document.body.style.overflow = SideBar ? "hidden" : "auto";
     return () => (document.body.style.overflow = "auto");
   }, [SideBar]);
 
-
-//Reuse in other pages that requires logging in
-const navigate = useNavigate();
-axios.defaults.withCredentials = true;
-//RETURNING ACCOUNT NAME IF LOGGED IN
-useEffect(() => {
-  axios
-    .get("http://localhost:8080")
-    .then((res) => {
-      if (res.data.valid) {
-        setAccName(res.data.name);
-      } else {
-        navigate("/LoginPage");
-      }
-    })
-    //RETURNING ERROR IF NOT
-    .catch((err) => {
-      console.error("Error validating user session:", err);
-    });
-}, []);
-//Reuse in other pages that requires logging in
-
+  //Reuse in other pages that requires logging in
+  const navigate = useNavigate();
+  axios.defaults.withCredentials = true;
+  //RETURNING ACCOUNT NAME IF LOGGED IN
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080")
+      .then((res) => {
+        if (res.data.valid) {
+          setAccName(res.data.name);
+        } else {
+          navigate("/LoginPage");
+        }
+      })
+      //RETURNING ERROR IF NOT
+      .catch((err) => {
+        console.error("Error validating user session:", err);
+      });
+  }, []);
+  //Reuse in other pages that requires logging in
 
   // BILOG NA ANO
   const doughnutData = useMemo(
     () => ({
-      labels: ["Alliance of Computer Science", "Information Technology Society"],
+      labels: [
+        "Alliance of Computer Science",
+        "Information Technology Society",
+      ],
       datasets: [
         {
           label: "DCS CHARTS",
@@ -87,19 +93,21 @@ useEffect(() => {
   );
 
   useEffect(() => {
-    axios.get("http://localhost:8080/DCSHeadProgram")
-    .then((res) => {
-      console.log(res.data.program);
-      setProgram(res.data.program);
-    })
-    .catch((err) => {
-      console.error("Error getting program:", err);
-    });
+    axios
+      .get("http://localhost:8080/DCSHeadProgram")
+      .then((res) => {
+        console.log(res.data.program);
+        setProgram(res.data.program);
+      })
+      .catch((err) => {
+        console.error("Error getting program:", err);
+      });
   }, []);
 
   //GET NUMBER OF REGULAR STUDENTS ENROLLED IN BSCS
   useEffect(() => {
-    axios.get("http://localhost:8080/getCS")
+    axios
+      .get("http://localhost:8080/getCS")
       .then((res) => {
         setCScount(res.data.CScount);
       })
@@ -111,7 +119,8 @@ useEffect(() => {
 
   //GET NUMBER OF REGULAR STUDENTS ENROLLED IN BSIT
   useEffect(() => {
-    axios.get("http://localhost:8080/getIT")
+    axios
+      .get("http://localhost:8080/getIT")
       .then((res) => {
         setITcount(res.data.ITcount);
       })
@@ -122,7 +131,8 @@ useEffect(() => {
   }, []);
 
   useEffect(() => {
-    axios.get("http://localhost:8080/getTotalShiftingReq")
+    axios
+      .get("http://localhost:8080/getTotalShiftingReq")
       .then((res) => {
         setReqCount(res.data.shiftingReqCount);
       })
@@ -132,146 +142,178 @@ useEffect(() => {
       });
   });
 
+  const [isEnrollment, setIsEnrollment] = useState(false);
+  const [enrollment, setEnrollment] = useState([]);
 
-const [isEnrollment, setIsEnrollment] = useState(false);
-const [enrollment, setEnrollment] = useState([]);
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/dcsViewEnrollment")
+      .then((res) => {
+        const { enrollmentPeriod } = res.data;
 
-useEffect(() => {
-  axios.get("http://localhost:8080/dcsViewEnrollment")
-  .then((res) => {
-    const {enrollmentPeriod} = res.data;
-
-    if(res.data.message === "Enrollment fetched successfully"){
-      if(enrollmentPeriod.Status === "Pending" || enrollmentPeriod.Status === "Ongoing"){
-        setIsEnrollment(true);
-        setEnrollment(enrollmentPeriod);
-      } else {
+        if (res.data.message === "Enrollment fetched successfully") {
+          if (
+            enrollmentPeriod.Status === "Pending" ||
+            enrollmentPeriod.Status === "Ongoing"
+          ) {
+            setIsEnrollment(true);
+            setEnrollment(enrollmentPeriod);
+          } else {
+            setIsEnrollment(false);
+          }
+        } else {
+          setIsEnrollment(false);
+        }
+      })
+      .catch((err) => {
+        alert("Error: ", err);
         setIsEnrollment(false);
-      }
-    } else{
-      setIsEnrollment(false);
-    }
-  })
-  .catch((err) => {
-    alert("Error: ", err);
-    setIsEnrollment(false);
-  })
-}, [isEnrollment, enrollment]);
-
+      });
+  }, [isEnrollment, enrollment]);
 
   return (
     <>
       <Header SideBar={SideBar} setSideBar={setSideBar} />
-      <div className={styles.contentSection}>
-        <div className={styles.gridContainer}>
-
-
-          <div className={styles.container2}>
+      <div className={styles.contentSection} data-testid="content-section">
+        <div className={styles.gridContainer} data-testid="grid-container">
+          <div className={styles.container2} data-testid="container-2">
             {/* STATS */}
-            <div className={styles.Stats}>
-              <div className={styles.nameCard}>
-                <div className={styles.nameSection}>
-                  <p>HI</p>
-                  <h3>{accName}</h3>
+            <div className={styles.Stats} data-testid="stats-section">
+              <div className={styles.nameCard} data-testid="name-card">
+                <div className={styles.nameSection} data-testid="name-section">
+                  <p>Hi,</p>
+                  <h3>{accName}!</h3>
                 </div>
-                <div className={styles.logos}>
-                  <img src={program === 1 ? "/src/assets/ACS-ICON.png" 
-                            : program === 2 ? "/src/assets/ITS-ICON.png"
-                            : ""
-                          } alt="society logo" className={styles.logo} />
+                <div className={styles.logos} data-testid="logo">
+                  <img
+                    src={
+                      program === 1
+                        ? "/src/assets/ACS-ICON.png"
+                        : program === 2
+                        ? "/src/assets/ITS-ICON.png"
+                        : ""
+                    }
+                    alt="society logo"
+                    className={styles.logo}
+                  />
                 </div>
               </div>
 
-
-              <div className={styles.blueCard}>
+              <div
+                className={styles.blueCard}
+                data-testid="total-enrolled-card"
+              >
                 <h3>Total Enrolled</h3>
                 <p>{ITcount + CScount}</p>
               </div>
-              <div className={styles.blueCard}>
+              <div
+                className={styles.blueCard}
+                data-testid="shifting-request-card"
+              >
                 <h3>Shifting Request</h3>
                 <p>{reqCount}</p>
               </div>
             </div>
           </div>
 
-
           <div className={styles.container2}>
             {/* STATS */}
             <div className={styles.Stats}>
-              <div className={styles.DCScount}>
+              <div className={styles.DCScount} data-testid="total-dcs-students">
                 <h3>Total DCS Students</h3>
                 <p>{ITcount + CScount}</p>
               </div>
-              <div className={styles.CsStats}>
+              <div className={styles.CsStats} data-testid="cs-stats">
                 <h3>Computer Science</h3>
                 <p>{CScount}</p>
               </div>
-              <div className={styles.ItStats}>
+              <div className={styles.ItStats} data-testid="it-stats">
                 <h3>Information Technology</h3>
                 <p>{ITcount}</p>
               </div>
             </div>
           </div>
 
-
           {isEnrollment && (
-                                <div className={styles.container3}>
-                                  <div className={styles.row1}>
-                                    <div className={styles.headerContainer}>
-                                      <h2 className={styles.announcementHeader}>{enrollment.Status === "Pending" ? "CS Enrollment Period"
-                                        : enrollment.Status === "Ongoing" ? "CS Enrollment is On Going"
-                                          : ""}</h2>
-                                    </div>
-                    
-                                    <div className={styles.announcementList}>
-                                      <div className={styles.announcementCard}>
-                                        <div className={styles.announcementText}>
-                                          <p>
-                                            {new Date(enrollment.Start).toLocaleString('en-US', {
-                                              year: 'numeric',
-                                              month: 'long',
-                                              day: 'numeric',
-                                              hour: 'numeric',
-                                              minute: 'numeric',
-                                              hour12: true,
-                                            })}
-                                          </p>
-                                          <p>to</p>
-                                          <p>
-                                            {new Date(enrollment.End).toLocaleString('en-US', {
-                                              year: 'numeric',
-                                              month: 'long',
-                                              day: 'numeric',
-                                              hour: 'numeric',
-                                              minute: 'numeric',
-                                              hour12: true,
-                                            })}
-                                          </p>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                    
-                                </div>
-                              )}
+            <div
+              className={styles.container3}
+              data-testid="enrollment-container"
+            >
+              <div className={styles.row1} data-testid="row1">
+                <div
+                  className={styles.headerContainer}
+                  data-testid="header-container"
+                >
+                  <h2
+                    className={styles.announcementHeader}
+                    data-testid="announcement-header"
+                  >
+                    {enrollment.Status === "Pending"
+                      ? "CS Enrollment Period"
+                      : enrollment.Status === "Ongoing"
+                      ? "CS Enrollment is Ongoing"
+                      : ""}
+                  </h2>
+                </div>
 
+                <div
+                  className={styles.announcementList}
+                  data-testid="announcement-list"
+                >
+                  <div
+                    className={styles.announcementCard}
+                    data-testid="announcement-card"
+                  >
+                    <div
+                      className={styles.announcementText}
+                      data-testid="announcement-text"
+                    >
+                      <p>
+                        {new Date(enrollment.Start).toLocaleString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                          hour: "numeric",
+                          minute: "numeric",
+                          hour12: true,
+                        })}
+                      </p>
+                      <p>to</p>
+                      <p>
+                        {new Date(enrollment.End).toLocaleString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                          hour: "numeric",
+                          minute: "numeric",
+                          hour12: true,
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* DONUT  */}
-          <div className={styles.container4}>
-            <div className={styles.DonutContainer}>
-              <div className={styles.DonutText}>
-                <h3>DCS Population Per Course</h3>
+          <div className={styles.container4} data-testid="donut-container">
+            <div
+              className={styles.DonutContainer}
+              data-testid="donut-container-wrapper"
+            >
+              <div className={styles.DonutText} data-testid="donut-text">
+                <h3>DCS Population Per Program</h3>
               </div>
-              <div className={styles.Donut}>
+              <div className={styles.Donut} data-testid="donut-chart">
                 <Doughnut data={doughnutData} options={doughnutOptions} />
               </div>
             </div>
           </div>
         </div>
       </div>
-
     </>
   );
-};
+}
 
 export default DCSHeadDashboard;
