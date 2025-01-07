@@ -308,7 +308,6 @@ function EnrollmentRegular() {
               cog: '',
               cogURL: '',
             });
-            setUploadedImage(null);
           }
         } else {
           setUploadedImage(null);
@@ -323,7 +322,6 @@ function EnrollmentRegular() {
         if (response[3].data.message === 'Requirements verified.') {
           setReqStatus(response[3].data.checklistStatus);
         } else if (response[3].data.message === "Some requirements were rejected.") {
-          console.log("Rejected: ", response[3].data.rejected);
           setReqStatus('Rejected');
         } else {
           setReqStatus('Pending');
@@ -351,7 +349,7 @@ function EnrollmentRegular() {
         console.error(err);
         setUploadedImage(null);
       });
-  }, [uploadedImage, cogChecklist, advisingStatus, reqStatus, preEnrollmentStatus, isPreEnrollmentSubmitted]);
+  }, [uploadedImage, advisingStatus, reqStatus, preEnrollmentStatus, isPreEnrollmentSubmitted]);
 
   // Group data by YearLevel and Semester
   const groupedByYearAndSemester = checklistData.reduce((acc, course) => {
@@ -529,14 +527,9 @@ function EnrollmentRegular() {
     </>
   )}
 </div>
+                            
 
-              
-          
-            
-
-
-
-            {Object.keys(groupedByYearAndSemester).map((yearLevel) => (
+{Object.keys(groupedByYearAndSemester).map((yearLevel) => (
               <div className={styles.Contentt} key={yearLevel}>
                 <h4>{yearLevel}</h4>
                 {Object.keys(groupedByYearAndSemester[yearLevel]).map((semester) => (

@@ -93,19 +93,30 @@ router.get('/reqsProgress', (req, res) => {
         if(err){
             return res.json({ message: "Error in server: " + err });
         } else if (stdRes.length > 0) {
-            const reqs = `SELECT * FROM studentcoursechecklist WHERE StudentID = ${stdRes[0].StudentID}`;
+            const reqs = `SELECT * FROM studentcoursechecklist WHERE StudentID = ${stdRes[0].StudentID}`;            
             db.query(reqs, (err, reqsRes) => {
                 if(err){
                     return res.json({ message: "Error in server: " + err });
                 } else {
-                    // Check if there is any row with StdChecklistStatus not 'Verified'
-                    const unverifiedRows = reqsRes.some(row => row.StdChecklistStatus !== 'Verified');
+
+                    const cog = `SELECT * FROM requirements WHERE StudentID = ?`;
+                    db.query(cog, stdRes[0].StudentID, (err, cogRes) => {
+                        if(err){
+                            return res.json({ message: "Error in server: " + err });
+                        } else if(cogRes[0].SocFeePayment !== "Paid" || cogRes[0].COG === null){
+                            return res.json({ message: "Requirements are not yet verified" });
+                        } else{
+                            // Check if there is any row with StdChecklistStatus not 'Verified'
+                            const unverifiedRows = reqsRes.some(row => row.StdChecklistStatus !== 'Verified');
+                            
+                            if (unverifiedRows || reqsRes.length === 0) {
+                                return res.json({ message: "Requirements are not yet verified" });
+                            } else {
+                                return res.json({ message: "Success" });
+                            }                            
+                        }
+                    })
                     
-                    if (unverifiedRows || reqsRes.length === 0) {
-                        return res.json({ message: "Requirements are not yet verified" });
-                    } else {
-                        return res.json({ message: "Success" });
-                    }
                 }
             });
         }

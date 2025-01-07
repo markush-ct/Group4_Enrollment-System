@@ -396,7 +396,7 @@ const closePrompt = () => {
        <div className={styles.popupTextReq}>
       
           <p><strong>Name:</strong> {selectedRequest.Firstname} {selectedRequest.Lastname}</p>
-          <p><strong>Student ID:</strong> {selectedRequest.StudentID}</p>
+          <p><strong>Student ID:</strong> {selectedRequest.CvSUStudentID}</p>
           <p><strong>Student Type:</strong> {selectedRequest.StudentType}</p>
           
         </div>
