@@ -29,6 +29,44 @@ const transporter = nodemailer.createTransport({
 
 });
 
+router.get('/classSchedIrreg/preEnroll', (req, res) => {
+    const sql1 = `SELECT * FROM student WHERE Email = ?`;
+    const sql2 = `
+    SELECT cs.CourseChecklistID,
+        cs.Day,
+        cs.StartTime,
+        cs.EndTime,
+        cs.YearLevel,
+        cs.Section,
+        cs.Room,
+        cs.InstructorName,
+        cs.ClassType,
+        cc.CourseCode,
+        cc.CourseTitle,
+        cc.CreditUnitLec,
+        cc.CreditUnitLab
+    FROM classschedule cs
+    JOIN advising a  
+    ON cs.CourseChecklistID = a.CourseChecklistID    
+    JOIN coursechecklist cc
+    ON a.CourseChecklistID = cc.CourseChecklistID
+    WHERE cs.ProgramID = ? AND a.StudentID = ?`;
+
+    db.query(sql1, req.session.email, (err, stdRes) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else{
+            db.query(sql2, [stdRes[0].ProgramID, stdRes[0].StudentID], (err, schedRes) => {
+                if(err){
+                    return res.json({message: "Error in server: " + err});
+                } else {
+                    return res.json({message: "Success", schedData: schedRes});
+                }
+            })
+        }
+    })
+})
+
 
 // Approve pre-enrollment
 router.post("/adviserApprovePreEnrollment", (req, res) => {

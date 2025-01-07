@@ -27,6 +27,7 @@ function Requirements() {
   const [rows, setRows] = useState([]);
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [totalUnits, setTotalUnits] = useState(0);
 
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -79,6 +80,7 @@ function Requirements() {
 
   // Request
   const handleApprove = async (request) => {
+    
     setLoading(true);
   
     if (!request?.StudentID) {
@@ -197,6 +199,24 @@ const handleCourseChange = (index, courseID) => {
   updatedRows[index].selectedCourse = courseID; // Ensure this is the CourseChecklistID
   setRows(updatedRows);
 };
+
+const calculateTotalUnits = () => {
+  const total = rows.reduce((acc, row) => {
+    const selectedCourse = courses.find(
+      (course) => course.CourseChecklistID === Number(row.selectedCourse)
+    );
+    if (selectedCourse) {
+      acc += selectedCourse.CreditUnitLec + selectedCourse.CreditUnitLab;
+    }
+    return acc;
+  }, 0);
+  setTotalUnits(total);
+};
+
+// UseEffect to recalculate total units when rows or eligibleCourses change
+useEffect(() => {
+  calculateTotalUnits();
+}, [rows, courses]);
 
 
 useEffect(() => {
@@ -513,7 +533,7 @@ useEffect(() => {
                   </option>
                   {courses.map((course) => (
                     <option key={course.CourseChecklistID} value={course.CourseChecklistID}>
-                      {course.CourseCode} - {course.CourseTitle}
+                      {course.CourseCode} - {course.CourseTitle} ({course.CreditUnitLec + course.CreditUnitLab} units)
                     </option>
                   ))}
                 </select>
@@ -524,10 +544,13 @@ useEffect(() => {
               </td>
             </tr>
           ))}
+          <tr colSpan="3">
+            <td style={{textAlign: 'center'}}>Total Units: {totalUnits}</td>
+          </tr>
         </tbody>
       </table>
-
       <div className={styles.buttonSection} >
+
   <button className={styles.submitBtn} onClick={() => handleApprove(selectedRequest)} disabled={loading}>
     <span>{loading ? "Sending..." : "SEND"}</span>
   </button>

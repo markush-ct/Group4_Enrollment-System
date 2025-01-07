@@ -78,45 +78,45 @@ router.post('/getChecklistForEnrollmentOff', (req, res) => {
             const programID = programRes[0].ProgramID;
 
             const getStdChecklist = `SELECT 
-        cc.CourseChecklistID, 
-        cc.ProgramID, 
-        cc.YearLevel, 
-        cc.Semester, 
-        scc.StudentID,
-        scc.FinalGrade,
-        scc.InstructorName,
-        scc.SYTaken,
-        cc.CourseCode,
-        cc.CourseTitle,
-        cc.CreditUnitLec,
-        cc.CreditUnitLab,
-        cc.ContactHrsLec,
-        cc.ContactHrsLab,
-        cc.PreRequisite
-    FROM 
-        coursechecklist cc
-    LEFT JOIN 
-        studentcoursechecklist scc
-    ON 
-        cc.CourseChecklistID = scc.CourseChecklistID 
-        AND scc.StudentID = ? AND scc.StdChecklistStatus = 'Verified'
-    WHERE 
-        cc.ProgramID = ?
-        AND (scc.CourseChecklistID IS NULL OR scc.FinalGrade IS NOT NULL)
-    ORDER BY 
-        CASE 
-            WHEN cc.YearLevel = 'First Year' THEN 1
-            WHEN cc.YearLevel = 'Second Year' THEN 2
-            WHEN cc.YearLevel = 'Third Year' THEN 3
-            WHEN cc.YearLevel = 'Mid-Year' THEN 4
-            WHEN cc.YearLevel = 'Fourth Year' THEN 5
-            ELSE 6
-        END ASC,
-        CASE 
-            WHEN cc.Semester = 'First Semester' THEN 1
-            WHEN cc.Semester = 'Second Semester' THEN 2
-            ELSE 3
-        END ASC`;
+                cc.CourseChecklistID, 
+                cc.ProgramID, 
+                cc.YearLevel, 
+                cc.Semester, 
+                scc.StudentID,
+                scc.FinalGrade,
+                scc.InstructorName,
+                scc.SYTaken,
+                cc.CourseCode,
+                cc.CourseTitle,
+                cc.CreditUnitLec,
+                cc.CreditUnitLab,
+                cc.ContactHrsLec,
+                cc.ContactHrsLab,
+                cc.PreRequisite
+            FROM 
+                coursechecklist cc
+            LEFT JOIN 
+                studentcoursechecklist scc
+            ON 
+                cc.CourseChecklistID = scc.CourseChecklistID 
+                AND scc.StudentID = ? AND scc.StdChecklistStatus = 'Verified'
+            WHERE 
+                cc.ProgramID = ?
+                AND (scc.CourseChecklistID IS NULL OR scc.FinalGrade IS NOT NULL)
+            ORDER BY 
+                CASE 
+                    WHEN cc.YearLevel = 'First Year' THEN 1
+                    WHEN cc.YearLevel = 'Second Year' THEN 2
+                    WHEN cc.YearLevel = 'Third Year' THEN 3
+                    WHEN cc.YearLevel = 'Mid-Year' THEN 4
+                    WHEN cc.YearLevel = 'Fourth Year' THEN 5
+                    ELSE 6
+                END ASC,
+                CASE 
+                    WHEN cc.Semester = 'First Semester' THEN 1
+                    WHEN cc.Semester = 'Second Semester' THEN 2
+                    ELSE 3
+                END ASC`;
 
             db.query(getStdChecklist, [studentID, programID], (err, checklistRes) => {
                 if (err) {
@@ -140,15 +140,19 @@ router.post('/getChecklistForEnrollmentOff', (req, res) => {
                             finalGrade: row.FinalGrade,
                             instructor: row.InstructorName,
                             syTaken: row.SYTaken
-                        }))
+                        })),
+                        studentData: programRes[0]
                     });
                 } else {
                     return res.json({ message: "No checklist found" });
                 }
             });
+        } else {
+            return res.json({ message: "Student not found" });
         }
     });
 });
+
 
 
 router.get('/getPreEnrollForEnrollmentOff', (req, res) => {

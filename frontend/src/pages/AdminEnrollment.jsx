@@ -23,6 +23,7 @@ function Requirements() {
     const [loading, setLoading] = useState(false);
     const [cog, setCOG] = useState(null);
     const [checklist, setChecklist] = useState([]);
+    const [studentInfo, setStudentInfo] = useState([]);
     const [courses, setCourses] = useState([]);
     const [rows, setRows] = useState([]);
     const [preEnrollmentValues, setPreEnrollmentValues] = useState([]);
@@ -87,24 +88,24 @@ function Requirements() {
                     request.CvSUStudentID.toString().includes(query) ||
                     request.SocFeePayment.toLowerCase().includes(query) ||
                     `${request.Year === "First Year" ? 1
-                      : request.Year === "Second Year" ? 2
-                      : request.Year === "Third Year" ? 3
-                      : request.Year === "Fourth Year" ? 4
-                      : "N/A"
-                    } - ${request.Section.toLowerCase()}`.includes(query) ||
+                        : request.Year === "Second Year" ? 2
+                            : request.Year === "Third Year" ? 3
+                                : request.Year === "Fourth Year" ? 4
+                                    : "N/A"
+                        } - ${request.Section.toLowerCase()}`.includes(query) ||
                     request.SocFeePayment.toLowerCase().includes(query) ||
                     `${request.Year === "First Year" ? 1
-                      : request.Year === "Second Year" ? 2
-                      : request.Year === "Third Year" ? 3
-                      : request.Year === "Fourth Year" ? 4
-                      : "N/A"
-                    }-${request.Section.toLowerCase()}`.includes(query)
+                        : request.Year === "Second Year" ? 2
+                            : request.Year === "Third Year" ? 3
+                                : request.Year === "Fourth Year" ? 4
+                                    : "N/A"
+                        }-${request.Section.toLowerCase()}`.includes(query)
                 )
             );
         }, 300);
-      
+
         return () => clearTimeout(timeoutId);
-      }, [searchQuery, accountRequests]);
+    }, [searchQuery, accountRequests]);
 
 
     const [updateStudent, setUpdateStudent] = useState({
@@ -112,13 +113,13 @@ function Requirements() {
         year: '',
         section: '',
         semester: '',
-      });
-    
-      const handleUpdateStdChange = (e) => {
+    });
+
+    const handleUpdateStdChange = (e) => {
         const { name, value } = e.target;
         setUpdateStudent((prev) => ({ ...prev, [name]: value }));
-    
-      };
+
+    };
 
 
     // Request
@@ -136,11 +137,11 @@ function Requirements() {
                 studentID: request.StudentID,
                 studentType: updateStudent.studentType,
                 year: updateStudent.year,
-                section: updateStudent.section, 
+                section: updateStudent.section,
                 semester: updateStudent.semester,
             });
 
-            if(res.data.message === "Success") {
+            if (res.data.message === "Success") {
                 setApprovalPrompt(true);
                 setApprovalMsg('Student successfully enrolled.');
                 setPopUpVisible(false);
@@ -151,8 +152,8 @@ function Requirements() {
                     year: '',
                     section: '',
                     semester: '',
-                });                
-            } else {            
+                });
+            } else {
                 setErrorPrompt(true);
                 setErrorMsg(res.data.message);
                 setLoading(false);
@@ -185,10 +186,13 @@ function Requirements() {
                 if (res[0].data.message === "Success" && res[1].data.message === "Pre-enrollment is approved") {
                     setPreEnrollmentValues(res[1].data.data)
                     setChecklist(res[0].data.checklistData);
+                    setStudentInfo(res[0].data.studentData);
                     setCourses(res[1].data.courses);
+                    console.log(res[0].data.studentData);
                 } else {
                     setCOG(null);
                     setChecklist([]);
+                    setStudentInfo([]);
                     alert("Failed to fetch COG and Checklist data.", res[0].data.message, "sajkdhjashdjsad", res[1].data.message);
 
                     setCourses([]);
@@ -323,16 +327,16 @@ function Requirements() {
                 </div>
 
                 <div className={styles.searchBar} data-aos="fade-up">
-                                  
-                                  <input
-                                    type="text"
-                                    id="search"
-                                    placeholder="Search by name or student ID..."
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className={styles.searchInput}
-                                  />
-                                </div>
+
+                    <input
+                        type="text"
+                        id="search"
+                        placeholder="Search by name or student ID..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className={styles.searchInput}
+                    />
+                </div>
 
                 {/* Table */}
                 <div className={styles.tableContainer} data-aos="fade-up">
@@ -389,17 +393,23 @@ function Requirements() {
                         </div>
                         <div data-aos="fade-up" className={styles.studentType}>
                             <span>DETAILS</span>
-                        </div>                        
+                        </div>
 
 
                         {/* Submission Details */}
-                        <div className={styles.popupTextReq}>
 
-                            <p><strong>Name:</strong> {selectedRequest.Firstname} {selectedRequest.Lastname}</p>
-                            <p><strong>Student ID:</strong> {selectedRequest.CvSUStudentID}</p>
-                            <p><strong>Student Type:</strong> {selectedRequest.StudentType}</p>
+    <div className={styles.popupTextReq}>
+        <p><strong>Name:</strong> {selectedRequest.Firstname} {selectedRequest.Lastname}</p>
+        <p><strong>Student ID:</strong> {selectedRequest.CvSUStudentID}</p>
+        <p><strong>Program ID:</strong> {studentInfo.ProgramID === 1 ? "BSCS" : "BSIT"}</p>
+        <p><strong>Year - Section:</strong> {studentInfo.Year === "First Year" ? 1
+        : studentInfo.Year === "Second Year" ? 2
+        : studentInfo.Year === "Third Year" ? 3
+        : studentInfo.Year === "Fourth Year" ? 4
+        : "Mid-Year"} - {studentInfo.Section}</p>
+        <p><strong>Student Type:</strong> {selectedRequest.StudentType}</p>
+    </div>
 
-                        </div>
 
 
 
@@ -474,11 +484,11 @@ function Requirements() {
 
                                     {preEnrollmentValues.map((row) => (
 
-<div key={row.CourseChecklistID}>
-<p>{row.CourseCode} - {row.CourseTitle} ({row.CreditUnitLec + row.CreditUnitLab} units)</p>                  
-</div>
-))}
-<p>Total Units: <span>{totalPreEnrollUnits}</span></p>
+                                        <div key={row.CourseChecklistID}>
+                                            <p>{row.CourseCode} - {row.CourseTitle} ({row.CreditUnitLec + row.CreditUnitLab} units)</p>
+                                        </div>
+                                    ))}
+                                    <p>Total Units: <span>{totalPreEnrollUnits}</span></p>
 
 
                                 </div>
@@ -490,7 +500,7 @@ function Requirements() {
                                 </div>
 
                                 <div>
-                                    
+
                                     <select value={updateStudent.studentType} name="studentType" id="" onChange={handleUpdateStdChange} required>
                                         <option value="">Select student type</option>
                                         <option value="Regular">Regular</option>

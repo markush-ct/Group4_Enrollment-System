@@ -14,6 +14,7 @@ function SchedManagement() {
   const [popUpVisible, setPopUpVisible] = useState(false);
   const [selectedSection, setSelectedSection] = useState("");
   const [accName, setAccName] = useState("");
+  const [filterType, setFilterType] = useState("");
 
   //Reuse in other pages that requires logging in
   const navigate = useNavigate();
@@ -183,6 +184,12 @@ function SchedManagement() {
       })
   }, [schedule]);
 
+  const filteredSchedule = filterType
+    ? schedule.filter(
+        (sched) => `${sched.YearLevel} - ${sched.Section}` === filterType
+      )
+    : schedule;
+
   return (
     <>
       <Header SideBar={SideBar} setSideBar={setSideBar} />
@@ -203,13 +210,15 @@ function SchedManagement() {
             <select
               id="filter"
               className={styles.filterDropdown}
-              value="filterType"
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value)}
             >
-              <option value="All">All</option>
-              <option value="1-1">1-1</option>
-              <option value="1-2">1-2</option>
-              <option value="1-3">1-3</option>
-              <option value="2-1">2-1</option>
+              <option value="">All Sections</option> {/* Option to reset the filter */}
+        {schedule.map((sched, index) => (
+          <option value={`${sched.YearLevel} - ${sched.Section}`} key={index}>
+            {`${sched.YearLevel} - ${sched.Section}`}
+          </option>
+        ))}
             </select>
           </div>
         </div>
@@ -224,8 +233,8 @@ function SchedManagement() {
                 </tr>
               </thead>
               <tbody>
-                {schedule.length > 0 ? (
-                  schedule.map((sched, index) => (
+                {filteredSchedule.length > 0 ? (
+                  filteredSchedule.map((sched, index) => (
                     <tr key={index} onClick={() => handleSectionClick(sched)}>
                       <td>{sched.YearLevel}</td>
                       <td>{sched.Section}</td>

@@ -21,6 +21,8 @@ function EnrollmentIrregular() {
   const [totalUnits, setTotalUnits] = useState(0);
   const [isPreEnrollmentSubmitted, setIsPreEnrollmentSubmitted] = useState();
   const [preEnrollmentValues, setPreEnrollmentValues] = useState([]);
+  const [preEnrollSched, setPreEnrollSched] = useState([]);
+  const [filterType, setFilterType] = useState("");
 
   //Enrollment Progress
   const [socFeeProg, setSocFeeProg] = useState(false);
@@ -288,6 +290,7 @@ function EnrollmentIrregular() {
       axios.get('http://localhost:8080/getChecklistStatus'),
       axios.get('http://localhost:8080/getPreEnrollmentStatus'),
       axios.get('http://localhost:8080/getPreEnrollmentValues'),
+      axios.get('http://localhost:8080/classSchedIrreg/preEnroll'),
     ])
       .then((response) => {
         if (response[0].data.message === 'Success') {
@@ -308,7 +311,6 @@ function EnrollmentIrregular() {
               cog: '',
               cogURL: '',
             });
-            setUploadedImage(null);
           }
         } else {
           setUploadedImage(null);
@@ -323,7 +325,6 @@ function EnrollmentIrregular() {
         if (response[3].data.message === 'Requirements verified.') {
           setReqStatus(response[3].data.checklistStatus);
         } else if (response[3].data.message === "Some requirements were rejected.") {
-          console.log("Rejected: ", response[3].data.rejected);
           setReqStatus('Rejected');
         } else {
           setReqStatus('Pending');
@@ -345,13 +346,20 @@ function EnrollmentIrregular() {
           setIsPreEnrollmentSubmitted(false);
         }
 
+        if (response[6].data.message === 'Success') {
+          console.log(response[6].data.schedData);
+          setPreEnrollSched(response[6].data.schedData);
+        } else {
+          console.log(response[0].data.message);
+        }
+
       })
       .catch((err) => {
         alert('An error occurred while fetching data.');
         console.error(err);
         setUploadedImage(null);
       });
-  }, [uploadedImage, cogChecklist, advisingStatus, reqStatus, preEnrollmentStatus, isPreEnrollmentSubmitted]);
+  }, [uploadedImage, advisingStatus, reqStatus, preEnrollmentStatus, isPreEnrollmentSubmitted]);
 
   // Group data by YearLevel and Semester
   const groupedByYearAndSemester = checklistData.reduce((acc, course) => {
@@ -478,6 +486,23 @@ function EnrollmentIrregular() {
   },[]);
 
 
+  function formatTime(time) {
+    const currentDate = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+    const formattedTime = `${currentDate}T${time}`; // Combine current date with the time
+  
+    const validDate = new Date(formattedTime); // Create a valid Date object
+    return validDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Format the time
+  }
+
+
+  const filteredRequests = filterType
+    ? preEnrollSched.filter(
+        (sched) => `${sched.CourseChecklistID}` === filterType
+      )
+    : preEnrollSched;
+  
+
+
   const renderContent = () => {
     switch (steps[activeStep]) {
       case "Requirements Submission":
@@ -529,14 +554,9 @@ function EnrollmentIrregular() {
     </>
   )}
 </div>
+                            
 
-              
-          
-            
-
-
-
-            {Object.keys(groupedByYearAndSemester).map((yearLevel) => (
+{Object.keys(groupedByYearAndSemester).map((yearLevel) => (
               <div className={styles.Contentt} key={yearLevel}>
                 <h4>{yearLevel}</h4>
                 {Object.keys(groupedByYearAndSemester[yearLevel]).map((semester) => (
@@ -667,6 +687,67 @@ function EnrollmentIrregular() {
       case "Pre-Enrollment Form":
         return (
           <div className={styles.Contentt}>
+            <h3>Class Schedule</h3>
+            <div className={styles.filterSection} data-aos="fade-up">
+    <label htmlFor="filter" className={styles.filterLabel}>Filter by Course:</label>
+    <select
+        id="filter"
+        className={styles.filterDropdown}
+        value={filterType}
+        onChange={(e) => setFilterType(e.target.value)} // Updates filterType
+    >
+        <option value="">All Courses</option> {/* Option to reset filter */}
+        {eligibleCourses.map((course) => (
+            <option
+                key={course.CourseChecklistID}
+                value={course.CourseChecklistID}
+            >
+                {course.CourseCode} {/* Display Course Code */}
+            </option>
+        ))}
+    </select>
+</div>
+
+            
+            <div className={styles.tableContainer} data-aos="fade-up">
+                      <table className={styles.requestsTable}>
+                        <thead>
+                          <tr>
+                            <th>Course Code</th>
+                            <th>Course Title</th>
+                            <th>Section</th>
+                            <th>Time</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filteredRequests.length > 0 ? (
+                            filteredRequests.map((acc, index) => (
+                              <tr key={index}>
+                                <td data-label="Course Code">{acc.CourseCode}</td>
+                                <td data-label="Course Title">{acc.CourseTitle}</td>
+                                <td data-label="Section">{acc.YearLevel === "First Year" ? 1
+                                : acc.YearLevel === "Second Year" ? 2
+                                : acc.YearLevel === "Third Year" ? 3
+                                : acc.YearLevel === "Fourth Year" ? 4
+                                : "Mid-Year"} - {acc.Section}</td>
+                                <td data-label="Time">
+  {formatTime(acc.StartTime)} to {formatTime(acc.EndTime)}
+</td>
+                            
+                              </tr>
+                            ))
+                          ) : (
+                            <tr>
+                              <td colSpan="4" className={styles.noData}>
+                                No accounts found.
+                              </td>
+                            </tr>
+                          )}
+                        </tbody>                        
+                      </table>
+                    </div>
+
+
             <img
               src="src/assets/admission-icon.png"
               alt="Form Icon"
@@ -716,6 +797,7 @@ function EnrollmentIrregular() {
                     <tr>
                       <th>#</th>
                       <th>Course</th>
+                      <th>Section</th>
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -739,6 +821,11 @@ function EnrollmentIrregular() {
                                 {course.CourseCode} - {course.CourseTitle} ({course.CreditUnitLab + course.CreditUnitLec} units)
                               </option>
                             ))}
+                          </select>
+                        </td>
+                        <td>
+                          <select name="" id="">
+                            <option value="">Meow</option>
                           </select>
                         </td>
                         <td>
