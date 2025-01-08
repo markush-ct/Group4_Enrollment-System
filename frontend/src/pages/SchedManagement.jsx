@@ -175,7 +175,7 @@ function SchedManagement() {
           setErrorPrompt(false);
         } else {
           setErrorMsg("Error fetching courses");
-          setErrorPrompt(true);
+          setErrorPrompt(false);
         }
       })
       .catch((err) => {
