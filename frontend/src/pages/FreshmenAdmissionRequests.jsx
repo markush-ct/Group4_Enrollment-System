@@ -549,7 +549,7 @@ function FreshmenAdmissionRequest() {
                     <div className={styles.infoGrid}>
                     <div className={styles.contentt}>
                         <p>Generated: <span>Date and Time</span></p>
-                        <p>Admission Information - <span>{selectedRequest.ExamControlNo} 1st semester 2022-2023</span></p>
+                        <p>Admission Information - <span>{selectedRequest.ExamControlNo} {selectedRequest.ApplyingFor}</span></p>
                         <p>Campus - <span>{selectedRequest.Branch}</span></p>
                       </div>
                       </div>

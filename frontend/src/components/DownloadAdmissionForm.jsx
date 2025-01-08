@@ -91,7 +91,7 @@ const DownloadAdmissionForm = () => {
 
       <div className={styles.infoGrid0}>
       <div className={styles.contentt}>
-          <p>Admission Information - <span>{formData.ExamControlNo} 1st semester 2022-2023</span></p>
+          <p>Admission Information - <span>{formData.ExamControlNo} {formData.ApplyingFor}</span></p>
           <p>Campus - <span>{formData.Branch}</span></p>
         </div>
         </div>
