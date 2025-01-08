@@ -188,10 +188,6 @@ useEffect(() => {
                 <h3>Total Enrolled</h3>
                 <p>{ITcount + CScount}</p>
               </div>
-              <div className={styles.blueCard}>
-                <h3>Shifting Request</h3>
-                <p>{reqCount}</p>
-              </div>
             </div>
           </div>
 

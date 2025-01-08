@@ -73,7 +73,22 @@ function TransfereeAdmissionRequest() {
         setAccountRequests([]); // Ensure state is not undefined
         setFilteredRequests([]);
       });
-  }, []);
+  }, [accountRequests]);
+
+  const [prevCourses, setPrevCourses] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/getTransfereePreProgram")
+      .then((res) => {        
+        setPrevCourses(res.data.prevCourses);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.warn("Error fetching account requests, using example data:", err);
+        setPrevCourses([]);
+      });
+  }, [prevCourses]);
 
 
   useEffect(() => { // dropwdonw function
@@ -87,7 +102,7 @@ function TransfereeAdmissionRequest() {
       setFilteredRequests(accountRequests);
     } else {
       setFilteredRequests(
-        accountRequests.filter((request) => request.SHSStrand === filterType)
+        accountRequests.filter((request) => request.TransfereeCollegeCourse === filterType)
       );
     }
   }, [filterType, accountRequests]);
@@ -98,6 +113,13 @@ function TransfereeAdmissionRequest() {
       console.error("Invalid request or Email missing:", request);
       setErrorPrompt(true);
       setErrorMsg("Invalid request data.");
+      return;
+    }  
+    
+    if (!submissionDate){
+      console.error("asdasd");
+      setErrorPrompt(true);
+      setErrorMsg("Set submission date for transferee");
       return;
     }
 
@@ -118,21 +140,18 @@ function TransfereeAdmissionRequest() {
         setApprovalMsg(`Approval email sent to ${request.Email}`);
         setErrorPrompt(false);
         setPopUpVisible(false);
-        // Delay the reload
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+        setLoading(false);
 
       } else {
         console.error(response.data.message);
         setErrorPrompt(true);
         setErrorMsg('Failed to send approval email');
+        setLoading(false);
       }
     } catch (err) {
       console.error('Error:', err);
       setErrorPrompt(true);
       setErrorMsg(`Failed to send approval email: ${err.response?.data?.message || err.message}`);
-    } finally {
       setLoading(false);
     }
   };
@@ -142,6 +161,13 @@ function TransfereeAdmissionRequest() {
       console.error("Invalid request or Email missing:", request);
       setErrorPrompt(true);
       setErrorMsg("Invalid request data.");
+      return;
+    }
+
+    if(!rejectionReason){
+      console.error("Invalid request or Email missing:", request);
+      setErrorPrompt(true);
+      setErrorMsg("Input reason/s for rejecting transfer request.");
       return;
     }
 
@@ -196,6 +222,8 @@ function TransfereeAdmissionRequest() {
     setSelectedRequest(null);
   };
 
+
+
   return (
     <>
       <Header SideBar={SideBar} setSideBar={setSideBar} />
@@ -233,7 +261,7 @@ function TransfereeAdmissionRequest() {
                 className={styles.OKButton}
                 onClick={() => handleApprove(selectedRequest)}
               >
-                <span>Send</span>
+                <span>{loading ? "Sending..." : "Send"}</span>
               </button>
 
             </div>
@@ -308,12 +336,12 @@ function TransfereeAdmissionRequest() {
 
       <div className={styles.contentSection}>
         <div className={styles.PageTitle} data-aos="fade-up">
-          Admission Requests
+          Transfer Requests
         </div>
 
         {/* Dropdown  */}
         <div className={styles.filterSection} data-aos="fade-up">
-          <label htmlFor="filter" className={styles.filterLabel}>Filter by Strand:</label>
+          <label htmlFor="filter" className={styles.filterLabel}>Filter by Program:</label>
           <select
             id="filter"
             className={styles.filterDropdown}
@@ -321,8 +349,12 @@ function TransfereeAdmissionRequest() {
             onChange={(e) => setFilterType(e.target.value)}
           >
             <option value="All">All</option>
-            <option value="STEM">STEM</option>
-            <option value="ICT">ICT</option>
+            {prevCourses.length > 0 &&
+    prevCourses.map((course, index) => (
+      <option key={index} value={course.TransfereeCollegeCourse}>
+        {course.TransfereeCollegeCourse}
+      </option>
+    ))}
 
           </select>
         </div>
@@ -433,12 +465,14 @@ function TransfereeAdmissionRequest() {
                     <div className={styles.infoGrid}>
                     <div className={styles.contentt}>
                       <p>Entry: <span>New</span></p>
-                      <p>Strand: <span>{selectedRequest.SHSStrand}</span></p>
+                      {selectedRequest.SHSStrand !== null ? (
+                        <p>Strand: <span>{selectedRequest.SHSStrand}</span></p>
+                      ) : ("")}                      
                       <p>LRN: <span>{selectedRequest.LRN}</span></p>
                       <p>Preffered Course: <span>{selectedRequest.ProgramID === 1 ? "BSCS" : selectedRequest.ProgramID === 2 ? "BSIT" : "Unknown"}</span></p>
                       </div>
                       <div className={styles.contentt}>
-                      <p>Type: <span>K12 SHS Graduate</span></p>
+                      <p>Type: <span>{selectedRequest.StudentType === "Freshman" ? "K-12 SHS Graduate/Graduating" : "Transferee"}</span></p>
               
                       </div>
                       <div className={styles.contentt}>

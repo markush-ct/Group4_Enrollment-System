@@ -103,7 +103,7 @@ const DownloadAdmissionForm = () => {
         <p>Preffered Course: <span>{studentData.ProgramID === 1 ? "BSCS" : studentData.ProgramID === 2 ? "BSIT" : "Unknown"}</span></p>
         </div>
         <div className={styles.contentt}>
-        <p>Type: <span>K12 SHS Graduate</span></p>
+        <p>Type: <span>{studentData.StudentType === "Freshman" ? "K-12 SHS Graduate/Graduating" : "Transferee"}</span></p>
 
         </div>
         <div className={styles.contentt}>

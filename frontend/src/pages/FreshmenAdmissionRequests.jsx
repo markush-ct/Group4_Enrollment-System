@@ -561,7 +561,7 @@ function FreshmenAdmissionRequest() {
                       <p>Preffered Course: <span>{selectedRequest.ProgramID === 1 ? "BSCS" : selectedRequest.ProgramID === 2 ? "BSIT" : "Unknown"}</span></p>
                       </div>
                       <div className={styles.contentt}>
-                      <p>Type: <span>K12 SHS Graduate</span></p>
+                      <p>Type: <span>{selectedRequest.StudentType === "Freshman" ? "K-12 SHS Graduate/Graduating" : "Transferee"}</span></p>
               
                       </div>
                       <div className={styles.contentt}>

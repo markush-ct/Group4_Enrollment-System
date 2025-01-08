@@ -160,6 +160,25 @@ function SchoolHeadDashboard() {
       })
   }, []);
 
+    const [freshmenAdmissionNotif, setFreshmenAdmissionNotif] = useState(0);
+    const [transfereeAdmissionNotif, setTransfereeAdmissionNotif] = useState(0);
+
+
+  useEffect(() => {
+    const fetchAdmissionNotif = async () => {
+        try {
+            const admissionReqRes = await axios.get("http://localhost:8080/admissionNotif");
+            // console.log("Fetched admission notifications:", admissionReqRes.data);
+            setFreshmenAdmissionNotif(admissionReqRes.data.freshmenCount);
+            setTransfereeAdmissionNotif(admissionReqRes.data.transfereeCount);
+        } catch (err) {
+            console.error("Error getting admission notifications:", err);
+        }
+    };
+
+    fetchAdmissionNotif();
+  }, []);
+
   return (
     <>
       <Header SideBar={SideBar} setSideBar={setSideBar} />
@@ -187,8 +206,8 @@ function SchoolHeadDashboard() {
                 <p>{ITcount + CScount}</p>
               </div>
               <div className={styles.blueCard}>
-                <h3>Shifting Request</h3>
-                <p>{reqCount}</p>
+                <h3>New Student Requests</h3>
+                <p>{transfereeAdmissionNotif + freshmenAdmissionNotif}</p>
               </div>
             </div>
           </div>

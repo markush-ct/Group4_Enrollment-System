@@ -30,6 +30,7 @@ import HandlePreEnrollment from './routes/HandlePreEnrollment.js';
 import RegIrregEnrollProgress from './routes/RegIrregDashboardProgress.js';
 import HandleEnrollmentStatus from './routes/HandleEnrollmentStatus.js';
 import SchedManagement from './routes/SchedManagement.js';
+import ClassSched from './routes/ClassSched.js';
 
 dotenv.config();
 const app = express();
@@ -102,6 +103,7 @@ app.use('/', HandlePreEnrollment);
 app.use('/', RegIrregEnrollProgress);
 app.use('/', HandleEnrollmentStatus);
 app.use('/', SchedManagement);
+app.use('/', ClassSched);
 
 
 app.post('/rejectTransfereeAdmissionReq', (req, res) =>{
@@ -252,6 +254,22 @@ app.post('/approveTransfereeAdmissionReq', (req, res) => {
             })
         }
     })
+})
+
+app.get('/getTransfereePreProgram', (req, res) => {
+    const sql1 = `
+    SELECT DISTINCT TransfereeCollegeCourse
+FROM admissionform
+WHERE TransfereeCollegeCourse IS NOT NULL;
+`;
+
+db.query(sql1, (err, prevCoursesRes) => {
+    if (err) {
+        return res.json({ message: "Error in server: " + err });
+    } else {
+        return res.json({prevCourses: prevCoursesRes});
+    }
+})
 })
 
 app.get('/getTransfereeAdmissionReq', (req, res) => {
