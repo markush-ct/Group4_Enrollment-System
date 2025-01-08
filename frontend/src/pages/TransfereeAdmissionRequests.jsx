@@ -462,196 +462,331 @@ function TransfereeAdmissionRequest() {
 
             <div className={styles.popupText}>
               <div className={styles.container}>
-              
-                    <div className={styles.headerContainer}>
-              
-                      <div className={styles.logoContainer}>
-                        <img
-                          src="/src/assets/cvsu-logo.png"
-                          alt="CvSU Logo"
-                          className={styles.logo}
-                        />
-                      </div>
-              
-              
-                      <div className={styles.header}>
-                        <p>Republic of the Philippines</p>
-                        <h1>CAVITE STATE UNIVERSITY</h1>
-                        <h2>APPLICATION FORM FOR ADMISSION</h2>
-                      </div>
-              
-              
-                      <div className={styles.pictureContainer}>
-                        
-                        <img className={styles.idPictureBox} src={`http://localhost:8080/${selectedRequest.IDPicture}`} alt="" />
-                      </div>
-                    </div>
-              
-              
-                    <div className={styles.infoGrid}>
-                    <div className={styles.contentt}>
-                        <p>Admission Information - <span>{selectedRequest.ExamControlNo} 1st semester 2022-2023</span></p>
-                        <p>Campus - <span>{selectedRequest.Branch}</span></p>
-                      </div>
-                      </div>
-                    <div className={styles.infoGrid}>
-                    <div className={styles.contentt}>
-                      <p>Entry: <span>New</span></p>
-                      {selectedRequest.SHSStrand !== null ? (
-                        <p>Strand: <span>{selectedRequest.SHSStrand}</span></p>
-                      ) : ("")}                      
-                      <p>LRN: <span>{selectedRequest.LRN}</span></p>
-                      <p>Preffered Course: <span>{selectedRequest.ProgramID === 1 ? "BSCS" : selectedRequest.ProgramID === 2 ? "BSIT" : "Unknown"}</span></p>
-                      </div>
-                      <div className={styles.contentt}>
-                      <p>Type: <span>{selectedRequest.StudentType === "Freshman" ? "K-12 SHS Graduate/Graduating" : "Transferee"}</span></p>
-              
-                      </div>
-                      <div className={styles.contentt}>
-                        <p>Applicant Type: <span>{selectedRequest.Nationality}</span></p>
-                      </div>
-                      <div className={styles.contentt}>
-                      <p>Final Average: <span>{selectedRequest.FinalAverage}</span></p>
-              
-                      </div>
-                      </div>
-              
-                      <div className={styles.infoGrid3}>
-                      <div className={styles.contentt}>
-                      <p>1st Quarter: <span>{selectedRequest.FirstQuarterAve}</span></p>
-                      </div>
-                      <div className={styles.contentt}>
-                      <p>2nd Quarter: <span>{selectedRequest.SecondQuarterAve}</span></p>
-                      </div>
-                      <div className={styles.contentt}>
-                      <p>3rd Quarter: <span>{selectedRequest.ThirdQuarterAve}</span></p>
-                      </div>
-                      <div className={styles.contentt}>
-                      <p>4th Quarter: <span>{selectedRequest.FourthQuarterAve === 0 ? '' : selectedRequest.FourthQuarterAve}</span></p>
-                      </div>
-              
-                      </div>
-                      
-              
-              
-              
-                    <div className={styles.sectionTitle}>Personal Information</div>
-                    <div className={styles.infoGrid2}>
-                    <div className={styles.contentt}>
-                        <p>Name: <span>{`${selectedRequest.Lastname?.toUpperCase()}, ${selectedRequest.Firstname?.toUpperCase()} ${selectedRequest.Middlename?.toUpperCase()}`}</span></p>
-                        <p>Address: <span>{selectedRequest.Address}</span></p>
-                        <p>Email: <span>{selectedRequest.Email}</span></p>
-                        <p>Birthdate: <span>{new Date(selectedRequest.DOB).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })}</span></p>
-                        <p>PWD: <span>{selectedRequest.PWD}</span></p>
-                      </div>
-                     
-                      <div className={styles.contentt}>
-                        <p>Sex: <span>{selectedRequest.Gender === 'F' ? "Female" : selectedRequest.Gender === 'M' ? "Male" : ""}</span></p>
-                        <p>Mobile: <span>{selectedRequest.PhoneNo}</span></p>
-                        <p>Civil Status: <span>{selectedRequest.CivilStatus}</span></p>
-                        <p>Nationality: <span>{selectedRequest.Nationality}</span></p>
-                        <p>Indigenous: <span>{selectedRequest.Indigenous}</span></p>
-                      </div>
-                      
-                    </div>
-              
-              
-                  <div className={styles.sectionTitle}>Family Background</div>
-                    <div className={styles.infoGrid}>
-                    <div className={styles.contentt}>
-                        <p>Father: <span>{selectedRequest.FatherName}</span></p>
-                        <p>Mother: <span>{selectedRequest.MotherName}</span></p>
-                        <p>Guardian: <span>{selectedRequest.MotherName}</span></p>
-                      </div>
-                     
-                      <div className={styles.contentt}>
-                        <p>Contact: <span>{selectedRequest.FatherContactNo}</span></p>
-                        <p>Contact: <span>{selectedRequest.MotherContactNo}</span></p>
-                        <p>Contact: <span>{selectedRequest.GuardianContactNo}</span></p>
-                      </div>
-                      <div className={styles.contentt}>
-                        <p>Occupation: <span>{selectedRequest.FatherOccupation}</span></p>
-                        <p>Occupation: <span>{selectedRequest.MotherOccupation}</span></p>
-                        <p>Occupation: <span>{selectedRequest.GuardianOccupation}</span></p>
-                      </div>
-              
-                      
-                      
-                    </div>
-              
-                  <div className={styles.sectionTitle}>Educational Background</div>
-                    <div className={styles.infoGrid3}>
-                    <div className={styles.contentt}>
-                        <p>Elementary</p>
-                        <p><span>{selectedRequest.ElemSchoolName}</span></p>
-                        <p>High School</p>
-                        <p><span>{selectedRequest.HighSchoolName}</span></p>
-                        <p>Senior High School</p>
-                        <p><span>{selectedRequest.SHSchoolName}</span></p>
-                      </div>
-                     
-                      <div className={styles.contentt}>
-                      <p>Address</p>
-                        <p><span>{selectedRequest.ElemSchoolAddress}</span></p>
-                        <p>Address</p>
-                        <p><span>{selectedRequest.HighSchoolAddress}</span></p>
-                        <p>Address</p>
-                        <p><span>{selectedRequest.SHSchoolAddress}</span></p>
-                      </div>
-                      <div className={styles.contentt}>
-                      <p>Year</p>
-                        <p><span>{selectedRequest.ElemYearGraduated}</span></p>
-                        <p>Year</p>
-                        <p><span>{selectedRequest.HighSchoolYearGraduated}</span></p>
-                        <p>Year</p>
-                        <p><span>{selectedRequest.SHYearGraduated}</span></p>
-                      </div>
-                      <div className={styles.contentt}>
-                      <p>Type</p>
-                        <p><span>{selectedRequest.ElemSchoolType}</span></p>
-                        <p>Type</p>
-                        <p><span>{selectedRequest.HighSchoolType}</span></p>
-                        <p>Type</p>
-                        <p><span>{selectedRequest.SHSchoolType}</span></p>
-                      </div>
-              
-                    
-                    </div>
-              
-              
-                    <div className={styles.sectionTitle}>Medical History Information</div>
-                                              <div className={styles.infoGrid2}>
-                                              <div className={styles.contentt}>
-                                                  <p>Medications: <span>{selectedRequest.Medication}</span></p>
-                                                  <p>Medical Condtion/s: <span>{selectedRequest.MedicalHistory}</span></p><br></br>
-                                                  </div>
-                                                  </div>
-                                                  <div className={styles.infoGrid2}>
-                                                  <div className={styles.hereby}>
-                                                  <p><strong>I hereby certify that all the information 
-                                                    stated above are true and correct</strong> as to the best 
-                                                    of my knowledge. I hereby give consent for my
-                                                     personal data included in my offer to be processed 
-                                                     for the purposes of admission and enrollment in accordance
-                                                      with Republic Act 10173 - Data Privacy Act of 2012.: <span></span></p>
-                                                      <br></br>
-                                        
-                                                      <p><span
-                                                                style={{
-                                                                  display: "inline-block",
-                                                                  borderBottom: "1px solid black",
-                                                                  width: "80%",
-                                                                  marginLeft: "10px",
-                                                                  marginRight: "0px",
-                                                                  textAlign: "center",
-                                                                  textTransform: "uppercase",
-                                                                }}
-                                                              >{selectedRequest.Lastname}, {selectedRequest.Firstname} {selectedRequest.Middlename}</span>
-                                                              <br />
-                                                              <p style={{textAlign: "center",}}>
-                                                              Signature over printed name</p>
-                                                            </p>
-                                                </div>
+                <div className={styles.headerContainer}>
+                  <div className={styles.logoContainer}>
+                    <img
+                      src="/src/assets/cvsu-logo.png"
+                      alt="CvSU Logo"
+                      className={styles.logo}
+                    />
+                  </div>
+
+                  <div className={styles.header}>
+                    <p>Republic of the Philippines</p>
+                    <h1>CAVITE STATE UNIVERSITY</h1>
+                    <h2>APPLICATION FORM FOR ADMISSION</h2>
+                  </div>
+
+                  <div className={styles.pictureContainer}>
+                    <img
+                      className={styles.idPictureBox}
+                      src={`http://localhost:8080/${selectedRequest.IDPicture}`}
+                      alt=""
+                    />
+                  </div>
+                </div>
+
+                <div className={styles.infoGrid}>
+                  <div className={styles.contentt}>
+                    <p>
+                      Admission Information -{" "}
+                      <span>
+                        {selectedRequest.ExamControlNo}{" "}
+                        {selectedRequest.ApplyingFor}
+                      </span>
+                    </p>
+                    <p>
+                      Campus - <span>{selectedRequest.Branch}</span>
+                    </p>
+                  </div>
+                </div>
+                <div className={styles.infoGrid}>
+                  <div className={styles.contentt}>
+                    <p>
+                      Entry: <span>New</span>
+                    </p>
+                    {selectedRequest.SHSStrand !== null ? (
+                      <p>
+                        Strand: <span>{selectedRequest.SHSStrand}</span>
+                      </p>
+                    ) : (
+                      ""
+                    )}
+                    <p>
+                      LRN: <span>{selectedRequest.LRN}</span>
+                    </p>
+                    <p>
+                      Preferred Course:{" "}
+                      <span>
+                        {selectedRequest.ProgramID === 1
+                          ? "BSCS"
+                          : selectedRequest.ProgramID === 2
+                          ? "BSIT"
+                          : "Unknown"}
+                      </span>
+                    </p>
+                  </div>
+                  <div className={styles.contentt}>
+                    <p>
+                      Type:{" "}
+                      <span>
+                        {selectedRequest.StudentType === "Freshman"
+                          ? "K-12 SHS Graduate/Graduating"
+                          : "Transferee"}
+                      </span>
+                    </p>
+                  </div>
+                  <div className={styles.contentt}>
+                    <p>
+                      Applicant Type: <span>{selectedRequest.Nationality}</span>
+                    </p>
+                  </div>
+                  <div className={styles.contentt}>
+                    <p>
+                      Final Average: <span>{selectedRequest.FinalAverage}</span>
+                    </p>
+                  </div>
+                </div>
+
+                <div className={styles.infoGrid3}>
+                  <div className={styles.contentt}>
+                    <p>
+                      1st Quarter:{" "}
+                      <span>{selectedRequest.FirstQuarterAve}</span>
+                    </p>
+                  </div>
+                  <div className={styles.contentt}>
+                    <p>
+                      2nd Quarter:{" "}
+                      <span>{selectedRequest.SecondQuarterAve}</span>
+                    </p>
+                  </div>
+                  <div className={styles.contentt}>
+                    <p>
+                      3rd Quarter:{" "}
+                      <span>{selectedRequest.ThirdQuarterAve}</span>
+                    </p>
+                  </div>
+                  <div className={styles.contentt}>
+                    <p>
+                      4th Quarter:{" "}
+                      <span>
+                        {selectedRequest.FourthQuarterAve === 0
+                          ? ""
+                          : selectedRequest.FourthQuarterAve}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+
+                <div className={styles.sectionTitle}>Personal Information</div>
+                <div className={styles.infoGrid2}>
+                  <div className={styles.contentt}>
+                    <p>
+                      Name:{" "}
+                      <span>{`${selectedRequest.Lastname?.toUpperCase()}, ${selectedRequest.Firstname?.toUpperCase()} ${selectedRequest.Middlename?.toUpperCase()}`}</span>
+                    </p>
+                    <p>
+                      Address: <span>{selectedRequest.Address}</span>
+                    </p>
+                    <p>
+                      Email: <span>{selectedRequest.Email}</span>
+                    </p>
+                    <p>
+                      Birthdate:{" "}
+                      <span>
+                        {new Date(selectedRequest.DOB).toLocaleDateString(
+                          "en-US",
+                          { year: "numeric", month: "long", day: "numeric" }
+                        )}
+                      </span>
+                    </p>
+                    <p>
+                      PWD: <span>{selectedRequest.PWD}</span>
+                    </p>
+                  </div>
+
+                  <div className={styles.contentt}>
+                    <p>
+                      Sex:{" "}
+                      <span>
+                        {selectedRequest.Gender === "F"
+                          ? "Female"
+                          : selectedRequest.Gender === "M"
+                          ? "Male"
+                          : ""}
+                      </span>
+                    </p>
+                    <p>
+                      Mobile: <span>{selectedRequest.PhoneNo}</span>
+                    </p>
+                    <p>
+                      Civil Status: <span>{selectedRequest.CivilStatus}</span>
+                    </p>
+                    <p>
+                      Nationality: <span>{selectedRequest.Nationality}</span>
+                    </p>
+                    <p>
+                      Indigenous: <span>{selectedRequest.Indigenous}</span>
+                    </p>
+                  </div>
+                </div>
+
+                <div className={styles.sectionTitle}>Family Background</div>
+                <div className={styles.infoGrid}>
+                  <div className={styles.contentt}>
+                    <p>
+                      Father: <span>{selectedRequest.FatherName}</span>
+                    </p>
+                    <p>
+                      Mother: <span>{selectedRequest.MotherName}</span>
+                    </p>
+                    <p>
+                      Guardian: <span>{selectedRequest.MotherName}</span>
+                    </p>
+                  </div>
+
+                  <div className={styles.contentt}>
+                    <p>
+                      Contact: <span>{selectedRequest.FatherContactNo}</span>
+                    </p>
+                    <p>
+                      Contact: <span>{selectedRequest.MotherContactNo}</span>
+                    </p>
+                    <p>
+                      Contact: <span>{selectedRequest.GuardianContactNo}</span>
+                    </p>
+                  </div>
+                  <div className={styles.contentt}>
+                    <p>
+                      Occupation:{" "}
+                      <span>{selectedRequest.FatherOccupation}</span>
+                    </p>
+                    <p>
+                      Occupation:{" "}
+                      <span>{selectedRequest.MotherOccupation}</span>
+                    </p>
+                    <p>
+                      Occupation:{" "}
+                      <span>{selectedRequest.GuardianOccupation}</span>
+                    </p>
+                  </div>
+                </div>
+
+                <div className={styles.sectionTitle}>
+                  Educational Background
+                </div>
+                <div className={styles.infoGrid3}>
+                  <div className={styles.contentt}>
+                    <p>Elementary</p>
+                    <p>
+                      <span>{selectedRequest.ElemSchoolName}</span>
+                    </p>
+                    <p>High School</p>
+                    <p>
+                      <span>{selectedRequest.HighSchoolName}</span>
+                    </p>
+                    <p>Senior High School</p>
+                    <p>
+                      <span>{selectedRequest.SHSchoolName}</span>
+                    </p>
+                  </div>
+
+                  <div className={styles.contentt}>
+                    <p>Address</p>
+                    <p>
+                      <span>{selectedRequest.ElemSchoolAddress}</span>
+                    </p>
+                    <p>Address</p>
+                    <p>
+                      <span>{selectedRequest.HighSchoolAddress}</span>
+                    </p>
+                    <p>Address</p>
+                    <p>
+                      <span>{selectedRequest.SHSchoolAddress}</span>
+                    </p>
+                  </div>
+                  <div className={styles.contentt}>
+                    <p>Year</p>
+                    <p>
+                      <span>{selectedRequest.ElemYearGraduated}</span>
+                    </p>
+                    <p>Year</p>
+                    <p>
+                      <span>{selectedRequest.HighSchoolYearGraduated}</span>
+                    </p>
+                    <p>Year</p>
+                    <p>
+                      <span>{selectedRequest.SHYearGraduated}</span>
+                    </p>
+                  </div>
+                  <div className={styles.contentt}>
+                    <p>Type</p>
+                    <p>
+                      <span>{selectedRequest.ElemSchoolType}</span>
+                    </p>
+                    <p>Type</p>
+                    <p>
+                      <span>{selectedRequest.HighSchoolType}</span>
+                    </p>
+                    <p>Type</p>
+                    <p>
+                      <span>{selectedRequest.SHSchoolType}</span>
+                    </p>
+                  </div>
+                </div>
+
+                <div className={styles.sectionTitle}>
+                  Medical History Information
+                </div>
+                <div className={styles.infoGrid2}>
+                  <div className={styles.contentt}>
+                    <p>
+                      Medications: <span>{selectedRequest.Medication}</span>
+                    </p>
+                    <p>
+                      Medical Condition/s:{" "}
+                      <span>{selectedRequest.MedicalHistory}</span>
+                    </p>
+                    <br></br>
+                  </div>
+                </div>
+                <div className={styles.infoGrid2}>
+                  <div className={styles.hereby}>
+                    <p>
+                      <strong>
+                        I hereby certify that all the information stated above
+                        are true and correct
+                      </strong>{" "}
+                      as to the best of my knowledge. I hereby give consent for
+                      my personal data included in my offer to be processed for
+                      the purposes of admission and enrollment in accordance
+                      with Republic Act 10173 - Data Privacy Act of 2012.{" "}
+                      <span></span>
+                    </p>
+                    <br></br>
+
+                    <p>
+                      <span
+                        style={{
+                          display: "inline-block",
+                          borderBottom: "1px solid black",
+                          width: "80%",
+                          marginLeft: "10px",
+                          marginRight: "0px",
+                          textAlign: "center",
+                          textTransform: "uppercase",
+                        }}
+                      >
+                        {selectedRequest.Lastname}, {selectedRequest.Firstname}{" "}
+                        {selectedRequest.Middlename}
+                      </span>
+                      <br />
+                      <p style={{ textAlign: "center" }}>
+                        Signature over printed name
+                      </p>
+                    </p>
+                  </div>
 
                   <div className={styles.contentt3box}>
                     <p className={styles.contentt3}>
@@ -683,7 +818,7 @@ function TransfereeAdmissionRequest() {
                       Short ordinary folder
                     </p>
                     <p className={styles.contentt4}>
-                      <strong>New Student (SHS, ALS)</strong>
+                      <strong>Transferee</strong>
                       <br />
                       <span
                         style={{
@@ -694,8 +829,57 @@ function TransfereeAdmissionRequest() {
                           marginRight: "2px",
                         }}
                       ></span>
-                      Certified True Copy of G12 report/Certificate of ALS
-                      Rating
+                      Certified True Copy of Transcript of Records/Certificate
+                      of Grades
+                    </p>
+                    <p className={styles.contentt4}>
+                      <span
+                        style={{
+                          display: "inline-block",
+                          borderBottom: "1px solid black",
+                          width: "10px",
+                          marginLeft: "2px",
+                          marginRight: "2px",
+                        }}
+                      ></span>
+                      Certified True Copy of Transfer Credentials/Honorable
+                      Dismissal
+                    </p>
+                    <p className={styles.contentt4}>
+                      <span
+                        style={{
+                          display: "inline-block",
+                          borderBottom: "1px solid black",
+                          width: "10px",
+                          marginLeft: "2px",
+                          marginRight: "2px",
+                        }}
+                      ></span>
+                      Certified True Copy of Good Moral Certificate
+                    </p>
+                    <p className={styles.contentt4}>
+                      <span
+                        style={{
+                          display: "inline-block",
+                          borderBottom: "1px solid black",
+                          width: "10px",
+                          marginLeft: "2px",
+                          marginRight: "2px",
+                        }}
+                      ></span>
+                      Photocopy NBI Clearance
+                    </p>
+                    <p className={styles.contentt4}>
+                      <span
+                        style={{
+                          display: "inline-block",
+                          borderBottom: "1px solid black",
+                          width: "10px",
+                          marginLeft: "2px",
+                          marginRight: "2px",
+                        }}
+                      ></span>
+                      Photocopy Accomplished Interview Slip
                     </p>
                     <p className={styles.contentt4}>
                       <strong>Assessed by:</strong>
@@ -710,16 +894,9 @@ function TransfereeAdmissionRequest() {
                       ></span>
                     </p>
                     <p className={styles.contentt4}>
-                      <strong>Control No.:</strong>
-                      <span
-                        style={{
-                          display: "inline-block",
-                          borderBottom: "1px solid black",
-                          width: "100px",
-                          marginLeft: "2px",
-                          marginRight: "2px",
-                        }}
-                      ></span>
+                      <strong>
+                        Control No.: {selectedRequest.ExamControlNo}
+                      </strong>
                     </p>
                   </div>
                 </div>
