@@ -9,7 +9,7 @@ app.use(express.json());
 
 app.get("/DCSHeadProgram", async (req, res) => {
   try {
-    const response = await axios.get("someApiEndpoint");
+    const response = await axios.get("http://localhost:8080/DCSHeadProgram");
     res.status(200).json(response.data);
   } catch (error) {
     res.status(500).json({ message: "Error fetching program" });
@@ -18,7 +18,7 @@ app.get("/DCSHeadProgram", async (req, res) => {
 
 app.get("/getCS", async (req, res) => {
   try {
-    const response = await axios.get("someApiEndpoint");
+    const response = await axios.get("http://localhost:8080/getCS");
     res.status(200).json(response.data);
   } catch (error) {
     res.status(500).json({ message: "Error fetching CS count" });
@@ -27,7 +27,7 @@ app.get("/getCS", async (req, res) => {
 
 app.get("/getIT", async (req, res) => {
   try {
-    const response = await axios.get("someApiEndpoint");
+    const response = await axios.get("http://localhost:8080/getIT");
     res.status(200).json(response.data);
   } catch (error) {
     res.status(500).json({ message: "Error fetching IT count" });
@@ -36,7 +36,9 @@ app.get("/getIT", async (req, res) => {
 
 app.get("/getTotalShiftingReq", async (req, res) => {
   try {
-    const response = await axios.get("someApiEndpoint");
+    const response = await axios.get(
+      "http://localhost:8080/getTotalShiftingReq"
+    );
     res.status(200).json(response.data);
   } catch (error) {
     res.status(500).json({ message: "Error fetching shifting request count" });
@@ -45,7 +47,7 @@ app.get("/getTotalShiftingReq", async (req, res) => {
 
 app.get("/dcsViewEnrollment", async (req, res) => {
   try {
-    const response = await axios.get("someApiEndpoint");
+    const response = await axios.get("http://localhost:8080/dcsViewEnrollment");
     if (
       response.data.enrollmentPeriod.Status === "Pending" ||
       response.data.enrollmentPeriod.Status === "Ongoing"
