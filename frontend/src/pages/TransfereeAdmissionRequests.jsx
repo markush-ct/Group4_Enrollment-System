@@ -179,7 +179,7 @@ function TransfereeAdmissionRequest() {
     if (!rejectionReason) {
       console.error("Invalid request or Email missing:", request);
       setErrorPrompt(true);
-      setErrorMsg("Input reason/s for rejecting transfer request.");
+      setErrorMsg("Input reason/s for rejecting transfer request");
       return;
     }
 
