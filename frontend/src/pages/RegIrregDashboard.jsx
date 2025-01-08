@@ -198,22 +198,24 @@ useEffect(() => {
           )}
           
   
-       {isEnrollment === true ? (
-        <div className={styles.enrollmentProgress}>
-        <h2>Enrollment Progress</h2>
-        <div className={styles.progressBar}>
-          <div className={styles.progressFill} style={{ width: progressWidth }}></div>
-          <span>{progressWidth}</span>
-        </div>
-        <ul className={styles.progressSteps}>
-          <li>{socFeeProg ? "✔" : "❌"} Step 1: Society Fee Payment</li>
-          <li>{reqsProg ? "✔" : "❌"} Step 2: COG and Checklist</li>
-          <li>{adviseProg ? "✔" : "❌"} Step 3: Advising</li>
-          <li>{preEnrollProg ? "✔" : "❌"} Step 4: Pre-Enrollment</li>
-          <li>{enrollProg ? "✔" : "❌"} Step 5: Enrollment</li>
-        </ul>
-      </div>
+          {isEnrollment === true ? (
+  <div className={styles.enrollmentProgress}>
+    <h2>Enrollment Progress</h2>
+    <div className={styles.progressBar}>
+      <div className={styles.progressFill} style={{ width: progressWidth }}></div>
+      <span className={styles.progressText}>{progressWidth}</span>
+    </div>
+    <ul className={styles.progressSteps}>
+      <li>{socFeeProg ? "✔" : "❌"} Step 1: Society Fee Payment</li>
+      <li>{reqsProg ? "✔" : "❌"} Step 2: COG and Checklist</li>
+      <li>{adviseProg ? "✔" : "❌"} Step 3: Advising</li>
+      <li>{preEnrollProg ? "✔" : "❌"} Step 4: Pre-Enrollment</li>
+      <li>{enrollProg ? "✔" : "❌"} Step 5: Enrollment</li>
+    </ul>
+  </div>
        ) : ('')}
+
+</div>
           
   
           <div className={styles.linksSection}>
@@ -222,7 +224,7 @@ useEffect(() => {
 </div>
 
         </div>
-      </div>
+     
 
   
 

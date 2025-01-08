@@ -80,7 +80,7 @@
     background: #f9f9f9;
     border-radius: 10px;
     padding: 30px 50px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 10px rgba(0, 0, 0, 0.1);
 }
 
 .progressBar {
@@ -88,20 +88,30 @@
     align-items: center;
     gap: 10px;
     margin: 10px 0;
-    background: #e0e0e0;
+    background: rgb(190, 190, 190);
     border-radius: 50px;
     overflow: hidden;
     position: relative;
 }
 
 .progressBar span {
-    color: black;
+    color: white;
+
     background-color: transparent;
 }
 
+.progressText {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-weight: bold;
+  }
+
 .progressFill {
     background: #4caf50;
-    height: 20px;
+    height: 50px;
     width: 0;
     transition: width 0.3s ease;
 }
@@ -116,6 +126,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
     gap: 10px;
     text-align: center;
 }
@@ -161,10 +172,22 @@
         grid-template-columns: 1fr; 
     }
 
-    .announcements,
-    .enrollmentProgress,
+    
+    
     .linksSection {
         padding: 20px; 
+    }
+
+    .announcements, .enrollmentProgress {
+        padding: 50px; 
+    }
+
+    .announcements h2 {
+        text-align: center;
+    }
+
+    .enrollmentProgress h2 {
+        text-align: center;
     }
 
     .linksSection img {
