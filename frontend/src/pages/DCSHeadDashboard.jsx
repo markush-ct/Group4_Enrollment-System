@@ -171,6 +171,21 @@ function DCSHeadDashboard() {
       });
   }, [isEnrollment, enrollment]);
 
+  const [enrolledStudents, setEnrolledStudents] = useState(0);
+  useEffect(() => {
+    axios.get('http://localhost:8080/getEnrolledStdCount')
+    .then((res) => {
+      if(res.data.message === "Rows fetched"){
+        setEnrolledStudents(res.data.enrolledCount);
+      } else if(res.data.message === "No rows fetched"){
+        setEnrolledStudents(0);
+      }
+    })
+    .catch((err) => {
+      alert("Error: " + err);
+    })
+  },[enrolledStudents]);
+
   return (
     <>
       <Header SideBar={SideBar} setSideBar={setSideBar} />
@@ -204,7 +219,7 @@ function DCSHeadDashboard() {
                 data-testid="total-enrolled-card"
               >
                 <h3>Total Enrolled</h3>
-                <p>{ITcount + CScount}</p>
+                <p>{enrolledStudents}</p>
               </div>
               <div
                 className={styles.blueCard}

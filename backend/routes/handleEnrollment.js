@@ -18,6 +18,26 @@ db.connect((err) => {
     }
 });
 
+router.get('/getEnrolledStdCount', (req, res) => {
+    const sql1 = `
+    SELECT COUNT(*) AS enrolledStudents
+    FROM enrollment
+    WHERE EnrollmentStatus = 'Enrolled'`;
+
+    db.query(sql1, (err, countRes) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else if (countRes.length > 0){
+            const enrolledStudents = countRes[0].enrolledStudents;
+            return res.json({message: "Rows fetched", enrolledCount: enrolledStudents});
+        } else if(countRes.length === 0){
+            return res.json({message: "No rows fetched", enrolledCount: 0});
+        } else {
+            return res.json({message: "Unable to fetch rows"});
+        }
+    })
+})
+
 router.get('/getEnrolledStdInfo', (req, res) => {
     const sql1 = `SELECT * FROM student WHERE Email = ?`;
     db.query(sql1, req.session.email, (err, stdRes) => {
