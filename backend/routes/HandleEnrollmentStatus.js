@@ -209,8 +209,10 @@ router.get('/getStdEnrollmentStatus', (req, res) => {
                     return res.json({message: "Success",
                         enrollStatus: enrollRes[0].EnrollmentStatus
                     });
-                } else {
+                } else if (enrollRes.length === 0){
                     return res.json({message: "Student is not yet enrolled"});
+                } else {
+                    return res.json({message: "Failed to get status"});
                 }
             });
 

@@ -199,7 +199,7 @@ function EnrollmentRegular() {
         setSuccessPrompt(false);
         setIsPreEnrollmentSubmitted(false);
         setErrorPrompt(true);
-        setErrorMsg(`FFailed to submit pre enrollment: ${err.response?.data?.message || err.message}`);
+        setErrorMsg(`Failed to submit pre enrollment: ${err.response?.data?.message || err.message}`);
       }
     }
   };
@@ -247,7 +247,13 @@ function EnrollmentRegular() {
 
             axios.get("http://localhost:8080/getStdEnrollmentStatus")
               .then((res) => {
-                setStdEnrollStatus(res.data.enrollStatus);
+                if(res.data.message === "Success"){
+                  setStdEnrollStatus(res.data.enrollStatus);
+                } else if (res.data.message === "Student is not yet enrolled"){
+                  setStdEnrollStatus('Pending');
+                } else {
+                  setStdEnrollStatus(res.data.message);
+                }              
               })
               .catch((err) => {
                 alert("Error: " + err);

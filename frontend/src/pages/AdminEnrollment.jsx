@@ -415,6 +415,7 @@ function Requirements() {
         : studentInfo.Year === "Third Year" ? 3
         : studentInfo.Year === "Fourth Year" ? 4
         : "Mid-Year"} - {studentInfo.Section}</p>
+        <p><strong>Semester:</strong> {selectedRequest.Semester}</p>
         <p><strong>Student Type:</strong> {selectedRequest.StudentType}</p>
     </div>
 

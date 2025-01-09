@@ -272,7 +272,7 @@ router.get('/getReqsForAdviser', (req, res) => {
             WHERE StdChecklistStatus = 'Verified'
         ) c ON s.StudentID = c.StudentID
         LEFT JOIN advising a ON s.StudentID = a.StudentID AND a.AdvisingStatus = 'Approved'
-        WHERE a.StudentID IS NULL
+        WHERE a.StudentID IS NULL AND r.SocFeePayment = 'Paid' AND r.COG IS NOT NULL
             `;
 
     db.query(getStudents, (err, studentsRes) => {

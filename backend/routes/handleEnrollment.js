@@ -218,7 +218,13 @@ router.post('/startEnrollment', (req, res) => {
                                                         if(err){
                                                             return res.json({message: "Error in server: " + err});
                                                         } else{
-                                                            return res.json({message: "Enrollment is now ongoing"});
+                                                            db.query(deleteSched, (err, deleteSchedRes) => {
+                                                                if(err){
+                                                                    return res.json({message: "Error in server: " + err});
+                                                                } else {
+                                                                    return res.json({message: "Enrollment is now ongoing"});
+                                                                }
+                                                            })
                                                         }
                                                     });
                                                 }
