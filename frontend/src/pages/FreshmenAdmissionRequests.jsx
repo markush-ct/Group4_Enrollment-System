@@ -489,7 +489,7 @@ function FreshmenAdmissionRequest() {
                   ) : (
                     <tr>
                       <td colSpan="4" className={styles.noData}>
-                        No freshmen admission request found.
+                        No freshmen admission requests found.
                       </td>
                     </tr>
                   )}

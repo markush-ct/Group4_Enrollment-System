@@ -433,7 +433,7 @@ function ShiftingRequest() {
               ) : (
                 <tr>
                   <td colSpan="4" className={styles.noData}>
-                    No shifting request found.
+                    No shifting requests found.
                   </td>
                 </tr>
               )}

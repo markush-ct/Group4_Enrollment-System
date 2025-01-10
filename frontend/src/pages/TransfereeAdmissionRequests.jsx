@@ -150,6 +150,9 @@ function TransfereeAdmissionRequest() {
         setErrorPrompt(false);
         setPopUpVisible(false);
         setLoading(false);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       } else {
         console.error(response.data.message);
         setErrorPrompt(true);
@@ -433,7 +436,7 @@ function TransfereeAdmissionRequest() {
               ) : (
                 <tr>
                   <td colSpan="4" className={styles.noData}>
-                    No transferee admission request found.
+                    No transferee admission requests found.
                   </td>
                 </tr>
               )}

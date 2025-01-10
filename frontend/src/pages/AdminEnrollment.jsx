@@ -373,7 +373,7 @@ function Requirements() {
                             ) : (
                                 <tr>
                                     <td colSpan="4" className={styles.noData}>
-                                        No submissions found.
+                                        No enrollees found.
                                     </td>
                                 </tr>
                             )}

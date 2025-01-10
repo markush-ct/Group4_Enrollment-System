@@ -199,7 +199,7 @@ function ShifteeForm() {
       return;
     }
 
-    const url = `/download-form/${studentID}`;
+    const url = `/download-shiftingform/${studentID}`;
     window.open(url, "_blank");
 };
   const renderContent = () => {

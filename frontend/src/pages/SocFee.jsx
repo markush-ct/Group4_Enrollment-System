@@ -428,7 +428,7 @@ const closePrompt = () => {
         ) : (
           <tr>
             <td colSpan="4" className={styles.noData}>
-              No Society Fee found.
+              No students found.
             </td>
           </tr>
         )}
