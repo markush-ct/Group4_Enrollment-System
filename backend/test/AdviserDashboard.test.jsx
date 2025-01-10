@@ -47,6 +47,19 @@ app.get("/ITEnrollmentPeriod", async (req, res) => {
   }
 });
 
+const getEnrolledStudents = async () => {
+  return { enrolledCount: 150, message: "Rows fetched" };
+};
+
+app.get("/getEnrolledStdCount", async (req, res) => {
+  try {
+    const data = await getEnrolledStudents();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching enrolled students" });
+  }
+});
+
 describe("Unit Testing for Adviser Dashboard Function", () => {
   describe("For /getCS", () => {
     it("Should return the number of CS students enrolled", async () => {
@@ -145,6 +158,21 @@ describe("Unit Testing for Adviser Dashboard Function", () => {
 
       expect(response.status).toBe(500);
       expect(response.body.message).toBe("Error fetching IT enrollment data");
+    });
+  });
+
+  describe("For /getEnrolledStdCount", () => {
+    it("Should return the correct enrolled student count", async () => {
+      const expectedResponse = {
+        enrolledCount: 150,
+        message: "Rows fetched",
+      };
+
+      const response = await request(app).get("/getEnrolledStdCount");
+
+      expect(response.status).toBe(200);
+      expect(response.body.enrolledCount).toBe(expectedResponse.enrolledCount);
+      expect(response.body.message).toBe(expectedResponse.message);
     });
   });
 });

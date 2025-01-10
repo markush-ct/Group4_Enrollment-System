@@ -56,6 +56,19 @@ app.get("/admissionNotif", async (req, res) => {
   }
 });
 
+const getEnrolledStudents = async () => {
+  return { enrolledCount: 150, message: "Rows fetched" };
+};
+
+app.get("/getEnrolledStdCount", async (req, res) => {
+  try {
+    const data = await getEnrolledStudents();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching enrolled students" });
+  }
+});
+
 describe("Unit Testing for School Head Dashboard Function", () => {
   describe("For /getCS", () => {
     it("Should return the number of CS students enrolled", async () => {
@@ -181,6 +194,21 @@ describe("Unit Testing for School Head Dashboard Function", () => {
       expect(response.body.message).toBe(
         "Error fetching admission notifications"
       );
+    });
+  });
+
+  describe("For /getEnrolledStdCount", () => {
+    it("Should return the correct enrolled student count", async () => {
+      const expectedResponse = {
+        enrolledCount: 150,
+        message: "Rows fetched",
+      };
+
+      const response = await request(app).get("/getEnrolledStdCount");
+
+      expect(response.status).toBe(200);
+      expect(response.body.enrolledCount).toBe(expectedResponse.enrolledCount);
+      expect(response.body.message).toBe(expectedResponse.message);
     });
   });
 });
