@@ -20,7 +20,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
     background-color: transparent;
   }
   
@@ -51,7 +51,7 @@
   
   .header h1 {
     font-size: 15px;
-    margin-bottom: 3px;
+    margin-bottom: 0px;
     font-weight: bold;
     color: #222;
     text-transform: uppercase;
@@ -73,8 +73,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 12px;

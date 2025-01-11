@@ -251,67 +251,181 @@ const DownloadAdmissionForm = () => {
                       Signature over printed name</p>
                     </p>
         </div>
- 
-        <div className={styles.contentt3box}>
+
+        {studentData.StudentType === "Freshman" ? (
+          <div className={styles.contentt3box}>
+          <p className={styles.contentt3}>
+          To be filled up by the OSAS/Guidance Staff
+        </p>
         <p className={styles.contentt3}>
-        To be filled up by the OSAS/Guidance Staff
-      </p>
-      <p className={styles.contentt3}>
-        SUBMITTED REQUIREMENTS
-      </p>
-      <p className={styles.contentt4}><span
-            style={{
-              display: "inline-block",
-              borderBottom: "1px solid black",
-              width: "10px",
-              marginLeft: "2px",
-              marginRight: "2px",
-            }}
-          ></span>2 copies of 1x1 ID Picture with name tag</p>
-      <p className={styles.contentt4}><span
-            style={{
-              display: "inline-block",
-              borderBottom: "1px solid black",
-              width: "10px",
-              marginLeft: "2px",
-              marginRight: "2px",
-            }}
-          ></span>Short ordinary folder</p>
-      <p className={styles.contentt4}>
-       <strong>New Student (SHS, ALS)</strong>
-        <br />
-        <span
-            style={{
-              display: "inline-block",
-              borderBottom: "1px solid black",
-              width: "10px",
-              marginLeft: "2px",
-              marginRight: "2px",
-            }}
-          ></span>Certified True Copy of G12 report/Certificate of ALS Rating
-      </p>
-      <p className={styles.contentt4}><strong>Assessed by:</strong><span
-            style={{
-              display: "inline-block",
-              borderBottom: "1px solid black",
-              width: "100px",
-              marginLeft: "2px",
-              marginRight: "2px",
-            }}
-          ></span></p>
-      <p className={styles.contentt4}><strong>Control No.:</strong><span
-            style={{
-              display: "inline-block",
-              borderBottom: "1px solid black",
-              width: "100px",
-              marginLeft: "2px",
-              marginRight: "2px",
-            }}
-          ></span></p>
-
-
-      
-    </div>
+          SUBMITTED REQUIREMENTS
+        </p>
+        <p className={styles.contentt4}><span
+              style={{
+                display: "inline-block",
+                borderBottom: "1px solid black",
+                width: "10px",
+                marginLeft: "2px",
+                marginRight: "2px",
+              }}
+            ></span>2 copies of 1x1 ID Picture with name tag</p>
+        <p className={styles.contentt4}><span
+              style={{
+                display: "inline-block",
+                borderBottom: "1px solid black",
+                width: "10px",
+                marginLeft: "2px",
+                marginRight: "2px",
+              }}
+            ></span>Short ordinary folder</p>
+        <p className={styles.contentt4}>
+         <strong>New Student (SHS, ALS)</strong>
+          <br />
+          <span
+              style={{
+                display: "inline-block",
+                borderBottom: "1px solid black",
+                width: "10px",
+                marginLeft: "2px",
+                marginRight: "2px",
+              }}
+            ></span>Certified True Copy of G12 report/Certificate of ALS Rating
+        </p>
+        <p className={styles.contentt4}><strong>Assessed by:</strong><span
+              style={{
+                display: "inline-block",
+                borderBottom: "1px solid black",
+                width: "100px",
+                marginLeft: "2px",
+                marginRight: "2px",
+              }}
+            ></span></p>
+        <p className={styles.contentt4}><strong>Control No.:</strong><span
+              style={{
+                display: "inline-block",
+                borderBottom: "1px solid black",
+                width: "100px",
+                marginLeft: "2px",
+                marginRight: "2px",
+              }}
+            ></span></p>
+  
+  
+        
+      </div>
+        ) : (
+          <div className={styles.contentt3box}>
+                              <p className={styles.contentt3}>
+                                To be filled up by the OSAS/Guidance Staff
+                              </p>
+                              <p className={styles.contentt3}>SUBMITTED REQUIREMENTS</p>
+                              <p className={styles.contentt4}>
+                                <span
+                                  style={{
+                                    display: "inline-block",
+                                    borderBottom: "1px solid black",
+                                    width: "10px",
+                                    marginLeft: "2px",
+                                    marginRight: "2px",
+                                  }}
+                                ></span>
+                                2 copies of 1x1 ID Picture with name tag
+                              </p>
+                              <p className={styles.contentt4}>
+                                <span
+                                  style={{
+                                    display: "inline-block",
+                                    borderBottom: "1px solid black",
+                                    width: "10px",
+                                    marginLeft: "2px",
+                                    marginRight: "2px",
+                                  }}
+                                ></span>
+                                Short ordinary folder
+                              </p>
+                              <p className={styles.contentt4}>
+                                <strong>Transferee</strong>
+                                <br />
+                                <span
+                                  style={{
+                                    display: "inline-block",
+                                    borderBottom: "1px solid black",
+                                    width: "10px",
+                                    marginLeft: "2px",
+                                    marginRight: "2px",
+                                  }}
+                                ></span>
+                                Certified True Copy of Transcript of Records/Certificate
+                                of Grades
+                              </p>
+                              <p className={styles.contentt4}>
+                                <span
+                                  style={{
+                                    display: "inline-block",
+                                    borderBottom: "1px solid black",
+                                    width: "10px",
+                                    marginLeft: "2px",
+                                    marginRight: "2px",
+                                  }}
+                                ></span>
+                                Certified True Copy of Transfer Credentials/Honorable
+                                Dismissal
+                              </p>
+                              <p className={styles.contentt4}>
+                                <span
+                                  style={{
+                                    display: "inline-block",
+                                    borderBottom: "1px solid black",
+                                    width: "10px",
+                                    marginLeft: "2px",
+                                    marginRight: "2px",
+                                  }}
+                                ></span>
+                                Certified True Copy of Good Moral Certificate
+                              </p>
+                              <p className={styles.contentt4}>
+                                <span
+                                  style={{
+                                    display: "inline-block",
+                                    borderBottom: "1px solid black",
+                                    width: "10px",
+                                    marginLeft: "2px",
+                                    marginRight: "2px",
+                                  }}
+                                ></span>
+                                Photocopy NBI Clearance
+                              </p>
+                              <p className={styles.contentt4}>
+                                <span
+                                  style={{
+                                    display: "inline-block",
+                                    borderBottom: "1px solid black",
+                                    width: "10px",
+                                    marginLeft: "2px",
+                                    marginRight: "2px",
+                                  }}
+                                ></span>
+                                Photocopy Accomplished Interview Slip
+                              </p>
+                              <p className={styles.contentt4}>
+                                <strong>Assessed by:</strong>
+                                <span
+                                  style={{
+                                    display: "inline-block",
+                                    borderBottom: "1px solid black",
+                                    width: "100px",
+                                    marginLeft: "2px",
+                                    marginRight: "2px",
+                                  }}
+                                ></span>
+                              </p>
+                              <p className={styles.contentt4}>
+                                <strong>
+                                  Control No.: {formData.ExamControlNo}
+                                </strong>
+                              </p>
+                            </div>
+        )}
 
        
       
