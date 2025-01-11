@@ -18,28 +18,27 @@ function AccountSettingsStudent() {
   const [successMsg, setsuccessMsg] = useState("");
   const [errorPrompt, setErrorPrompt] = useState(false); //errors
   const [errorMsg, setErrorMsg] = useState("");
-  const [accRole, setAccRole] = useState('');
+  const [accRole, setAccRole] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [isChangePasswordView, setIsChangePasswordView] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const [pfp, setPFP] = useState({
     uploadPFP: null,
-    pfpURL: '',
+    pfpURL: "",
   });
   const [uploadedPFP, setUploadedPFP] = useState(null);
   const [accInfo, setAccInfo] = useState({
-    firstName: '',
-    middleName: '',
-    lastName: '',
-    email: '',
-    gender: '',
-    age: '',
-    phoneNo: '',
-    address: '',
-    dob: '',
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    email: "",
+    gender: "",
+    age: "",
+    phoneNo: "",
+    address: "",
+    dob: "",
   });
-
 
   //Reuse in other pages that requires logging in
   const navigate = useNavigate();
@@ -71,14 +70,14 @@ function AccountSettingsStudent() {
     };
   }, [SideBar]);
 
-
   const handleToggleView = () => {
     setIsChangePasswordView(!isChangePasswordView);
   };
 
   //FETCH ACCOUNT INFO
   useEffect(() => {
-    axios.get('http://localhost:8080/getAccInfo')
+    axios
+      .get("http://localhost:8080/getAccInfo")
       .then((res) => {
         if (res.data.message === "Fetch successful") {
           setAccInfo({
@@ -86,7 +85,7 @@ function AccountSettingsStudent() {
             middleName: res.data.middleName,
             lastName: res.data.lastName,
             email: res.data.email,
-            gender: res.data.gender === 'F' ? 'Female' : 'Male',
+            gender: res.data.gender === "F" ? "Female" : "Male",
             age: res.data.age,
             phoneNo: res.data.phoneNo,
             address: res.data.address,
@@ -100,42 +99,43 @@ function AccountSettingsStudent() {
       })
       .catch((err) => {
         alert("Error: " + err);
-      })
+      });
 
-      axios.get('http://localhost:8080/getPFP')
+    axios
+      .get("http://localhost:8080/getPFP")
       .then((res) => {
         setUploadedPFP(res.data.pfpURL);
         setPFP({
           uploadPFP: res.data.uploadPFP || null,
-          pfpURL: res.data.pfpURL || '',
+          pfpURL: res.data.pfpURL || "",
         });
       })
       .catch((err) => {
         alert("Error: " + err);
-      })
-  }, [])
+      });
+  }, []);
 
-    //AUTOSAVE PFP
-    useEffect(() => {
-      const timer = setTimeout(() => {
-        autoSave();
-      }, 1000);
-  
-      return () => clearTimeout(timer);
-    }, [pfp]);
+  //AUTOSAVE PFP
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      autoSave();
+    }, 1000);
 
-    const autoSave = () => {
-      setIsSaving(true);
+    return () => clearTimeout(timer);
+  }, [pfp]);
 
-      const data = new FormData();
-      if (pfp.uploadPFP) {
-        data.append("uploadPFP", pfp.uploadPFP);
-      }
-      data.append("pfpURL", pfp.pfpURL);
+  const autoSave = () => {
+    setIsSaving(true);
 
+    const data = new FormData();
+    if (pfp.uploadPFP) {
+      data.append("uploadPFP", pfp.uploadPFP);
+    }
+    data.append("pfpURL", pfp.pfpURL);
 
-      axios.post("http://localhost:8080/changePFP", data, {
-        headers: { "Content-Type": "multipart/form-data", },
+    axios
+      .post("http://localhost:8080/changePFP", data, {
+        headers: { "Content-Type": "multipart/form-data" },
       })
       .then((res) => {
         console.log("Student saved successfully:", res.data);
@@ -143,13 +143,13 @@ function AccountSettingsStudent() {
         setUploadedPFP(`http://localhost:8080/${res.data.pfpURL}`);
       })
       .catch((err) => {
-        alert("Error: " + err)
-      })
-    }
-  
-    const handleUploadChange = (e) => {
-      setPFP({ ...pfp, uploadPFP: e.target.files[0] });
-    };
+        alert("Error: " + err);
+      });
+  };
+
+  const handleUploadChange = (e) => {
+    setPFP({ ...pfp, uploadPFP: e.target.files[0] });
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -159,9 +159,9 @@ function AccountSettingsStudent() {
     }));
   };
 
-
   const handleSaveChanges = () => {
-    axios.post('http://localhost:8080/saveAccInfo', accInfo)
+    axios
+      .post("http://localhost:8080/saveAccInfo", accInfo)
       .then((res) => {
         if (res.data.message === "Account updated successfully") {
           console.log(res.data);
@@ -180,14 +180,21 @@ function AccountSettingsStudent() {
         setErrorPrompt(true);
         setsuccessMsg("");
         setsuccessPrompt(false);
-      })
-  }
+      });
+  };
 
   // Handle current password submission
   const handleCurrentPasswordSubmit = (event) => {
     event.preventDefault();
 
-    axios.post('http://localhost:8080/matchPass', { currentPassword })
+    if (!currentPassword) {
+      setErrorPrompt(true);
+      setErrorMsg("Current password is required");
+      return;
+    }
+
+    axios
+      .post("http://localhost:8080/matchPass", { currentPassword })
       .then((res) => {
         if (res.data.message === "Account found") {
           setIsCurrentPasswordValid(true);
@@ -204,7 +211,7 @@ function AccountSettingsStudent() {
       })
       .catch((err) => {
         alert("Error: " + err);
-      })
+      });
   };
 
   const submitNewPassword = (event) => {
@@ -216,8 +223,11 @@ function AccountSettingsStudent() {
       setErrorPrompt(true);
       setErrorMsg("Password do not match");
     } else {
-
-      axios.post('http://localhost:8080/changePass', { newPassword, confirmPassword })
+      axios
+        .post("http://localhost:8080/changePass", {
+          newPassword,
+          confirmPassword,
+        })
         .then((res) => {
           if (res.data.message === "Password changed successfully") {
             setsuccessPrompt(true);
@@ -238,18 +248,15 @@ function AccountSettingsStudent() {
         })
         .catch((err) => {
           alert("Error: " + err);
-        })
+        });
     }
-  }
+  };
 
   return (
     <>
       <Header SideBar={SideBar} setSideBar={setSideBar} />
       <div className={styles.contentSection}>
         <div className={styles.PageTitle}>Account Settings</div>
-
-
-
 
         <div className={styles.accountContainer}>
           {/* Left Column - Profile Section */}
@@ -290,7 +297,11 @@ function AccountSettingsStudent() {
 
           {/* SUCCESS PROMPT */}
           {successPrompt && (
-            <div data-aos="zoom-out" data-aos-duration="500" className={styles.popup}>
+            <div
+              data-aos="zoom-out"
+              data-aos-duration="500"
+              className={styles.popup}
+            >
               <div className={styles.popupContent}>
                 <button
                   className={styles.closeButton}
@@ -302,7 +313,11 @@ function AccountSettingsStudent() {
                   <h2>Success</h2>
                 </div>
                 <div className={styles.Message}>
-                  <img src="/src/assets/checkmark.png" alt="Success Icon" className={styles.messageImage} />
+                  <img
+                    src="/src/assets/checkmark.png"
+                    alt="Success Icon"
+                    className={styles.messageImage}
+                  />
                 </div>
                 <p className={styles.popupText}>{successMsg}</p>
               </div>
@@ -311,7 +326,11 @@ function AccountSettingsStudent() {
 
           {/* ERROR PROMPT */}
           {errorPrompt && (
-            <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupError}>
+            <div
+              data-aos="zoom-out"
+              data-aos-duration="500"
+              className={styles.popupError}
+            >
               <div className={styles.popupContentError}>
                 <button
                   className={styles.closeButton}
@@ -322,20 +341,22 @@ function AccountSettingsStudent() {
                 <div className={styles.popupHeaderError}>
                   <h2>Error</h2>
                 </div>
-                <div className={styles.MessageError} >
-                  <img src="/src/assets/errormark.png" alt="Error Icon" className={styles.messageImage} />
+                <div className={styles.MessageError}>
+                  <img
+                    src="/src/assets/errormark.png"
+                    alt="Error Icon"
+                    className={styles.messageImage}
+                  />
                 </div>
                 <p className={styles.popupTextError}>{errorMsg}</p>
               </div>
             </div>
           )}
 
-
-
           <div className={styles.rightColumn}>
             {!isChangePasswordView ? (
               <div className={styles.profileEditSection}>
-                <h3 className={styles.subHeading}>Personal Info</h3>
+                <h3 className={styles.subHeading}>Personal Information</h3>
                 <div className={styles.editButtonContainer}>
                   <button
                     className={styles.editButton}
@@ -348,20 +369,21 @@ function AccountSettingsStudent() {
                     }}
                   >
                     {isEditing ? (
-                      <>
-                        Save Changes
-                      </>
+                      <>Save Changes</>
                     ) : (
                       <>
-                        Edit <img src="/src/assets/edit-icon.png" className={styles.editIcon} alt="Edit" />
+                        Edit{" "}
+                        <img
+                          src="/src/assets/edit-icon.png"
+                          className={styles.editIcon}
+                          alt="Edit"
+                        />
                       </>
                     )}
                   </button>
-
                 </div>
 
                 <div className={styles.profileInfo}>
-
                   <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>First Name:</span>
                     {isEditing ? (
@@ -375,10 +397,11 @@ function AccountSettingsStudent() {
                         onChange={handleInputChange}
                       />
                     ) : (
-                      <span className={styles.infoValue}>{accInfo.firstName}</span>
+                      <span className={styles.infoValue}>
+                        {accInfo.firstName}
+                      </span>
                     )}
                   </div>
-
 
                   <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>Middle Name:</span>
@@ -393,10 +416,11 @@ function AccountSettingsStudent() {
                         onChange={handleInputChange}
                       />
                     ) : (
-                      <span className={styles.infoValue}>{accInfo.middleName}</span>
+                      <span className={styles.infoValue}>
+                        {accInfo.middleName}
+                      </span>
                     )}
                   </div>
-
 
                   <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>Last Name:</span>
@@ -411,10 +435,11 @@ function AccountSettingsStudent() {
                         onChange={handleInputChange}
                       />
                     ) : (
-                      <span className={styles.infoValue}>{accInfo.lastName}</span>
+                      <span className={styles.infoValue}>
+                        {accInfo.lastName}
+                      </span>
                     )}
                   </div>
-
 
                   <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>Email:</span>
@@ -433,7 +458,6 @@ function AccountSettingsStudent() {
                     )}
                   </div>
 
-
                   <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>Gender:</span>
                     {isEditing ? (
@@ -444,7 +468,9 @@ function AccountSettingsStudent() {
                         value={accInfo.gender}
                         onChange={handleInputChange}
                       >
-                        <option value={accInfo.gender} selected disabled>{accInfo.gender}</option>
+                        <option value={accInfo.gender} selected disabled>
+                          {accInfo.gender}
+                        </option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                       </select>
@@ -452,7 +478,6 @@ function AccountSettingsStudent() {
                       <span className={styles.infoValue}>{accInfo.gender}</span>
                     )}
                   </div>
-
 
                   <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>Age:</span>
@@ -484,10 +509,11 @@ function AccountSettingsStudent() {
                         onChange={handleInputChange}
                       />
                     ) : (
-                      <span className={styles.infoValue}>{accInfo.phoneNo}</span>
+                      <span className={styles.infoValue}>
+                        {accInfo.phoneNo}
+                      </span>
                     )}
                   </div>
-
 
                   <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>Address:</span>
@@ -502,10 +528,11 @@ function AccountSettingsStudent() {
                         onChange={handleInputChange}
                       />
                     ) : (
-                      <span className={styles.infoValue}>{accInfo.address}</span>
+                      <span className={styles.infoValue}>
+                        {accInfo.address}
+                      </span>
                     )}
                   </div>
-
 
                   <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>Date of Birth:</span>
@@ -515,42 +542,43 @@ function AccountSettingsStudent() {
                         id="dob"
                         name="dob"
                         className={styles.editInput}
-                        value={accInfo.dob === "0000-00-00" || !accInfo.dob ? 
-                          "" : accInfo.dob
+                        value={
+                          accInfo.dob === "0000-00-00" || !accInfo.dob
+                            ? ""
+                            : accInfo.dob
                         }
                         onChange={handleInputChange}
                       />
                     ) : (
                       <span className={styles.infoValue}>
-                        {
-                          accInfo.dob === "0000-00-00" || !accInfo.dob ? 
-                          "" : 
-                          new Date(accInfo.dob).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                        })
-                        }
-
+                        {accInfo.dob === "0000-00-00" || !accInfo.dob
+                          ? ""
+                          : new Date(accInfo.dob).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })}
                       </span>
                     )}
                   </div>
                 </div>
               </div>
             ) : (
-
               <div className={styles.profileEditSection}>
                 <h3 className={styles.subHeading}>Change Password</h3>
                 {!isCurrentPasswordValid ? (
                   <form className={styles.passwordForm}>
                     {/* Current Password */}
                     <div className={styles.formGroup}>
-                      <label htmlFor="currentPassword" className={styles.formLabel}>
+                      <label
+                        htmlFor="currentPassword"
+                        className={styles.formLabel}
+                      >
                         Current Password
                       </label>
                       <div className={styles.inputContainer}>
                         <input
-                          type={showCurrentPassword ? 'text' : 'password'}
+                          type={showCurrentPassword ? "text" : "password"}
                           id="currentPassword"
                           className={styles.formInput}
                           placeholder=""
@@ -558,25 +586,30 @@ function AccountSettingsStudent() {
                           onChange={(e) => setCurrentPassword(e.target.value)}
                           required
                         />
-                        
                       </div>
                     </div>
 
                     {/* Submit Button */}
-                    <button type="submit" className={styles.submitButton} onClick={handleCurrentPasswordSubmit}>
+                    <button
+                      type="submit"
+                      className={styles.submitButton}
+                      onClick={handleCurrentPasswordSubmit}
+                    >
                       <span>Confirm</span>
                     </button>
                   </form>
                 ) : (
-                  <form className={styles.passwordForm} onSubmit={submitNewPassword}>
-
+                  <form
+                    className={styles.passwordForm}
+                    onSubmit={submitNewPassword}
+                  >
                     <div className={styles.formGroup}>
                       <label htmlFor="newPassword" className={styles.formLabel}>
                         New Password
                       </label>
                       <div className={styles.inputContainer}>
                         <input
-                          type={showNewPassword ? 'text' : 'password'}
+                          type={showNewPassword ? "text" : "password"}
                           id="newPassword"
                           className={styles.formInput}
                           placeholder=""
@@ -584,18 +617,19 @@ function AccountSettingsStudent() {
                           onChange={(e) => setNewPassword(e.target.value)}
                           required
                         />
-                        
                       </div>
                     </div>
 
-
                     <div className={styles.formGroup}>
-                      <label htmlFor="confirmPassword" className={styles.formLabel}>
+                      <label
+                        htmlFor="confirmPassword"
+                        className={styles.formLabel}
+                      >
                         Confirm New Password
                       </label>
                       <div className={styles.inputContainer}>
                         <input
-                          type={showConfirmPassword ? 'text' : 'password'}
+                          type={showConfirmPassword ? "text" : "password"}
                           id="confirmPassword"
                           className={styles.formInput}
                           placeholder=""
@@ -603,11 +637,8 @@ function AccountSettingsStudent() {
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           required
                         />
-                        
                       </div>
                     </div>
-
-
 
                     <button type="submit" className={styles.submitButton}>
                       <span>Update Password</span>
