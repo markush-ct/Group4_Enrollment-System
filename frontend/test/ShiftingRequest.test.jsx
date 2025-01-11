@@ -126,7 +126,7 @@ describe("Unit Testing for Shifting Request Page", () => {
 
     await waitFor(() => {
       const noRequestRow = screen.getByRole("row", {
-        name: /No shifting request found./i,
+        name: /No shifting requests found./i,
       });
       expect(noRequestRow).toBeInTheDocument();
     });

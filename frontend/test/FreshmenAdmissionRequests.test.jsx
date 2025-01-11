@@ -152,7 +152,7 @@ describe("Unit Testing for Freshman Admission Request Page", () => {
 
     await waitFor(() => {
       const noRequestRow = screen.getByRole("row", {
-        name: /No freshmen admission request found./i,
+        name: /No freshmen admission requests found./i,
       });
       expect(noRequestRow).toBeInTheDocument();
     });
