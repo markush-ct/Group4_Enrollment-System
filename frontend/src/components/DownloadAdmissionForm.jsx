@@ -300,18 +300,7 @@ const DownloadAdmissionForm = () => {
                 marginRight: "2px",
               }}
             ></span></p>
-        <p className={styles.contentt4}><strong>Control No.:</strong><span
-              style={{
-                display: "inline-block",
-                borderBottom: "1px solid black",
-                width: "100px",
-                marginLeft: "2px",
-                marginRight: "2px",
-              }}
-            ></span></p>
-  
-  
-        
+        <p className={styles.contentt4}><strong>Control No.: {formData.ExamControlNo}</strong><span></span></p>        
       </div>
         ) : (
           <div className={styles.contentt3box}>

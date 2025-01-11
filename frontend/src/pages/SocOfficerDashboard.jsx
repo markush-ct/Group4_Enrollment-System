@@ -96,11 +96,16 @@ function SocOfficerDashboard() {
   };
 
   const handlePostAnnouncement = () => {
+    if(!enrollmentPeriod.start || !enrollmentPeriod.end || enrollmentPeriod.start === '' || enrollmentPeriod.end === ''){
+      setErrorMsg('Set start and end of enrollment period');
+      setErrorPrompt(true);
+      return;
+    }
+
     axios
       .post("http://localhost:8080/postEnrollmentPeriod", enrollmentPeriod)
       .then((res) => {
         if (res.data.message === "Enrollment period posted successfully.") {
-          //TODO: Success prompt
           setsuccessPrompt(true);
           setsuccessMsg("Announcement posted successfully");
           setErrorPrompt(false);
