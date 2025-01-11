@@ -29,12 +29,14 @@ jest.mock("/src/styles/LoginPage.module.css", () => ({
   PageTitle: "mocked-PageTitle-class",
 }));
 
-beforeEach(() => {
+beforeAll(() => {
   window.alert = jest.fn();
+  global.console.error = jest.fn();
 });
 
-afterEach(() => {
+afterAll(() => {
   jest.clearAllMocks();
+  global.console.error.mockRestore();
 });
 
 describe("Unit Testing for Login Page", () => {
