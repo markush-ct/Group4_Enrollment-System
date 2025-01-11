@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import StudentDashSideBar from "/src/components/StudentDashSideBar";
 import style from "/src/styles/StudentDashHeader.module.css";
@@ -48,7 +49,7 @@ function StudentDashHeader() {
   return (
     <>
       <div className={style.nav}>
-        <header className={style.header}>
+        <header className={style.header} data-testid="mock-header" >
           <div className={style.navLeft}>
             {/* MENU */}
             <button className={style.menuBtn} onClick={toggleSidebar}>

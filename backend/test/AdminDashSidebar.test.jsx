@@ -140,3 +140,5 @@ describe("Unit Testing for AdminDashSidebar Function", () => {
     });
   });
 });
+
+module.exports = app;
