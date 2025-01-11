@@ -356,8 +356,8 @@ function SocOfficerDashboard() {
                   className={styles.greetingText}
                   data-testid="greeting-text"
                 >
-                  <p>Hi,</p>
-                  <h3>{accName}!</h3>
+                  <p style={{color: "#3d8c4b"}}>Hi,</p>
+                  <h3 style={{color: "#3d8c4b"}}>{accName}!</h3>
                 </div>
               </div>
 

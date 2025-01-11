@@ -240,7 +240,7 @@ function LoginPage() {
             <p>
               Don&apos;t have an account?{" "}
               <Link to="/CreateAcc" className={styles.createAccBtn}>
-                Create an account.
+                <span>Create an account.</span>
               </Link>
             </p>
           </div>

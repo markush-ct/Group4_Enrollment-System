@@ -14,6 +14,7 @@ function AccountManagement() {
   const [filterType, setFilterType] = useState("All");
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [popUpVisible, setPopUpVisible] = useState(false);
+  const [popUpAdd, setPopUpAdd] = useState(false);
   const [approvalPrompt, setApprovalPrompt] = useState(false);
   const [approvalMsg, setApprovalMsg] = useState('');
   const [rejectionPrompt, setRejectionPrompt] = useState(false);
@@ -185,6 +186,11 @@ function AccountManagement() {
 
 
   //show popup
+  const handleAddAcc = () => {
+    setPopUpAdd(true);
+  };
+
+  // show add
   const handleRowClick = (index) => {
     setSelectedRequest(index);
     setPopUpVisible(true);
@@ -194,6 +200,11 @@ function AccountManagement() {
   const closePopup = () => {
     setPopUpVisible(false);
     setSelectedRequest(null);
+  };
+
+  //close popup
+  const closePopupAdd = () => {
+    setPopUpAdd(false);
   };
 
   //edit employee values
@@ -482,9 +493,17 @@ function AccountManagement() {
           Account Management
         </div>
 
-        {/* Dropdown  */}
-        <div className={styles.filterSection} data-aos="fade-up">
-          <label htmlFor="filter" className={styles.filterLabel}>Filter by Type:</label>
+        <div className={styles.buttonFilterContainer} data-aos="fade-up">
+                  <button
+                    className={styles.addButton1}
+                    onClick={handleAddAcc}
+                  >
+                    <span>Add</span>
+                  </button>
+
+                  {/* Dropdown  */}
+                            <div className={styles.filterSection} data-aos="fade-up">
+                            <label htmlFor="filter" className={styles.filterLabel}>Filter by Type:</label>
           <select
             id="filter"
             className={styles.filterDropdown}
@@ -503,7 +522,12 @@ function AccountManagement() {
             <option value="School Head">School Head</option>
             <option value="Enrollment Officer">Enrollment Officer</option>
           </select>
-        </div>
+                          </div>
+                          </div>
+
+
+
+
 
         {/* Table */}
         <div className={styles.tableContainer} data-aos="fade-up">
@@ -575,6 +599,101 @@ function AccountManagement() {
         </div>
       </div>
 
+
+    {/* PopUp */}
+{popUpAdd && (
+  <div data-aos="zoom-out" data-aos-duration="500" className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}>
+    <div className={styles.popupContent}>
+    
+      {/* Popup Header */}
+      <div className={styles.popupHeader}>
+              <button onClick={closePopupAdd} className={styles.closeButton}>✖</button>
+              <h2>Add Account</h2>
+            </div>
+            <div data-aos="fade-up" className={styles.studentType}>
+              <span>DETAILS</span>
+            </div>
+      
+      {/* Form Content */}
+      <div className={styles.formGroup}>
+        <p style={{color: "#3d8c4b"}}><strong>Student ID:</strong></p>
+        <input 
+          type="text" 
+          name="studentID" 
+          value=""
+          onChange=""
+          placeholder="Enter Student ID" 
+          required 
+        />
+        
+        <p style={{color: "#3d8c4b"}}><strong>Email:</strong></p>
+        <input 
+          type="email" 
+          name="email" 
+          value=""
+          onChange=""
+          placeholder="Enter Email" 
+          required 
+        />
+        
+        <p style={{color: "#3d8c4b"}}><strong>Name:</strong></p>
+        <input 
+          type="text" 
+          name="name" 
+          value=""
+          onChange=""
+          placeholder="Enter Name" 
+          required 
+        />
+        
+        <p style={{color: "#3d8c4b"}}><strong>Year:</strong></p>
+        <select 
+          name="year" 
+          value=""
+          onChange=""
+          required
+        >
+          <option value="">Select Year</option>
+          <option value="First Year">First Year</option>
+          <option value="Second Year">Second Year</option>
+          <option value="Third Year">Third Year</option>
+          <option value="Fourth Year">Fourth Year</option>
+        </select>
+        
+        <p style={{color: "#3d8c4b"}}><strong>Section:</strong></p>
+        <input 
+          type="text" 
+          name="section" 
+          value=""
+          onChange=""
+          placeholder="Enter Section" 
+          required 
+        />
+      </div>
+      
+      {/* Submit Button */}
+      <div className={styles.buttonContainer}>
+        <button className={styles.submitBtn}>
+          <span>Add Account</span>
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       {/* PopUp */}
       {popUpVisible && (
         <div data-aos="zoom-out" data-aos-duration="500" className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}>
@@ -643,7 +762,7 @@ function AccountManagement() {
 
             {(["Enrollment Officer", "Adviser", "DCS Head", "School Head"].includes(filteredRequests[selectedRequest]?.account.role)) && (
               <div className={styles.popupText}>
-                <p><strong>Student Type:</strong> {filteredRequests[selectedRequest]?.account.role}</p>
+                <p><strong>Account Type:</strong> {filteredRequests[selectedRequest]?.account.role}</p>
                 <p><strong>Name:</strong> {filteredRequests[selectedRequest]?.account.name}</p>
                 <p><strong>Email:</strong> {filteredRequests[selectedRequest]?.account.email}</p>
                 <p><strong>Program:</strong> {filteredRequests[selectedRequest]?.employee.programID === 1 ? "BSCS" 
@@ -695,7 +814,7 @@ function AccountManagement() {
               "4th Year Chairperson",
             ].includes(filteredRequests[selectedRequest]?.socOfficer.position) && (
                 <div className={styles.popupText}>
-                  <p><strong>Student Type:</strong> {filteredRequests[selectedRequest]?.account.role}</p>
+                  <p><strong>Officer Type:</strong> {filteredRequests[selectedRequest]?.account.role}</p>
                 <p><strong>Name:</strong> {filteredRequests[selectedRequest]?.account.name}</p>
                 <p><strong>Email:</strong> {filteredRequests[selectedRequest]?.account.email}</p>
                 <p><strong>Program:</strong> {filteredRequests[selectedRequest]?.socOfficer.programID === 1 ? "BSCS" : "BSIT"}</p>

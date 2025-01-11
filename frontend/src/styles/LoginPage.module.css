@@ -197,6 +197,11 @@ form{
     text-align: center;
 }
 
+.createAcc span{
+    color: #3d8c4b;
+    background-color: transparent;
+}
+
 .createAcc p{
     background-color: transparent;
     color: rgba(0, 0, 0, 0.521);

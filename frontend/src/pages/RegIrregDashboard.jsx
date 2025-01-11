@@ -213,7 +213,11 @@ useEffect(() => {
       <li>{enrollProg ? "✔" : "❌"} Step 5: Enrollment</li>
     </ul>
   </div>
-       ) : ('')}
+       ) : (
+        <div className={styles.enrollmentProgress}>
+    <h2>Enrollment not yet started</h2>
+      </div>
+       )}
 
 </div>
           

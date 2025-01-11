@@ -172,6 +172,7 @@ function CreateAcc() {
         <div className={styles.PageTitle} data-aos="fade-up">
           Create Account
         </div>
+        
         <form onSubmit={handleSubmit}>
           {/* Account Type */}
           <div data-aos="fade-up" className={styles.radioGroup}>
@@ -661,6 +662,21 @@ function CreateAcc() {
               )}
             </div>
           )}
+
+<div className={styles.formGroup}>
+                <label className={styles.checkboxLabel}>
+                  <input
+                    type="checkbox"
+                    className={styles.checkbox}
+                    name="certify"
+                    id="certify"
+                   
+                    required />
+                  I agree to the <a href="/terms" target="_blank">Terms and Conditions</a>
+                </label>
+              </div>
+
+
 
           {/* Register Button */}
           <div className={styles.buttonContainer}>
