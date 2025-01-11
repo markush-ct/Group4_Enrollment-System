@@ -144,6 +144,7 @@ function DCSHeadDashboard() {
 
   const [isEnrollment, setIsEnrollment] = useState(false);
   const [enrollment, setEnrollment] = useState([]);
+  const [enrollProgram, setEnrollProgram] = useState();
 
   useEffect(() => {
     axios
@@ -158,6 +159,7 @@ function DCSHeadDashboard() {
           ) {
             setIsEnrollment(true);
             setEnrollment(enrollmentPeriod);
+            setEnrollProgram(enrollment.ProgramID === 1 ? "CS" : "IT");
           } else {
             setIsEnrollment(false);
           }
@@ -264,10 +266,11 @@ function DCSHeadDashboard() {
                     data-testid="announcement-header"
                   >
                     {enrollment.Status === "Pending"
-                      ? "CS Enrollment Period"
+                      ? enrollProgram + " Enrollment Period"
                       : enrollment.Status === "Ongoing"
-                      ? "CS Enrollment is Ongoing"
+                      ? enrollProgram + " Enrollment is Ongoing"
                       : ""}
+                  
                   </h2>
                 </div>
 
