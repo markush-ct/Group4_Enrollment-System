@@ -155,6 +155,177 @@
     background-color: transparent;
 }
 
+
+.checkboxLabel {
+    display: flex;
+    font-weight: 400;
+    align-items: center;
+    font-size: 14px;
+    gap: 20px;
+    color: black; 
+    background-color: transparent;
+  }
+
+  .checkboxLabel span{
+    color: #3d8c4b;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  .checkbox {
+    margin-right: 8px; 
+    width: 16px;
+    max-width: 20px;
+    height: 16px;
+    accent-color: #3d8c4b; 
+    cursor: pointer;
+    color: black;
+  }
+  
+  .checkbox:focus {
+    outline: 2px solid #3d8c4b; 
+    outline-offset: 2px;
+  }
+  
+  .checkboxLabel:hover .checkbox {
+    accent-color: #d0943d; 
+  }
+
+  .termsLink {
+    color: #3d8c4b;
+    text-decoration: underline;
+    cursor: pointer;
+    z-index: 1;
+  }
+  
+  .termsLink:hover {
+    color: #d0943d; 
+    text-decoration: none;
+  }
+  
+
+  .popup {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7); 
+    z-index: 2000;
+}
+
+.popupContent {
+    padding: 20px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    text-align: left;
+    position: relative;
+}
+
+.popupContent::-webkit-scrollbar {
+    width: 20px;
+}
+
+
+.popupContentTerms {
+    padding: 20px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    text-align: left;
+    position: relative;
+}
+
+.popupContentTerms::-webkit-scrollbar {
+    width: 20px;
+}
+
+
+
+.popupHeader {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    height: 30px;
+    color: #d0943d;;
+    margin-bottom: 50px;
+    padding-bottom: 10px;
+
+}
+
+.Message {
+    display: flex;
+    color: #3d8c4b;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    font-weight: 800;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+
+.Message::before,
+.Message::after {
+    content: "";
+    flex: 1; 
+    border-bottom: 1px solid #3d8c4b; 
+    margin: 0 10px; 
+}
+
+
+.messageImage {
+    width: 60px; 
+    vertical-align: middle; 
+}
+
+
+
+.popupText{
+    font-size: 1.0rem;
+    text-align: center;
+}
+
+.popupTextTerms{
+    font-size: 1.0rem;
+    text-align: left;
+}  
+
+.popupHeader h2 {
+    font-size: 2.0rem;
+    margin: 0;
+    text-align: center;
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.2s;
+    position: absolute; 
+    top: 0;             
+    right: 0;          
+    padding: 10px;     
+}
+.closeButton:hover {
+    color: #900;
+}
+
+
+
 .buttonContainer {
     display: flex;
     justify-content: center;

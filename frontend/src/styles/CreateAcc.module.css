@@ -208,12 +208,15 @@
     font-weight: 400;
     align-items: center;
     font-size: 14px;
+    gap: 20px;
     color: black; 
     background-color: transparent;
   }
 
-  .checkboxLabel a{
+  .checkboxLabel span{
     color: #3d8c4b;
+    cursor: pointer;
+    text-decoration: underline;
   }
   
   .checkbox {
@@ -234,6 +237,19 @@
   .checkboxLabel:hover .checkbox {
     accent-color: #d0943d; 
   }
+
+  .termsLink {
+    color: #3d8c4b;
+    text-decoration: underline;
+    cursor: pointer;
+    z-index: 1;
+  }
+  
+  .termsLink:hover {
+    color: #d0943d; 
+    text-decoration: none;
+  }
+  
 
 
 .popup {
@@ -264,6 +280,25 @@
 .popupContent::-webkit-scrollbar {
     width: 20px;
 }
+
+
+.popupContentTerms {
+    padding: 20px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    text-align: left;
+    position: relative;
+}
+
+.popupContentTerms::-webkit-scrollbar {
+    width: 20px;
+}
+
+
 
 .popupHeader {
     display: flex;
@@ -309,6 +344,12 @@
     font-size: 1.0rem;
     text-align: center;
 }
+
+.popupTextTerms{
+    font-size: 1.0rem;
+    text-align: left;
+}  
+
 .popupHeader h2 {
     font-size: 2.0rem;
     margin: 0;
