@@ -93,7 +93,7 @@ function AccountSettingsStudent() {
             dob: res.data.dob,
           });
 
-          console.log(res.data);
+          // console.log(res.data);
         } else {
           alert("Error fetching account info");
         }
@@ -139,7 +139,7 @@ function AccountSettingsStudent() {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then((res) => {
-        console.log("Student saved successfully:", res.data);
+        // console.log("Student saved successfully:", res.data);
 
         setUploadedPFP(`http://localhost:8080/${res.data.pfpURL}`);
       })
@@ -165,7 +165,7 @@ function AccountSettingsStudent() {
       .post("http://localhost:8080/saveAccInfo", accInfo)
       .then((res) => {
         if (res.data.message === "Account updated successfully") {
-          console.log(res.data);
+          // console.log(res.data);
           setTimeout(() => {
             window.location.reload();
           }, 1000);
