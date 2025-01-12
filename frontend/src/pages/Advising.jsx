@@ -402,166 +402,43 @@ useEffect(() => {
     data-aos-duration="500"
     className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}
   >
-    <div className={styles.popupContentReq}>
-      {/* Popup Header */}
-      <div className={styles.popupHeader}>
-                    <button onClick={closePopup} className={styles.closeButton}>✖</button>
-                    <h2>Requirements</h2>
-                  </div>
-                  <div data-aos="fade-up" className={styles.studentType}>
-                    <span>DETAILS</span>
-                  </div>
-      
-
-        {/* Submission Details */}
-       <div className={styles.popupTextReq}>
-      
-          <p><strong>Name:</strong> {selectedRequest.Firstname} {selectedRequest.Lastname}</p>
-          <p><strong>Student ID:</strong> {selectedRequest.CvSUStudentID}</p>
-          <p><strong>Student Type:</strong> {selectedRequest.StudentType}</p>
-          
-        </div>
-
-
-
-{/* Details Section */}
-<div data-aos="fade-up" className={styles.detailsSection}>
-        {/* Document Image */}
-        <div className={styles.documentImage}>
-          <img
-            src={cog}
-            alt="Document"
-            className={styles.imageStyle}
-          />
-        </div>
-        </div>
-
-      {/* Checklist Table */}
-      {Object.keys(groupedByYearAndSemester).map((yearLevel) => (
-              <div className={styles.Contentt} key={yearLevel}>
-                <h4>{yearLevel}</h4>
-                {Object.keys(groupedByYearAndSemester[yearLevel]).map((semester) => (
-                  <div className={styles.Contentt} key={semester}>
-                    <h5>{semester || ""}</h5>
-                    <table className={styles.checklistTable}>
-                      <thead>
-                        <tr>
-                          <th colSpan="2">COURSE</th>
-                          <th colSpan="2">CREDIT UNIT</th>
-                          <th colSpan="2">CONTACT HRS.</th>
-                          <th rowSpan="2">PRE-REQUISITE</th>
-                          <th rowSpan="2">SY TAKEN</th>
-                          <th rowSpan="2">FINAL GRADE</th>
-                          <th rowSpan="2">INSTRUCTOR</th>
-                        </tr>
-                        <tr>
-                          <th>CODE</th>
-                          <th>TITLE</th>
-                          <th>Lec</th>
-                          <th>Lab</th>
-                          <th>Lec</th>
-                          <th>Lab</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {groupedByYearAndSemester[yearLevel][semester].map((course, index) => (
-                          <tr key={index}>
-                            <td>{course.courseDetails.code}</td>
-                            <td>{course.courseDetails.title}</td>
-                            <td>{course.courseDetails.creditLec === 0 ? '' : course.courseDetails.creditLec}</td>
-                            <td>{course.courseDetails.creditLab === 0 ? '' : course.courseDetails.creditLab}</td>
-                            <td>{course.courseDetails.contactHrsLec === 0 ? '' : course.courseDetails.contactHrsLec}</td>
-                            <td>{course.courseDetails.contactHrsLab === 0 ? '' : course.courseDetails.contactHrsLab}</td>
-                            <td>{course.courseDetails.preReq || ''}</td>
-                            <td>{course.syTaken}</td>
-                            <td>{course.finalGrade}</td>
-                            <td>{course.instructor}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                ))}
-              </div>
-            ))}
-
-
-<div className={styles.advising}>
-                    <h5>ADVISING</h5>
-                  </div>
-                  
-                  <div className={styles.formContainer}>
-             <div className={styles.formGroup}>
-                <label htmlFor='adviseMsg'>Advise Message:</label>
-                <input type="textarea" name='adviseMsg' required />
-
-                <p style={{ textAlign: "center" }}>Select eligible courses for student {selectedRequest.CvSUStudentID} to take</p>
-              </div>
-              </div>
-
-              <div className={styles.formContainer}>
-   
-
-            
- <div className={styles.buttonSection} >
-            <button
-                    className={`${styles.btn} ${styles.addBtn}`}
-                    onClick={handleAddRow}
-                  >
-                    <span>ADD</span>
+    <div className={styles.popupContent}>
+                <div className={styles.popupHeader}>
+                  <button onClick={closePopup} className={styles.closeButton}>
+                    ✖
                   </button>
-                  </div>
-                  <table className={styles.checkTable}>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Course</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>
-                <select 
-                  value={row.selectedCourse}
-                  onChange={(e) => handleCourseChange(index, e.target.value)}
-                >
-                  <option value="" disabled>
-                    -- Select a Course --
-                  </option>
-                  {courses.map((course) => (
-                    <option key={course.CourseChecklistID} value={course.CourseChecklistID}>
-                      {course.CourseCode} - {course.CourseTitle} ({course.CreditUnitLec + course.CreditUnitLab} units)
-                    </option>
-                  ))}
-                </select>
-              </td>
-              <td>
-                
-                <button onClick={() => handleDeleteRow(index)} className={`${styles.btn} ${styles.removeBtn}`}><span>Delete</span></button>
-              </td>
-            </tr>
-          ))}
-          <tr colSpan="3">
-            <td style={{textAlign: 'center'}}>Total Units: {totalUnits}</td>
-          </tr>
-        </tbody>
-      </table>
-      <div className={styles.buttonSection} >
-
-  <button className={styles.submitBtn} onClick={() => handleApprove(selectedRequest)} disabled={loading}>
-    <span>{loading ? "Sending..." : "SEND"}</span>
-  </button>
-</div>
+                  <h3>Send Schedule for face to face advising</h3>
+                </div>
+    
+                {/* Date Input and Send Button */}
+                <div data-aos="fade-up" className={styles.studentType}>
+                  <h5>Date of Advising</h5>
+    
+                  <input
+                    type="datetime-local"
+                    id="examDatetime"
+                    name="examDatetime"
+                     value=""
+                    onChange=""
+                    className={styles.popupPromptInput}
+                    required
+                  />
+                </div>
+    
+               
+    
+                {/* Buttons */}
+                <div className={styles.buttonContainer}>
+                  <button
+                    className={styles.OKButton}
+                    onClick={() => handleApprove(selectedRequest)}
+                  >
+                    <span>Send</span>
+                  </button>
+                </div>
               </div>
-
-
-    </div>
-    </div>
-
-)}
+            </div>
+          )}
 
 
     </>
