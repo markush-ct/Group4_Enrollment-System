@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import styles from "/src/styles/AccountSettings.module.css";
 import Header from "/src/components/StudentDashHeader.jsx";
@@ -267,12 +268,14 @@ function AccountSettingsStudent() {
                   src={uploadedPFP}
                   alt="Profile"
                   className={styles.profileImage}
+                  data-testid="profile-image"
                 />
               </div>
               <label
                 htmlFor="uploadPFP"
                 className={styles.uploadButton}
                 aria-label="Upload Profile Picture"
+                data-testid="upload-button"
               >
                 <span>Upload Profile Picture</span>
               </label>
@@ -283,13 +286,15 @@ function AccountSettingsStudent() {
                 className={styles.fileInput}
                 accept="image/*"
                 onChange={handleUploadChange}
+                data-testid="file-input"
               />
-              <h3>{accName}</h3>
-              <p>{accRole}</p>
+              <h3 data-testid="account-name">{accName}</h3>
+              <p data-testid="account-role">{accRole}</p>
             </div>
             <button
               className={styles.changePasswordButton}
               onClick={handleToggleView}
+              data-testid="toggle-button"
             >
               {isChangePasswordView ? "Edit Profile" : "Change Password"}
             </button>
@@ -353,12 +358,18 @@ function AccountSettingsStudent() {
             </div>
           )}
 
-          <div className={styles.rightColumn}>
+          <div
+            className={styles.rightColumn}
+            data-testid="account-settings-form"
+          >
             {!isChangePasswordView ? (
               <div className={styles.profileEditSection}>
-                <h3 className={styles.subHeading}>Personal Information</h3>
+                <h3 className={styles.subHeading} data-testid="sub-heading">
+                  Personal Information
+                </h3>
                 <div className={styles.editButtonContainer}>
                   <button
+                    data-testid="edit-button"
                     className={styles.editButton}
                     onClick={() => {
                       if (isEditing) {
@@ -385,7 +396,12 @@ function AccountSettingsStudent() {
 
                 <div className={styles.profileInfo}>
                   <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>First Name:</span>
+                    <span
+                      className={styles.infoLabel}
+                      data-testid="first-name-label"
+                    >
+                      First Name:
+                    </span>
                     {isEditing ? (
                       <input
                         type="text"
@@ -395,16 +411,25 @@ function AccountSettingsStudent() {
                         placeholder="Enter First Name"
                         value={accInfo.firstName}
                         onChange={handleInputChange}
+                        data-testid="first-name-input"
                       />
                     ) : (
-                      <span className={styles.infoValue}>
+                      <span
+                        className={styles.infoValue}
+                        data-testid="first-name-value"
+                      >
                         {accInfo.firstName}
                       </span>
                     )}
                   </div>
 
                   <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>Middle Name:</span>
+                    <span
+                      className={styles.infoLabel}
+                      data-testid="middle-name-label"
+                    >
+                      Middle Name:
+                    </span>
                     {isEditing ? (
                       <input
                         type="text"
@@ -414,6 +439,7 @@ function AccountSettingsStudent() {
                         placeholder="Enter Middle Name"
                         value={accInfo.middleName}
                         onChange={handleInputChange}
+                        data-testid="middle-name-input"
                       />
                     ) : (
                       <span className={styles.infoValue}>
@@ -423,7 +449,12 @@ function AccountSettingsStudent() {
                   </div>
 
                   <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>Last Name:</span>
+                    <span
+                      className={styles.infoLabel}
+                      data-testid="last-name-label"
+                    >
+                      Last Name:
+                    </span>
                     {isEditing ? (
                       <input
                         type="text"
@@ -433,6 +464,7 @@ function AccountSettingsStudent() {
                         placeholder="Enter Last Name"
                         value={accInfo.lastName}
                         onChange={handleInputChange}
+                        data-testid="last-name-input"
                       />
                     ) : (
                       <span className={styles.infoValue}>
@@ -442,7 +474,12 @@ function AccountSettingsStudent() {
                   </div>
 
                   <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>Email:</span>
+                    <span
+                      className={styles.infoLabel}
+                      data-testid="email-label"
+                    >
+                      Email:
+                    </span>
                     {isEditing ? (
                       <input
                         type="email"
@@ -451,6 +488,7 @@ function AccountSettingsStudent() {
                         className={styles.editInput}
                         value={accInfo.email}
                         onChange={handleInputChange}
+                        data-testid="email-input"
                         disabled
                       />
                     ) : (
@@ -459,7 +497,12 @@ function AccountSettingsStudent() {
                   </div>
 
                   <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>Gender:</span>
+                    <span
+                      className={styles.infoLabel}
+                      data-testid="gender-label"
+                    >
+                      Gender:
+                    </span>
                     {isEditing ? (
                       <select
                         name="gender"
@@ -467,9 +510,10 @@ function AccountSettingsStudent() {
                         className={styles.editInput}
                         value={accInfo.gender}
                         onChange={handleInputChange}
+                        data-testid="gender-select"
                       >
-                        <option value={accInfo.gender} selected disabled>
-                          {accInfo.gender}
+                        <option value="" disabled>
+                          Select Gender
                         </option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
@@ -480,7 +524,9 @@ function AccountSettingsStudent() {
                   </div>
 
                   <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>Age:</span>
+                    <span className={styles.infoLabel} data-testid="age-label">
+                      Age:
+                    </span>
                     {isEditing ? (
                       <input
                         type="number"
@@ -490,6 +536,7 @@ function AccountSettingsStudent() {
                         placeholder="Enter Age"
                         value={accInfo.age}
                         onChange={handleInputChange}
+                        data-testid="age-input"
                       />
                     ) : (
                       <span className={styles.infoValue}>{accInfo.age}</span>
@@ -497,7 +544,12 @@ function AccountSettingsStudent() {
                   </div>
 
                   <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>Phone Number:</span>
+                    <span
+                      className={styles.infoLabel}
+                      data-testid="phonenum-label"
+                    >
+                      Phone Number:
+                    </span>
                     {isEditing ? (
                       <input
                         type="tel"
@@ -507,6 +559,7 @@ function AccountSettingsStudent() {
                         placeholder="Enter Phone Number"
                         value={accInfo.phoneNo}
                         onChange={handleInputChange}
+                        data-testid="phonenum-input"
                       />
                     ) : (
                       <span className={styles.infoValue}>
@@ -516,7 +569,12 @@ function AccountSettingsStudent() {
                   </div>
 
                   <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>Address:</span>
+                    <span
+                      className={styles.infoLabel}
+                      data-testid="address-label"
+                    >
+                      Address:
+                    </span>
                     {isEditing ? (
                       <input
                         type="text"
@@ -526,6 +584,7 @@ function AccountSettingsStudent() {
                         placeholder="Enter Address"
                         value={accInfo.address}
                         onChange={handleInputChange}
+                        data-testid="address-input"
                       />
                     ) : (
                       <span className={styles.infoValue}>
@@ -535,7 +594,9 @@ function AccountSettingsStudent() {
                   </div>
 
                   <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>Date of Birth:</span>
+                    <span className={styles.infoLabel} data-testid="dob-label">
+                      Date of Birth:
+                    </span>
                     {isEditing ? (
                       <input
                         type="date"
@@ -548,6 +609,7 @@ function AccountSettingsStudent() {
                             : accInfo.dob
                         }
                         onChange={handleInputChange}
+                        data-testid="dob-input"
                       />
                     ) : (
                       <span className={styles.infoValue}>
@@ -567,7 +629,10 @@ function AccountSettingsStudent() {
               <div className={styles.profileEditSection}>
                 <h3 className={styles.subHeading}>Change Password</h3>
                 {!isCurrentPasswordValid ? (
-                  <form className={styles.passwordForm}>
+                  <form
+                    className={styles.passwordForm}
+                    data-testid="password-form"
+                  >
                     {/* Current Password */}
                     <div className={styles.formGroup}>
                       <label
@@ -653,4 +718,5 @@ function AccountSettingsStudent() {
     </>
   );
 }
+
 export default AccountSettingsStudent;
