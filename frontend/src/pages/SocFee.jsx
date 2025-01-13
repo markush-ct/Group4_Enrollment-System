@@ -75,32 +75,35 @@ function SocFee() {
 }, []);
 
 useEffect(() => {
-    const timeoutId = setTimeout(() => {
-        const query = searchQuery.toLowerCase();
-        setFilteredRequests(
-            accountRequests.filter((request) =>
-                request.Firstname.toLowerCase().includes(query) ||
-                request.Lastname.toLowerCase().includes(query) ||
-                request.CvSUStudentID.toString().includes(query) ||
-                request.SocFeePayment.toLowerCase().includes(query) ||
-                `${request.Year === "First Year" ? 1
-                  : request.Year === "Second Year" ? 2
-                  : request.Year === "Third Year" ? 3
-                  : request.Year === "Fourth Year" ? 4
-                  : "N/A"
-                } - ${request.Section.toLowerCase()}`.includes(query) ||
-                request.SocFeePayment.toLowerCase().includes(query) ||
-                `${request.Year === "First Year" ? 1
-                  : request.Year === "Second Year" ? 2
-                  : request.Year === "Third Year" ? 3
-                  : request.Year === "Fourth Year" ? 4
-                  : "N/A"
-                }-${request.Section.toLowerCase()}`.includes(query)
-            )
-        );
-    }, 300);
+  const timeoutId = setTimeout(() => {
+      const query = searchQuery.toLowerCase();
+      if (!query) {
+          setFilteredRequests(accountRequests);
+      } else {
+          setFilteredRequests(
+              accountRequests.filter((request) =>
+                  request.Firstname.toLowerCase().includes(query) ||
+                  request.Lastname.toLowerCase().includes(query) ||
+                  request.CvSUStudentID.toString().includes(query) ||
+                  request.SocFeePayment.toLowerCase().includes(query) ||
+                  `${request.Year === "First Year" ? 1
+                      : request.Year === "Second Year" ? 2
+                      : request.Year === "Third Year" ? 3
+                      : request.Year === "Fourth Year" ? 4
+                      : "N/A"
+                  } - ${request.Section?.toString().toLowerCase() || ""}`.includes(query) ||
+                  `${request.Year === "First Year" ? 1
+                      : request.Year === "Second Year" ? 2
+                      : request.Year === "Third Year" ? 3
+                      : request.Year === "Fourth Year" ? 4
+                      : "N/A"
+                  }-${request.Section?.toString().toLowerCase() || ""}`.includes(query)
+              )
+          );
+      }
+  }, 300);
 
-    return () => clearTimeout(timeoutId);
+  return () => clearTimeout(timeoutId);
 }, [searchQuery, accountRequests]);
 
 

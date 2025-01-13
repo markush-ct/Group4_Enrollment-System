@@ -28,6 +28,24 @@ const transporter = nodemailer.createTransport({
 
 });
 
+router.post('/getAdviceStatus/advising', (req, res) => {
+    const {studentID} = req.body;
+    const sql1 = `SELECT * FROM advising WHERE StudentID = ?`;
+    db.query(sql1, studentID, (err, adviceRes) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else if(adviceRes.length === 0){
+            return res.json({message: "Not yet scheduled"});
+        } else if(adviceRes.length > 0){
+            if(adviceRes[0].AdvisingStatus === "Pending"){
+                return res.json({message: "Pending", sched: adviceRes[0].Schedule});
+            }
+        } else{
+            return res.json({message: "Unable to fetch student advising record."});
+        }
+    })
+})
+
 
 router.post('/sendEmailAdvise', (req, res) => {
     const { studentID, courses, adviseMessage } = req.body;
@@ -263,7 +281,7 @@ router.post('/getCOGForAdviser', (req, res) => {
 });
 
 router.get('/getReqsForAdviser', (req, res) => {
-    const getStudents = `SELECT s.StudentID, s.CvSUStudentID, s.Firstname, s.Lastname, s.Year, s.Section, s.StudentType, r.SocFeePayment
+    const getStudents = `SELECT s.StudentID, s.CvSUStudentID, s.Firstname, s.Lastname, s.Year, s.Section, s.StudentType, r.SocFeePayment, a.AdvisingStatus
         FROM student s
         JOIN requirements r ON s.StudentID = r.StudentID
         INNER JOIN (

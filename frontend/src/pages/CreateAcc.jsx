@@ -43,6 +43,14 @@ function CreateAcc() {
     e.preventDefault();
     console.log("Submitting data:", values);
 
+    const isCertified = document.getElementById("certify").checked;
+
+    if (!isCertified) {
+      setErrorMsg("You must certify that the information provided is correct before submitting.");
+      setErrorPrompt(true);
+      return;
+    }
+
     setIsLoading(true);
 
     axios
@@ -202,19 +210,19 @@ function CreateAcc() {
         Welcome to Cavite State University - Bacoor Campus These Terms and Conditions govern your use of our services. By accessing or using our website, you agree to comply with these terms.
     </p>
 
-    <h3 className={styles.popupTextTerms}>1. Acceptance of Terms</h3>
+    <h3 className={styles.popupTextTerms} style={{color: 'black'}}>1. Acceptance of Terms</h3>
     <p className={styles.popupTextTerms}>By accessing or using our services, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions.</p>
 
-    <h3 className={styles.popupTextTerms}>2. Eligibility and Use of Services</h3>
+    <h3 className={styles.popupTextTerms} style={{color: 'black'}}>2. Eligibility and Use of Services</h3>
     <p className={styles.popupTextTerms}>You must be at least 18 years old or have parental consent to use our services. You agree to use our services for lawful purposes only.</p>
 
-    <h3 className={styles.popupTextTerms}>3. Intellectual Property Rights</h3>
+    <h3 className={styles.popupTextTerms} style={{color: 'black'}}>3. Intellectual Property Rights</h3>
     <p className={styles.popupTextTerms}>All content is the intellectual property of Cavite State University - Bacoor Campus unless otherwise stated.</p>
 
-    <h3 className={styles.popupTextTerms}>4. Privacy Policy</h3>
+    <h3 className={styles.popupTextTerms} style={{color: 'black'}}>4. Privacy Policy</h3>
     <p className={styles.popupTextTerms}>Your data will be handled in accordance with the Data Privacy Act of 2012 RA 10173.</p>
 
-    <h3 className={styles.popupTextTerms}>5. Governing Law</h3>
+    <h3 className={styles.popupTextTerms} style={{color: 'black'}}>5. Governing Law</h3>
     <p className={styles.popupTextTerms}>These Terms and Conditions are governed by the laws of the Republic of the Philippines.</p>
 </div>
 </div>

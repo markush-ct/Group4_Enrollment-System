@@ -23,8 +23,7 @@ router.get('/', (req, res) => {
 
     db.query(sql, req.session.email, (err, result) => {
         if (err) {
-            console.error('Error getting society officer:', err.message);
-            return res.json('Error getting society officer.');
+            return res.json('Error getting DCS Head.');
         } else if(result.length > 0) {
             return res.json({program: result[0].ProgramID});
         }

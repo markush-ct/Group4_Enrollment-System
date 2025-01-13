@@ -28,6 +28,8 @@ function Requirements() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [totalUnits, setTotalUnits] = useState(0);
+  const [advisingStatus, setAdvisingStatus] = useState('');
+  const [adviceSched, setAdviceSched] = useState('');
 
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -66,9 +68,9 @@ function Requirements() {
   useEffect(() => {
     axios
       .get("http://localhost:8080/getReqsForAdviser")
-      .then((res) => {
+      .then((res) => {        
         setAccountRequests(res.data.students);
-        setFilteredRequests(res.data.students);
+        setFilteredRequests(res.data.students);        
       })
       .catch((err) => {
         console.warn("Error fetching account requests, using example data:", err);
@@ -138,6 +140,7 @@ const closePrompt = () => {
       axios.post(`http://localhost:8080/getCOGForAdviser`, {studentID: request.StudentID}),
       axios.post(`http://localhost:8080/getChecklistForAdviser`, {studentID: request.StudentID}),
       axios.post(`http://localhost:8080/getCoursesForAdviser`, {studentID: request.StudentID}),
+      axios.post(`http://localhost:8080/getAdviceStatus/advising`, {studentID: request.StudentID}),
     ])
     .then((res) => {
       if(res[0].data.message === "Success" && res[1].data.message === "Success" && res[2].data.message === "Success"){
@@ -149,6 +152,16 @@ const closePrompt = () => {
         setChecklist([]);
         alert("Failed to fetch COG and Checklist data.");
         setCourses([]);
+      }
+
+
+      if(res[3].data.message === "Not yet scheduled"){
+        setAdvisingStatus("Not yet scheduled");
+      } else if(res[3].data.message === "Pending"){
+        setAdvisingStatus("Pending");
+        setAdviceSched(res[3].data.sched);
+      } else{
+        console.error(res[3].data.message);
       }
     })
     .catch((err) => {
@@ -402,6 +415,59 @@ useEffect(() => {
     data-aos-duration="500"
     className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}
   >
+
+    {advisingStatus === "Not yet scheduled" ? (
+        <>
+          {Object.keys(groupedByYearAndSemester).map((yearLevel) => (
+                  <div className={styles.Contentt} key={yearLevel}>
+                    <h4>{yearLevel}</h4>
+                    {Object.keys(groupedByYearAndSemester[yearLevel]).map((semester) => (
+                      <div className={styles.Contentt} key={semester}>
+                        <h5>{semester || ""}</h5>
+                        <table className={styles.checklistTable}>
+                          <thead>
+                            <tr>
+                              <th colSpan="2">COURSE</th>
+                              <th colSpan="2">CREDIT UNIT</th>
+                              <th colSpan="2">CONTACT HRS.</th>
+                              <th rowSpan="2">PRE-REQUISITE</th>
+                              <th rowSpan="2">SY TAKEN</th>
+                              <th rowSpan="2">FINAL GRADE</th>
+                              <th rowSpan="2">INSTRUCTOR</th>
+                            </tr>
+                            <tr>
+                              <th>CODE</th>
+                              <th>TITLE</th>
+                              <th>Lec</th>
+                              <th>Lab</th>
+                              <th>Lec</th>
+                              <th>Lab</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {groupedByYearAndSemester[yearLevel][semester].map((course, index) => (
+                              <tr key={index}>
+                                <td>{course.courseDetails.code}</td>
+                                <td>{course.courseDetails.title}</td>
+                                <td>{course.courseDetails.creditLec === 0 ? '' : course.courseDetails.creditLec}</td>
+                                <td>{course.courseDetails.creditLab === 0 ? '' : course.courseDetails.creditLab}</td>
+                                <td>{course.courseDetails.contactHrsLec === 0 ? '' : course.courseDetails.contactHrsLec}</td>
+                                <td>{course.courseDetails.contactHrsLab === 0 ? '' : course.courseDetails.contactHrsLab}</td>
+                                <td>{course.courseDetails.preReq || ''}</td>
+                                <td>{course.syTaken}</td>
+                                <td>{course.finalGrade}</td>
+                                <td>{course.instructor}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+
+
+
     <div className={styles.popupContent}>
                 <div className={styles.popupHeader}>
                   <button onClick={closePopup} className={styles.closeButton}>
@@ -437,6 +503,44 @@ useEffect(() => {
                   </button>
                 </div>
               </div>
+        </>
+    ) : advisingStatus === "Pending" ? (
+      <>
+      
+
+
+<div className={styles.popupContent}>
+            <div className={styles.popupHeader}>
+              <button onClick={closePopup} className={styles.closeButton}>
+                ✖
+              </button>
+              <h3>Set advising status</h3>
+            </div>
+
+            {/* Date Input and Send Button */}
+            <div data-aos="fade-up" className={styles.studentType}>
+              <h5>Date of Advising</h5>
+              <p>{adviceSched}</p>
+              
+            </div>
+
+           
+
+            {/* Buttons */}
+            <div className={styles.buttonContainer}>
+              <button
+                className={styles.OKButton}
+                onClick={() => handleApprove(selectedRequest)}
+              >
+                <span>Finish Advising</span>
+              </button>
+            </div>
+
+          </div>
+    </>
+    ) : ("")}
+
+
             </div>
           )}
 
