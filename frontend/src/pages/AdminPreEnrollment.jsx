@@ -21,11 +21,17 @@ function Requirements() {
   const [errorPrompt, setErrorPrompt] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
-  const [preRegEnrollmentValues, setRegPreEnrollmentValues] = useState([]);
-  const [preIrregEnrollmentValues, setIrregPreEnrollmentValues] = useState([]);
+  const [preEnrollmentValues, setPreEnrollmentValues] = useState([]);
   const [rows, setRows] = useState([]);
+  const [rows1, setRows1] = useState([]);
+  const [draggedCourse, setDraggedCourse] = useState(null); //draglord function design
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [eligibleCourses, setEligibleCourses] = useState([]);
+  const [totalUnits, setTotalUnits] = useState(0);
+  const [preEnrollSched, setPreEnrollSched] = useState([]);
+  const [filterType1, setFilterType1] = useState("");
+  const [eligibleCourses1, setEligibleCourses1] = useState([]);
 
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -76,47 +82,83 @@ function Requirements() {
 
 
 
-  const handleApprove = async (preEnrollmentValues) => {
-    try {
-      console.log("Approving the following values:", preEnrollmentValues);
-  
-      // Send the data to the backend API
-      const response = await axios.post("http://localhost:8080/adviserApprovePreEnrollment", {
-        preEnrollmentValues, // Pass the array to the backend
-      });
-  
-      // Check the response from the backend
-      if (response.data.message === "Success") {
-        setApprovalPrompt(true);
-        setApprovalMsg(`Pre-enrollment Approved Successfully.`);
-        setPopUpVisible(false);
-      } else {
+  const handleSubmit = async (request) => {
+    const addedSubjects = rows
+      .filter((row) => row.selectedCourse) // Only include rows with a selected course
+      .map((row) => {
+        console.log("Selected course ID: ", row.selectedCourse); // Log selected course ID
+        const subject = eligibleCourses.find(
+          (s) => s.CourseChecklistID === Number(row.selectedCourse) // Convert string to number
+        );
+        console.log("Matched subject: ", subject); // Log the matched subject
+        return subject
+          ? {
+            code: subject.CourseCode,
+            title: subject.CourseTitle,
+            units: subject.CreditUnitLec + subject.CreditUnitLab,
+          }
+          : null;
+      })
+      .filter(Boolean); // Remove null values
+
+      if (addedSubjects.length === 0) {
         setErrorPrompt(true);
-        setErrorMsg('Failed approve pre-enrollment. Please try again.');
+        setErrorMsg("You need to add at least 1 subject");
+        return; // Stop the submission process
       }
-    } catch (err) {
-      setErrorPrompt(true);
-      setErrorMsg(`Failed to approve pre-enrollment: ${err.response?.data?.message || err.message}`);
-    }
+
+      
+      try {
+        // Prepare the data to save
+        const selectedCourses = rows.map((row) => row.selectedCourse);
+
+        const res = await axios.post('http://localhost:8080/submitPreEnrollment', {
+          courses: selectedCourses,
+          studentID: request.StudentID
+        });
+
+        if (res.data.message === "Pre enrollment submitted.") {
+          setApprovalPrompt(true);
+          setApprovalMsg("Pre-enrollment submitted");
+        } else {
+          setApprovalPrompt(false);
+          setErrorPrompt(true);
+          setErrorMsg('Failed to submit pre enrollment. Please try again.');
+        }
+      } catch (err) {
+        setApprovalPrompt(false);
+        setErrorPrompt(true);
+        setErrorMsg(`Failed to submit pre enrollment: ${err.response?.data?.message || err.message}`);
+      }
   };
-  
-  const handleReject = async (preEnrollmentValues) => {
+
+
+  const handleSubmit1 = async(request) => {
+
+    const selectedCoursesAndSections = rows1.map(row => ({
+      courseID: row.selectedCourse,
+      schedID: row.selectedSectionID
+    }));
+    console.log("values", selectedCoursesAndSections);
+
     try {
-      const response = await axios.post("http://localhost:8080/adviserRejectPreEnrollment", {
-        preEnrollmentValues,
+      const res = await axios.post('http://localhost:8080/submitIrregPreEnrollment', {
+        values: selectedCoursesAndSections,
+        studentID: request.StudentID
       });
-  
-      if (response.data.message === "Success") {
-        setApprovalPrompt(true);
-        setApprovalMsg(`Pre-enrollment Rejected Successfully.`);
-        setPopUpVisible(false);
+
+      if(res.data.message === "Pre enrollment submitted."){          
+          setApprovalPrompt(true);
+          setApprovalMsg("Pre-enrollment submitted");
       } else {
+        setApprovalPrompt(false);
         setErrorPrompt(true);
-        setErrorMsg('Failed reject pre-enrollment. Please try again.');
+        setErrorMsg(res.data.message);
       }
     } catch (err) {
-      setErrorPrompt(true);
-      setErrorMsg(`Failed to reject pre-enrollment: ${err.response?.data?.message || err.message}`);
+      setApprovalPrompt(false);
+        setErrorPrompt(true);
+        setErrorMsg(`FFailed to submit pre enrollment: ${err.response?.data?.message || err.message}`);
     }
   };
 
@@ -133,26 +175,42 @@ function Requirements() {
     setSelectedRequest(request);
     setPopUpVisible(true);
 
-    axios
-    .post(`http://localhost:8080/getPreEnrollmentValuesForAdmin`, { studentID: request.StudentID })
-    .then((res) => {
-      if (res.data.message === "Waiting for pre-enrollment reg approval") {
-        setRegPreEnrollmentValues(res.data.data);
-        setIrregPreEnrollmentValues([]);
-      } else if (res.data.message === "Waiting for pre-enrollment irreg approval") {
-        setIrregPreEnrollmentValues(res.data.data);
-        setRegPreEnrollmentValues([]);
-      } else {
-        setRegPreEnrollmentValues([]);
-        setIrregPreEnrollmentValues([]);
-      }
-    })
-    .catch((err) => {      
-      setErrorMsg("Error: " + err);
-      setErrorPrompt(true);
-      setRegPreEnrollmentValues([]);
-      setIrregPreEnrollmentValues([]);
-    });
+    console.log(request.StudentID);
+    console.log(request.StudentType);
+
+    if(request.StudentType === "Regular"){
+      axios.post('http://localhost:8080/getEligibleCourse', {studentID: request.StudentID})
+      .then((res) => {
+        if(res.data.message === "Success"){
+          setEligibleCourses(res.data.courses);        
+        }
+      })
+      .catch((err) => {
+        console.error("Error: " + err);
+        setErrorMsg("An error occurred. Please reload the page and try again.");
+        setErrorPrompt(true);
+      })
+    } else if(request.StudentType === "Irregular"){
+      Promise.all([
+        axios.post('http://localhost:8080/classSchedIrreg/preEnroll', {studentID: request.StudentID}),
+        axios.post('http://localhost:8080/getEligibleCourse', {studentID: request.StudentID}),
+      ])
+      .then((res) => {
+        if(res[0].data.message === "Success"){
+          setEligibleCourses1(res[0].data.schedData);        
+          setPreEnrollSched(res[0].data.schedData);
+        }
+
+        if (res[1].data.message === "Success") {
+          setEligibleCourses1(res[1].data.courses);
+        }
+      })
+      .catch((err) => {
+        console.error("Error: " + err);
+        setErrorMsg("An error occurred. Please reload the page and try again.");
+        setErrorPrompt(true);
+      })
+    }
   };
 
 
@@ -162,36 +220,122 @@ function Requirements() {
     setSelectedRequest(null);
   };
   
-
-
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-        const query = searchQuery.toLowerCase();
-        setFilteredRequests(
-            accountRequests.filter((request) =>
-                request.Firstname.toLowerCase().includes(query) ||
-                request.Lastname.toLowerCase().includes(query) ||
-                request.CvSUStudentID.toString().includes(query) ||
-                request.SocFeePayment.toLowerCase().includes(query) ||
-                `${request.Year === "First Year" ? 1
-                  : request.Year === "Second Year" ? 2
-                  : request.Year === "Third Year" ? 3
-                  : request.Year === "Fourth Year" ? 4
+      const query = searchQuery.toLowerCase();
+      setFilteredRequests(
+        accountRequests.filter((request) =>
+          request.Firstname.toLowerCase().includes(query) ||
+          request.Lastname.toLowerCase().includes(query) ||
+          request.CvSUStudentID.toString().includes(query) ||
+          `${request.Year === "First Year" ? 1
+            : request.Year === "Second Year" ? 2
+              : request.Year === "Third Year" ? 3
+                : request.Year === "Fourth Year" ? 4
                   : "N/A"
-                } - ${request.Section.toLowerCase()}`.includes(query) ||
-                request.SocFeePayment.toLowerCase().includes(query) ||
-                `${request.Year === "First Year" ? 1
-                  : request.Year === "Second Year" ? 2
-                  : request.Year === "Third Year" ? 3
-                  : request.Year === "Fourth Year" ? 4
+            } - ${request.Section}`.includes(query) ||
+          `${request.Year === "First Year" ? 1
+            : request.Year === "Second Year" ? 2
+              : request.Year === "Third Year" ? 3
+                : request.Year === "Fourth Year" ? 4
                   : "N/A"
-                }-${request.Section.toLowerCase()}`.includes(query)
-            )
-        );
+            }-${request.Section}`.includes(query)
+        )
+      );
     }, 300);
-  
+
     return () => clearTimeout(timeoutId);
   }, [searchQuery, accountRequests]);
+
+  const handleAddRow = () => {
+    setRows((prevRows) => [...prevRows, { selectedCourse: "" }]);
+  };
+
+  const handleDeleteRow = (index) => {
+    setRows((prevRows) => prevRows.filter((_, i) => i !== index));
+  };
+
+
+
+  const handleCourseChange = (index, courseID) => {
+    const updatedRows = [...rows];
+    updatedRows[index].selectedCourse = courseID;
+    setRows(updatedRows);
+  };
+
+  // Add a new row
+  const handleAddRow1 = () => {
+    setRows1((prevRows) => [...prevRows, { selectedCourse: "" }]);
+  };
+
+  // Delete a row
+  const handleDeleteRow1 = (index) => {
+    setRows1((prevRows) => prevRows.filter((_, i) => i !== index));
+  };
+
+  // Handle course selection
+  const handleCourseChange1 = (index, courseID) => {
+    console.log(index);
+
+    setRows1(prevRows => {
+      const updatedRows = [...prevRows];
+      updatedRows[index] = { 
+        ...updatedRows[index], 
+        selectedCourse: courseID, 
+        selectedSectionID: null, // Reset selected section when course changes
+        sections: [] // Empty sections initially
+      };
+      return updatedRows;
+    });
+  
+    // Fetch new sections based on the selected course
+    axios.post('http://localhost:8080/schedOnCourseChange', { courseID: courseID, studentID: selectedRequest.StudentID })
+      .then((res) => {
+        if (res.data.message === "Success") {
+          const sections = res.data.schedInfo; // Assuming the sections are returned here
+          
+          setRows1(prevRows => {
+            const updatedRows = [...prevRows];
+            updatedRows[index] = {
+              ...updatedRows[index],
+              sections: sections, // Update sections here
+            };
+            return updatedRows;
+          });
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching sections:", err);
+      });
+  };
+  const handleSectionChange = (index, selectedSectionID) => {
+    setRows1(prevRows => {
+      const updatedRows = [...prevRows];
+      updatedRows[index] = {
+        ...updatedRows[index],
+        selectedSectionID: selectedSectionID, // Store just the section ID if needed
+      };
+      return updatedRows;
+    });
+  };
+
+  const calculateTotalUnits = () => {
+    const total = rows.reduce((acc, row) => {
+      const selectedCourse = eligibleCourses.find(
+        (course) => course.CourseChecklistID === Number(row.selectedCourse)
+      );
+      if (selectedCourse) {
+        acc += selectedCourse.CreditUnitLec + selectedCourse.CreditUnitLab;
+      }
+      return acc;
+    }, 0);
+    setTotalUnits(total);
+  };
+
+  useEffect(() => {
+    calculateTotalUnits();
+  }, [rows, eligibleCourses]);
+  
 
 
   function formatTime(time) {
@@ -202,6 +346,30 @@ function Requirements() {
     return validDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Format the time
   }
 
+  const handleDragStart = (course) => {
+    setDraggedCourse(course);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault(); // Allow the drop
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    if (draggedCourse) {
+      console.log("Dropped course:", draggedCourse);
+      // You can handle drop logic here, like adding the course to a schedule
+    }
+    setDraggedCourse(null); // Reset after drop
+  };
+
+  const filteredRequests1 = filterType1
+    ? preEnrollSched.filter(
+      (sched) => `${sched.CourseChecklistID}` === filterType1
+    )
+    : preEnrollSched;
+  
+
 
   return (
     <>
@@ -209,7 +377,7 @@ function Requirements() {
       {/* PROMPTS */}
       {/* APPROVAL PROMPT */}
       {approvalPrompt && (
-        <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPrompt}>
+        <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPrompt} style={{zIndex: '100000'}}>
           <div className={styles.popupPromptContent}>
             <button
               className={styles.popupPromptcloseButton}
@@ -268,7 +436,7 @@ function Requirements() {
 
       {/* ERROR PROMPT */}
       {errorPrompt && (
-        <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPromptError}>
+        <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPromptError} style={{zIndex: "100000"}}>
           <div className={styles.popupPromptContentError}>
             <button
               className={styles.popupPromptcloseButton}
@@ -300,13 +468,13 @@ function Requirements() {
                 <div className={styles.searchBar} data-aos="fade-up">
                           
                           <input
-                            type="text"
-                            id="search"
-                            placeholder="Search by name or student ID..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className={styles.searchInput}
-                          />
+                                      type="text"
+                                      id="search"
+                                      placeholder="Search by name or student ID..."
+                                      value={searchQuery}
+                                      onChange={(e) => setSearchQuery(e.target.value)}
+                                      className={styles.searchInput}
+                                    />
                         </div>
 
         
@@ -380,77 +548,236 @@ function Requirements() {
               <p><strong>Student Type:</strong> {selectedRequest.StudentType}</p>
 
             </div>
+                      
 
-
-
-            {/* Details Section */}
-            <div data-aos="fade-up" className={styles.detailsSection}>
-            </div>
-            
             {selectedRequest.StudentType === "Regular" ? (
               <div className={styles.formContainer}>
-              {preRegEnrollmentValues.map((row) => (
-                <div className={styles.popupPromptTextPre} key={row.CourseChecklistID}>
-                  <p>
-                    <span style={{ fontWeight: "bold", color: "#3d8c4b" }}>{row.CourseCode}</span> -{" "}
-                    {row.CourseTitle}{" "}
-                    <span style={{ fontWeight: "bold", color: "#AA0000" }}>
-                      {row.CreditUnitLec + row.CreditUnitLab} units
-                    </span>
-                  </p>
+                              <div className={styles.buttonSection} >
+                                <button
+                                  className={`${styles.btn} ${styles.addBtn}`}
+                                  onClick={handleAddRow}
+                                >
+                                  <span>ADD</span>
+                                </button>
+                              </div>
+                                                    
+                              <table className={styles.checkTable}>
+                                <thead>
+                                  <tr>
+                                    <th>#</th>
+                                    <th>Course</th>
+                                    <th>Action</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {rows.map((row, index) => (
+                                    <tr key={index}>
+                                      <td>{index + 1}</td>
+                                      <td>
+                                        <select
+                                          value={row.selectedCourse}
+                                          onChange={(e) => handleCourseChange(index, e.target.value)}
+                                        >
+                                          <option value="" disabled>
+                                            -- Select a Course --
+                                          </option>
+                                          {eligibleCourses.map((course) => (
+                                            <option
+                                              key={course.CourseChecklistID}
+                                              value={course.CourseChecklistID}
+                                            >
+                                              {course.CourseCode} - {course.CourseTitle} ({course.CreditUnitLab + course.CreditUnitLec} units)
+                                            </option>
+                                          ))}
+                                        </select>
+                                      </td>
+                                      <td>
+                                        <button onClick={() => handleDeleteRow(index)} className={`${styles.btn} ${styles.removeBtn}`}><span>Delete</span></button>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+              
+                              <p>Total Units: <span>{totalUnits}</span></p> {/* Display updated total units */}
+              
+                              {/* Submit Button */}
+                              <button className={styles.submitBtn} onClick={() => handleSubmit(selectedRequest)}>
+                                <span>SUBMIT</span>
+                              </button>
+                            </div>
+            ) : selectedRequest.StudentType === "Irregular" ? (
+              <div className={styles.Contentt}>
+                      <h3 style={{color: 'black'}}>Class Schedule</h3>
+                          <div className={styles.filterSection} data-aos="fade-up">
+                            <label htmlFor="filter" className={styles.filterLabel}>Filter by Course:</label>
+                            <select
+                              id="filter"
+                              className={styles.filterDropdown}
+                              value={filterType1}
+                              onChange={(e) => setFilterType1(e.target.value)} // Updates filterType
+                            >
+                              <option value="">All Courses</option> {/* Option to reset filter */}
+                {eligibleCourses1.map((course) => (
+                  <option
+                    key={course.CourseChecklistID}
+                    value={course.CourseChecklistID}
+                  >
+                    {course.CourseCode} {/* Display Course Code */}
+                  </option>
+                ))}
+              </select>
+                          </div>
+              
+                    <div
+                      className={styles.tableContainer}
+                      data-aos="fade-up"
+                      onDragOver={handleDragOver}
+                      onDrop={handleDrop}
+                    >       
+                    <table className={styles.checklistTable}>
+          <thead>
+            <tr>
+              <th>Course Code</th>
+              <th>Course Title</th>
+              <th>Section</th>
+              <th>Day</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredRequests1.length > 0 ? (
+              filteredRequests1.map((acc, index) => (
+                <tr
+                  key={index}
+                  draggable
+                  onDragStart={() => handleDragStart(acc)}
+                  className={styles.checklistTable}
+                >
+                  <td data-label="Course Code">{acc.CourseCode}</td>
+                  <td data-label="Course Title">{acc.CourseTitle}</td>
+                  <td data-label="Section">
+                    {acc.YearLevel === "First Year"
+                      ? 1
+                      : acc.YearLevel === "Second Year"
+                      ? 2
+                      : acc.YearLevel === "Third Year"
+                      ? 3
+                      : acc.YearLevel === "Fourth Year"
+                      ? 4
+                      : "Mid-Year"}{" "}
+                    - {acc.Section}
+                  </td>
+                  <td data-label="Day">{acc.Day}</td>
+                  <td data-label="Time">
+                    {formatTime(acc.StartTime)} to {formatTime(acc.EndTime)}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className={styles.noData}>
+                  No courses available.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+                      </div>
+              <br />
+              <br />
+              
+                          <h3 style={{color: "black"}}>Pre-Enrollment Form</h3>
+              
+                          <div className={styles.formContainer}>
+                <div className={styles.buttonSection} >
+                  <button
+                    className={`${styles.btn} ${styles.addBtn}`}
+                    onClick={handleAddRow1}
+                  >
+                    <span>ADD</span>
+                  </button>
                 </div>
-              ))}
-              <p style={{ textAlign: "center" }}>
-                <span style={{ fontWeight: "bold", color: "#3d8c4b" }}> Total Units: </span>
-                {preRegEnrollmentValues.reduce((acc, row) => acc + (row.CreditUnitLec + row.CreditUnitLab), 0)}
-              </p>
-              <div className={styles.buttonSection}>
-                <button className={`${styles.btn} ${styles.addBtn}`} onClick={() => handleApprove(preRegEnrollmentValues)}>
-                  <span>Approve</span>
-                </button>
-                <button className={`${styles.btn} ${styles.removeBtn}`} onClick={() => handleReject(preRegEnrollmentValues)}>
-                  <span>Reject</span>
+
+
+
+
+                <table className={styles.checkTable}>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Course</th>
+      <th>Section</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {rows1.map((row, index) => (
+      <tr key={index}>
+        <td>{index + 1}</td>
+        <td>
+          <select
+            value={row.selectedCourse} // Ensure selectedCourse is the value here
+            onChange={(e) => handleCourseChange1(index, e.target.value)}
+          >
+            <option value="" disabled>
+              -- Select a Course --
+            </option>
+            {eligibleCourses1.map((course) => (
+              <option
+                key={course.CourseChecklistID}
+                value={course.CourseChecklistID}
+              >
+                {course.CourseCode} - {course.CourseTitle} ({course.CreditUnitLab + course.CreditUnitLec} units)
+              </option>
+            ))}
+          </select>
+        </td>
+        <td>
+        <select 
+  value={row.selectedSectionID || ""} // Set the selected section value based on the section ID
+  onChange={(e) => handleSectionChange(index, e.target.value)} // Pass the ClassSchedID
+>
+  <option value="" disabled>-- Select Section --</option>
+  {row.sections?.length > 0 ? (
+    row.sections.map((section, idx) => (
+      <option key={idx} value={section.ClassSchedID}>
+        {section.YearLevel === "First Year" ? 1
+        : section.YearLevel === "Second Year" ? 2
+        : section.YearLevel === "Third Year" ? 3
+        : section.YearLevel === "Fourth Year" ? 4
+        : "Mid-Year"} - {section.Section}
+      </option>
+    ))
+  ) : (
+    <option value="" disabled>No sections available</option>
+  )}
+</select>
+
+
+        </td>
+        <td>
+          <button onClick={() => handleDeleteRow1(index)} className={`${styles.btn} ${styles.removeBtn}`}>
+            <span>Delete</span>
+          </button>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+
+                <p>Total Units: <span>{totalUnits}</span></p> {/* Display updated total units */}
+
+                {/* Submit Button */}
+                <button className={styles.submitBtn} onClick={() => handleSubmit1(selectedRequest)}>
+                  <span>SUBMIT</span>
                 </button>
               </div>
-            </div>
-            ) : (
-              <div className={styles.formContainer}>
-        {preIrregEnrollmentValues.map((row) => (
-          <div className={styles.popupPromptTextPreIrreg} key={row.CourseChecklistID}>
-            <p>
-              <span style={{ fontWeight: "bold", color: "#3d8c4b" }}>{row.CourseCode}</span> -{" "}
-              {row.CourseTitle}{" "}
-              <span style={{ fontWeight: "bold", color: "#AA0000" }}>
-                {row.CreditUnitLec + row.CreditUnitLab} units
-              </span>
               
-              <span style={{ fontWeight: "normal", color: "black" , marginLeft: "5px"}}>
-                ({row.YearLevel === "First Year" ? 1
-                                                : row.YearLevel === "Second Year" ? 2
-                                                : row.YearLevel === "Third Year" ? 3
-                                                : row.YearLevel === "Fourth Year" ? 4
-                                                : "Mid-Year"} - {row.Section} {row.Day} {formatTime(row.StartTime)} to {formatTime(row.EndTime)})
-              </span>
-            </p>
-          </div>
-        ))}
-        <p style={{ textAlign: "center" }}>
-          <span style={{ fontWeight: "bold", color: "#3d8c4b" }}> Total Units: </span>
-          {preIrregEnrollmentValues.reduce((acc, row) => acc + (row.CreditUnitLec + row.CreditUnitLab), 0)}
-        </p>
-        <div className={styles.buttonSection}>
-          <button className={`${styles.btn} ${styles.addBtn}`} onClick={() => handleApprove(preIrregEnrollmentValues)}>
-            <span>Approve</span>
-          </button>
-          <button className={`${styles.btn} ${styles.removeBtn}`} onClick={() => handleReject(preIrregEnrollmentValues)}>
-            <span>Reject</span>
-          </button>
-        </div>
-      </div>
-            )}
+                        </div>
 
-
-            
+            ) : ("")}            
 
           </div>
         </div>

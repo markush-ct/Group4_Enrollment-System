@@ -8,6 +8,7 @@ function StudentChecklist() {
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const [checklistData, setChecklistData] = useState([]);
+  const [studentData, setStudentData] = useState({});
 
   useEffect(() => {
     // Fetch the checklist data
@@ -16,6 +17,7 @@ function StudentChecklist() {
       .then((response) => {
         if (response.data.message === 'Success') {
           setChecklistData(response.data.checklistData);
+          setStudentData(response.data.studentData);
         } else {
           alert(response.data.message);
         }
@@ -69,7 +71,17 @@ function StudentChecklist() {
     <>
       <Header SideBar={SideBar} setSideBar={setSideBar} />
       <div className={styles.contentSection}>
-        <h2 className={styles.PageTitle}>Student Checklist</h2>
+      <div className={styles.studentInfoTop}>
+        <p><strong>Student ID</strong>: {studentData.CvSUStudentID}</p>
+          <p><strong>Year-Section</strong>: {studentData.Year === "First Year" ? 1 
+          : studentData.Year === "Second Year" ? 2
+          : studentData.Year === "Third Year" ? 3
+          : studentData.Year === "Fourth Year" ? 4
+          : "Mid-Year"} - {studentData.Section}</p>
+          <p><strong>Semester</strong>: {studentData.Semester}</p>
+        </div>        
+        <h2 className={styles.PageTitle}>Student Checklist</h2>        
+        
         {Object.keys(groupedByYearAndSemester).map((yearLevel) => (
         <div className={styles.Contentt} key={yearLevel}>
           <h4>{yearLevel}</h4>

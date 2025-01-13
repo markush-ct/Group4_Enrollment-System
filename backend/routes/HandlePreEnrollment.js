@@ -30,66 +30,72 @@ const transporter = nodemailer.createTransport({
 });
 
 router.post('/submitIrregPreEnrollment', (req, res) => {
-    const {values} = req.body;
-
-    const getStudent = `SELECT * FROM student WHERE Email = ?`;
-    db.query(getStudent, req.session.email, (err, stdRes) => {
-        if(err){
-            return res.json({message: "Error in server: " + err}) ;
+    const emp = `SELECT * FROM employee WHERE Email = ?`;
+    db.query(emp, req.session.email, (err, empRes) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
         } else {
-            const studentID = stdRes[0].StudentID;
-            const yearSection = 
-    (stdRes[0].ProgramID === 1 ? "BSCS" : "BSIT") + " " +
-    (stdRes[0].Year === "First Year" ? 1
-    : stdRes[0].Year === "Second Year" ? 2
-    : stdRes[0].Year === "Third Year" ? 3
-    : stdRes[0].Year === "Fourth Year" ? 4
-    : "Mid-Year") +
-    " - " + stdRes[0].Section;
+            const { values, studentID } = req.body;
+
+            const getStudent = `SELECT * FROM student WHERE StudentID = ?`;
+            db.query(getStudent, studentID, (err, stdRes) => {
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else {
+                    const yearSection =
+                        (stdRes[0].ProgramID === 1 ? "BSCS" : "BSIT") + " " +
+                        (stdRes[0].Year === "First Year" ? 1
+                            : stdRes[0].Year === "Second Year" ? 2
+                                : stdRes[0].Year === "Third Year" ? 3
+                                    : stdRes[0].Year === "Fourth Year" ? 4
+                                        : "Mid-Year") +
+                        " - " + stdRes[0].Section;
 
 
-            const sql = `INSERT INTO preenrollment (CourseChecklistID, ClassSchedID, StudentID, YearSection) VALUES (?, ?, ?, ?)`;
+                    const sql = `INSERT INTO preenrollment (CourseChecklistID, EmployeeID, ClassSchedID, StudentID, YearSection) VALUES (?, ?, ?, ?, ?)`;
 
-            // Insert advised courses into the database
-            const promises = values.map(course =>
-                new Promise((resolve, reject) => {
-                    db.query(sql, [course.courseID, course.schedID, studentID, yearSection], (err) => { // Pass 'course' directly
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve();
-                        }
-                    });
-                })
-            );
+                    // Insert advised courses into the database
+                    const promises = values.map(course =>
+                        new Promise((resolve, reject) => {
+                            db.query(sql, [course.courseID, empRes[0].EmployeeID, course.schedID, studentID, yearSection], (err) => { // Pass 'course' directly
+                                if (err) {
+                                    reject(err);
+                                } else {
+                                    resolve();
+                                }
+                            });
+                        })
+                    );
 
-            Promise.all(promises)
-                .then(() => {
-                    return res.json({ message: "Pre enrollment submitted." });
-                })
-                .catch(saveErr => {
-                    return res.json({ message: "Error saving courses: " + saveErr.message });
-                });
+                    Promise.all(promises)
+                        .then(() => {
+                            return res.json({ message: "Pre enrollment submitted." });
+                        })
+                        .catch(saveErr => {
+                            return res.json({ message: "Error saving courses: " + saveErr.message });
+                        });
 
+                }
+            })
         }
     })
 });
 
 router.post('/schedOnCourseChange', (req, res) => {
-    const {courseID} = req.body;
+    const { courseID, studentID } = req.body;
 
-    const sql1 = `SELECT * FROM student WHERE Email = ?`;
+    const sql1 = `SELECT * FROM student WHERE StudentID = ?`;
     const sql2 = `SELECT * FROM classschedule WHERE CourseChecklistID = ? AND ProgramID = ?`;
 
-    db.query(sql1, req.session.email, (err, stdRes) => {
-        if(err){
-            return res.json({message: "Error in server: " + err});
+    db.query(sql1, studentID, (err, stdRes) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
         } else {
             db.query(sql2, [courseID, stdRes[0].ProgramID], (err, schedRes) => {
-                if(err){
-                    return res.json({message: "Error in server: " + err});
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
                 } else {
-                    return res.json({message: "Success", schedInfo: schedRes});
+                    return res.json({ message: "Success", schedInfo: schedRes });
                 }
             })
         }
@@ -97,8 +103,9 @@ router.post('/schedOnCourseChange', (req, res) => {
 })
 
 
-router.get('/classSchedIrreg/preEnroll', (req, res) => {
-    const sql1 = `SELECT * FROM student WHERE Email = ?`;
+router.post('/classSchedIrreg/preEnroll', (req, res) => {
+    const { studentID } = req.body;
+    const sql1 = `SELECT * FROM student WHERE StudentID = ?`;
     const sql2 = `
     SELECT cs.CourseChecklistID,
         cs.Day,
@@ -114,21 +121,19 @@ router.get('/classSchedIrreg/preEnroll', (req, res) => {
         cc.CreditUnitLec,
         cc.CreditUnitLab
     FROM classschedule cs
-    JOIN advising a  
-    ON cs.CourseChecklistID = a.CourseChecklistID    
     JOIN coursechecklist cc
-    ON a.CourseChecklistID = cc.CourseChecklistID
-    WHERE cs.ProgramID = ? AND a.StudentID = ?`;
+    ON cs.CourseChecklistID = cc.CourseChecklistID
+    WHERE cs.ProgramID = ? and cc.ProgramID = ?`;
 
-    db.query(sql1, req.session.email, (err, stdRes) => {
-        if(err){
-            return res.json({message: "Error in server: " + err});
-        } else{
-            db.query(sql2, [stdRes[0].ProgramID, stdRes[0].StudentID], (err, schedRes) => {
-                if(err){
-                    return res.json({message: "Error in server: " + err});
+    db.query(sql1, studentID, (err, stdRes) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else {
+            db.query(sql2, [stdRes[0].ProgramID, stdRes[0].ProgramID], (err, schedRes) => {
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
                 } else {
-                    return res.json({message: "Success", schedData: schedRes});
+                    return res.json({ message: "Success", schedData: schedRes });
                 }
             })
         }
@@ -187,9 +192,9 @@ router.post("/adviserApprovePreEnrollment", (req, res) => {
     });
 });
 
-  
-  // Reject pre-enrollment
-  router.post("/adviserRejectPreEnrollment", async (req, res) => {
+
+// Reject pre-enrollment
+router.post("/adviserRejectPreEnrollment", async (req, res) => {
     const getID = "SELECT EmployeeID FROM employee WHERE Email = ?";
     const email = req.session.email;
 
@@ -237,7 +242,7 @@ router.post("/adviserApprovePreEnrollment", (req, res) => {
             });
         });
     });
-  });
+});
 
 
 router.post('/getPreEnrollmentValuesForAdmin', (req, res) => {
@@ -251,7 +256,7 @@ router.post('/getPreEnrollmentValuesForAdmin', (req, res) => {
         } else {
             const studentID = idRes[0].StudentID;
 
-            if(idRes[0].StudentType === "Regular"){
+            if (idRes[0].StudentType === "Regular") {
                 const getStatus = `
             SELECT p.CourseChecklistID, 
                    p.StudentID, 
@@ -266,29 +271,29 @@ router.post('/getPreEnrollmentValuesForAdmin', (req, res) => {
             WHERE p.StudentID = ?
             `;
 
-            db.query(getStatus, studentID, (err, statusRes) => {
-                if (err) {
-                    return res.json({ message: "Error in server: " + err });
-                } else if (statusRes.length > 0) {
-                    const status = statusRes[0].PreEnrollmentStatus;
-                    if (status === "Pending") {
-                        return res.json({
-                            message: "Waiting for pre-enrollment reg approval",
-                            data: statusRes
-                        });
-                    } else if (status === "Approved") {
-                        return res.json({
-                            message: "Pre-enrollment is approved",
-                            data: statusRes,
-                            status: status
-                        });
+                db.query(getStatus, studentID, (err, statusRes) => {
+                    if (err) {
+                        return res.json({ message: "Error in server: " + err });
+                    } else if (statusRes.length > 0) {
+                        const status = statusRes[0].PreEnrollmentStatus;
+                        if (status === "Pending") {
+                            return res.json({
+                                message: "Waiting for pre-enrollment reg approval",
+                                data: statusRes
+                            });
+                        } else if (status === "Approved") {
+                            return res.json({
+                                message: "Pre-enrollment is approved",
+                                data: statusRes,
+                                status: status
+                            });
+                        }
                     }
-                }
-                return res.json({
-                    message: "No record found",
+                    return res.json({
+                        message: "No record found",
+                    });
                 });
-            });
-            }else if(idRes[0].StudentType === "Irregular") {
+            } else if (idRes[0].StudentType === "Irregular") {
                 const getStatus = `
             SELECT p.CourseChecklistID, 
                    p.StudentID, 
@@ -310,28 +315,28 @@ router.post('/getPreEnrollmentValuesForAdmin', (req, res) => {
             WHERE p.StudentID = ?
             `;
 
-            db.query(getStatus, studentID, (err, statusRes) => {
-                if (err) {
-                    return res.json({ message: "Error in server: " + err });
-                } else if (statusRes.length > 0) {
-                    const status = statusRes[0].PreEnrollmentStatus;
-                    if (status === "Pending") {
-                        return res.json({
-                            message: "Waiting for pre-enrollment irreg approval",
-                            data: statusRes
-                        });
-                    } else if (status === "Approved") {
-                        return res.json({
-                            message: "Pre-enrollment is approved",
-                            data: statusRes,
-                            status: status
-                        });
+                db.query(getStatus, studentID, (err, statusRes) => {
+                    if (err) {
+                        return res.json({ message: "Error in server: " + err });
+                    } else if (statusRes.length > 0) {
+                        const status = statusRes[0].PreEnrollmentStatus;
+                        if (status === "Pending") {
+                            return res.json({
+                                message: "Waiting for pre-enrollment irreg approval",
+                                data: statusRes
+                            });
+                        } else if (status === "Approved") {
+                            return res.json({
+                                message: "Pre-enrollment is approved",
+                                data: statusRes,
+                                status: status
+                            });
+                        }
                     }
-                }
-                return res.json({
-                    message: "No record found",
+                    return res.json({
+                        message: "No record found",
+                    });
                 });
-            });
             }
         }
     });
@@ -339,16 +344,14 @@ router.post('/getPreEnrollmentValuesForAdmin', (req, res) => {
 
 
 router.get('/getPreEnrollForAdviser', (req, res) => {
-    const getStudents = `SELECT DISTINCT s.StudentID, s.CvSUStudentID, s.Firstname, s.Lastname, s.Year, s.Section, s.StudentType, r.SocFeePayment
-FROM student s
-JOIN requirements r ON s.StudentID = r.StudentID
-INNER JOIN (
-    SELECT DISTINCT StudentID
-    FROM studentcoursechecklist
-    WHERE StdChecklistStatus = 'Verified'
-) c ON s.StudentID = c.StudentID
-INNER JOIN preenrollment a ON s.StudentID = a.StudentID
-WHERE a.PreEnrollmentStatus = 'Pending'
+    const getStudents = `
+    SELECT 
+            a.*, 
+            s.*
+        FROM advising a
+        LEFT JOIN preenrollment p ON a.StudentID = p.StudentID
+        INNER JOIN student s ON a.StudentID = s.StudentID
+        WHERE p.StudentID IS NULL AND a.AdvisingStatus = 'Approved'
             `;
 
     db.query(getStudents, (err, studentsRes) => {
@@ -361,78 +364,96 @@ WHERE a.PreEnrollmentStatus = 'Pending'
 })
 
 router.post('/submitPreEnrollment', (req, res) => {
-    const {courses} = req.body;
+    const { courses, studentID } = req.body;
 
-    const getStudent = `SELECT * FROM student WHERE Email = ?`;
-    db.query(getStudent, req.session.email, (err, stdRes) => {
-        if(err){
-            return res.json({message: "Error in server: " + err}) ;
+    const emp = `SELECT * FROM employee WHERE EmployeeID = ?`;
+
+    db.query(emp, req.session.email, (err, empRes) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
         } else {
-            const studentID = stdRes[0].StudentID;
-            const yearSection = 
-    (stdRes[0].ProgramID === 1 ? "BSCS" : "BSIT") + " " +
-    (stdRes[0].Year === "First Year" ? 1
-    : stdRes[0].Year === "Second Year" ? 2
-    : stdRes[0].Year === "Third Year" ? 3
-    : stdRes[0].Year === "Fourth Year" ? 4
-    : "Mid-Year") +
-    " - " + stdRes[0].Section;
+            const empID = empRes[0].EmployeeID;
+
+            const getStudent = `SELECT * FROM student WHERE StudentID = ?`;
+            db.query(getStudent, studentID, (err, stdRes) => {
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else {
+                    const yearSection =
+                        (stdRes[0].ProgramID === 1 ? "BSCS" : "BSIT") + " " +
+                        (stdRes[0].Year === "First Year" ? 1
+                            : stdRes[0].Year === "Second Year" ? 2
+                                : stdRes[0].Year === "Third Year" ? 3
+                                    : stdRes[0].Year === "Fourth Year" ? 4
+                                        : "Mid-Year") +
+                        " - " + stdRes[0].Section;
 
 
-            const sql = `INSERT INTO preenrollment (CourseChecklistID, StudentID, YearSection) VALUES (?, ?, ?)`;
+                    const sql = `INSERT INTO preenrollment (CourseChecklistID, EmployeeID, StudentID, YearSection) VALUES (?, ?, ?, ?)`;
 
-            // Insert advised courses into the database
-            const promises = courses.map(course =>
-                new Promise((resolve, reject) => {
-                    db.query(sql, [course, studentID, yearSection], (err) => { // Pass 'course' directly
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve();
-                        }
-                    });
-                })
-            );
+                    // Insert advised courses into the database
+                    const promises = courses.map(course =>
+                        new Promise((resolve, reject) => {
+                            db.query(sql, [course, empID, studentID, yearSection], (err) => { // Pass 'course' directly
+                                if (err) {
+                                    reject(err);
+                                } else {
+                                    resolve();
+                                }
+                            });
+                        })
+                    );
 
-            Promise.all(promises)
-                .then(() => {
-                    console.log("Courses received in backend:", courses);
-                    return res.json({ message: "Pre enrollment submitted." });
-                })
-                .catch(saveErr => {
-                    return res.json({ message: "Error saving courses: " + saveErr.message });
-                });
+                    Promise.all(promises)
+                        .then(() => {
+                            console.log("Courses received in backend:", courses);
+                            return res.json({ message: "Pre enrollment submitted." });
+                        })
+                        .catch(saveErr => {
+                            return res.json({ message: "Error saving courses: " + saveErr.message });
+                        });
 
+                }
+            })
         }
     })
 });
 
 
-router.get('/getEligibleCourse', (req, res) => {
-    const getID = `SELECT * FROM student WHERE Email = ?`;
+router.post('/getEligibleCourse', (req, res) => {
+    const { studentID } = req.body;
 
-    db.query(getID, req.session.email, (err, idRes) => {
+    const getID = `SELECT * FROM student WHERE StudentID = ?`;
+
+    db.query(getID, studentID, (err, idRes) => {
         if (err) {
             return res.json({ message: "Error in server: " + err });
         } else {
-            const studentID = idRes[0].StudentID;
 
             const getAdvise = `
-            SELECT s.StudentID, s.ProgramID, c.CourseChecklistID, c.CourseCode, c.CourseTitle, c.CreditUnitLec, c.CreditUnitLab, c.ProgramID, a.CourseChecklistID
-            FROM student s
-            JOIN advising a ON s.StudentID = a.StudentID
-            JOIN coursechecklist c ON a.CourseChecklistID = c.CourseChecklistID
-            WHERE s.StudentID = ?`;
+            SELECT 
+            cc.* 
+        FROM 
+            coursechecklist cc
+        LEFT JOIN 
+            studentcoursechecklist scc
+        ON 
+            cc.CourseChecklistID = scc.CourseChecklistID 
+            AND scc.StudentID = ?
+            AND scc.StdChecklistStatus = 'Verified'
+        WHERE 
+            cc.ProgramID = ? 
+            AND scc.CourseChecklistID IS NULL`;
 
-            db.query(getAdvise, studentID, (err, adviseRes) => {
+            db.query(getAdvise, [studentID, idRes[0].ProgramID], (err, adviseRes) => {
                 if (err) {
                     return res.json({ message: "Error in server: " + err });
-                } else if(adviseRes.length > 0){
+                } else if (adviseRes.length > 0) {
                     return res.json({
                         message: "Success",
                         courses: adviseRes
                     });
-                } else{
+                } else {
                     return res.json({
                         message: "No courses available"
                     });
@@ -450,7 +471,7 @@ router.get('/getPreEnrollmentValues', (req, res) => {
             return res.json({ message: "Error in server: " + err });
         } else {
             const studentID = idRes[0].StudentID;
-            
+
             const getStatus = `
             SELECT p.CourseChecklistID, 
                    p.StudentID, 
@@ -500,13 +521,13 @@ router.get('/getPreEnrollmentStatus', (req, res) => {
             return res.json({ message: "Error in server: " + err });
         } else {
             const studentID = idRes[0].StudentID;
-            
+
             const getStatus = `SELECT * FROM preenrollment WHERE StudentID = ?`;
 
             db.query(getStatus, studentID, (err, statusRes) => {
                 if (err) {
                     return res.json({ message: "Error in server: " + err });
-                } else if(statusRes.length === 0 || statusRes[0].PreEnrollmentStatus !== "Approved"){
+                } else if (statusRes.length === 0 || statusRes[0].PreEnrollmentStatus !== "Approved") {
                     return res.json({
                         message: "Cannot proceed, pre-enrollment is not approved",
                         status: "Pending"

@@ -30,6 +30,7 @@ function Requirements() {
   const [totalUnits, setTotalUnits] = useState(0);
   const [advisingStatus, setAdvisingStatus] = useState('');
   const [adviceSched, setAdviceSched] = useState('');
+  const [schedAdvising, setSchedAdvising] = useState('');
 
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -68,9 +69,9 @@ function Requirements() {
   useEffect(() => {
     axios
       .get("http://localhost:8080/getReqsForAdviser")
-      .then((res) => {        
+      .then((res) => {
         setAccountRequests(res.data.students);
-        setFilteredRequests(res.data.students);        
+        setFilteredRequests(res.data.students);
       })
       .catch((err) => {
         console.warn("Error fetching account requests, using example data:", err);
@@ -80,96 +81,116 @@ function Requirements() {
 
 
 
-  // Request
-  const handleApprove = async (request) => {
-    
+  // send sched
+  const handleSetSched = async (request) => {
+
     setLoading(true);
-  
-    if (!request?.StudentID) {
+
+    if (!schedAdvising || schedAdvising === '') {
       setErrorPrompt(true);
-      setErrorMsg('StudentID is required.');
+      setErrorMsg('Advising schedule is required');
       return;
     }
-  
+
     try {
-      // Prepare the data to save
-      const selectedCourses = rows.map((row) => row.selectedCourse);
-      console.log("Selected Courses: ", selectedCourses);
-      console.log("Selected Courses: ", rows);
-      const adviseMessage = document.querySelector('input[name="adviseMsg"]').value;
-  
-      const res = await axios.post('http://localhost:8080/sendEmailAdvise', {
-        studentID: request.StudentID,
-        courses: selectedCourses,
-        adviseMessage,
-      });
-  
-      if (res.data.message === "Courses saved and email sent successfully.") {
+      const res = await axios.post('http://localhost:8080/sendAdvisingSched', {
+        sched: schedAdvising,
+        studentID: request.StudentID
+      })
+
+      if(res.data.message === "Success"){
         setApprovalPrompt(true);
-        setApprovalMsg(`Courses successfully saved for Student ID: ${request.CvSUStudentID}`);
+        setApprovalMsg(`Schedule sent to Student: ${request.CvSUStudentID}`);
         setPopUpVisible(false);
         setLoading(false);
       } else {
         setErrorPrompt(true);
-        setErrorMsg(res.data.message);
+        setErrorMsg(`Failed to send advising schedule to Student: ${request.CvSUStudentID}`);
         setLoading(false);
       }
     } catch (err) {
+      console.error(`Error: ${err.response?.data?.message || err.message}`)
       setErrorPrompt(true);
-      setErrorMsg(`Failed to verify requirements: ${err.response?.data?.message || err.message}`);
-      setLoading(false);
-    } finally {
-      setLoading(false);
+      setErrorMsg(`An error occurred. Please try again.`);
+      setLoading(false);      
     }
   };
-  
 
-const closePrompt = () => {
-  setApprovalPrompt(false);
-  setRejectionPrompt(false);
-  window.location.reload();
-};
+  const handleFinishAdvising = async(request) => {
+    setLoading(true);
+
+    console.log(request.StudentID);
+
+    try {
+      const res = await axios.post('http://localhost:8080/setAdvisingStatus', {
+        studentID: request.StudentID
+      })
+
+      if(res.data.message === "Success"){
+        setApprovalPrompt(true);
+        setApprovalMsg(`Successfully updated advising status for Student: ${request.CvSUStudentID}`);
+        setPopUpVisible(false);
+        setLoading(false);
+      } else {
+        setErrorPrompt(true);
+        setErrorMsg(`Failed to update advising status for Student: ${request.CvSUStudentID}`);
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error(`Error: ${err.response?.data?.message || err.message}`)
+      setErrorPrompt(true);
+      setErrorMsg(`An error occurred. Please try again.`);
+      setLoading(false);      
+    }
+  }
+
+
+  const closePrompt = () => {
+    setApprovalPrompt(false);
+    setRejectionPrompt(false);
+    window.location.reload();
+  };
 
 
   //show popup
   const handleRowClick = (request) => {
     setSelectedRequest(request);
     setPopUpVisible(true);
-    
+
     Promise.all([
-      axios.post(`http://localhost:8080/getCOGForAdviser`, {studentID: request.StudentID}),
-      axios.post(`http://localhost:8080/getChecklistForAdviser`, {studentID: request.StudentID}),
-      axios.post(`http://localhost:8080/getCoursesForAdviser`, {studentID: request.StudentID}),
-      axios.post(`http://localhost:8080/getAdviceStatus/advising`, {studentID: request.StudentID}),
+      axios.post(`http://localhost:8080/getCOGForAdviser`, { studentID: request.StudentID }),
+      axios.post(`http://localhost:8080/getChecklistForAdviser`, { studentID: request.StudentID }),
+      axios.post(`http://localhost:8080/getCoursesForAdviser`, { studentID: request.StudentID }),
+      axios.post(`http://localhost:8080/getAdviceStatus/advising`, { studentID: request.StudentID }),
     ])
-    .then((res) => {
-      if(res[0].data.message === "Success" && res[1].data.message === "Success" && res[2].data.message === "Success"){
-        setCOG(`http://localhost:8080/${res[0].data.cogPath}`);
-        setChecklist(res[1].data.checklistData);
-        setCourses(res[2].data.courses);
-      } else{
+      .then((res) => {
+        if (res[0].data.message === "Success" && res[1].data.message === "Success" && res[2].data.message === "Success") {
+          setCOG(`http://localhost:8080/${res[0].data.cogPath}`);
+          setChecklist(res[1].data.checklistData);
+          setCourses(res[2].data.courses);
+        } else {
+          setCOG(null);
+          setChecklist([]);
+          alert("Failed to fetch COG and Checklist data.");
+          setCourses([]);
+        }
+
+
+        if (res[3].data.message === "Not yet scheduled") {
+          setAdvisingStatus("Not yet scheduled");
+        } else if (res[3].data.message === "Pending") {
+          setAdvisingStatus("Pending");
+          setAdviceSched(res[3].data.sched);
+        } else {
+          console.error(res[3].data.message);
+        }
+      })
+      .catch((err) => {
+        alert("Error: " + err);
         setCOG(null);
         setChecklist([]);
-        alert("Failed to fetch COG and Checklist data.");
         setCourses([]);
-      }
-
-
-      if(res[3].data.message === "Not yet scheduled"){
-        setAdvisingStatus("Not yet scheduled");
-      } else if(res[3].data.message === "Pending"){
-        setAdvisingStatus("Pending");
-        setAdviceSched(res[3].data.sched);
-      } else{
-        console.error(res[3].data.message);
-      }
-    })
-    .catch((err) => {
-      alert("Error: " + err);
-      setCOG(null);
-      setChecklist([]);
-      setCourses([]);
-    });
+      });
   };
 
   const groupedByYearAndSemester = checklist.reduce((acc, course) => {
@@ -196,159 +217,159 @@ const closePrompt = () => {
     setSelectedRequest(null);
   };
 
-// Add a new row
-const handleAddRow = () => {
-  setRows((prevRows) => [...prevRows, { selectedCourse: "" }]);
-};
+  // Add a new row
+  const handleAddRow = () => {
+    setRows((prevRows) => [...prevRows, { selectedCourse: "" }]);
+  };
 
-// Delete a row
-const handleDeleteRow = (index) => {
-  setRows((prevRows) => prevRows.filter((_, i) => i !== index));
-};
+  // Delete a row
+  const handleDeleteRow = (index) => {
+    setRows((prevRows) => prevRows.filter((_, i) => i !== index));
+  };
 
-// Handle course selection
-const handleCourseChange = (index, courseID) => {
-  const updatedRows = [...rows];
-  updatedRows[index].selectedCourse = courseID; // Ensure this is the CourseChecklistID
-  setRows(updatedRows);
-};
+  // Handle course selection
+  const handleCourseChange = (index, courseID) => {
+    const updatedRows = [...rows];
+    updatedRows[index].selectedCourse = courseID; // Ensure this is the CourseChecklistID
+    setRows(updatedRows);
+  };
 
-const calculateTotalUnits = () => {
-  const total = rows.reduce((acc, row) => {
-    const selectedCourse = courses.find(
-      (course) => course.CourseChecklistID === Number(row.selectedCourse)
-    );
-    if (selectedCourse) {
-      acc += selectedCourse.CreditUnitLec + selectedCourse.CreditUnitLab;
-    }
-    return acc;
-  }, 0);
-  setTotalUnits(total);
-};
+  const calculateTotalUnits = () => {
+    const total = rows.reduce((acc, row) => {
+      const selectedCourse = courses.find(
+        (course) => course.CourseChecklistID === Number(row.selectedCourse)
+      );
+      if (selectedCourse) {
+        acc += selectedCourse.CreditUnitLec + selectedCourse.CreditUnitLab;
+      }
+      return acc;
+    }, 0);
+    setTotalUnits(total);
+  };
 
-// UseEffect to recalculate total units when rows or eligibleCourses change
-useEffect(() => {
-  calculateTotalUnits();
-}, [rows, courses]);
+  // UseEffect to recalculate total units when rows or eligibleCourses change
+  useEffect(() => {
+    calculateTotalUnits();
+  }, [rows, courses]);
 
 
-useEffect(() => {
-  const timeoutId = setTimeout(() => {
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
       const query = searchQuery.toLowerCase();
       setFilteredRequests(
-          accountRequests.filter((request) =>
-              request.Firstname.toLowerCase().includes(query) ||
-              request.Lastname.toLowerCase().includes(query) ||
-              request.CvSUStudentID.toString().includes(query) ||
-              request.SocFeePayment.toLowerCase().includes(query) ||
-              `${request.Year === "First Year" ? 1
-                : request.Year === "Second Year" ? 2
-                : request.Year === "Third Year" ? 3
+        accountRequests.filter((request) =>
+          request.Firstname.toLowerCase().includes(query) ||
+          request.Lastname.toLowerCase().includes(query) ||
+          request.CvSUStudentID.toString().includes(query) ||
+          request.SocFeePayment.toLowerCase().includes(query) ||
+          `${request.Year === "First Year" ? 1
+            : request.Year === "Second Year" ? 2
+              : request.Year === "Third Year" ? 3
                 : request.Year === "Fourth Year" ? 4
-                : "N/A"
-              } - ${request.Section.toLowerCase()}`.includes(query) ||
-              request.SocFeePayment.toLowerCase().includes(query) ||
-              `${request.Year === "First Year" ? 1
-                : request.Year === "Second Year" ? 2
-                : request.Year === "Third Year" ? 3
+                  : "N/A"
+            } - ${request.Section.toLowerCase()}`.includes(query) ||
+          request.SocFeePayment.toLowerCase().includes(query) ||
+          `${request.Year === "First Year" ? 1
+            : request.Year === "Second Year" ? 2
+              : request.Year === "Third Year" ? 3
                 : request.Year === "Fourth Year" ? 4
-                : "N/A"
-              }-${request.Section.toLowerCase()}`.includes(query)
-          )
+                  : "N/A"
+            }-${request.Section.toLowerCase()}`.includes(query)
+        )
       );
-  }, 300);
+    }, 300);
 
-  return () => clearTimeout(timeoutId);
-}, [searchQuery, accountRequests]);
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery, accountRequests]);
 
 
   return (
     <>
       <Header SideBar={SideBar} setSideBar={setSideBar} />
-{/* PROMPTS */}
+      {/* PROMPTS */}
       {/* APPROVAL PROMPT */}
-{approvalPrompt && (
-    <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPrompt}>
-        <div className={styles.popupPromptContent}>
+      {approvalPrompt && (
+        <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPrompt}>
+          <div className={styles.popupPromptContent}>
             <button
-                className={styles.popupPromptcloseButton}
-                onClick={() => setApprovalPrompt(false)}
+              className={styles.popupPromptcloseButton}
+              onClick={() => setApprovalPrompt(false)}
             >
-                &times;
+              &times;
             </button>
             <div className={styles.popupPromptHeader}>
-                <h2>Approval Success</h2>
+              <h2>Approval Success</h2>
             </div>
             <div className={styles.popupPromptMessage}>
-                <img
-                    src="/src/assets/checkmark.png"
-                    alt="Success Icon"
-                    className={styles.popupPromptmessageImage}
-                />
+              <img
+                src="/src/assets/checkmark.png"
+                alt="Success Icon"
+                className={styles.popupPromptmessageImage}
+              />
             </div>
             <p className={styles.popupPromptText}>{approvalMsg}</p>
             <div className={styles.buttonContainer}>
-            <button
-  className={styles.OKButton}
-  onClick={closePrompt} 
->
-  <span>OK</span>
-</button>
-</div>
-
-        </div>
-    </div>
-)}
-
-{/* REJECTION PROMPT */}
-{rejectionPrompt && (
-    <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPrompt}>
-        <div className={styles.popupPromptContent}>
-            <button
-                className={styles.popupPromptcloseButton}
+              <button
+                className={styles.OKButton}
                 onClick={closePrompt}
+              >
+                <span>OK</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* REJECTION PROMPT */}
+      {rejectionPrompt && (
+        <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPrompt}>
+          <div className={styles.popupPromptContent}>
+            <button
+              className={styles.popupPromptcloseButton}
+              onClick={closePrompt}
             >
-                &times;
+              &times;
             </button>
             <div className={styles.popupPromptHeader}>
-                <h2>Rejection Success</h2>
+              <h2>Rejection Success</h2>
             </div>
             <div className={styles.popupPromptMessage}>
-                <img
-                    src="/src/assets/checkmark.png"
-                    alt="Success Icon"
-                    className={styles.popupPromptmessageImage}
-                />
+              <img
+                src="/src/assets/checkmark.png"
+                alt="Success Icon"
+                className={styles.popupPromptmessageImage}
+              />
             </div>
             <p className={styles.popupPromptText}>{rejectionMsg}</p>
+          </div>
         </div>
-    </div>
-)}
+      )}
 
-{/* ERROR PROMPT */}
-{errorPrompt && (
-    <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPromptError}>
-        <div className={styles.popupPromptContentError}>
+      {/* ERROR PROMPT */}
+      {errorPrompt && (
+        <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPromptError} style={{zIndex: '100000'}}>
+          <div className={styles.popupPromptContentError}>
             <button
-                className={styles.popupPromptcloseButton}
-                onClick={() => setErrorPrompt(false)}
+              className={styles.popupPromptcloseButton}
+              onClick={() => setErrorPrompt(false)}
             >
-                &times;
+              &times;
             </button>
             <div className={styles.popupPromptHeaderError}>
-                <h2>Error</h2>
+              <h2>Error</h2>
             </div>
             <div className={styles.popupPromptMessageError}>
-                <img
-                    src="/src/assets/errormark.png"
-                    alt="Error Icon"
-                    className={styles.popupPromptmessageImage}
-                />
+              <img
+                src="/src/assets/errormark.png"
+                alt="Error Icon"
+                className={styles.popupPromptmessageImage}
+              />
             </div>
             <p className={styles.popupPromptTextError}>{errorMsg}</p>
+          </div>
         </div>
-    </div>
-)}
+      )}
 
 
       <div className={styles.contentSection}>
@@ -357,23 +378,23 @@ useEffect(() => {
         </div>
 
         <div className={styles.searchBar} data-aos="fade-up">
-                  
-                  <input
-                    type="text"
-                    id="search"
-                    placeholder="Search by name or student ID..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className={styles.searchInput}
-                  />
-                </div>
+
+          <input
+            type="text"
+            id="search"
+            placeholder="Search by name or student ID..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className={styles.searchInput}
+          />
+        </div>
 
         {/* Table */}
         <div className={styles.tableContainer} data-aos="fade-up">
           <table className={styles.requestsTable}>
             <thead>
               <tr>
-              <th>Student ID</th>
+                <th>Student ID</th>
                 <th>Name</th>
                 <th>Year - Section</th>
                 <th>Student Type</th>
@@ -386,9 +407,9 @@ useEffect(() => {
                     <td data-label="Student ID">{request.CvSUStudentID}</td>
                     <td data-label="Student ID">{request.Firstname} {request.Lastname}</td>
                     <td data-label="Year and Section">{request.Year === "First Year" ? 1
-                    : request.Year === "Second Year" ? 2
-                    : request.Year === "Third Year" ? 3
-                    : 4} - {request.Section}</td>
+                      : request.Year === "Second Year" ? 2
+                        : request.Year === "Third Year" ? 3
+                          : 4} - {request.Section}</td>
                     <td data-label="Student ID">{request.StudentType}</td>
                   </tr>
                 ))
@@ -408,130 +429,149 @@ useEffect(() => {
 
 
 
-     {/* PopUp */}
-     {popUpVisible && selectedRequest && (
-  <div
-    data-aos="zoom-out"
-    data-aos-duration="500"
-    className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}
-  >
-    {advisingStatus === "Not yet scheduled" ? (
-      <div className={styles.popupContentNew}>
-        {/* Popup Header */}
-        <div className={styles.popupHeader}>
-          <button onClick={closePopup} className={styles.closeButton}>
-            ✖
-          </button>
-          <h3>Advising</h3>
-        </div>
+      {/* PopUp */}
+      {popUpVisible && selectedRequest && (
+        <div
+          data-aos="zoom-out"
+          data-aos-duration="500"
+          className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}
+        >          
 
-        {/* Year and Semester Table */}
-        {Object.keys(groupedByYearAndSemester).map((yearLevel) => (
-          <div className={styles.Contentt} key={yearLevel}>
-            <h4>{yearLevel}</h4>
-            {Object.keys(groupedByYearAndSemester[yearLevel]).map((semester) => (
-              <div className={styles.Contentt} key={semester}>
-                <h5>{semester || ""}</h5>
-                <table className={styles.checklistTable}>
-                  <thead>
-                    <tr>
-                      <th colSpan="2">COURSE</th>
-                      <th colSpan="2">CREDIT UNIT</th>
-                      <th colSpan="2">CONTACT HRS.</th>
-                      <th rowSpan="2">PRE-REQUISITE</th>
-                      <th rowSpan="2">SY TAKEN</th>
-                      <th rowSpan="2">FINAL GRADE</th>
-                      <th rowSpan="2">INSTRUCTOR</th>
-                    </tr>
-                    <tr>
-                      <th>CODE</th>
-                      <th>TITLE</th>
-                      <th>Lec</th>
-                      <th>Lab</th>
-                      <th>Lec</th>
-                      <th>Lab</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {groupedByYearAndSemester[yearLevel][semester].map((course, index) => (
-                      <tr key={index}>
-                        <td>{course.courseDetails.code}</td>
-                        <td>{course.courseDetails.title}</td>
-                        <td>{course.courseDetails.creditLec === 0 ? '' : course.courseDetails.creditLec}</td>
-                        <td>{course.courseDetails.creditLab === 0 ? '' : course.courseDetails.creditLab}</td>
-                        <td>{course.courseDetails.contactHrsLec === 0 ? '' : course.courseDetails.contactHrsLec}</td>
-                        <td>{course.courseDetails.contactHrsLab === 0 ? '' : course.courseDetails.contactHrsLab}</td>
-                        <td>{course.courseDetails.preReq || ''}</td>
-                        <td>{course.syTaken}</td>
-                        <td>{course.finalGrade}</td>
-                        <td>{course.instructor}</td>
-                        </tr>
-                    ))}
-                  </tbody>
-                </table>
+          {advisingStatus === "Not yet scheduled" ? (
+            <div className={styles.popupContentNew}>
+              {/* Popup Header */}
+              <div className={styles.popupHeader}>
+                <button onClick={closePopup} className={styles.closeButton}>
+                  ✖
+                </button>
+                <h3>Advising</h3>
               </div>
-            ))}
-          </div>
-        ))}
 
+              <div className={styles.popupTextReq}>
+                
+                    <p><strong>Name:</strong> {selectedRequest.Firstname} {selectedRequest.Lastname}</p>
+                    <p><strong>Student ID:</strong> {selectedRequest.CvSUStudentID}</p>
+                    <p><strong>Semester:</strong> {selectedRequest.Semester}</p>
+                    <p><strong>Student Type:</strong> {selectedRequest.StudentType}</p>
+                    
+                  </div>
 
- 
-        <div data-aos="fade-up" className={styles.studentType}>
-          <h5>Date of Advising</h5>
-          <input
-            type="datetime-local"
-            id="examDatetime"
-            name="examDatetime"
-            value=""
-            onChange=""
-            className={styles.popupPromptInput}
-            required
-          />
-        </div>
+              {/* Year and Semester Table */}
+              {Object.keys(groupedByYearAndSemester).map((yearLevel) => (
+                <div className={styles.Contentt} key={yearLevel}>
+                  <h4>{yearLevel}</h4>
+                  {Object.keys(groupedByYearAndSemester[yearLevel]).map((semester) => (
+                    <div className={styles.Contentt} key={semester}>
+                      <h5>{semester || ""}</h5>
+                      <table className={styles.checklistTable}>
+                        <thead>
+                          <tr>
+                            <th colSpan="2">COURSE</th>
+                            <th colSpan="2">CREDIT UNIT</th>
+                            <th colSpan="2">CONTACT HRS.</th>
+                            <th rowSpan="2">PRE-REQUISITE</th>
+                            <th rowSpan="2">SY TAKEN</th>
+                            <th rowSpan="2">FINAL GRADE</th>
+                            <th rowSpan="2">INSTRUCTOR</th>
+                          </tr>
+                          <tr>
+                            <th>CODE</th>
+                            <th>TITLE</th>
+                            <th>Lec</th>
+                            <th>Lab</th>
+                            <th>Lec</th>
+                            <th>Lab</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {groupedByYearAndSemester[yearLevel][semester].map((course, index) => (
+                            <tr key={index}>
+                              <td>{course.courseDetails.code}</td>
+                              <td>{course.courseDetails.title}</td>
+                              <td>{course.courseDetails.creditLec === 0 ? '' : course.courseDetails.creditLec}</td>
+                              <td>{course.courseDetails.creditLab === 0 ? '' : course.courseDetails.creditLab}</td>
+                              <td>{course.courseDetails.contactHrsLec === 0 ? '' : course.courseDetails.contactHrsLec}</td>
+                              <td>{course.courseDetails.contactHrsLab === 0 ? '' : course.courseDetails.contactHrsLab}</td>
+                              <td>{course.courseDetails.preReq || ''}</td>
+                              <td>{course.syTaken}</td>
+                              <td>{course.finalGrade}</td>
+                              <td>{course.instructor}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ))}
+                </div>
+              ))}
 
-        {/* Button */}
-        <div className={styles.buttonContainer}>
-          <button
-            className={styles.OKButton}
-            onClick={() => handleApprove(selectedRequest)}
-          >
-            <span>Send</span>
-          </button>
-        </div>
-      </div>
-    ) : advisingStatus === "Pending" ? (
-      <div data-aos="fade-up" className={styles.studentType}>
-  
-        <div className={styles.popupHeader}>
-          <button onClick={closePopup} className={styles.closeButton}>
-            ✖
-          </button>
-          <h3>Set Advising Status</h3>
-        </div>
+              <br />
+              <br />
 
-     
-        <div data-aos="fade-up" className={styles.studentType}>
-          <h5>Date of Advising</h5>
-          <p>{adviceSched}</p>
-        </div>
+              <div className={styles.popupHeader}>
+                <h3>Set advising schedule</h3>
+              </div>
+              
+              <div className={styles.studentType}>
+                <h5>Date of Advising</h5>
+                <input
+                  type="datetime-local"
+                  name='schedAdvising'
+                  onChange={(e) => setSchedAdvising(e.target.value)}
+                  className={styles.popupPromptInput}
+                  required
+                />
+              </div>
 
-     
-        <div className={styles.buttonContainer}>
-          <button
-            className={styles.OKButton}
-            onClick={() => handleApprove(selectedRequest)}
-          >
-            <span>Finish Advising</span>
-          </button>
-        </div>
-      </div>
-    ) : null}
-
-
-
-
+              {/* Button */}
+              <div className={styles.buttonContainer}>
+                <button
+                  className={styles.OKButton}
+                  onClick={() => handleSetSched(selectedRequest)}
+                >
+                  <span>Send</span>
+                </button>
+              </div>
             </div>
-          )}
+          ) : advisingStatus === "Pending" ? (
+            <div data-aos="fade-up" className={styles.studentType}>
+
+              <div className={styles.popupHeader}>
+                <button onClick={closePopup} className={styles.closeButton}>
+                  ✖
+                </button>
+                <h3>Set Advising Status</h3>
+              </div>
+
+
+              <div data-aos="fade-up" className={styles.studentType}>
+                <h5>Date of Advising</h5>
+                <p>{new Date(adviceSched).toLocaleString('en-US', {
+                    weekday: 'long', // Optional: Adds the weekday
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true, // 12-hour format
+                  })}</p>
+              </div>
+
+
+              <div className={styles.buttonContainer}>
+                <button
+                  className={styles.OKButton}
+                  onClick={() => handleFinishAdvising(selectedRequest)}
+                >
+                  <span>Finish Advising</span>
+                </button>
+              </div>
+            </div>
+          ) : null}
+
+
+        </div>
+      )}
 
 
     </>

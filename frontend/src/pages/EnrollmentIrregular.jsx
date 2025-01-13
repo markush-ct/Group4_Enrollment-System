@@ -15,17 +15,17 @@ function EnrollmentIrregular() {
   const [errorPrompt, setErrorPrompt] = useState(false); //errors
   const [errorMsg, setErrorMsg] = useState("");
   const [accName, setAccName] = useState("");
-  const [eligibleCourses, setEligibleCourses] = useState([]);
-  const [totalUnits, setTotalUnits] = useState(0);
+
   const [isPreEnrollmentSubmitted, setIsPreEnrollmentSubmitted] = useState();
   const [preEnrollmentValues, setPreEnrollmentValues] = useState([]);
-  const [preEnrollSched, setPreEnrollSched] = useState([]);
   const [filterType, setFilterType] = useState("");
   const [draggedCourse, setDraggedCourse] = useState(null); //draglord function design
 
   
   // In your state, make sure rows is initialized with this structure
   const [rows, setRows] = useState([]);
+
+  const [advisingSched, setAdvisingSched] = useState('');
 
   //Enrollment Progress
   const [socFeeProg, setSocFeeProg] = useState(false);
@@ -92,11 +92,6 @@ function EnrollmentIrregular() {
   //Reuse in other pages that requires logging in
 
 
-
-  const handleDragStart = (course) => {
-    setDraggedCourse(course);
-  };
-
   const handleDragOver = (e) => {
     e.preventDefault(); // Allow the drop
   };
@@ -130,115 +125,6 @@ function EnrollmentIrregular() {
   ];
 
 
-  // Add a new row
-  const handleAddRow = () => {
-    setRows((prevRows) => [...prevRows, { selectedCourse: "" }]);
-  };
-
-  // Delete a row
-  const handleDeleteRow = (index) => {
-    setRows((prevRows) => prevRows.filter((_, i) => i !== index));
-  };
-
-  // Handle course selection
-  const handleCourseChange = (index, courseID) => {
-    setRows(prevRows => {
-      const updatedRows = [...prevRows];
-      updatedRows[index] = { 
-        ...updatedRows[index], 
-        selectedCourse: courseID, 
-        selectedSectionID: null, // Reset selected section when course changes
-        sections: [] // Empty sections initially
-      };
-      return updatedRows;
-    });
-  
-    // Fetch new sections based on the selected course
-    axios.post('http://localhost:8080/schedOnCourseChange', { courseID: courseID })
-      .then((res) => {
-        if (res.data.message === "Success") {
-          const sections = res.data.schedInfo; // Assuming the sections are returned here
-          
-          setRows(prevRows => {
-            const updatedRows = [...prevRows];
-            updatedRows[index] = {
-              ...updatedRows[index],
-              sections: sections, // Update sections here
-            };
-            return updatedRows;
-          });
-        }
-      })
-      .catch((err) => {
-        console.error("Error fetching sections:", err);
-      });
-  };
-
-  // Track the selected section for each row
-  const handleSectionChange = (index, selectedSectionID) => {
-    setRows(prevRows => {
-      const updatedRows = [...prevRows];
-      updatedRows[index] = {
-        ...updatedRows[index],
-        selectedSectionID: selectedSectionID, // Store just the section ID if needed
-      };
-      return updatedRows;
-    });
-  };
-  
-  
-  
-
-
-  const calculateTotalUnits = () => {
-    const total = rows.reduce((acc, row) => {
-      const selectedCourse = eligibleCourses.find(
-        (course) => course.CourseChecklistID === Number(row.selectedCourse)
-      );
-      if (selectedCourse) {
-        acc += selectedCourse.CreditUnitLec + selectedCourse.CreditUnitLab;
-      }
-      return acc;
-    }, 0);
-    setTotalUnits(total);
-  };
-
-  // UseEffect to recalculate total units when rows or eligibleCourses change
-  useEffect(() => {
-    calculateTotalUnits();
-  }, [rows, eligibleCourses]);
-
-
-  const handleSubmit = async() => {
-    const selectedCoursesAndSections = rows.map(row => ({
-      courseID: row.selectedCourse,
-      schedID: row.selectedSectionID
-    }));
-    console.log("values", selectedCoursesAndSections);
-
-    try {
-      const res = await axios.post('http://localhost:8080/submitIrregPreEnrollment', {
-        values: selectedCoursesAndSections,
-      });
-
-      if(res.data.message === "Pre enrollment submitted."){
-          setSuccessPrompt(true);          
-          setIsPreEnrollmentSubmitted(true);
-      } else {
-        setIsPreEnrollmentSubmitted(false);
-        setSuccessPrompt(false);
-        setErrorPrompt(true);
-        setErrorMsg(res.data.message);
-      }
-    } catch (err) {
-      setSuccessPrompt(false);
-        setIsPreEnrollmentSubmitted(false);
-        setErrorPrompt(true);
-        setErrorMsg(`FFailed to submit pre enrollment: ${err.response?.data?.message || err.message}`);
-    }
-
-  };
-
 
 
   const [isEnrollment, setIsEnrollment] = useState(false);
@@ -262,18 +148,6 @@ function EnrollmentIrregular() {
             axios.get("http://localhost:8080/getStudentSocFeeStatus")
               .then((res) => {
                 setSocFeeStatus(res.data.records.SocFeePayment);
-              })
-              .catch((err) => {
-                alert("Error: " + err);
-              });
-
-            axios.get("http://localhost:8080/getEligibleCourse")
-              .then((res) => {
-                if (res.data.message === "Success") {
-                  setEligibleCourses(res.data.courses);
-                } else {
-                  console.log(res.data.message)
-                }
               })
               .catch((err) => {
                 alert("Error: " + err);
@@ -327,7 +201,6 @@ function EnrollmentIrregular() {
       axios.get('http://localhost:8080/getChecklistStatus'),
       axios.get('http://localhost:8080/getPreEnrollmentStatus'),
       axios.get('http://localhost:8080/getPreEnrollmentValues'),
-      axios.get('http://localhost:8080/classSchedIrreg/preEnroll'),
     ])
       .then((response) => {
         if (response[0].data.message === 'Success') {
@@ -355,8 +228,12 @@ function EnrollmentIrregular() {
 
         if (response[2].data.message === 'Advising is approved. Proceed to pre-enrollment.') {
           setAdvisingStatus(response[2].data.advisingStatus);
-        } else {
+          setAdvisingSched(response[2].data.sched);
+        } else if (response[2].data.message === 'Cannot proceed to pre-enrollment. Advising is not yet finished.') {
+          setAdvisingSched(response[2].data.sched);
           setAdvisingStatus('Pending');
+        } else if (response[2].data.message === 'Cannot proceed to pre-enrollment. Advising is not yet approved.') {
+          setAdvisingStatus('Not yet in advising step');
         }
 
         if (response[3].data.message === 'Requirements verified.') {
@@ -383,20 +260,13 @@ function EnrollmentIrregular() {
           setIsPreEnrollmentSubmitted(false);
         }
 
-        if (response[6].data.message === 'Success') {
-          console.log(response[6].data.schedData);
-          setPreEnrollSched(response[6].data.schedData);
-        } else {
-          console.log(response[0].data.message);
-        }
-
       })
       .catch((err) => {
         alert('An error occurred while fetching data.');
         console.error(err);
         setUploadedImage(null);
       });
-  }, [uploadedImage, advisingStatus, reqStatus, preEnrollmentStatus, isPreEnrollmentSubmitted]);
+  }, [uploadedImage, advisingSched, advisingStatus, reqStatus, preEnrollmentStatus, isPreEnrollmentSubmitted]);
 
   // Group data by YearLevel and Semester
   const groupedByYearAndSemester = checklistData.reduce((acc, course) => {
@@ -521,22 +391,6 @@ function EnrollmentIrregular() {
         setErrorPrompt(true);
       })
   }, []);
-
-
-  function formatTime(time) {
-    const currentDate = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
-    const formattedTime = `${currentDate}T${time}`; // Combine current date with the time
-
-    const validDate = new Date(formattedTime); // Create a valid Date object
-    return validDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Format the time
-  }
-
-
-  const filteredRequests = filterType
-    ? preEnrollSched.filter(
-      (sched) => `${sched.CourseChecklistID}` === filterType
-    )
-    : preEnrollSched;
 
 
 
@@ -717,88 +571,55 @@ function EnrollmentIrregular() {
               alt="Fee Status Icon"
               className={styles.uploadIcon}
             />
-            <h3>Advising Status: <span>{advisingStatus}</span></h3>
-            <p>Please check your Gmail for advice on eligible courses you can take.</p>
+            {advisingStatus === 'Approved' ? (
+              <>
+                <h3>Advising Sched: <span>
+                  {new Date(advisingSched).toLocaleString('en-US', {
+                    weekday: 'long', // Optional: Adds the weekday
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true, // 12-hour format
+                  })}
+                </span></h3>
+                <h3>Advising Status: <span>{advisingStatus}</span></h3>
+                <p>Advising step completed. Please double-check the Pre-Enrollment form filled out by your adviser.</p>
+              </>
+            ) : advisingStatus === "Pending" ? (
+              <>
+                <h3>Advising Sched: <span>
+                  {new Date(advisingSched).toLocaleString('en-US', {
+                    weekday: 'long', // Optional: Adds the weekday
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true, // 12-hour format
+                  })}
+                </span></h3>
+                <h3>Advising Status: <span>{advisingStatus}</span></h3>
+                <p>Please be present at the faculty office according to the scheduled advising time.</p>
+              </>
+            ) : (
+              <>                
+                <h3>Advising Status: <span>Advising step has not been initiated yet.</span></h3>
+              </>
+            )}
 
           </div>)
       case "Pre-Enrollment Form":
         return (
           <div className={styles.Contentt}>
-        <h3>Class Schedule</h3>
-            <div className={styles.filterSection} data-aos="fade-up">
-              <label htmlFor="filter" className={styles.filterLabel}>Filter by Course:</label>
-              <select
-                id="filter"
-                className={styles.filterDropdown}
-                value={filterType}
-                onChange={(e) => setFilterType(e.target.value)} // Updates filterType
-              >
-                <option value="">All Courses</option> {/* Option to reset filter */}
-                {eligibleCourses.map((course) => (
-                  <option
-                    key={course.CourseChecklistID}
-                    value={course.CourseChecklistID}
-                  >
-                    {course.CourseCode} {/* Display Course Code */}
-                  </option>
-                ))}
-              </select>
-            </div>
 
       <div
         className={styles.tableContainer}
         data-aos="fade-up"
         onDragOver={handleDragOver}
         onDrop={handleDrop}
-      >
-        <table className={styles.checklistTable}>
-          <thead>
-            <tr>
-              <th>Course Code</th>
-              <th>Course Title</th>
-              <th>Section</th>
-              <th>Day</th>
-              <th>Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredRequests.length > 0 ? (
-              filteredRequests.map((acc, index) => (
-                <tr
-                  key={index}
-                  draggable
-                  onDragStart={() => handleDragStart(acc)}
-                  className={styles.checklistTable}
-                >
-                  <td data-label="Course Code">{acc.CourseCode}</td>
-                  <td data-label="Course Title">{acc.CourseTitle}</td>
-                  <td data-label="Section">
-                    {acc.YearLevel === "First Year"
-                      ? 1
-                      : acc.YearLevel === "Second Year"
-                      ? 2
-                      : acc.YearLevel === "Third Year"
-                      ? 3
-                      : acc.YearLevel === "Fourth Year"
-                      ? 4
-                      : "Mid-Year"}{" "}
-                    - {acc.Section}
-                  </td>
-                  <td data-label="Day">{acc.Day}</td>
-                  <td data-label="Time">
-                    {formatTime(acc.StartTime)} to {formatTime(acc.EndTime)}
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="5" className={styles.noData}>
-                  No courses available.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+      >       
         </div>
 
 
@@ -833,91 +654,7 @@ function EnrollmentIrregular() {
                 </p>
               </div>
             ) : (
-              <div className={styles.formContainer}>
-                <div className={styles.buttonSection} >
-                  <button
-                    className={`${styles.btn} ${styles.addBtn}`}
-                    onClick={handleAddRow}
-                  >
-                    <span>ADD</span>
-                  </button>
-                </div>
-
-
-
-
-                <table className={styles.checkTable}>
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>Course</th>
-      <th>Section</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    {rows.map((row, index) => (
-      <tr key={index}>
-        <td>{index + 1}</td>
-        <td>
-          <select
-            value={row.selectedCourse} // Ensure selectedCourse is the value here
-            onChange={(e) => handleCourseChange(index, e.target.value)}
-          >
-            <option value="" disabled>
-              -- Select a Course --
-            </option>
-            {eligibleCourses.map((course) => (
-              <option
-                key={course.CourseChecklistID}
-                value={course.CourseChecklistID}
-              >
-                {course.CourseCode} - {course.CourseTitle} ({course.CreditUnitLab + course.CreditUnitLec} units)
-              </option>
-            ))}
-          </select>
-        </td>
-        <td>
-        <select 
-  value={row.selectedSectionID || ""} // Set the selected section value based on the section ID
-  onChange={(e) => handleSectionChange(index, e.target.value)} // Pass the ClassSchedID
->
-  <option value="" disabled>-- Select Section --</option>
-  {row.sections?.length > 0 ? (
-    row.sections.map((section, idx) => (
-      <option key={idx} value={section.ClassSchedID}>
-        {section.YearLevel === "First Year" ? 1
-        : section.YearLevel === "Second Year" ? 2
-        : section.YearLevel === "Third Year" ? 3
-        : section.YearLevel === "Fourth Year" ? 4
-        : "Mid-Year"} - {section.Section}
-      </option>
-    ))
-  ) : (
-    <option value="" disabled>No sections available</option>
-  )}
-</select>
-
-
-        </td>
-        <td>
-          <button onClick={() => handleDeleteRow(index)} className={`${styles.btn} ${styles.removeBtn}`}>
-            <span>Delete</span>
-          </button>
-        </td>
-      </tr>
-    ))}
-  </tbody>
-</table>
-
-
-                <p>Total Units: <span>{totalUnits}</span></p> {/* Display updated total units */}
-
-                {/* Submit Button */}
-                <button className={styles.submitBtn} onClick={handleSubmit}>
-                  <span>SUBMIT</span>
-                </button>
-              </div>
+            <p>Your pre-enrollment application is currently under review. Please check back later for updates.</p>
             )}
 
           </div>

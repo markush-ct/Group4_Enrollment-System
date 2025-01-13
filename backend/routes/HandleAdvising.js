@@ -46,103 +46,45 @@ router.post('/getAdviceStatus/advising', (req, res) => {
     })
 })
 
+router.post('/setAdvisingStatus', (req, res) => {
+    const { studentID } = req.body;
+    const sql = `UPDATE advising
+    SET AdvisingStatus = 'Approved'
+    WHERE StudentID = ?`;
 
-router.post('/sendEmailAdvise', (req, res) => {
-    const { studentID, courses, adviseMessage } = req.body;
+    db.query(sql, studentID, (err, updateRes) => {
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else if(updateRes.affectedRows > 0){
+            return res.json({message: "Success"});
+        } else {
+            return res.json({message: "Failed"});
+        }
+    })
+})
 
-    // Validate request body
-    if (!studentID || !courses || courses.length === 0 || !adviseMessage) {
-        return res.json({ message: "All fields (studentID, courses, adviseMessage) are required." });
-    }
 
-    // Get employee details based on session email
+router.post('/sendAdvisingSched', (req, res) => {
+    const { studentID, sched } = req.body;
+
     const getEmp = `SELECT * FROM employee WHERE Email = ?`;
+
     db.query(getEmp, req.session.email, (err, empRes) => {
-        if (err) {
-            return res.json({ message: "Error in server: " + err.message });
-        }
-
-        if (empRes.length === 0) {
-            return res.json({ message: "Employee not found." });
-        }
-
-        const empID = empRes[0].EmployeeID;
-
-        // Get student details
-        const getStudent = `SELECT * FROM student WHERE StudentID = ?`;
-        db.query(getStudent, [studentID], (err, studentRes) => {
-            if (err) {
-                return res.json({ message: "Error fetching student data: " + err.message });
-            }
-
-            if (studentRes.length === 0) {
-                return res.json({ message: "Student not found." });
-            }
-
-            const studentName = `${studentRes[0].Firstname} ${studentRes[0].Lastname}`;
-            const cvsuStudentID = studentRes[0].CvSUStudentID;
-            const studentEmail = studentRes[0].Email; // Assuming student has an email field
-
-            // Query to get course titles based on course IDs
-            const getCourses = `SELECT CourseTitle FROM coursechecklist WHERE CourseChecklistID IN (?)`;
-            db.query(getCourses, [courses], (err, coursesRes) => {
-                if (err) {
-                    return res.json({ message: "Error fetching course titles: " + err.message });
+        if(err){
+            return res.json({message: "Error in server: " + err});
+        } else {
+            const insert = `INSERT INTO advising (EmployeeID, StudentID, Schedule) VALUES (?, ?, ?)`;
+            db.query(insert, [empRes[0].EmployeeID, studentID, sched], (err, insertRes) => {
+                if(err){
+                    return res.json({message: "Error in server: " + err});
+                } else if(insertRes.affectedRows > 0){
+                    return res.json({message:"Success"});
+                } else{
+                    return res.json({message:"Failed"});
                 }
-
-            const courseTitles = coursesRes.map(course => `- ${course.CourseTitle}`).join('\n');
-
-
-                // Prepare email content
-                const emailBody = `
-                Advise For: ${studentName} - (${cvsuStudentID})\n
-                Message: 
-                ${adviseMessage}\n
-                Advised Courses:
-                ${courseTitles}
-                `;
-
-                // Set up email options
-                const mailOptions = {
-                    from: 'your-email@gmail.com', // Your email address
-                    to: studentEmail,
-                    subject: 'Advising Notification',
-                    text: emailBody,
-                };
-
-                // Send the email
-                transporter.sendMail(mailOptions, (emailErr, info) => {
-                    if (emailErr) {
-                        console.error("Error sending email:", emailErr);
-                        return res.json({ message: "Error sending email: " + emailErr.message });
-                    }
-
-                    const sql = `INSERT INTO advising (StudentID, EmployeeID, CourseChecklistID) VALUES (?, ?, ?)`;
-
-                    // Insert advised courses into the database
-                    const promises = courses.map(course =>
-                        new Promise((resolve, reject) => {
-                            db.query(sql, [studentID, empID, course], (err) => { // Pass 'course' directly
-                                if (err) {
-                                    reject(err);
-                                } else {
-                                    resolve();
-                                }
-                            });
-                        })
-                    );
-
-                    Promise.all(promises)
-                        .then(() => {
-                            return res.json({ message: "Courses saved and email sent successfully." });
-                        })
-                        .catch(saveErr => {
-                            return res.json({ message: "Error saving courses: " + saveErr.message });
-                        });
-                });
-            });
-        });
-    });
+            })
+        }
+    })
 });
 
 
@@ -281,7 +223,7 @@ router.post('/getCOGForAdviser', (req, res) => {
 });
 
 router.get('/getReqsForAdviser', (req, res) => {
-    const getStudents = `SELECT s.StudentID, s.CvSUStudentID, s.Firstname, s.Lastname, s.Year, s.Section, s.StudentType, r.SocFeePayment, a.AdvisingStatus
+    const getStudents = `SELECT s.StudentID, s.CvSUStudentID, s.Firstname, s.Lastname, s.Year, s.Section, s.StudentType, s.Semester, r.SocFeePayment, a.AdvisingStatus
         FROM student s
         JOIN requirements r ON s.StudentID = r.StudentID
         INNER JOIN (
@@ -310,13 +252,17 @@ router.get('/getAdvisingResult', (req, res) => {
         if (err) {
             return res.json({ message: "Error in server: " + err });
         } else if (studentRes.length > 0) {
-            db.query(sql2, studentRes[0].StudentID, (err, advisingRes) => {
+            db.query(sql2, studentRes[0].StudentID, (err, adviceRes) => {
                 if (err) {
                     return res.json({ message: "Error in server: " + err });
-                } else if (advisingRes.length === 0 || advisingRes[0].AdvisingStatus !== "Approved") {
-                    return res.json({ message: "Cannot proceed to pre-enrollment. Advising is not yet approved.", advisingStatus: "Pending" });
-                } else {
-                    return res.json({ message: "Advising is approved. Proceed to pre-enrollment.", advisingStatus: advisingRes[0].AdvisingStatus });
+                } else if(adviceRes.length > 0){
+                    if(adviceRes[0].AdvisingStatus === "Pending"){
+                        return res.json({ message: "Cannot proceed to pre-enrollment. Advising is not yet finished.", advisingStatus: "Pending", sched: adviceRes[0].Schedule });
+                    } else if(adviceRes[0].AdvisingStatus === "Approved"){
+                        return res.json({ message: "Advising is approved. Proceed to pre-enrollment.", advisingStatus: adviceRes[0].AdvisingStatus, sched: adviceRes[0].Schedule });
+                    }
+                } else if ((adviceRes.length === 0)){
+                    return res.json({ message: "Cannot proceed to pre-enrollment. Advising is not yet approved." });
                 }
             })
         }

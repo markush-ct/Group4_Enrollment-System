@@ -15,9 +15,6 @@ function EnrollmentRegular() {
   const [errorPrompt, setErrorPrompt] = useState(false); //errors
   const [errorMsg, setErrorMsg] = useState("");
   const [accName, setAccName] = useState("");
-  const [rows, setRows] = useState([]);
-  const [eligibleCourses, setEligibleCourses] = useState([]);
-  const [totalUnits, setTotalUnits] = useState(0);
   const [isPreEnrollmentSubmitted, setIsPreEnrollmentSubmitted] = useState();
   const [preEnrollmentValues, setPreEnrollmentValues] = useState([]);
 
@@ -27,6 +24,7 @@ function EnrollmentRegular() {
   const [adviseProg, setAdviseProg] = useState(false);
   const [preEnrollProg, setPreEnrollProg] = useState(false);
   const [enrollProg, setEnrollProg] = useState(false);
+  const [advisingSched, setAdvisingSched] = useState('');
 
   useEffect(() => {
     Promise.all([
@@ -104,105 +102,6 @@ function EnrollmentRegular() {
   ];
 
 
-  // Add a new row
-  const handleAddRow = () => {
-    setRows((prevRows) => [...prevRows, { selectedCourse: "" }]);
-  };
-
-  // Delete a row
-  const handleDeleteRow = (index) => {
-    setRows((prevRows) => prevRows.filter((_, i) => i !== index));
-  };
-
-  // Handle course selection
-  const handleCourseChange = (index, courseID) => {
-    const updatedRows = [...rows];
-    updatedRows[index].selectedCourse = courseID;
-    setRows(updatedRows);
-  };
-
-  const calculateTotalUnits = () => {
-    const total = rows.reduce((acc, row) => {
-      const selectedCourse = eligibleCourses.find(
-        (course) => course.CourseChecklistID === Number(row.selectedCourse)
-      );
-      if (selectedCourse) {
-        acc += selectedCourse.CreditUnitLec + selectedCourse.CreditUnitLab;
-      }
-      return acc;
-    }, 0);
-    setTotalUnits(total);
-  };
-
-  // UseEffect to recalculate total units when rows or eligibleCourses change
-  useEffect(() => {
-    calculateTotalUnits();
-  }, [rows, eligibleCourses]);
-
-
-  const handleSubmit = async () => {
-    const addedSubjects = rows
-      .filter((row) => row.selectedCourse) // Only include rows with a selected course
-      .map((row) => {
-        console.log("Selected course ID: ", row.selectedCourse); // Log selected course ID
-        const subject = eligibleCourses.find(
-          (s) => s.CourseChecklistID === Number(row.selectedCourse) // Convert string to number
-        );
-        console.log("Matched subject: ", subject); // Log the matched subject
-        return subject
-          ? {
-            code: subject.CourseCode,
-            title: subject.CourseTitle,
-            units: subject.CreditUnitLec + subject.CreditUnitLab,
-          }
-          : null;
-      })
-      .filter(Boolean); // Remove null values
-
-    if (addedSubjects.length === 0) {
-      setErrorPrompt(true);
-      setErrorMsg("You need to add at least 1 subject");
-      return; // Stop the submission process
-    }
-
-    // Calculate the total units of selected subjects
-    const totalUnits = addedSubjects.reduce((acc, subject) => acc + subject.units, 0);
-
-    if (totalUnits > 23) {
-      setErrorPrompt(true);
-      setErrorMsg(`Maximum units exceeded. You have selected ${totalUnits} units, but the limit is 23 units.`);
-      return;
-    } else if (totalUnits < 10) {
-      setErrorPrompt(true);
-      setErrorMsg(`Minimum units not reached. You have selected ${totalUnits} units, but the minimum requirement is 10 units.`);
-      return;
-    } else {
-      try {
-        // Prepare the data to save
-        const selectedCourses = rows.map((row) => row.selectedCourse);
-
-        const res = await axios.post('http://localhost:8080/submitPreEnrollment', {
-          courses: selectedCourses,
-        });
-
-        if (res.data.message === "Pre enrollment submitted.") {
-          setSuccessPrompt(true);
-          setIsPreEnrollmentSubmitted(true);
-
-        } else {
-          setIsPreEnrollmentSubmitted(false);
-          setSuccessPrompt(false);
-          setErrorPrompt(true);
-          setErrorMsg('Failed to submit pre enrollment. Please try again.');
-        }
-      } catch (err) {
-        setSuccessPrompt(false);
-        setIsPreEnrollmentSubmitted(false);
-        setErrorPrompt(true);
-        setErrorMsg(`Failed to submit pre enrollment: ${err.response?.data?.message || err.message}`);
-      }
-    }
-  };
 
 
 
@@ -232,28 +131,16 @@ function EnrollmentRegular() {
                 alert("Error: " + err);
               });
 
-            axios.get("http://localhost:8080/getEligibleCourse")
-              .then((res) => {
-                if (res.data.message === "Success") {
-                  setEligibleCourses(res.data.courses);
-                } else {
-                  console.log(res.data.message)
-                }
-              })
-              .catch((err) => {
-                alert("Error: " + err);
-              });
-
 
             axios.get("http://localhost:8080/getStdEnrollmentStatus")
               .then((res) => {
-                if(res.data.message === "Success"){
+                if (res.data.message === "Success") {
                   setStdEnrollStatus(res.data.enrollStatus);
-                } else if (res.data.message === "Student is not yet enrolled"){
+                } else if (res.data.message === "Student is not yet enrolled") {
                   setStdEnrollStatus('Pending');
                 } else {
                   setStdEnrollStatus(res.data.message);
-                }              
+                }
               })
               .catch((err) => {
                 alert("Error: " + err);
@@ -319,8 +206,12 @@ function EnrollmentRegular() {
 
         if (response[2].data.message === 'Advising is approved. Proceed to pre-enrollment.') {
           setAdvisingStatus(response[2].data.advisingStatus);
-        } else {
+          setAdvisingSched(response[2].data.sched);
+        } else if (response[2].data.message === 'Cannot proceed to pre-enrollment. Advising is not yet finished.') {
+          setAdvisingSched(response[2].data.sched);
           setAdvisingStatus('Pending');
+        } else if (response[2].data.message === 'Cannot proceed to pre-enrollment. Advising is not yet approved.') {
+          setAdvisingStatus('Not yet in advising step');
         }
 
         if (response[3].data.message === 'Requirements verified.') {
@@ -353,7 +244,7 @@ function EnrollmentRegular() {
         console.error(err);
         setUploadedImage(null);
       });
-  }, [uploadedImage, advisingStatus, reqStatus, preEnrollmentStatus, isPreEnrollmentSubmitted]);
+  }, [uploadedImage, advisingSched, advisingStatus, reqStatus, preEnrollmentStatus, isPreEnrollmentSubmitted]);
 
   // Group data by YearLevel and Semester
   const groupedByYearAndSemester = checklistData.reduce((acc, course) => {
@@ -467,17 +358,17 @@ function EnrollmentRegular() {
   const [enrolledStdData, SetEnrolledStdData] = useState([]);
   useEffect(() => {
     axios.get('http://localhost:8080/getEnrolledStdInfo')
-    .then((res) => {
-      if(res.data.message === "Success"){
-        console.log(res.data.studentData);
-        SetEnrolledStdData(res.data.studentData);
-      }
-    })
-    .catch((err) => {
-      setErrorMsg("Error: " + err);
-      setErrorPrompt(true);
-    })
-  },[]);
+      .then((res) => {
+        if (res.data.message === "Success") {
+          console.log(res.data.studentData);
+          SetEnrolledStdData(res.data.studentData);
+        }
+      })
+      .catch((err) => {
+        setErrorMsg("Error: " + err);
+        setErrorPrompt(true);
+      })
+  }, []);
 
 
   const renderContent = () => {
@@ -514,26 +405,26 @@ function EnrollmentRegular() {
             </div>
 
             <h3>Digital Checklist</h3>
-           
 
-<div className={styles.Contentt}>
-  {reqStatus === "Rejected" && (
-    <>
-      <img
-        src="/src/assets/warning-icon.png"
-        alt="Warning Icon"
-        className={styles.uploadIcon}
-      />
-      <h4 style={{ color: "red", marginBottom: "10px", fontSize: "1.5rem" }}> Attention Required</h4>
-      <h4 style={{ color: "red", marginBottom: "10px", fontSize: "1rem" }}>
-        Some of your submitted requirements were <strong>rejected</strong>. Please review the details below and correct the issues.
-      </h4>
-    </>
-  )}
-</div>
-                            
 
-{Object.keys(groupedByYearAndSemester).map((yearLevel) => (
+            <div className={styles.Contentt}>
+              {reqStatus === "Rejected" && (
+                <>
+                  <img
+                    src="/src/assets/warning-icon.png"
+                    alt="Warning Icon"
+                    className={styles.uploadIcon}
+                  />
+                  <h4 style={{ color: "red", marginBottom: "10px", fontSize: "1.5rem" }}> Attention Required</h4>
+                  <h4 style={{ color: "red", marginBottom: "10px", fontSize: "1rem" }}>
+                    Some of your submitted requirements were <strong>rejected</strong>. Please review the details below and correct the issues.
+                  </h4>
+                </>
+              )}
+            </div>
+
+
+            {Object.keys(groupedByYearAndSemester).map((yearLevel) => (
               <div className={styles.Contentt} key={yearLevel}>
                 <h4>{yearLevel}</h4>
                 {Object.keys(groupedByYearAndSemester[yearLevel]).map((semester) => (
@@ -657,8 +548,43 @@ function EnrollmentRegular() {
               alt="Fee Status Icon"
               className={styles.uploadIcon}
             />
-            <h3>Advising Status: <span>{advisingStatus}</span></h3>
-            <p>Please check your Gmail for advice on eligible courses you can take.</p>
+            {advisingStatus === 'Approved' ? (
+              <>
+                <h3>Advising Sched: <span>
+                  {new Date(advisingSched).toLocaleString('en-US', {
+                    weekday: 'long', // Optional: Adds the weekday
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true, // 12-hour format
+                  })}
+                </span></h3>
+                <h3>Advising Status: <span>{advisingStatus}</span></h3>
+                <p>Advising step completed. Please double-check the Pre-Enrollment form filled out by your adviser.</p>
+              </>
+            ) : advisingStatus === "Pending" ? (
+              <>
+                <h3>Advising Sched: <span>
+                  {new Date(advisingSched).toLocaleString('en-US', {
+                    weekday: 'long', // Optional: Adds the weekday
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true, // 12-hour format
+                  })}
+                </span></h3>
+                <h3>Advising Status: <span>{advisingStatus}</span></h3>
+                <p>Please be present at the faculty office according to the scheduled advising time.</p>
+              </>
+            ) : (
+              <>                
+                <h3>Advising Status: <span>Advising step has not been initiated yet.</span></h3>
+              </>
+            )}
 
           </div>)
       case "Pre-Enrollment Form":
@@ -695,64 +621,7 @@ function EnrollmentRegular() {
                 </p>
               </div>
             ) : (
-              <div className={styles.formContainer}>
-                <div className={styles.buttonSection} >
-                  <button
-                    className={`${styles.btn} ${styles.addBtn}`}
-                    onClick={handleAddRow}
-                  >
-                    <span>ADD</span>
-                  </button>
-                </div>
-
-
-
-
-                <table className={styles.checkTable}>
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Course</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {rows.map((row, index) => (
-                      <tr key={index}>
-                        <td>{index + 1}</td>
-                        <td>
-                          <select
-                            value={row.selectedCourse}
-                            onChange={(e) => handleCourseChange(index, e.target.value)}
-                          >
-                            <option value="" disabled>
-                              -- Select a Course --
-                            </option>
-                            {eligibleCourses.map((course) => (
-                              <option
-                                key={course.CourseChecklistID}
-                                value={course.CourseChecklistID}
-                              >
-                                {course.CourseCode} - {course.CourseTitle} ({course.CreditUnitLab + course.CreditUnitLec} units)
-                              </option>
-                            ))}
-                          </select>
-                        </td>
-                        <td>
-                          <button onClick={() => handleDeleteRow(index)} className={`${styles.btn} ${styles.removeBtn}`}><span>Delete</span></button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-
-                <p>Total Units: <span>{totalUnits}</span></p> {/* Display updated total units */}
-
-                {/* Submit Button */}
-                <button className={styles.submitBtn} onClick={handleSubmit}>
-                  <span>SUBMIT</span>
-                </button>
-              </div>
+              <p>Your pre-enrollment application is currently under review. Please check back later for updates.</p>
             )}
 
           </div>
@@ -768,35 +637,35 @@ function EnrollmentRegular() {
                   ? "src/assets/paid-icon.png"
                   : stdEnrollStatus === "Pending"
                     ? "src/assets/pending-icon.png"
-                    : stdEnrollStatus === "Not Enrolled" 
-                    ? "src/assets/unpaid-icon.png"
-                    : "src/assets/pending-icon.png"
+                    : stdEnrollStatus === "Not Enrolled"
+                      ? "src/assets/unpaid-icon.png"
+                      : "src/assets/pending-icon.png"
               }
               alt="Fee Status Icon"
               className={styles.uploadIcon}
             />
 
             <h3>Enrollment Status: <span>{stdEnrollStatus}</span></h3>
-            
+
             <p>{stdEnrollStatus === "Enrolled" ? "Kindly go to Registrar’s Office to claim your Certificate of Registration"
               : stdEnrollStatus === "Pending" ? "Your enrollment is currently under review. Please wait for further updates regarding your status."
                 : stdEnrollStatus === "Not Enrolled" ? "It seems you are not enrolled. Please contact the Registrar’s Office for assistance."
-              : "Your enrollment is currently under review. Please wait for further updates regarding your status."}</p>
+                  : "Your enrollment is currently under review. Please wait for further updates regarding your status."}</p>
 
 
-{stdEnrollStatus === "Enrolled" && enrolledStdData && (
-  <div>
-    <h3>Details</h3>
-    <p>Student ID: <span>{enrolledStdData.CvSUStudentID}</span></p>
-    <p>Student Type: <span>{enrolledStdData.StudentType}</span></p>
-    <p>Program Year-Section: <span>{enrolledStdData.ProgramID === 1 ? "BSCS" : "BSIT"} {enrolledStdData.Year === "First Year" ? 1 
-    : enrolledStdData.Year === "Second Year" ? 2 
-  : enrolledStdData.Year === "Third Year" ? 3 
- : enrolledStdData.Year === "Fourth Year" ? 4
- : "Mid-Year"}
- {enrolledStdData.Section !== null ? ` - ${enrolledStdData.Section}` : ""}</span></p>
-  </div>
-)}
+            {stdEnrollStatus === "Enrolled" && enrolledStdData && (
+              <div>
+                <h3>Details</h3>
+                <p>Student ID: <span>{enrolledStdData.CvSUStudentID}</span></p>
+                <p>Student Type: <span>{enrolledStdData.StudentType}</span></p>
+                <p>Program Year-Section: <span>{enrolledStdData.ProgramID === 1 ? "BSCS" : "BSIT"} {enrolledStdData.Year === "First Year" ? 1
+                  : enrolledStdData.Year === "Second Year" ? 2
+                    : enrolledStdData.Year === "Third Year" ? 3
+                      : enrolledStdData.Year === "Fourth Year" ? 4
+                        : "Mid-Year"}
+                  {enrolledStdData.Section !== null ? ` - ${enrolledStdData.Section}` : ""}</span></p>
+              </div>
+            )}
 
           </div>)
       default:

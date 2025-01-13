@@ -24,6 +24,13 @@
     background-color: transparent;
   }
   
+  .studentInfoTop{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-around;
+    margin-top: 30px;
+  }
   
   .Contentt h3{
     background-color: transparent;

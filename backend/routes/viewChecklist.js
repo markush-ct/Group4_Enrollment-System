@@ -166,6 +166,7 @@ router.get('/viewStudentChecklist', (req, res) => {
                 if (courseRes.length > 0) {
                     return res.json({
                         message: "Success",
+                        studentData: studentRes[0],
                         checklistData: courseRes.map(row => ({
                             yearLevel: row.YearLevel,
                             semester: row.Semester,
