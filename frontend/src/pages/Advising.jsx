@@ -409,136 +409,125 @@ useEffect(() => {
 
 
      {/* PopUp */}
-{popUpVisible && selectedRequest && (
+     {popUpVisible && selectedRequest && (
   <div
     data-aos="zoom-out"
     data-aos-duration="500"
     className={`${styles.popup} ${popUpVisible ? styles.visible : ""}`}
   >
-
     {advisingStatus === "Not yet scheduled" ? (
-        <>
-          {Object.keys(groupedByYearAndSemester).map((yearLevel) => (
-                  <div className={styles.Contentt} key={yearLevel}>
-                    <h4>{yearLevel}</h4>
-                    {Object.keys(groupedByYearAndSemester[yearLevel]).map((semester) => (
-                      <div className={styles.Contentt} key={semester}>
-                        <h5>{semester || ""}</h5>
-                        <table className={styles.checklistTable}>
-                          <thead>
-                            <tr>
-                              <th colSpan="2">COURSE</th>
-                              <th colSpan="2">CREDIT UNIT</th>
-                              <th colSpan="2">CONTACT HRS.</th>
-                              <th rowSpan="2">PRE-REQUISITE</th>
-                              <th rowSpan="2">SY TAKEN</th>
-                              <th rowSpan="2">FINAL GRADE</th>
-                              <th rowSpan="2">INSTRUCTOR</th>
-                            </tr>
-                            <tr>
-                              <th>CODE</th>
-                              <th>TITLE</th>
-                              <th>Lec</th>
-                              <th>Lab</th>
-                              <th>Lec</th>
-                              <th>Lab</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {groupedByYearAndSemester[yearLevel][semester].map((course, index) => (
-                              <tr key={index}>
-                                <td>{course.courseDetails.code}</td>
-                                <td>{course.courseDetails.title}</td>
-                                <td>{course.courseDetails.creditLec === 0 ? '' : course.courseDetails.creditLec}</td>
-                                <td>{course.courseDetails.creditLab === 0 ? '' : course.courseDetails.creditLab}</td>
-                                <td>{course.courseDetails.contactHrsLec === 0 ? '' : course.courseDetails.contactHrsLec}</td>
-                                <td>{course.courseDetails.contactHrsLab === 0 ? '' : course.courseDetails.contactHrsLab}</td>
-                                <td>{course.courseDetails.preReq || ''}</td>
-                                <td>{course.syTaken}</td>
-                                <td>{course.finalGrade}</td>
-                                <td>{course.instructor}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
+      <div className={styles.popupContentNew}>
+        {/* Popup Header */}
+        <div className={styles.popupHeader}>
+          <button onClick={closePopup} className={styles.closeButton}>
+            ✖
+          </button>
+          <h3>Advising</h3>
+        </div>
+
+        {/* Year and Semester Table */}
+        {Object.keys(groupedByYearAndSemester).map((yearLevel) => (
+          <div className={styles.Contentt} key={yearLevel}>
+            <h4>{yearLevel}</h4>
+            {Object.keys(groupedByYearAndSemester[yearLevel]).map((semester) => (
+              <div className={styles.Contentt} key={semester}>
+                <h5>{semester || ""}</h5>
+                <table className={styles.checklistTable}>
+                  <thead>
+                    <tr>
+                      <th colSpan="2">COURSE</th>
+                      <th colSpan="2">CREDIT UNIT</th>
+                      <th colSpan="2">CONTACT HRS.</th>
+                      <th rowSpan="2">PRE-REQUISITE</th>
+                      <th rowSpan="2">SY TAKEN</th>
+                      <th rowSpan="2">FINAL GRADE</th>
+                      <th rowSpan="2">INSTRUCTOR</th>
+                    </tr>
+                    <tr>
+                      <th>CODE</th>
+                      <th>TITLE</th>
+                      <th>Lec</th>
+                      <th>Lab</th>
+                      <th>Lec</th>
+                      <th>Lab</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {groupedByYearAndSemester[yearLevel][semester].map((course, index) => (
+                      <tr key={index}>
+                        <td>{course.courseDetails.code}</td>
+                        <td>{course.courseDetails.title}</td>
+                        <td>{course.courseDetails.creditLec === 0 ? '' : course.courseDetails.creditLec}</td>
+                        <td>{course.courseDetails.creditLab === 0 ? '' : course.courseDetails.creditLab}</td>
+                        <td>{course.courseDetails.contactHrsLec === 0 ? '' : course.courseDetails.contactHrsLec}</td>
+                        <td>{course.courseDetails.contactHrsLab === 0 ? '' : course.courseDetails.contactHrsLab}</td>
+                        <td>{course.courseDetails.preReq || ''}</td>
+                        <td>{course.syTaken}</td>
+                        <td>{course.finalGrade}</td>
+                        <td>{course.instructor}</td>
+                        </tr>
                     ))}
-                  </div>
-                ))}
-
-
-
-    <div className={styles.popupContent}>
-                <div className={styles.popupHeader}>
-                  <button onClick={closePopup} className={styles.closeButton}>
-                    ✖
-                  </button>
-                  <h3>Send Schedule for face to face advising</h3>
-                </div>
-    
-                {/* Date Input and Send Button */}
-                <div data-aos="fade-up" className={styles.studentType}>
-                  <h5>Date of Advising</h5>
-    
-                  <input
-                    type="datetime-local"
-                    id="examDatetime"
-                    name="examDatetime"
-                     value=""
-                    onChange=""
-                    className={styles.popupPromptInput}
-                    required
-                  />
-                </div>
-    
-               
-    
-                {/* Buttons */}
-                <div className={styles.buttonContainer}>
-                  <button
-                    className={styles.OKButton}
-                    onClick={() => handleApprove(selectedRequest)}
-                  >
-                    <span>Send</span>
-                  </button>
-                </div>
+                  </tbody>
+                </table>
               </div>
-        </>
-    ) : advisingStatus === "Pending" ? (
-      <>
-      
-
-
-<div className={styles.popupContent}>
-            <div className={styles.popupHeader}>
-              <button onClick={closePopup} className={styles.closeButton}>
-                ✖
-              </button>
-              <h3>Set advising status</h3>
-            </div>
-
-            {/* Date Input and Send Button */}
-            <div data-aos="fade-up" className={styles.studentType}>
-              <h5>Date of Advising</h5>
-              <p>{adviceSched}</p>
-              
-            </div>
-
-           
-
-            {/* Buttons */}
-            <div className={styles.buttonContainer}>
-              <button
-                className={styles.OKButton}
-                onClick={() => handleApprove(selectedRequest)}
-              >
-                <span>Finish Advising</span>
-              </button>
-            </div>
-
+            ))}
           </div>
-    </>
-    ) : ("")}
+        ))}
+
+
+ 
+        <div data-aos="fade-up" className={styles.studentType}>
+          <h5>Date of Advising</h5>
+          <input
+            type="datetime-local"
+            id="examDatetime"
+            name="examDatetime"
+            value=""
+            onChange=""
+            className={styles.popupPromptInput}
+            required
+          />
+        </div>
+
+        {/* Button */}
+        <div className={styles.buttonContainer}>
+          <button
+            className={styles.OKButton}
+            onClick={() => handleApprove(selectedRequest)}
+          >
+            <span>Send</span>
+          </button>
+        </div>
+      </div>
+    ) : advisingStatus === "Pending" ? (
+      <div data-aos="fade-up" className={styles.studentType}>
+  
+        <div className={styles.popupHeader}>
+          <button onClick={closePopup} className={styles.closeButton}>
+            ✖
+          </button>
+          <h3>Set Advising Status</h3>
+        </div>
+
+     
+        <div data-aos="fade-up" className={styles.studentType}>
+          <h5>Date of Advising</h5>
+          <p>{adviceSched}</p>
+        </div>
+
+     
+        <div className={styles.buttonContainer}>
+          <button
+            className={styles.OKButton}
+            onClick={() => handleApprove(selectedRequest)}
+          >
+            <span>Finish Advising</span>
+          </button>
+        </div>
+      </div>
+    ) : null}
+
+
 
 
             </div>
