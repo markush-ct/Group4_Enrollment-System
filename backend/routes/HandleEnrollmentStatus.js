@@ -31,7 +31,12 @@ const transporter = nodemailer.createTransport({
 
 router.post('/setEnrollmentStatus', (req, res) => {
     const empID = `SELECT * FROM employee WHERE Email = ?`;    
-    const enrollmentStatus = `INSERT INTO enrollment (EmployeeID, StudentID, EnrollmentStatus) VALUES (?, ?, ?)`;
+    const enrollmentStatus = `
+    UPDATE enrollment
+    SET EmployeeID = ?,
+        EnrollmentStatus = 'Enrolled'
+    WHERE StudentID = ?`;
+
     const updateStd = `
     UPDATE student
     SET StudentType = ?,
@@ -45,7 +50,7 @@ router.post('/setEnrollmentStatus', (req, res) => {
         if(err){
             return res.json({ message: "Error in server: " + err });
         } else{
-            db.query(enrollmentStatus, [empRes[0].EmployeeID, studentID, "Enrolled"], (err, enrollRes) => {
+            db.query(enrollmentStatus, [empRes[0].EmployeeID, studentID], (err, enrollRes) => {
                 if(err){
                     return res.json({ message: "Error in server: " + err });
                 } else if(enrollRes.affectedRows > 0){

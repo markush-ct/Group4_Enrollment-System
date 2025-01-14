@@ -16,6 +16,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logoutFunction from "/src/components/logoutFunction.jsx";
+import studentIcon from '/src/assets/student_info_icon.png'
 
 function AdminDashSideBar({ isOpen, toggleSidebar }) {
   const [accName, setAccName] = useState("");
@@ -110,6 +111,11 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
                 path: "/EnrollmentOfficerDashboard",
               },
               {
+                name: "Student Information",
+                icon: studentIcon,
+                path: "/StudentInformation",
+              },
+              {
                 name: "Account Request",
                 icon: accountRequestsIcon,
                 path: "/AccountRequest",
@@ -127,7 +133,7 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
                 name: "Account Management",
                 icon: accManagementIcon,
                 path: "/AccountManagement",
-              },
+              },              
             ],
             "Society Officer": [
               {

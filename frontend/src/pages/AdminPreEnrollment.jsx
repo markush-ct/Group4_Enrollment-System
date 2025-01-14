@@ -335,6 +335,23 @@ function Requirements() {
   useEffect(() => {
     calculateTotalUnits();
   }, [rows, eligibleCourses]);
+
+  const calculateTotalUnits1 = () => {
+    const total = rows1.reduce((acc, row) => {
+      const selectedCourse1 = eligibleCourses1.find(
+        (course) => course.CourseChecklistID === Number(row.selectedCourse)
+      );
+      if (selectedCourse1) {
+        acc += selectedCourse1.CreditUnitLec + selectedCourse1.CreditUnitLab;
+      }
+      return acc;
+    }, 0);
+    setTotalUnits(total);
+  };
+
+  useEffect(() => {
+    calculateTotalUnits1();
+  }, [rows1, eligibleCourses1]);
   
 
 

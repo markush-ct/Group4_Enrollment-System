@@ -41,6 +41,7 @@ import AccountManagement from './pages/AccountManagement.jsx';
 import StudentChecklist from './pages/StudentChecklist.jsx';
 import Advising from './pages/Advising.jsx';
 import AdminEnrollment from './pages/AdminEnrollment.jsx';
+import StudentInformation from './pages/StudentInformation.jsx';
 
 function App() {
   return (
@@ -89,9 +90,7 @@ function App() {
         <Route path="/StudentChecklist" element={<StudentChecklist />} />
         <Route path="/Advising" element={<Advising />} />
         <Route path="/AdminEnrollment" element={<AdminEnrollment />} />
-
-
-        
+        <Route path="/StudentInformation" element={<StudentInformation />} />        
         {/* Add other routes as needed */}
       </Routes>
     </Router>

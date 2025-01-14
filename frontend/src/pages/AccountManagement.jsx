@@ -550,7 +550,7 @@ function AccountManagement() {
                     <td data-label="Account Type">{acc.account.role === "Student" ? acc.student.studentType
                       : acc.account.role === "Society Officer" ? acc.socOfficer.position
                         : acc.account.role}</td>
-                    <td data-label="Email">{acc.account.accStatus}</td>
+                    <td data-label="Account Status">{acc.account.accStatus}</td>
                     <td>
                       <button
                         className={styles.approveButton}

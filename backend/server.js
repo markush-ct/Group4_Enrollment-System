@@ -31,6 +31,7 @@ import RegIrregEnrollProgress from './routes/RegIrregDashboardProgress.js';
 import HandleEnrollmentStatus from './routes/HandleEnrollmentStatus.js';
 import SchedManagement from './routes/SchedManagement.js';
 import ClassSched from './routes/ClassSched.js';
+import StudentInformation from './routes/StudentInformation.js';
 
 dotenv.config();
 const app = express();
@@ -104,6 +105,7 @@ app.use('/', RegIrregEnrollProgress);
 app.use('/', HandleEnrollmentStatus);
 app.use('/', SchedManagement);
 app.use('/', ClassSched);
+app.use('/', StudentInformation);
 
 
 app.post('/rejectTransfereeAdmissionReq', (req, res) =>{

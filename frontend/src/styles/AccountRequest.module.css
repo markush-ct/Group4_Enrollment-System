@@ -731,7 +731,7 @@ button.addButton:hover{
   font-size: 16px;
   width: 100%;
   border-color: #3d8c4b;
-  box-shadow: 0 0 4px rgba(61, 140, 75, 0.5);
+  box-shadow: 0 0 1px rgba(61, 140, 76, 0.288);
   border-radius: 5px;
   outline: none;
   transition: border-color 0.2s ease;
@@ -1117,11 +1117,11 @@ font-size: 1rem;
   padding: 0.8rem 1rem;
   border-radius: 30px;
   font-size: 1rem;
-  margin-top: 20px;
   cursor: pointer;
   overflow: hidden; 
   width: 15%;
   transition: transform 0.3s ease, color 0.3s ease; 
+  margin-left: 50px;
   z-index: 1; 
 }
 

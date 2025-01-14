@@ -69,7 +69,16 @@ router.post('/submitIrregPreEnrollment', (req, res) => {
 
                     Promise.all(promises)
                         .then(() => {
-                            return res.json({ message: "Pre enrollment submitted." });
+                            const enrollment = `INSERT INTO enrollment (StudentID) VALUES (?)`;
+                            db.query(enrollment, studentID, (err, enrollRes) => {
+                                if (err) {
+                                    return res.json({ message: "Error in server: " + err });
+                                } else if(enrollRes.affectedRows > 0){
+                                    return res.json({ message: "Pre enrollment submitted." });
+                                } else{
+                                    return res.json({ message: "Failed to submit" });
+                                }
+                            })
                         })
                         .catch(saveErr => {
                             return res.json({ message: "Error saving courses: " + saveErr.message });
@@ -388,7 +397,6 @@ router.post('/submitPreEnrollment', (req, res) => {
                                         : "Mid-Year") +
                         " - " + stdRes[0].Section;
 
-
                     const sql = `INSERT INTO preenrollment (CourseChecklistID, EmployeeID, StudentID, YearSection) VALUES (?, ?, ?, ?)`;
 
                     // Insert advised courses into the database
@@ -407,7 +415,16 @@ router.post('/submitPreEnrollment', (req, res) => {
                     Promise.all(promises)
                         .then(() => {
                             console.log("Courses received in backend:", courses);
-                            return res.json({ message: "Pre enrollment submitted." });
+                            const enrollment = `INSERT INTO enrollment (StudentID) VALUES (?)`;
+                            db.query(enrollment, studentID, (err, enrollRes) => {
+                                if (err) {
+                                    return res.json({ message: "Error in server: " + err });
+                                } else if(enrollRes.affectedRows > 0){
+                                    return res.json({ message: "Pre enrollment submitted." });
+                                } else{
+                                    return res.json({ message: "Failed to submit" });
+                                }
+                            })
                         })
                         .catch(saveErr => {
                             return res.json({ message: "Error saving courses: " + saveErr.message });
