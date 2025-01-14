@@ -350,15 +350,16 @@ function Requirements() {
       {errorPrompt && (
         <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPromptError} style={{zIndex: '100000'}}>
           <div className={styles.popupPromptContentError}>
+          <div className={styles.popupPromptHeaderError}>
+              <h2>Error</h2>
+            </div>
             <button
               className={styles.popupPromptcloseButton}
               onClick={() => setErrorPrompt(false)}
             >
               &times;
             </button>
-            <div className={styles.popupPromptHeaderError}>
-              <h2>Error</h2>
-            </div>
+            
             <div className={styles.popupPromptMessageError}>
               <img
                 src="/src/assets/errormark.png"
@@ -441,10 +442,10 @@ function Requirements() {
             <div className={styles.popupContentNew}>
               {/* Popup Header */}
               <div className={styles.popupHeader}>
-                <button onClick={closePopup} className={styles.closeButton}>
-                  ✖
-                </button>
-                <h3>Advising</h3>
+                            <button onClick={closePopup} className={styles.closeButton}>✖</button>
+                            <h2>Advising</h2>
+                         
+                
               </div>
 
               <div className={styles.popupTextReq}>
@@ -509,7 +510,7 @@ function Requirements() {
               <br />
 
               <div className={styles.popupHeader}>
-                <h3>Set advising schedule</h3>
+                <h2>Set advising schedule</h2>
               </div>
               
               <div className={styles.studentType}>
@@ -534,18 +535,23 @@ function Requirements() {
               </div>
             </div>
           ) : advisingStatus === "Pending" ? (
-            <div data-aos="fade-up" className={styles.studentType}>
+            <div data-aos="zoom-out"
+            data-aos-duration="500" className={styles.popupPromptContent}>
+
+           
 
               <div className={styles.popupHeader}>
                 <button onClick={closePopup} className={styles.closeButton}>
                   ✖
                 </button>
-                <h3>Set Advising Status</h3>
+                <h2>Set Advising Status</h2>
               </div>
 
 
               <div data-aos="fade-up" className={styles.studentType}>
                 <h5>Date of Advising</h5>
+                </div>
+                <div data-aos="fade-up" className={styles.popupTextReq}>
                 <p>{new Date(adviceSched).toLocaleString('en-US', {
                     weekday: 'long', // Optional: Adds the weekday
                     year: 'numeric',

@@ -615,13 +615,17 @@ function Requirements() {
                                   ))}
                                 </tbody>
                               </table>
+                              <div className={styles.popupTextReq}>
               
-                              <p>Total Units: <span>{totalUnits}</span></p> {/* Display updated total units */}
+                              <p><strong>Total Units: </strong><span>{totalUnits}</span></p> {/* Display updated total units */}
+                              </div>
               
                               {/* Submit Button */}
+                              <div className={styles.buttonContainer}>
                               <button className={styles.submitBtn} onClick={() => handleSubmit(selectedRequest)}>
                                 <span>SUBMIT</span>
                               </button>
+                            </div>
                             </div>
             ) : selectedRequest.StudentType === "Irregular" ? (
               <div className={styles.Contentt}>
