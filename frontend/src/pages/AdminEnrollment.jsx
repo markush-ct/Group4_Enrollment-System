@@ -194,7 +194,7 @@ function Requirements() {
                     setChecklist([]);
                     setStudentInfo([]);
                     alert("Failed to fetch COG and Checklist data.", res[0].data.message, "sajkdhjashdjsad", res[1].data.message);
-
+                    
                     setCourses([]);
                 }
             })

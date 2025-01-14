@@ -332,7 +332,7 @@ function FreshmenAdmissionForm() {
       .catch((err) => {
         alert("Error fetching preferred program: " + err);
       });
-  }, [])
+  }, [formData.applicationStatus])
 
   const autoSave = () => {
     setIsSaving(true);
@@ -490,17 +490,17 @@ function FreshmenAdmissionForm() {
     }
   }
 
-  const [isSlot, setIsSlot] = useState(false);
+  const [isSlot, setIsSlot] = useState("Pending");
 
   useEffect(() => {
     axios.get("http://localhost:8080/getFreshmanSlot")
       .then((res) => {
         if (res.data.message === "Slot fetched" && res.data.isSlotConfirmed === 0) {
-          setIsSlot(false);
+          setIsSlot("Submitted");
         } else if (res.data.message === "Slot fetched" && res.data.isSlotConfirmed === 1) {
-          setIsSlot(true);
-        } else {
-          alert(res.data.message);
+          setIsSlot("Confirmed");  
+        } else if (res.data.message === "Unable to fetch slot status"){
+          setIsSlot("Pending");
         }
       })
       .catch((err) => {
@@ -512,10 +512,10 @@ function FreshmenAdmissionForm() {
     axios.post("http://localhost:8080/handleConfirmSlot")
     .then((res) => {
       if(res.data.message === "Slot Confirmed"){
-        setIsSlot(true);
+        setIsSlot("Confirmed");
         alert("Slot confirmed");
       } else{
-        setIsSlot(false);
+        setIsSlot("Pending");
         alert(res.data.message);
       }
     })
@@ -1606,7 +1606,7 @@ function FreshmenAdmissionForm() {
                 </button>
               </div>
 
-              {isSlot === false ? (
+              {isSlot === "Submitted" ? (
                 <>
                   <h3 className={styles.stepTitle} style={{ marginTop: "50px", marginBottom: "10px" }}>
                 <img src="/src/assets/pending-icon.png" alt="Personal Info Icon" className={styles.icon} />
@@ -1631,7 +1631,7 @@ function FreshmenAdmissionForm() {
                 <br />
               </div>
                 </>
-              ) : (
+              ) : isSlot === "Confirmed" ? (
                 <>
                   <h3 className={styles.stepTitle} style={{ marginTop: "50px", marginBottom: "10px" }}>
                 <img src="/src/assets/pending-icon.png" alt="Personal Info Icon" className={styles.icon} />
@@ -1645,7 +1645,7 @@ function FreshmenAdmissionForm() {
 
               </div>
                 </>
-              )}
+              ) : ('')}
 
 
 

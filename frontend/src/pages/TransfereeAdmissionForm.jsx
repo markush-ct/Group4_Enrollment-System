@@ -256,7 +256,7 @@ function FreshmenAdmissionForm() {
     .catch((err) => {
       alert("error: " + err);       
     })
-  },[])
+  },[formData.applicationStatus])
 
   const autoSave = () => {
     setIsSaving(true);

@@ -62,7 +62,7 @@ function ShifteeForm() {
       .catch((err) => {
         alert("Error: " + err);
       })
-  }, []);
+  }, [formValues.shiftingStatus]);
 
   const autoSave = async () => {
     try {
@@ -391,7 +391,7 @@ function ShifteeForm() {
     <>
       <Header SideBar={SideBar} setSideBar={setSideBar} />
       <div className={styles.contentSection}>
-        <div className={styles.PageTitle}>Shiftee</div>
+        <div className={styles.PageTitle}>Shifting Form</div>
 
         {/* STEPPER */}
         <div data-aos="fade-up" className={styles.container}>
