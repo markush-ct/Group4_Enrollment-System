@@ -32,7 +32,7 @@ function Apply() {
 5. Click "<b>Sign in</b>", then select “<b>Application Form</b>“ Type: <b>Freshman</b>. <br>
 6. Fill out all the necessary information then submit once done.<br>
 7. Wait for your application result. <br>
-8. Once successful, confirm your slot, then download and print the <b>Notice of Admission (NOA)</b>. <br>
+8. Once successful, confirm your slot. <br>
 9. Failure to confirm your slot 5 days after your application result has been posted will mean forfeiture of application.<br>
 <br>
 <b>REQUIREMENTS TO BE SUBMITTED IN SCHOOL (SENIOR HIGH SCHOOL GRADUATES):</b><br>
@@ -56,11 +56,10 @@ function Apply() {
 <br>
 <b>REQUIRED DOCUMENTS TO BE SUBMITTED IN SCHOOL:</b><br>
 1. Accomplished application form with 1x1 picture and signature<br>
-2. Notice of Admission (NOA)<br>
-3. Original copy of Transcript of Records<br>
-4. Honorable Dismissal<br>
-5. Certificate of Good Moral Character<br>
-6. NBI or Police Clearance<br>`,
+2. Original copy of Transcript of Records<br>
+3. Honorable Dismissal<br>
+4. Certificate of Good Moral Character<br>
+5. NBI or Police Clearance<br>`,
     Shiftee: `1. Ask permission to your department head about shifting programs 15 days prior to the enrollment period. <br>
 2. Once permitted, go to the sign up link. <a href="/SignUp" target="_blank"><b> "Click here to sign up"</b></a>.<br>
 3. Fill out and have your email verified.<br>
@@ -87,8 +86,8 @@ function Apply() {
 5. Submit a soft copy of your COG (make sure it is clear and legible). <br>
 6. Fill out digital checklist and submit.<br>
 7. Society officer will update the status of your digital checklist after cross-checking it. <br>
-8. Adviser will send an advise and the lists of courses you are eligible to take.<br>
-9. Fill out the pre-enrollment form and submit.<br>
+8. The adviser will set a schedule for in-person advising, where eligible courses will be discussed.<br>
+9. The adviser will fill out and submit the pre-enrollment form based on the advising discussion.<br>
 10. Check your enrollment status.<br>`,
     Irregular: `1. Fill out and submit registration form at <a href="/CreateAcc" target="_blank" ><b>signup link</a></b>.<br>
 2. Check your registered email for your temporary login credentials. <br>
@@ -97,8 +96,8 @@ function Apply() {
 5. Submit a soft copy of your COG (make sure it is clear and legible). <br> 
 6. Fill out digital checklist and submit.<br>
 7. Society officer will update the status of your digital checklist after cross-checking it. <br>
-8. Adviser will send an advise and the lists of courses you are eligible to take.<br>
-9. Fill out the pre-enrollment form and submit.<br>
+8. The adviser will set a schedule for in-person advising, where eligible courses will be discussed.<br>
+9. The adviser will fill out and submit the pre-enrollment form based on the advising discussion.<br>
 10. Check your enrollment status.<br>`,
   };
 
@@ -115,113 +114,124 @@ function Apply() {
   return (
     <>
       <Header SideBar={SideBar} setSideBar={setSideBar} />
-
-      {/* Parallax Section 1 */}
-      <div
-        className={`${styles.parallaxSection} ${styles.parallax1}`}
-        data-testid="parallax-section"
-      >
-        <h2>CAVITE STATE UNIVERSITY</h2>
-        <h1>ADMISSIONS</h1>
-      </div>
-
-      {/* Application Section */}
-      <div data-aos="fade-up" className={styles.contentSection}>
-        <div data-aos="fade-up" className={styles.PageTitle}>
-          Application Procedures
+      <div className={styles.mainPage}>
+        {/* Parallax Section 1 */}
+        <div
+          className={`${styles.parallaxSection} ${styles.parallax1}`}
+          data-testid="parallax-section"
+        >
+          <h2>CAVITE STATE UNIVERSITY</h2>
+          <h1>ADMISSIONS</h1>
         </div>
 
-        <div
-          onClick={() => handleContainerClick("Freshman")}
-          className={styles.studentContainer}
-          data-testid="freshman-container"
-        >
-          <img src="/src/assets/arrow-icon.svg" alt="Arrow Icon" />
-          Freshman
-        </div>
-        <div
-          onClick={() => handleContainerClick("Transferee")}
-          className={styles.studentContainer}
-          data-testid="transferee-container"
-        >
-          <img src="/src/assets/arrow-icon.svg" alt="Arrow Icon" />
-          Transferee
-        </div>
-        <div
-          onClick={() => handleContainerClick("Shiftee")}
-          className={styles.studentContainer}
-          data-testid="shiftee-container"
-        >
-          <img src="/src/assets/arrow-icon.svg" alt="Arrow Icon" />
-          Shiftee
-        </div>
+        {/* Application Section */}
+        <div data-aos="fade-up" className={styles.contentSection}>
+          <div
+            data-aos="fade-up"
+            data-aos-offset="200"
+            data-aos-delay="0"
+            className={styles.PageTitle}
+          >
+            Application Procedures
+          </div>
 
-        {/* Old Stduent Section */}
-        <div data-aos="fade-up" className={styles.PageTitle2}>
-          Enrollment Procedures For Old Students
-        </div>
+          <div
+            data-aos="fade-up"
+            onClick={() => handleContainerClick("Freshman")}
+            className={styles.studentContainer}
+            data-testid="freshman-container"
+          >
+            <img src="/src/assets/arrow-icon.svg" alt="Arrow Icon" />
+            Freshman
+          </div>
+          <div
+            data-aos="fade-up"
+            onClick={() => handleContainerClick("Transferee")}
+            className={styles.studentContainer}
+            data-testid="transferee-container"
+          >
+            <img src="/src/assets/arrow-icon.svg" alt="Arrow Icon" />
+            Transferee
+          </div>
+          <div
+            data-aos="fade-up"
+            onClick={() => handleContainerClick("Shiftee")}
+            className={styles.studentContainer}
+            data-testid="shiftee-container"
+          >
+            <img src="/src/assets/arrow-icon.svg" alt="Arrow Icon" />
+            Shiftee
+          </div>
 
-        <div
-          onClick={() => handleContainerClick("Regular")}
-          className={styles.studentContainer}
-          data-testid="regular-container"
-        >
-          <img src="/src/assets/arrow-icon.svg" alt="Arrow Icon" />
-          Regular Student
-        </div>
-        <div
-          onClick={() => handleContainerClick("Irregular")}
-          className={styles.studentContainer}
-          data-testid="irregular-container"
-        >
-          <img src="/src/assets/arrow-icon.svg" alt="Arrow Icon" />
-          Irregular Student
-        </div>
-      </div>
+          {/* Old Stduent Section */}
+          <div data-aos="fade-up" className={styles.PageTitle2}>
+            Enrollment Procedures For Old Students
+          </div>
 
-      {selectedType && (
-        <div
-          data-aos="zoom-out"
-          data-aos-duration="500"
-          className={styles.popup}
-        >
-          <div className={styles.popupContent}>
-            <div className={styles.popupHeader}>
-              <button onClick={closePopup} className={styles.closeButton}>
-                ✖
-              </button>
-              <h2>
-                {selectedType === "Regular" || selectedType === "Irregular"
-                  ? "Enrollment Procedures"
-                  : "Application Procedures"}
-              </h2>
-            </div>
-            <div data-aos="fade-up" className={styles.studentType}>
-              <span>{selectedType}</span>
-            </div>
-            <div
-              className={styles.popupText}
-              dangerouslySetInnerHTML={{
-                __html: enrollmentProcess[selectedType],
-              }}
-            />
+          <div
+            data-aos="fade-up"
+            onClick={() => handleContainerClick("Regular")}
+            className={styles.studentContainer}
+            data-testid="regular-container"
+          >
+            <img src="/src/assets/arrow-icon.svg" alt="Arrow Icon" />
+            Regular Student
+          </div>
+          <div
+            data-aos="fade-up"
+            onClick={() => handleContainerClick("Irregular")}
+            className={styles.studentContainer}
+            data-testid="irregular-container"
+          >
+            <img src="/src/assets/arrow-icon.svg" alt="Arrow Icon" />
+            Irregular Student
           </div>
         </div>
-      )}
 
-      {/* Footer */}
-      <footer className={styles.footer} data-testid="footer-copyright">
-        <div className={styles.footerCopyright}>
-          <p>
-            © Copyright <span>Cavite State University</span>. All Rights
-            Reserved.
-          </p>
-          <p>
-            Designed by{" "}
-            <span className={styles.highlighted}>BSCS 3-5 Group 4</span>
-          </p>
-        </div>
-      </footer>
+        {selectedType && (
+          <div
+            data-aos="zoom-out"
+            data-aos-duration="500"
+            className={styles.popup}
+          >
+            <div className={styles.popupContent}>
+              <div className={styles.popupHeader}>
+                <button onClick={closePopup} className={styles.closeButton}>
+                  ✖
+                </button>
+                <h2>
+                  {selectedType === "Regular" || selectedType === "Irregular"
+                    ? "Enrollment Procedures"
+                    : "Application Procedures"}
+                </h2>
+              </div>
+              <div data-aos="fade-up" className={styles.studentType}>
+                <span>{selectedType}</span>
+              </div>
+              <div
+                className={styles.popupText}
+                dangerouslySetInnerHTML={{
+                  __html: enrollmentProcess[selectedType],
+                }}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Footer */}
+        <footer className={styles.footer} data-testid="footer-copyright">
+          <div className={styles.footerCopyright}>
+            <p>
+              © Copyright <span>Cavite State University</span>. All Rights
+              Reserved.
+            </p>
+            <p>
+              Designed by{" "}
+              <span className={styles.highlighted}>BSCS 3-5 Group 4</span>
+            </p>
+          </div>
+        </footer>
+      </div>
     </>
   );
 }

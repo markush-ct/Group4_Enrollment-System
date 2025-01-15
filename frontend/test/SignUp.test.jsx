@@ -290,6 +290,20 @@ describe("Unit Testing for Sign Up Page", () => {
     expect(programField).toHaveAttribute("required");
   });
 
+    test("Renders the checkbox and Terms and Conditions link", () => {
+      render(
+        <Router>
+          <SignUp />
+        </Router>
+      );
+  
+      const checkbox = screen.getByRole("checkbox", { name: /i agree to the/i });
+      expect(checkbox).toBeInTheDocument();
+  
+      const termsLink = screen.getByText(/Terms and Conditions/i);
+      expect(termsLink).toBeInTheDocument();
+    });
+
   test("Renders the Register button", () => {
     render(
       <Router>

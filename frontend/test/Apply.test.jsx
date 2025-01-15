@@ -231,9 +231,6 @@ describe("Unit Testing for Apply Page", () => {
       )
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/Notice of Admission \(NOA\)/i)
-    ).toBeInTheDocument();
-    expect(
       screen.getByText(/Original copy of Transcript of Records/i)
     ).toBeInTheDocument();
     expect(screen.getByText(/Honorable Dismissal/i)).toBeInTheDocument();
@@ -375,12 +372,14 @@ describe("Unit Testing for Apply Page", () => {
 
     expect(
       screen.getByText(
-        /Adviser will send an advise and the lists of courses you are eligible to take/i
+        /The adviser will set a schedule for in-person advising, where eligible courses will be discussed./i
       )
     ).toBeInTheDocument();
 
     expect(
-      screen.getByText(/Fill out the pre-enrollment form and submit/i)
+      screen.getByText(
+        /The adviser will fill out and submit the pre-enrollment form based on the advising discussion./i
+      )
     ).toBeInTheDocument();
 
     expect(
@@ -443,12 +442,14 @@ describe("Unit Testing for Apply Page", () => {
 
     expect(
       screen.getByText(
-        /Adviser will send an advise and the lists of courses you are eligible to take/i
+        /The adviser will set a schedule for in-person advising, where eligible courses will be discussed./i
       )
     ).toBeInTheDocument();
 
     expect(
-      screen.getByText(/Fill out the pre-enrollment form and submit/i)
+      screen.getByText(
+        /The adviser will fill out and submit the pre-enrollment form based on the advising discussion./i
+      )
     ).toBeInTheDocument();
 
     expect(

@@ -86,7 +86,7 @@ app.post("/finishEnrollment", async (req, res) => {
 });
 
 describe("Unit Testing for Society Officer Dashboard Function", () => {
-  describe("GET /getPFP", () => {
+  describe("For /getPFP", () => {
     it("Should return profile picture URL", async () => {
       axios.get.mockResolvedValue({ data: { pfpURL: "profilepic.jpg" } });
 
@@ -106,7 +106,7 @@ describe("Unit Testing for Society Officer Dashboard Function", () => {
     });
   });
 
-  describe("GET /socOfficerProgram", () => {
+  describe("For /socOfficerProgram", () => {
     it("Should return SOC officer program details", async () => {
       axios.get.mockResolvedValue({
         data: { program: { name: "Tech Program" } },
@@ -128,7 +128,7 @@ describe("Unit Testing for Society Officer Dashboard Function", () => {
     });
   });
 
-  describe("GET /getCS", () => {
+  describe("For /getCS", () => {
     it("Should return CS student count", async () => {
       axios.get.mockResolvedValue({ data: { CScount: 200 } });
 
@@ -148,7 +148,7 @@ describe("Unit Testing for Society Officer Dashboard Function", () => {
     });
   });
 
-  describe("GET /getIT", () => {
+  describe("For /getIT", () => {
     it("Should return IT student count", async () => {
       axios.get.mockResolvedValue({ data: { ITcount: 150 } });
 
@@ -168,7 +168,7 @@ describe("Unit Testing for Society Officer Dashboard Function", () => {
     });
   });
 
-  describe("POST /postEnrollmentPeriod", () => {
+  describe("For /postEnrollmentPeriod", () => {
     it("Should post a new enrollment period", async () => {
       const enrollmentData = {
         start: "2025-01-01",
@@ -210,7 +210,7 @@ describe("Unit Testing for Society Officer Dashboard Function", () => {
     });
   });
 
-  describe("POST /startEnrollment", () => {
+  describe("For /startEnrollment", () => {
     it("Should start the enrollment period", async () => {
       axios.post.mockResolvedValue({
         data: { message: "Enrollment is now ongoing" },
@@ -232,7 +232,7 @@ describe("Unit Testing for Society Officer Dashboard Function", () => {
     });
   });
 
-  describe("POST /finishEnrollment", () => {
+  describe("For /finishEnrollment", () => {
     it("Should finish the enrollment period", async () => {
       axios.post.mockResolvedValue({ data: { message: "Enrollment ended" } });
 
@@ -252,7 +252,7 @@ describe("Unit Testing for Society Officer Dashboard Function", () => {
     });
   });
 
-  describe("GET /viewEnrollmentPeriod", () => {
+  describe("For /viewEnrollmentPeriod", () => {
     it("Should return enrollment period details", async () => {
       axios.get.mockResolvedValue({
         data: {

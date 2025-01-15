@@ -27,7 +27,7 @@
     background-attachment: fixed;
     background-size: cover;
     background-position: center;
-    min-height: 40vh;
+    min-height: 60vh;
     text-align: left; 
 }
 
@@ -576,7 +576,31 @@
     color: rgb(233, 185, 41); 
 }
 
+@keyframes slideUp {
+    0% {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
 
+.parallax1 h1,
+.parallax1 h2{
+    font-weight: bold;
+    color: white;
+
+    margin: 0; 
+    margin-left: 50px;
+    animation: slideUp 1s ease-out forwards; 
+}
+
+.parallax1 h1,
+.parallax1 h2{
+    animation-delay: 0.3s;
+}
 
 
 

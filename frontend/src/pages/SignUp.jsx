@@ -11,7 +11,7 @@ function SignUp() {
   const [signUpMsg, setsignUpMsg] = useState("");
   const [errorPrompt, setErrorPrompt] = useState(false); //errors
   const [errorMsg, setErrorMsg] = useState("");
-    const [showTerms, setShowTerms] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
   const [programs, setPrograms] = useState("");
   const [error, setError] = useState("");
   const [values, setValues] = useState({
@@ -173,51 +173,77 @@ function SignUp() {
         </div>
       )}
 
-       {/* SHOW TERMS AND CONDITION */}
-            {showTerms && (
-              <div
-                data-aos="zoom-out"
-                data-aos-duration="500"
-                className={styles.popup}
-              >
-               <div className={styles.popupContentTerms}>
-          <button
+      {/* SHOW TERMS AND CONDITION */}
+      {showTerms && (
+        <div
+          data-aos="zoom-out"
+          data-aos-duration="500"
+          className={styles.popup}
+        >
+          <div className={styles.popupContentTerms}>
+            <button
               className={styles.closeButton}
               onClick={() => closeTerms(false)}
-          >
+            >
               &times;
-          </button>
-          <div className={styles.popupHeader}>
-              <h2 style={{color: "#3d8c4b"}}>Terms and Conditions</h2>
+            </button>
+            <div className={styles.popupHeader}>
+              <h2 style={{ color: "#3d8c4b" }}>Terms and Conditions</h2>
+            </div>
+
+            <p className={styles.popupTextTerms}>
+              Welcome to Cavite State University - Bacoor Campus! These Terms
+              and Conditions govern your use of our services. By accessing or
+              using our website, you agree to comply with these terms.
+            </p>
+
+            <h3 className={styles.popupTextTerms}>1. Acceptance of Terms</h3>
+            <p className={styles.popupTextTerms}>
+              By accessing or using our services, you acknowledge that you have
+              read, understood, and agree to be bound by these Terms and
+              Conditions.
+            </p>
+
+            <h3 className={styles.popupTextTerms}>
+              2. Eligibility and Use of Services
+            </h3>
+            <p className={styles.popupTextTerms}>
+              You must be at least 18 years old or have parental consent to use
+              our services. You agree to use our services for lawful purposes
+              only.
+            </p>
+
+            <h3 className={styles.popupTextTerms}>
+              3. Intellectual Property Rights
+            </h3>
+            <p className={styles.popupTextTerms}>
+              All content is the intellectual property of Cavite State
+              University - Bacoor Campus unless otherwise stated.
+            </p>
+
+            <h3 className={styles.popupTextTerms}>4. Privacy Policy</h3>
+            <p className={styles.popupTextTerms}>
+              Your data will be handled in accordance with the Data Privacy Act
+              of 2012 RA 10173.
+            </p>
+
+            <h3 className={styles.popupTextTerms}>5. Governing Law</h3>
+            <p className={styles.popupTextTerms}>
+              These Terms and Conditions are governed by the laws of the
+              Republic of the Philippines.
+            </p>
           </div>
-      
-          
-      
-          <p className={styles.popupTextTerms}>
-              Welcome to Cavite State University - Bacoor Campus These Terms and Conditions govern your use of our services. By accessing or using our website, you agree to comply with these terms.
-          </p>
-      
-          <h3 className={styles.popupTextTerms}>1. Acceptance of Terms</h3>
-          <p className={styles.popupTextTerms}>By accessing or using our services, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions.</p>
-      
-          <h3 className={styles.popupTextTerms}>2. Eligibility and Use of Services</h3>
-          <p className={styles.popupTextTerms}>You must be at least 18 years old or have parental consent to use our services. You agree to use our services for lawful purposes only.</p>
-      
-          <h3 className={styles.popupTextTerms}>3. Intellectual Property Rights</h3>
-          <p className={styles.popupTextTerms}>All content is the intellectual property of Cavite State University - Bacoor Campus unless otherwise stated.</p>
-      
-          <h3 className={styles.popupTextTerms}>4. Privacy Policy</h3>
-          <p className={styles.popupTextTerms}>Your data will be handled in accordance with the Data Privacy Act of 2012 RA 10173.</p>
-      
-          <h3 className={styles.popupTextTerms}>5. Governing Law</h3>
-          <p className={styles.popupTextTerms}>These Terms and Conditions are governed by the laws of the Republic of the Philippines.</p>
-      </div>
-      </div>
+        </div>
       )}
 
       {/* Application Section */}
       <div data-aos="fade-up" className={styles.contentSection}>
-        <div data-aos="fade-up" className={styles.PageTitle}>
+        <div
+          data-aos="fade-up"
+          data-aos-offset="200"
+          data-aos-delay="0"
+          className={styles.PageTitle}
+        >
           Applicant Sign Up
         </div>
         <form onSubmit={handleSubmit}>
@@ -643,27 +669,19 @@ function SignUp() {
             </div>
           )}
 
-
-  <div className={styles.formGroup}>
-                  <label className={styles.checkboxLabel}>
-                  <input
-            type="checkbox"
-            className={styles.checkbox}
-            name="certify"
-            id="certify"
-            required
-          />
-          I agree to the{" "}      
-          <span
-            onClick={showPopupTerms}
-          >
-            Terms and Conditions
-          </span>
-          </label>
-      
-                </div>
-  
-
+          <div className={styles.formGroup}>
+            <label className={styles.checkboxLabel}>
+              <input
+                type="checkbox"
+                className={styles.checkbox}
+                name="certify"
+                id="certify"
+                required
+              />
+              I agree to the{" "}
+              <span onClick={showPopupTerms}>Terms and Conditions</span>
+            </label>
+          </div>
 
           {/* Register Button */}
           <div className={styles.buttonContainer}>

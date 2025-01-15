@@ -289,6 +289,20 @@ describe("Unit Testing for Create Account Page", () => {
     expect(screen.getByTestId("e-program")).toBeInTheDocument();
   });
 
+  test("Renders the checkbox and Terms and Conditions link", () => {
+    render(
+      <Router>
+        <CreateAcc />
+      </Router>
+    );
+
+    const checkbox = screen.getByRole("checkbox", { name: /i agree to the/i });
+    expect(checkbox).toBeInTheDocument();
+
+    const termsLink = screen.getByText(/Terms and Conditions/i);
+    expect(termsLink).toBeInTheDocument();
+  });
+
   test("Renders the Register button", () => {
     render(
       <Router>

@@ -38,7 +38,6 @@ function CreateAcc() {
     setShowTerms(false);
   };
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Submitting data:", values);
@@ -46,7 +45,9 @@ function CreateAcc() {
     const isCertified = document.getElementById("certify").checked;
 
     if (!isCertified) {
-      setErrorMsg("You must certify that the information provided is correct before submitting.");
+      setErrorMsg(
+        "You must certify that the information provided is correct before submitting."
+      );
       setErrorPrompt(true);
       return;
     }
@@ -112,7 +113,6 @@ function CreateAcc() {
   const handleApplicantCategoryChange = (category) => {
     setValues({ ...values, applicantCategory: category });
   };
-
 
   return (
     <>
@@ -193,48 +193,79 @@ function CreateAcc() {
           data-aos-duration="500"
           className={styles.popup}
         >
-         <div className={styles.popupContentTerms}>
-    <button
-        className={styles.closeButton}
-        onClick={() => closeTerms(false)}
-    >
-        &times;
-    </button>
-    <div className={styles.popupHeader}>
-        <h2 style={{color: "#3d8c4b"}}>Terms and Conditions</h2>
-    </div>
+          <div className={styles.popupContentTerms}>
+            <button
+              className={styles.closeButton}
+              onClick={() => closeTerms(false)}
+            >
+              &times;
+            </button>
+            <div className={styles.popupHeader}>
+              <h2 style={{ color: "#3d8c4b" }}>Terms and Conditions</h2>
+            </div>
 
-    
+            <p className={styles.popupTextTerms}>
+              Welcome to Cavite State University - Bacoor Campus! These Terms
+              and Conditions govern your use of our services. By accessing or
+              using our website, you agree to comply with these terms.
+            </p>
 
-    <p className={styles.popupTextTerms}>
-        Welcome to Cavite State University - Bacoor Campus These Terms and Conditions govern your use of our services. By accessing or using our website, you agree to comply with these terms.
-    </p>
+            <h3 className={styles.popupTextTerms} style={{ color: "black" }}>
+              1. Acceptance of Terms
+            </h3>
+            <p className={styles.popupTextTerms}>
+              By accessing or using our services, you acknowledge that you have
+              read, understood, and agree to be bound by these Terms and
+              Conditions.
+            </p>
 
-    <h3 className={styles.popupTextTerms} style={{color: 'black'}}>1. Acceptance of Terms</h3>
-    <p className={styles.popupTextTerms}>By accessing or using our services, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions.</p>
+            <h3 className={styles.popupTextTerms} style={{ color: "black" }}>
+              2. Eligibility and Use of Services
+            </h3>
+            <p className={styles.popupTextTerms}>
+              You must be at least 18 years old or have parental consent to use
+              our services. You agree to use our services for lawful purposes
+              only.
+            </p>
 
-    <h3 className={styles.popupTextTerms} style={{color: 'black'}}>2. Eligibility and Use of Services</h3>
-    <p className={styles.popupTextTerms}>You must be at least 18 years old or have parental consent to use our services. You agree to use our services for lawful purposes only.</p>
+            <h3 className={styles.popupTextTerms} style={{ color: "black" }}>
+              3. Intellectual Property Rights
+            </h3>
+            <p className={styles.popupTextTerms}>
+              All content is the intellectual property of Cavite State
+              University - Bacoor Campus unless otherwise stated.
+            </p>
 
-    <h3 className={styles.popupTextTerms} style={{color: 'black'}}>3. Intellectual Property Rights</h3>
-    <p className={styles.popupTextTerms}>All content is the intellectual property of Cavite State University - Bacoor Campus unless otherwise stated.</p>
+            <h3 className={styles.popupTextTerms} style={{ color: "black" }}>
+              4. Privacy Policy
+            </h3>
+            <p className={styles.popupTextTerms}>
+              Your data will be handled in accordance with the Data Privacy Act
+              of 2012 RA 10173.
+            </p>
 
-    <h3 className={styles.popupTextTerms} style={{color: 'black'}}>4. Privacy Policy</h3>
-    <p className={styles.popupTextTerms}>Your data will be handled in accordance with the Data Privacy Act of 2012 RA 10173.</p>
-
-    <h3 className={styles.popupTextTerms} style={{color: 'black'}}>5. Governing Law</h3>
-    <p className={styles.popupTextTerms}>These Terms and Conditions are governed by the laws of the Republic of the Philippines.</p>
-</div>
-</div>
-)}
-
+            <h3 className={styles.popupTextTerms} style={{ color: "black" }}>
+              5. Governing Law
+            </h3>
+            <p className={styles.popupTextTerms}>
+              These Terms and Conditions are governed by the laws of the
+              Republic of the Philippines.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Create Account Form */}
       <div data-aos="fade-up" className={styles.contentSection}>
-        <div className={styles.PageTitle} data-aos="fade-up">
+        <div
+          className={styles.PageTitle}
+          data-aos="fade-up"
+          data-aos-offset="200"
+          data-aos-delay="0"
+        >
           Create Account
         </div>
-        
+
         <form onSubmit={handleSubmit}>
           {/* Account Type */}
           <div data-aos="fade-up" className={styles.radioGroup}>
@@ -725,26 +756,19 @@ function CreateAcc() {
             </div>
           )}
 
-    <div className={styles.formGroup}>
-                <label className={styles.checkboxLabel}>
-                <input
-          type="checkbox"
-          className={styles.checkbox}
-          name="certify"
-          id="certify"
-          required
-        />
-        I agree to the{" "}      
-        <span
-          onClick={showPopupTerms}
-        >
-          Terms and Conditions
-        </span>
-        </label>
-    
-              </div>
-
-
+          <div className={styles.formGroup}>
+            <label className={styles.checkboxLabel}>
+              <input
+                type="checkbox"
+                className={styles.checkbox}
+                name="certify"
+                id="certify"
+                required
+              />
+              I agree to the{" "}
+              <span onClick={showPopupTerms}>Terms and Conditions</span>
+            </label>
+          </div>
 
           {/* Register Button */}
           <div className={styles.buttonContainer}>
