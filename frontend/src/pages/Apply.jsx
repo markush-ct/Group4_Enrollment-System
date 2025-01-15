@@ -87,7 +87,7 @@ function Apply() {
 6. Fill out digital checklist and submit.<br>
 7. Society officer will update the status of your digital checklist after cross-checking it. <br>
 8. The adviser will set a schedule for in-person advising, where eligible courses will be discussed.<br>
-9. The adviser will fill out and submit the pre-enrollment form based on the advising discussion.<br>
+9. The adviser will fill out and submit the pre-enrollment form based on the advising session.<br>
 10. Check your enrollment status.<br>`,
     Irregular: `1. Fill out and submit registration form at <a href="/CreateAcc" target="_blank" ><b>signup link</a></b>.<br>
 2. Check your registered email for your temporary login credentials. <br>
@@ -97,7 +97,7 @@ function Apply() {
 6. Fill out digital checklist and submit.<br>
 7. Society officer will update the status of your digital checklist after cross-checking it. <br>
 8. The adviser will set a schedule for in-person advising, where eligible courses will be discussed.<br>
-9. The adviser will fill out and submit the pre-enrollment form based on the advising discussion.<br>
+9. The adviser will fill out and submit the pre-enrollment form based on the advising session.<br>
 10. Check your enrollment status.<br>`,
   };
 

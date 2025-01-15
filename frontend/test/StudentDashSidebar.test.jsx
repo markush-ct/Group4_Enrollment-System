@@ -43,7 +43,7 @@ describe("Unit Testing for StudentDashSideBar Component", () => {
   });
 
   test("Renders the university name", () => {
-    renderSidebarWithRole("Enrollment Officer");
+    renderSidebarWithRole("Student");
     const universityName = screen.getByText(
       "CAVITE STATE UNIVERSITY - BACOOR CITY CAMPUS"
     );
@@ -51,13 +51,13 @@ describe("Unit Testing for StudentDashSideBar Component", () => {
   });
 
   test("Renders the department name", () => {
-    renderSidebarWithRole("Enrollment Officer");
+    renderSidebarWithRole("Student");
     const departmentName = screen.getByText(/DEPARTMENT OF COMPUTER STUDIES/i);
     expect(departmentName).toBeInTheDocument();
   });
 
   test("Renders the close button", () => {
-    renderSidebarWithRole("Enrollment Officer");
+    renderSidebarWithRole("Student");
     const closeButton = screen.getByAltText("Close Sidebar");
 
     expect(closeButton).toBeInTheDocument();
@@ -65,7 +65,7 @@ describe("Unit Testing for StudentDashSideBar Component", () => {
   });
 
   test("Closes sidebar when close button is clicked", () => {
-    renderSidebarWithRole("Enrollment Officer");
+    renderSidebarWithRole("Student");
 
     const closeButton = screen.getByAltText("Close Sidebar");
     fireEvent.click(closeButton);

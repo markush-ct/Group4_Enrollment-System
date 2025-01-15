@@ -197,14 +197,16 @@ function SignUp() {
               using our website, you agree to comply with these terms.
             </p>
 
-            <h3 className={styles.popupTextTerms}>1. Acceptance of Terms</h3>
+            <h3 className={styles.popupTextTerms} style={{ color: "black" }}>
+              1. Acceptance of Terms
+            </h3>
             <p className={styles.popupTextTerms}>
               By accessing or using our services, you acknowledge that you have
               read, understood, and agree to be bound by these Terms and
               Conditions.
             </p>
 
-            <h3 className={styles.popupTextTerms}>
+            <h3 className={styles.popupTextTerms} style={{ color: "black" }}>
               2. Eligibility and Use of Services
             </h3>
             <p className={styles.popupTextTerms}>
@@ -213,7 +215,7 @@ function SignUp() {
               only.
             </p>
 
-            <h3 className={styles.popupTextTerms}>
+            <h3 className={styles.popupTextTerms} style={{ color: "black" }}>
               3. Intellectual Property Rights
             </h3>
             <p className={styles.popupTextTerms}>
@@ -221,13 +223,17 @@ function SignUp() {
               University - Bacoor Campus unless otherwise stated.
             </p>
 
-            <h3 className={styles.popupTextTerms}>4. Privacy Policy</h3>
+            <h3 className={styles.popupTextTerms} style={{ color: "black" }}>
+              4. Privacy Policy
+            </h3>
             <p className={styles.popupTextTerms}>
               Your data will be handled in accordance with the Data Privacy Act
               of 2012 RA 10173.
             </p>
 
-            <h3 className={styles.popupTextTerms}>5. Governing Law</h3>
+            <h3 className={styles.popupTextTerms} style={{ color: "black" }}>
+              5. Governing Law
+            </h3>
             <p className={styles.popupTextTerms}>
               These Terms and Conditions are governed by the laws of the
               Republic of the Philippines.

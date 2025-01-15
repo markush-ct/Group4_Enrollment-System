@@ -109,6 +109,10 @@ describe("Unit Testing for AdminDashSideBar Component", () => {
         path: "/EnrollmentOfficerDashboard",
       },
       {
+        name: "Student Information",
+        path: "/StudentInformation",
+      },
+      {
         name: "Account Request",
         path: "/AccountRequest",
       },
