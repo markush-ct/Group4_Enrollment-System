@@ -99,6 +99,10 @@
     .contentSection {
       margin: 50px auto; 
     }
+
+    .Contentt{
+      overflow-x: scroll;
+    }
   
     .PageTitle {
       font-size: 1.5rem;
@@ -123,6 +127,7 @@
         font-size: 14px;
         padding: 8px; 
         width: auto; 
+        overflow-x: scroll;
       }
     }
 
