@@ -378,7 +378,7 @@ describe("Unit Testing for Apply Page", () => {
 
     expect(
       screen.getByText(
-        /The adviser will fill out and submit the pre-enrollment form based on the advising discussion./i
+        /The adviser will fill out and submit the pre-enrollment form based on the advising session./i
       )
     ).toBeInTheDocument();
 
@@ -448,7 +448,7 @@ describe("Unit Testing for Apply Page", () => {
 
     expect(
       screen.getByText(
-        /The adviser will fill out and submit the pre-enrollment form based on the advising discussion./i
+        /The adviser will fill out and submit the pre-enrollment form based on the advising session./i
       )
     ).toBeInTheDocument();
 

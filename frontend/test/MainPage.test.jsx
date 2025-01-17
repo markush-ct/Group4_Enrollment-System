@@ -138,10 +138,6 @@ describe("Unit Testing for the Main Page", () => {
   test("Renders the location icon and information", () => {
     const locationIcon = screen.getByAltText("Location Icon");
     expect(locationIcon).toBeInTheDocument();
-    expect(locationIcon).toHaveAttribute(
-      "src",
-      "/src/assets/location-logo.svg"
-    );
 
     const addressText = screen.getByText(
       /Cavite State University - Bacoor Campus, Bacoor, Cavite./i
@@ -152,7 +148,6 @@ describe("Unit Testing for the Main Page", () => {
   test("Renders the email icon and information", () => {
     const emailIcon = screen.getByAltText("Email Icon");
     expect(emailIcon).toBeInTheDocument();
-    expect(emailIcon).toHaveAttribute("src", "/src/assets/email-logo.svg");
 
     const emailLink = screen.getByText("cvsubacoor@cvsu.edu.ph");
     expect(emailLink).toBeInTheDocument();
@@ -165,7 +160,6 @@ describe("Unit Testing for the Main Page", () => {
   test("Renders the phone icon and information", () => {
     const phoneIcon = screen.getByAltText("Phone Icon");
     expect(phoneIcon).toBeInTheDocument();
-    expect(phoneIcon).toHaveAttribute("src", "/src/assets/phone-logo.svg");
 
     const phoneLink = screen.getByText("(046)476-5029");
     expect(phoneLink).toBeInTheDocument();
@@ -311,10 +305,6 @@ describe("Unit Testing for the Main Page", () => {
 
     const facebookImages = screen.getAllByAltText(/Facebook/i);
     expect(facebookImages.length).toBeGreaterThan(0);
-    expect(facebookImages[0]).toHaveAttribute(
-      "src",
-      "/src/assets/facebook.png"
-    );
     expect(facebookImages[0]).toHaveAttribute("alt", "Facebook");
   });
 

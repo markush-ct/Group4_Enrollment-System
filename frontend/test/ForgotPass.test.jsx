@@ -158,10 +158,16 @@ describe("Unit Testing for Forgot Password Page", () => {
         <ForgotPass />
       </Router>
     );
+
     fireEvent.click(screen.getByText("Reset Password"));
+
     const errorPopup = await screen.findByText("Error");
     expect(errorPopup).toBeInTheDocument();
-    fireEvent.click(screen.getByText("Close"));
+
+    const closeButton = screen.getByText("×");
+
+    fireEvent.click(closeButton);
+
     expect(screen.queryByText("Error")).toBeNull();
   });
 
