@@ -1,0 +1,320 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "backend/server.js", 
+        "use": "@vercel/node"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/editOldStudent",
+        "dest": "http://localhost:8080/editOldStudent"
+      },
+      {
+        "src": "/editNewStudent",
+        "dest": "http://localhost:8080/editNewStudent"
+      },
+      {
+        "src": "/editSocOfficerAccount",
+        "dest": "http://localhost:8080/editSocOfficerAccount"
+      },
+      {
+        "src": "/editEmpAccount",
+        "dest": "http://localhost:8080/editEmpAccount"
+      },
+      {
+        "src": "/activateAccount",
+        "dest": "http://localhost:8080/activateAccount"
+      },
+      {
+        "src": "/terminateAccount",
+        "dest": "http://localhost:8080/terminateAccount"
+      },
+      {
+        "src": "/getAccounts",
+        "dest": "http://localhost:8080/getAccounts"
+      },
+      {
+        "src": "/accReqNotif",
+        "dest": "http://localhost:8080/accReqNotif"
+      },
+      {
+        "src": "/admissionNotif",
+        "dest": "http://localhost:8080/admissionNotif"
+      },
+      {
+        "src": "/viewSched/regirreg",
+        "dest": "http://localhost:8080/viewSched/regirreg"
+      },
+      {
+        "src": "/DCSHeadProgram",
+        "dest": "http://localhost:8080/DCSHeadProgram"
+      },
+      {
+        "src": "/handleConfirmSlot",
+        "dest": "http://localhost:8080/handleConfirmSlot"
+      },
+      {
+        "src": "/getFreshmanSlot",
+        "dest": "http://localhost:8080/getFreshmanSlot"
+      },
+      {
+        "src": "/getFreshmenConfirmedSlots",
+        "dest": "http://localhost:8080/getFreshmenConfirmedSlots"
+      },
+      {
+        "src": "/getShiftingRequestsNotif",
+        "dest": "http://localhost:8080/getShiftingRequestsNotif"
+      },
+      {
+        "src": "/getAdviceStatus/advising",
+        "dest": "http://localhost:8080/getAdviceStatus/advising"
+      },
+      {
+        "src": "/setAdvisingStatus",
+        "dest": "http://localhost:8080/setAdvisingStatus"
+      },
+      {
+        "src": "/sendAdvisingSched",
+        "dest": "http://localhost:8080/sendAdvisingSched"
+      },
+      {
+        "src": "/getCoursesForAdviser",
+        "dest": "http://localhost:8080/getCoursesForAdviser"
+      },
+      {
+        "src": "/getChecklistForAdviser",
+        "dest": "http://localhost:8080/getChecklistForAdviser"
+      },
+      {
+        "src": "/getCOGForAdviser",
+        "dest": "http://localhost:8080/getCOGForAdviser"
+      },
+      {
+        "src": "/getReqsForAdviser",
+        "dest": "http://localhost:8080/getReqsForAdviser"
+      },
+      {
+        "src": "/getAdvisingResult",
+        "dest": "http://localhost:8080/getAdvisingResult"
+      },
+      {
+        "src": "/getChecklistStatus",
+        "dest": "http://localhost:8080/getChecklistStatus"
+      },
+      {
+        "src": "/socfeeRejectChecklist",
+        "dest": "http://localhost:8080/socfeeRejectChecklist"
+      },
+      {
+        "src": "/socfeeVerifyChecklist",
+        "dest": "http://localhost:8080/socfeeVerifyChecklist"
+      },
+      {
+        "src": "/getChecklistForSocOff",
+        "dest": "http://localhost:8080/getChecklistForSocOff"
+      },
+      {
+        "src": "/getCOGForSocOff",
+        "dest": "http://localhost:8080/getCOGForSocOff"
+      },
+      {
+        "src": "/getReqsForSocOff",
+        "dest": "http://localhost:8080/getReqsForSocOff"
+      },
+      {
+        "src": "/submitCOGChecklist",
+        "dest": "http://localhost:8080/submitCOGChecklist"
+      },
+      {
+        "src": "/submitCOGChecklist",
+        "dest": "http://localhost:8080/submitCOGChecklist"
+      },
+      {
+        "src": "/getSubmittedCOG",
+        "dest": "http://localhost:8080/getSubmittedCOG"
+      },
+      {
+        "src": "/getEnrolledStdCount",
+        "dest": "http://localhost:8080/getEnrolledStdCount"
+      },
+      {
+        "src": "/getEnrolledStdInfo",
+        "dest": "http://localhost:8080/getEnrolledStdInfo"
+      },
+      {
+        "src": "/CSEnrollmentPeriod",
+        "dest": "http://localhost:8080/CSEnrollmentPeriod"
+      },
+      {
+        "src": "/ITEnrollmentPeriod",
+        "dest": "http://localhost:8080/ITEnrollmentPeriod"
+      },
+      {
+        "src": "/dcsViewEnrollment",
+        "dest": "http://localhost:8080/dcsViewEnrollment"
+      },
+      {
+        "src": "/viewEnrollmentPeriod",
+        "dest": "http://localhost:8080/viewEnrollmentPeriod"
+      },
+      {
+        "src": "/getEnrollment",
+        "dest": "http://localhost:8080/getEnrollment"
+      },
+      {
+        "src": "/startEnrollment",
+        "dest": "http://localhost:8080/startEnrollment"
+      },
+      {
+        "src": "/finishEnrollment",
+        "dest": "http://localhost:8080/finishEnrollment"
+      },
+      {
+        "src": "/setEnrollmentStatus",
+        "dest": "http://localhost:8080/setEnrollmentStatus"
+      },
+      {
+        "src": "/getChecklistForEnrollmentOff",
+        "dest": "http://localhost:8080/getChecklistForEnrollmentOff"
+      },
+      {
+        "src": "/getPreEnrollForEnrollmentOff",
+        "dest": "http://localhost:8080/getPreEnrollForEnrollmentOff"
+      },
+      {
+        "src": "/getStdEnrollmentStatus",
+        "dest": "http://localhost:8080/getStdEnrollmentStatus"
+      },
+      {
+        "src": "/submitIrregPreEnrollment",
+        "dest": "http://localhost:8080/submitIrregPreEnrollment"
+      },
+      {
+        "src": "/schedOnCourseChange",
+        "dest": "http://localhost:8080/schedOnCourseChange"
+      },
+      {
+        "src": "/classSchedIrreg/preEnroll",
+        "dest": "http://localhost:8080/classSchedIrreg/preEnroll"
+      },
+      {
+        "src": "/adviserApprovePreEnrollment",
+        "dest": "http://localhost:8080/adviserApprovePreEnrollment"
+      },
+      {
+        "src": "/adviserRejectPreEnrollment",
+        "dest": "http://localhost:8080/adviserRejectPreEnrollment"
+      },
+      {
+        "src": "/getPreEnrollmentValuesForAdmin",
+        "dest": "http://localhost:8080/getPreEnrollmentValuesForAdmin"
+      },
+      {
+        "src": "/getPreEnrollForAdviser",
+        "dest": "http://localhost:8080/getPreEnrollForAdviser"
+      },
+      {
+        "src": "/submitPreEnrollment",
+        "dest": "http://localhost:8080/submitPreEnrollment"
+      },
+      {
+        "src": "/getEligibleCourse",
+        "dest": "http://localhost:8080/getEligibleCourse"
+      },
+      {
+        "src": "/getPreEnrollmentValues",
+        "dest": "http://localhost:8080/getPreEnrollmentValues"
+      },
+      {
+        "src": "/getPreEnrollmentStatus",
+        "dest": "http://localhost:8080/getPreEnrollmentStatus"
+      },
+      {
+        "src": "/postEnrollmentPeriod",
+        "dest": "http://localhost:8080/postEnrollmentPeriod"
+      },
+      {
+        "src": "/enrollStatusProgress",
+        "dest": "http://localhost:8080/enrollStatusProgress"
+      },
+      {
+        "src": "/preEnrollProgress",
+        "dest": "http://localhost:8080/preEnrollProgress"
+      },
+      {
+        "src": "/adviseProgress",
+        "dest": "http://localhost:8080/adviseProgress"
+      },
+      {
+        "src": "/reqsProgress",
+        "dest": "http://localhost:8080/reqsProgress"
+      },
+      {
+        "src": "/socFeeProgress",
+        "dest": "http://localhost:8080/socFeeProgress"
+      },
+      {
+        "src": "/getClassSched/popup",
+        "dest": "http://localhost:8080/getClassSched/popup"
+      },
+      {
+        "src": "/getClassSched/table",
+        "dest": "http://localhost:8080/getClassSched/table"
+      },
+      {
+        "src": "/postClassSched",
+        "dest": "http://localhost:8080/postClassSched"
+      },
+      {
+        "src": "/getOptionsForSched",
+        "dest": "http://localhost:8080/getOptionsForSched"
+      },
+      {
+        "src": "/getStudentSocFeeStatus",
+        "dest": "http://localhost:8080/getStudentSocFeeStatus"
+      },
+      {
+        "src": "/searchSocFee",
+        "dest": "http://localhost:8080/searchSocFee"
+      },
+      {
+        "src": "/getSocFee",
+        "dest": "http://localhost:8080/getSocFee"
+      },
+      {
+        "src": "/verifyPaidSocFee",
+        "dest": "http://localhost:8080/verifyPaidSocFee"
+      },
+      {
+        "src": "/verifyUnpaidSocFee",
+        "dest": "http://localhost:8080/verifyUnpaidSocFee"
+      },
+      {
+        "src": "/socOfficerProgram",
+        "dest": "http://localhost:8080/socOfficerProgram"
+      },
+      {
+        "src": "/addStudent/studentInfo",
+        "dest": "http://localhost:8080/addStudent/studentInfo"
+      },
+      {
+        "src": "/getEnrollStatus/studentInfo",
+        "dest": "http://localhost:8080/getEnrollStatus/studentInfo"
+      },
+      {
+        "src": "/getAllStudent",
+        "dest": "http://localhost:8080/getAllStudent"
+      },
+      {
+        "src": "/getCourseChecklist",
+        "dest": "http://localhost:8080/getCourseChecklist"
+      },
+      {
+        "src": "/viewStudentChecklist",
+        "dest": "http://localhost:8080/viewStudentChecklist"
+      }
+    ]
+  }
+  
