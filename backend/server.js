@@ -37,7 +37,7 @@ dotenv.config();
 const app = express();
 
 const corsConfig = {
-    origin: "*",
+    origin: "https://group4-enrollment-system-client.vercel.app",
     credential: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
 };
