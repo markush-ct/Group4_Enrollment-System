@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect, useMemo } from "react";
-import styles from "./styles/SocOFFDash.module.css";
+import styles from "../styles/SocOFFDash.module.css";
 import axios from "axios";
 import Header from "/src/components/AdminDashHeader.jsx";
 import { Doughnut } from "react-chartjs-2";
