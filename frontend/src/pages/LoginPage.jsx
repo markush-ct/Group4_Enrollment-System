@@ -35,7 +35,7 @@ function LoginPage() {
 
   useEffect(() => {
     axios
-      .get(backendUrl)
+      .get('https://group4-enrollment-system-server.vercel.app')
       .then((res) => {
         if (res.data.valid) {
           if (res.data.role === "Enrollment Officer") {
