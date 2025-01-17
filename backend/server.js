@@ -38,12 +38,14 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-    origin: ["http://localhost:5173",
-        "https://group4-enrollment-system-client.vercel.app" 
+    origin: [
+        "http://localhost:5173", // Local development
+        "https://group4-enrollment-system-client.vercel.app" // Deployed frontend URL
     ],
-    methods: ["POST", "GET"],
+    methods: ["POST", "GET", "OPTIONS"], // Ensure OPTIONS is allowed
     credentials: true
 }));
+
 app.use(cookieParser());
 app.use(session({
     secret: 'secret',
