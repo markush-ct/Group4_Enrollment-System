@@ -48,7 +48,7 @@ router.post('/editOldStudent', (req, res) => {
                 const updateAcc = `UPDATE account
                 SET Status = 'Active'
                 WHERE Email = ?`;
-
+                
                 db.query(updateAcc, email, (err, activateAccRes) => {
                     if (err) {
                         return res.json({ message: "Error in server: " + err });
