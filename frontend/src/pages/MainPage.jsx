@@ -17,6 +17,22 @@ import "swiper/css/pagination";
 import "/src/styles/SwiperStyles.css";
 import { Navigation, Pagination } from "swiper/modules";
 import { Link } from "react-router-dom"; // FOR LINKING PAGE
+import cl5 from '/src/assets/cl5.jpg';
+import cl1 from '/src/assets/cl1.jpg';
+import canteen from '/src/assets/canteen.jpg';
+import hmlab from '/src/assets/hmlab.jpg'
+import hmlab2 from '/src/assets/hmlab2.jpg';
+import registrarpic from '/src/assets/registrarpic.jpg';
+import room from '/src/assets/room.jpg';
+import faculty from '/src/assets/faculty.jpg'
+import gympic from '/src/assets/gympic.jpg';
+import librarypic from '/src/assets/librarypic.jpg';
+import newroom from '/src/assets/newroom.jpg'
+import locationLogo from '/src/assets/location-logo.svg';
+import emailLogo from '/src/assets/email-logo.svg'
+import phoneLogo from '/src/assets/phone-logo.svg';
+import cvsuLogo from '/src/assets/cvsu-logo.png';
+import fbLogo from '/src/assets/facebook.png';
 
 function MainPage() {
   const [SideBar, setSideBar] = useState(false);
@@ -126,57 +142,57 @@ function MainPage() {
             >
               <SwiperSlide>
                 <div className={styles.galleryItem}>
-                  <img src="/src/assets/cl5.jpg" alt="Image 1" />
+                  <img src={cl5} alt="Image 1" />
                 </div>
               </SwiperSlide>
               <SwiperSlide>
                 <div className={styles.galleryItem}>
-                  <img src="/src/assets/cl1.jpg" alt="Image 2" />
+                  <img src={cl1} alt="Image 2" />
                 </div>
               </SwiperSlide>
               <SwiperSlide>
                 <div className={styles.galleryItem}>
-                  <img src="/src/assets/canteen.jpg" alt="Image 3" />
+                  <img src={canteen} alt="Image 3" />
                 </div>
               </SwiperSlide>
               <SwiperSlide>
                 <div className={styles.galleryItem}>
-                  <img src="/src/assets/hmlab.jpg" alt="Image 4" />
+                  <img src={hmlab} alt="Image 4" />
                 </div>
               </SwiperSlide>
               <SwiperSlide>
                 <div className={styles.galleryItem}>
-                  <img src="/src/assets/hmlab2.jpg" alt="Image 5" />
+                  <img src={hmlab2} alt="Image 5" />
                 </div>
               </SwiperSlide>
               <SwiperSlide>
                 <div className={styles.galleryItem}>
-                  <img src="/src/assets/registrarpic.jpg" alt="Image 6" />
+                  <img src={registrarpic} alt="Image 6" />
                 </div>
               </SwiperSlide>
               <SwiperSlide>
                 <div className={styles.galleryItem}>
-                  <img src="/src/assets/room.jpg" alt="Image 7" />
+                  <img src={room} alt="Image 7" />
                 </div>
               </SwiperSlide>
               <SwiperSlide>
                 <div className={styles.galleryItem}>
-                  <img src="/src/assets/faculty.jpg" alt="Image 8" />
+                  <img src={faculty} alt="Image 8" />
                 </div>
               </SwiperSlide>
               <SwiperSlide>
                 <div className={styles.galleryItem}>
-                  <img src="/src/assets/gympic.jpg" alt="Image 9" />
+                  <img src={gympic} alt="Image 9" />
                 </div>
               </SwiperSlide>
               <SwiperSlide>
                 <div className={styles.galleryItem}>
-                  <img src="/src/assets/librarypic.jpg" alt="Image 10" />
+                  <img src={librarypic} alt="Image 10" />
                 </div>
               </SwiperSlide>
               <SwiperSlide>
                 <div className={styles.galleryItem}>
-                  <img src="/src/assets/newroom.jpg" alt="Image 11" />
+                  <img src={newroom} alt="Image 11" />
                 </div>
               </SwiperSlide>
             </Swiper>
@@ -202,7 +218,7 @@ function MainPage() {
             <div className={styles.contactCard}>
               <div className={styles.iconContainer}>
                 <img
-                  src="/src/assets/location-logo.svg"
+                  src={locationLogo}
                   alt="Location Icon"
                   className={styles.contactIcon}
                 />
@@ -213,7 +229,7 @@ function MainPage() {
             <div className={styles.contactCard}>
               <div className={styles.iconContainer}>
                 <img
-                  src="/src/assets/email-logo.svg"
+                  src={emailLogo}
                   alt="Email Icon"
                   className={styles.contactIcon}
                 />
@@ -228,7 +244,7 @@ function MainPage() {
             <div className={styles.contactCard}>
               <div className={styles.iconContainer}>
                 <img
-                  src="/src/assets/phone-logo.svg"
+                  src={phoneLogo}
                   alt="Phone Icon"
                   className={styles.contactIcon}
                 />
@@ -324,7 +340,7 @@ function MainPage() {
           <div className={styles.parallaxContent}>
             <div className={styles.footerBranding}>
               <img
-                src="/src/assets/cvsu-logo.png"
+                src={cvsuLogo}
                 alt="Cavite State University Logo"
                 className={styles.footerLogo}
               />
@@ -339,7 +355,7 @@ function MainPage() {
                 rel="noopener noreferrer"
               >
                 <img
-                  src="/src/assets/facebook.png"
+                  src={fbLogo}
                   alt="Facebook"
                   className={styles.socialIcon}
                 />
