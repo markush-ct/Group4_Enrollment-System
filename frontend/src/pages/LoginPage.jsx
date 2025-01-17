@@ -74,7 +74,7 @@ function LoginPage() {
     e.preventDefault();
 
     axios
-      .post("http://localhost:8080/LoginPage", values)
+      .post(`${backendUrl}/LoginPage`, values)
       .then((res) => {
         if (res.data.isLoggedIn && res.data.status === "Active") {
           const role = res.data.role;
