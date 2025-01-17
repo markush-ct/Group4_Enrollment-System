@@ -42,7 +42,7 @@ app.use(cors({
         "http://localhost:5173", // Local development
         "https://group4-enrollment-system-client.vercel.app" // Deployed frontend URL
     ],
-    methods: ["POST", "GET", "OPTIONS"], // Ensure OPTIONS is allowed
+    methods: ["POST", "GET"], // Ensure OPTIONS is allowed
     credentials: true
 }));
 
