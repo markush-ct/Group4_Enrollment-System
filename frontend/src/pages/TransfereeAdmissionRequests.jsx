@@ -262,8 +262,8 @@ function TransfereeAdmissionRequest() {
 
             {/* Date Input and Send Button */}
 
-            <div data-aos="fade-up" className={styles.studentType}>
-              <h5>Date of Submission</h5>
+            <div data-aos="fade-up" className={styles.formGroup}>
+              <label>Date of Submission</label>
 
               <input
                 type="date"
@@ -305,8 +305,8 @@ function TransfereeAdmissionRequest() {
             </div>
 
             {/* Date Input and Send Button */}
-            <div data-aos="fade-up" className={styles.studentType}>
-              <h5>Reason</h5>
+            <div data-aos="fade-up" className={styles.formGroup}>
+              <label>Reason</label>
 
               <input
                 type="textarea"

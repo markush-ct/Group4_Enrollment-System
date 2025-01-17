@@ -205,7 +205,7 @@ function SchedManagement() {
           </button>
 
           {/* Dropdown  */}
-          <div className={styles.filterSection} data-aos="fade-up">
+          <div className={styles.filterSection} >
             <label htmlFor="filter" className={styles.filterLabel}>Filter by Type:</label>
             <select
               id="filter"

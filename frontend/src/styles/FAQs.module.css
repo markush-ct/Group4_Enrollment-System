@@ -204,7 +204,7 @@ h2, p {
 }
 
 .popupContent::-webkit-scrollbar {
-    width: 20px;
+    width: 0px;
 }
 
 .popupHeader {

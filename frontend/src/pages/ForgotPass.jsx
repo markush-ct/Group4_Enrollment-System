@@ -12,8 +12,8 @@ function ForgotPass() {
   const [verificationPrompt, setVerificationPrompt] = useState(false);
   const [passwordResetPrompt, setPasswordResetPrompt] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [errorPrompt, setErrorPrompt] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showErrorPopup, setShowErrorPopup] = useState(false); // if password isn't same
   const [showSuccessPopup, setShowSuccessPopup] = useState(false); // for success popup
   const [showConfirmationPopup, setShowConfirmationPopup] = useState(false); // for confirmation popup
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -38,7 +38,7 @@ function ForgotPass() {
   const handleResetClick = () => {
     if (!values.email || values.email === "") {
       setErrorMessage("Email is required.");
-      setShowErrorPopup(true);
+      setErrorPrompt(true);
       return;
     }
     axios
@@ -50,7 +50,7 @@ function ForgotPass() {
           return;
         } else if (res.data.message === "Email doesn't exist") {
           setErrorMessage(res.data.message);
-          setShowErrorPopup(true);
+          setErrorPrompt(true);
         }
       });
   };
@@ -72,7 +72,7 @@ function ForgotPass() {
       values.pin.join("").length !== 4
     ) {
       setErrorMessage("Please enter all 4 digits of the PIN.");
-      setShowErrorPopup(true);
+      setErrorPrompt(true);
       return;
     }
 
@@ -87,7 +87,7 @@ function ForgotPass() {
           setVerificationPrompt(false);
           setPasswordResetPrompt(true);
         } else {
-          setShowErrorPopup(true);
+          setErrorPrompt(true);
           setErrorMessage(res.data.message);
         }
       });
@@ -97,13 +97,13 @@ function ForgotPass() {
     // error popup
     if (!values.newPassword || !values.confirmPassword) {
       setErrorMessage("Both fields are required.");
-      setShowErrorPopup(true);
+      setErrorPrompt(true);
       return;
     }
 
     if (values.newPassword !== values.confirmPassword) {
       setErrorMessage("Passwords do not match.");
-      setShowErrorPopup(true);
+      setErrorPrompt(true);
       return;
     }
 
@@ -139,7 +139,7 @@ function ForgotPass() {
           });
         } else {
           setErrorMessage(res.data.message);
-          setShowErrorPopup(true);
+          setErrorPrompt(true);
         }
       });
   };
@@ -281,31 +281,29 @@ function ForgotPass() {
       )}
 
       {/* Error Popup */}
-      {showErrorPopup && (
-        <div
-          data-aos="zoom-out"
-          data-aos-duration="500"
-          className={styles.popup}
-        >
-          <div className={styles.popupContent}>
-            <button
-              className={styles.closeButton}
-              onClick={() => setShowErrorPopup(false)}
-            >
-              &times;
-            </button>
-            <div className={styles.popupHeader}>
-              <h2>Error</h2>
-            </div>
-            <p className={styles.errorText}>{errorMessage}</p>
-            <button
-              className={styles.resetButton}
-              onClick={() => setShowErrorPopup(false)}
-            >
-              <span>Close</span>
-            </button>
-          </div>
-        </div>
+      {errorPrompt && (
+        <div data-aos="zoom-out" data-aos-duration="500" className={styles.popupPromptError} style={{zIndex: '100000'}}>
+                  <div className={styles.popupPromptContentError}>
+                  <div className={styles.popupPromptHeaderError}>
+                      <h2>Error</h2>
+                    </div>
+                    <button
+                      className={styles.closeButton}
+                      onClick={() => setErrorPrompt(false)}
+                    >
+                      &times;
+                    </button>
+                    
+                    <div className={styles.popupPromptMessageError}>
+                      <img
+                        src="/src/assets/errormark.png"
+                        alt="Error Icon"
+                        className={styles.popupPromptmessageImage}
+                      />
+                    </div>
+                    <p className={styles.popupPromptTextError}>{errorMessage}</p>
+                  </div>
+                </div>
       )}
 
       {/* Success Popup */}

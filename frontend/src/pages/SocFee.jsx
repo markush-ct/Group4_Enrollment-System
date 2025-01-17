@@ -414,7 +414,7 @@ const closePrompt = () => {
                     handleApproveSocFee(request);
                   }}
                 >
-                  &#10004;
+                  <span>&#10004;</span>
                 </button>
                 <button
                   className={styles.rejectButton}
@@ -423,7 +423,7 @@ const closePrompt = () => {
                     handleRejectSocFee(request);
                   }}
                 >
-                  {loading ? 'Loading...' : 'X'}
+                  <span>{loading ? 'Loading...' : 'X'}</span>
                 </button>
               </td>
             </tr>

@@ -1099,18 +1099,20 @@ font-size: 1rem;
   display: flex;
   justify-content: flex-end; 
   align-items: center;
-  width: 50%; 
+  margin-bottom: 20px;
+  padding-right: 20px; 
 }
 
 .filterLabel {
-  margin-right: 10px; 
+  margin-right: 10px;
+  font-size: 16px;
 }
 
 .filterDropdown {
-  padding: 0.5rem;
-  border-radius: 5px; 
-  border: 1px solid #ccc; 
+  padding: 5px 10px;
+  font-size: 16px;
 }
+
 
 
 .addButton1 {
