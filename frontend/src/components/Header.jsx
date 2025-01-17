@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom'; // FOR LINKING PAGE
 import SidebarMenu from '/src/components/SidebarMenu';
 import style from '/src/styles/header.module.css';
+import cvsuLogo from '/src/assets/cvsu-logo.png'
 
 function Header({SideBar, setSideBar}) {
 
@@ -17,7 +18,7 @@ function Header({SideBar, setSideBar}) {
             <div className={style.nav}>
                 <header className={style.header} data-testid="mock-header">
                     <div className={style.navLeft}>
-                    <Link to="/MainPage"><img className={style.cvsuLogo} src="../assets/cvsu-logo.png" alt="cvsu logo" /></Link>
+                    <Link to="/MainPage"><img className={style.cvsuLogo} src={cvsuLogo} alt="cvsu logo" /></Link>
                         <div className={style.institution}>
                             <h2 className={style.schoolName}>CAVITE STATE UNIVERSITY</h2>
                             <h2 className={style.schoolName}>BACOOR CAMPUS</h2>
