@@ -2745,3 +2745,5 @@ app.post('/LoginPage', (req, res) => {
 app.listen(8080, () => {
     console.log('Server is running');
 })
+
+export default app;
