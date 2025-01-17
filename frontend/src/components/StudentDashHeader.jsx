@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import StudentDashSideBar from "/src/components/StudentDashSideBar.jsx";
+import StudentDashSideBar from "/src/components/StudentDashSidebar.jsx";
 import style from "/src/styles/StudentDashHeader.module.css";
 import axios from "axios";
 import { useEffect, useState } from "react";
