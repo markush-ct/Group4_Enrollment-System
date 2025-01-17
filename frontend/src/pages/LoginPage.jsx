@@ -8,6 +8,8 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function LoginPage() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
   const [signUpPrompt, setsignUpPrompt] = useState(false); //success
   const [signUpMsg, setsignUpMsg] = useState("");
   const [errorPrompt, setErrorPrompt] = useState(false); //errors
@@ -33,7 +35,7 @@ function LoginPage() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(backendUrl)
       .then((res) => {
         if (res.data.valid) {
           if (res.data.role === "Enrollment Officer") {
