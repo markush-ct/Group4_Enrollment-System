@@ -35,7 +35,7 @@ function LoginPage() {
 
   useEffect(() => {
     axios
-      .get(backendUrl)
+      .get(`${backendUrl}/loginSession`)
       .then((res) => {
         if (res.data.valid) {
           if (res.data.role === "Enrollment Officer") {

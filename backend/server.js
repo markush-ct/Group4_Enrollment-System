@@ -7,11 +7,8 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
-import { report } from 'process';
-import { devNull } from 'os';
 import multer from 'multer';
 import path from 'path';
-import fs from 'fs';
 import accReqNotif from './routes/accReqNotif.js';
 import admissionNotif from './routes/admissionNotif.js';
 import getFreshmenConfirmedSlots from './routes/getFreshmenConfirmedSlots.js';
@@ -47,11 +44,11 @@ app.options("", cors(corsConfig));
 app.use(cors(corsConfig));
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://group4-enrollment-system-client.vercel.app');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true'); // If cookies are required
-  next();
+    res.header('Access-Control-Allow-Origin', 'https://group4-enrollment-system-client.vercel.app');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true'); // If cookies are required
+    next();
 });
 
 app.use(express.json());
@@ -122,7 +119,7 @@ app.use('/', ClassSched);
 app.use('/', StudentInformation);
 
 
-app.post('/rejectTransfereeAdmissionReq', (req, res) =>{
+app.post('/rejectTransfereeAdmissionReq', (req, res) => {
     const getEmpID = `SELECT * FROM employee where Email = ?`;
 
     db.query(getEmpID, req.session.email, (err, idRes) => {
@@ -279,13 +276,13 @@ FROM admissionform
 WHERE TransfereeCollegeCourse IS NOT NULL;
 `;
 
-db.query(sql1, (err, prevCoursesRes) => {
-    if (err) {
-        return res.json({ message: "Error in server: " + err });
-    } else {
-        return res.json({prevCourses: prevCoursesRes});
-    }
-})
+    db.query(sql1, (err, prevCoursesRes) => {
+        if (err) {
+            return res.json({ message: "Error in server: " + err });
+        } else {
+            return res.json({ prevCourses: prevCoursesRes });
+        }
+    })
 })
 
 app.get('/getTransfereeAdmissionReq', (req, res) => {
@@ -306,7 +303,7 @@ app.get('/getTransfereeAdmissionReq', (req, res) => {
             return res.json({ message: "No records found" });
         }
 
-        if (results.length > 0) {            
+        if (results.length > 0) {
             return res.json({
                 message: "Fetched records successfully",
                 records: results,
@@ -501,7 +498,7 @@ app.get('/getTransfereeData', (req, res) => {
             db.query(getTransfereeData, studentRes[0].StudentID, (err, transfereeRes) => {
                 if (err) {
                     return res.json({ message: "Error in server: " + err });
-                } else if(transfereeRes.length > 0 ){
+                } else if (transfereeRes.length > 0) {
                     return res.json({
                         message: "Fetched records successfully",
                         student: studentRes[0],
@@ -513,7 +510,7 @@ app.get('/getTransfereeData', (req, res) => {
     });
 })
 
-app.post('/rejectFreshmenAdmissionReq', (req, res) =>{
+app.post('/rejectFreshmenAdmissionReq', (req, res) => {
     const getEmpID = `SELECT * FROM employee where Email = ?`;
 
     db.query(getEmpID, req.session.email, (err, idRes) => {
@@ -603,15 +600,15 @@ app.post('/approveFreshmenAdmissionReq', (req, res) => {
             // Ensure that examDatetime is in the correct format (YYYY-MM-DDTHH:MM)
             const examDate = new Date(examDatetime);
             const formattedExamDateTime = isNaN(examDate)
-            ? "Invalid Date"
-            : examDate.toLocaleString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: 'numeric',
-                minute: '2-digit',
-                hour12: true
-            });
+                ? "Invalid Date"
+                : examDate.toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+                });
 
             const updateSubmissionSched = `UPDATE admissionform
             SET EmployeeID = ?,
@@ -714,7 +711,7 @@ app.get('/getFreshmenAdmissionReq', (req, res) => {
             return res.json({ message: "No records found" });
         }
 
-        if (results.length > 0) {            
+        if (results.length > 0) {
             return res.json({
                 message: "Fetched records successfully",
                 records: results,
@@ -751,15 +748,15 @@ app.get('/getTotalShiftingReq', (req, res) => {
             GROUP BY 
                 s.CvSUStudentID`;
 
-    db.query(sql, programID, (err, result) => {
-        if (err) {
-            return res.json({ message: "Error in server: " + err });
-        } else {
-            return res.json({ shiftingReqCount: result.length });
+            db.query(sql, programID, (err, result) => {
+                if (err) {
+                    return res.json({ message: "Error in server: " + err });
+                } else {
+                    return res.json({ shiftingReqCount: result.length });
+                }
+            });
         }
     });
-        }
-});
 })
 
 app.post('/rejectShiftingReq', (req, res) => {
@@ -902,11 +899,11 @@ app.get('/shiftingRequests', (req, res) => {
     db.query(getAdminProgram, req.session.email, (err, adminRes) => {
         if (err) {
             return res.json({ message: "Error in server: " + err });
-        } else if(adminRes.length > 0 ){
+        } else if (adminRes.length > 0) {
             const programID = adminRes[0].ProgramID;
 
-            if(programID === 1){
-                    const query = `
+            if (programID === 1) {
+                const query = `
                     SELECT 
                         s.CvSUStudentID, s.ProgramID, s.Email, s.Firstname, s.Middlename, s.Lastname, s.PrevProgram, 
                         sf.PrevProgramAdviser, sf.AcadYear, sf.Reasons, sf.Date 
@@ -928,7 +925,7 @@ app.get('/shiftingRequests', (req, res) => {
                         return res.json({ message: "No records found" });
                     }
                 });
-            } else if(programID === 2){
+            } else if (programID === 2) {
                 const query = `
                     SELECT 
                         s.CvSUStudentID, s.ProgramID, s.Email, s.Firstname, s.Middlename, s.Lastname, s.PrevProgram, 
@@ -1500,7 +1497,7 @@ app.get('/getAccountReq', (req, res) => {
 app.post('/sendEmailRejection', async (req, res) => {
     const { email, name, accountType } = req.body;
 
-    if (!email || !name || !accountType) {        
+    if (!email || !name || !accountType) {
         return res.status(400).json({ message: 'Email and name are required.' });
     }
 
@@ -2061,7 +2058,7 @@ app.post('/CreateAcc', (req, res) => {
                                         }
                                     })
                                 });
-                            } else {                                
+                            } else {
                                 return res.json({ message: "Error: " + err });
                             }
                         }
@@ -2615,7 +2612,7 @@ app.post("/logoutFunction", (req, res) => {
 });
 
 //LOGIN
-app.get('/', (req, res) => {
+app.get('/loginSession', (req, res) => {
     if (req.session && req.session.accountID) {
         const getName = `SELECT * FROM account WHERE Email = ?`;
         db.query(getName, req.session.email, (err, result) => {
@@ -2631,28 +2628,6 @@ app.get('/', (req, res) => {
                 })
             }
         })
-    } else if (req.cookies.rememberMe) {
-        const rememberedData = JSON.parse(req.cookies.rememberMe);
-
-        // Validate and auto-login the user based on cookie data
-        const validateQuery = `SELECT * FROM account WHERE AccountID = ? AND Email = ?`;
-        db.query(validateQuery, [rememberedData.accountID, rememberedData.email], (err, result) => {
-            if (err || result.length === 0) {
-                return res.json({ valid: false });
-            }
-
-            const user = result[0];
-            req.session.accountID = rememberedData.accountID;
-            req.session.role = rememberedData.role;
-            req.session.email = rememberedData.email;
-
-            return res.json({
-                valid: true,
-                accountID: req.session.accountID,
-                role: req.session.role,
-                email: req.session.email
-            });
-        });
     } else {
         return res.json({ valid: false })
     }
