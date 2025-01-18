@@ -1,7 +1,14 @@
 import express from 'express'
 import mysql from 'mysql'
 import cors from 'cors'
-
+import session from 'express-session';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+import crypto from 'crypto';
+import nodemailer from 'nodemailer';
+import multer from 'multer';
+import path from 'path';
 import accReqNotif from './routes/accReqNotif.js';
 import admissionNotif from './routes/admissionNotif.js';
 import getFreshmenConfirmedSlots from './routes/getFreshmenConfirmedSlots.js';
