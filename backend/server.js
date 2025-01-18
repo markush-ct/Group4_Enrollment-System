@@ -32,19 +32,14 @@ import StudentInformation from './routes/StudentInformation.js';
 dotenv.config();
 const app = express();
 
+// CORS configuration
 const corsConfig = {
-    origin: ['http://localhost:5173', 'https://group4-enrollment-system-server.vercel.app'], // Replace with your frontend's production URL
+    origin: ['http://localhost:5173', 'https://group4-enrollment-system-client.vercel.app'],
     credentials: true,
 };
-app.use(cors(corsConfig));
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'https://group4-enrollment-system-client.vercel.app');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.header('Access-Control-Allow-Credentials', 'true'); // If cookies are required
-    next();
-});
+// Enable CORS middleware
+app.use(cors(corsConfig));
 
 app.use(express.json());
 
