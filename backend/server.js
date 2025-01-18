@@ -68,7 +68,6 @@ const db = mysql.createConnection({
     database: 'cvsuenrollmentsystem'
 })
 
-
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
