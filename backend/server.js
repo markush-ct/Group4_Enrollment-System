@@ -100,19 +100,19 @@ app.use('/getShiftingRequestsNotif', getShiftingRequestsNotif);
 app.use('/socOfficerProgram', socOfficerProgram);
 app.use('/DCSHeadProgram', DCSHeadProgram);
 app.use('/postEnrollmentPeriod', postEnrollmentPeriod);
-app.use('/', handleEnrollment);
-app.use('/', socFee);
-app.use('/', FreshmenSlotConfirmation);
-app.use('/', AccountManagement);
-app.use('/', viewChecklist);
-app.use('/', HandleCOGChecklist);
-app.use('/', HandleAdvising);
-app.use('/', HandlePreEnrollment);
-app.use('/', RegIrregEnrollProgress);
-app.use('/', HandleEnrollmentStatus);
-app.use('/', SchedManagement);
-app.use('/', ClassSched);
-app.use('/', StudentInformation);
+app.use('/api', handleEnrollment);
+app.use('/api', socFee);
+app.use('/api', FreshmenSlotConfirmation);
+app.use('/api', AccountManagement);
+app.use('/api', viewChecklist);
+app.use('/api', HandleCOGChecklist);
+app.use('/api', HandleAdvising);
+app.use('/api', HandlePreEnrollment);
+app.use('/api', RegIrregEnrollProgress);
+app.use('/api', HandleEnrollmentStatus);
+app.use('/api', SchedManagement);
+app.use('/api', ClassSched);
+app.use('/api', StudentInformation);
 
 
 app.post('/rejectTransfereeAdmissionReq', (req, res) => {
