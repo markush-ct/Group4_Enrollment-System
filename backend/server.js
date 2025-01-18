@@ -1,6 +1,34 @@
 import express from 'express'
 import mysql from 'mysql'
-
+import cors from 'cors'
+import session from 'express-session';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+import crypto from 'crypto';
+import nodemailer from 'nodemailer';
+import multer from 'multer';
+import path from 'path';
+import accReqNotif from './routes/accReqNotif.js';
+import admissionNotif from './routes/admissionNotif.js';
+import getFreshmenConfirmedSlots from './routes/getFreshmenConfirmedSlots.js';
+import getShiftingRequestsNotif from './routes/getShiftingRequestsNotif.js';
+import socOfficerProgram from './routes/socOfficerProgram.js';
+import DCSHeadProgram from './routes/DCSHeadProgram.js';
+import postEnrollmentPeriod from './routes/postEnrollmentPeriod.js';
+import handleEnrollment from './routes/handleEnrollment.js';
+import socFee from './routes/socFee.js';
+import FreshmenSlotConfirmation from './routes/FreshmenSlotConfirmation.js';
+import AccountManagement from './routes/AccountManagement.js';
+import viewChecklist from './routes/viewChecklist.js';
+import HandleCOGChecklist from './routes/HandleCOGChecklist.js';
+import HandleAdvising from './routes/HandleAdvising.js';
+import HandlePreEnrollment from './routes/HandlePreEnrollment.js';
+import RegIrregEnrollProgress from './routes/RegIrregDashboardProgress.js';
+import HandleEnrollmentStatus from './routes/HandleEnrollmentStatus.js';
+import SchedManagement from './routes/SchedManagement.js';
+import ClassSched from './routes/ClassSched.js';
+import StudentInformation from './routes/StudentInformation.js';
 
 dotenv.config();
 const app = express();
@@ -64,6 +92,27 @@ const upload = multer({ storage });
 
 app.use("/uploads", express.static("uploads"));
 
+
+app.use('/accReqNotif', accReqNotif);
+app.use('/admissionNotif', admissionNotif);
+app.use('/getFreshmenConfirmedSlots', getFreshmenConfirmedSlots);
+app.use('/getShiftingRequestsNotif', getShiftingRequestsNotif);
+app.use('/socOfficerProgram', socOfficerProgram);
+app.use('/DCSHeadProgram', DCSHeadProgram);
+app.use('/postEnrollmentPeriod', postEnrollmentPeriod);
+app.use('/', handleEnrollment);
+app.use('/', socFee);
+app.use('/', FreshmenSlotConfirmation);
+app.use('/', AccountManagement);
+app.use('/', viewChecklist);
+app.use('/', HandleCOGChecklist);
+app.use('/', HandleAdvising);
+app.use('/', HandlePreEnrollment);
+app.use('/', RegIrregEnrollProgress);
+app.use('/', HandleEnrollmentStatus);
+app.use('/', SchedManagement);
+app.use('/', ClassSched);
+app.use('/', StudentInformation);
 
 
 app.post('/rejectTransfereeAdmissionReq', (req, res) => {
