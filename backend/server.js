@@ -5,7 +5,7 @@ import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
-//import crypto from 'crypto';
+import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import multer from 'multer';
 import path from 'path';
@@ -36,10 +36,10 @@ const app = express();
 const corsConfig = {
     origin: ['http://localhost:5173', 'https://group4-enrollment-system-server.vercel.app'], // Replace with your frontend's production URL
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
 };
-app.options("", cors(corsConfig));
+
 app.use(cors(corsConfig));
+
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'https://group4-enrollment-system-client.vercel.app');
