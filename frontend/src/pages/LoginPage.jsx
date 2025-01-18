@@ -6,6 +6,10 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import checkmark from '/src/assets/checkmark.png';
+import errormark from '/src/assets/errormark.png'
+import userLogo from '/src/assets/login-userlogo.svg';
+import passLogo from '/src/assets/login-pwlogo.svg';
 
 function LoginPage() {
   const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5173';
@@ -147,7 +151,7 @@ function LoginPage() {
             </div>
             <div className={styles.Message}>
               <img
-                src="/src/assets/checkmark.png"
+                src={checkmark}
                 alt="Success Icon"
                 className={styles.messageImage}
               />
@@ -176,7 +180,7 @@ function LoginPage() {
             </div>
             <div className={styles.MessageError}>
               <img
-                src="/src/assets/errormark.png"
+                src={errormark}
                 alt="Error Icon"
                 className={styles.messageImage}
               />
@@ -198,7 +202,7 @@ function LoginPage() {
           <form onSubmit={submitLogin}>
             <div className={styles.inputGroup}>
               <div className={styles.inputIcon}>
-                <img src="/src/assets/login-userlogo.svg" alt="User Icon" />
+                <img src={userLogo} alt="User Icon" />
               </div>
               <input
                 name="email"
@@ -212,7 +216,7 @@ function LoginPage() {
             </div>
             <div className={styles.inputGroup}>
               <div className={styles.inputIcon}>
-                <img src="/src/assets/login-pwlogo.svg" alt="Lock Icon" />
+                <img src={passLogo} alt="Lock Icon" />
               </div>
               <input
                 name="password"
