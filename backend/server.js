@@ -2717,8 +2717,12 @@ app.post('/LoginPage', (req, res) => {
     });
 });
 
+app.get('/', (_,res) => {
+    res.json('Hello world');
+});
+
 app.listen(8080, () => {
     console.log('Server is running');
-})
+});
 
 export default app;
