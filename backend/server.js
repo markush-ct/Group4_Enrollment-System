@@ -95,7 +95,26 @@ const upload = multer({ storage });
 app.use("/uploads", express.static("uploads"));
 
 
-
+app.use('/accReqNotif', accReqNotif);
+app.use('/admissionNotif', admissionNotif);
+app.use('/getFreshmenConfirmedSlots', getFreshmenConfirmedSlots);
+app.use('/getShiftingRequestsNotif', getShiftingRequestsNotif);
+app.use('/socOfficerProgram', socOfficerProgram);
+app.use('/DCSHeadProgram', DCSHeadProgram);
+app.use('/postEnrollmentPeriod', postEnrollmentPeriod);
+app.use('/', handleEnrollment);
+app.use('/', socFee);
+app.use('/', FreshmenSlotConfirmation);
+app.use('/', AccountManagement);
+app.use('/', viewChecklist);
+app.use('/', HandleCOGChecklist);
+app.use('/', HandleAdvising);
+app.use('/', HandlePreEnrollment);
+app.use('/', RegIrregEnrollProgress);
+app.use('/', HandleEnrollmentStatus);
+app.use('/', SchedManagement);
+app.use('/', ClassSched);
+app.use('/', StudentInformation);
 
 
 app.post('/rejectTransfereeAdmissionReq', (req, res) => {
