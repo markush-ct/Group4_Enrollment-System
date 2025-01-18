@@ -3,7 +3,6 @@ import mysql from 'mysql'
 import cors from 'cors'
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
@@ -59,7 +58,6 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24
     }
 }));
-app.use(bodyParser.json());
 
 const db = mysql.createConnection({
     host: '127.0.0.1',
