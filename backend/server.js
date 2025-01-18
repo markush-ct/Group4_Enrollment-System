@@ -1,7 +1,7 @@
 import express from 'express'
 import mysql from 'mysql'
 import cors from 'cors'
-//import session from 'express-session';
+import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
@@ -2717,8 +2717,14 @@ app.post('/LoginPage', (req, res) => {
     });
 });
 
-app.get('/', (_,res) => {
-    res.json('Hello world');
+app.get('/', (req, res) => {
+    console.log("Request received at '/'");
+    res.send('Hello, World!');
+});
+
+app.use((err, req, res, next) => {
+    console.error('Error:', err.message);
+    res.status(500).send('Internal Server Error');
 });
 
 app.listen(8080, () => {
