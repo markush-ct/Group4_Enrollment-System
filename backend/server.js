@@ -34,7 +34,7 @@ dotenv.config();
 const app = express();
 
 const corsConfig = {
-    origin: ['http://localhost:5173', 'https://group4-enrollment-system-server.vercel.app'], // Replace with your frontend's production URL
+    origin: ['http://localhost:5173', 'https://group4-enrollment-system-client.vercel.app'],
     credentials: true,
 };
 app.use(cors(corsConfig));
