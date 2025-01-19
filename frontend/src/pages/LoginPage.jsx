@@ -77,46 +77,8 @@ function LoginPage() {
   const submitLogin = (e) => {
     e.preventDefault();
 
-    axios
-      .post(`${backendUrl}/LoginPage`, values)
-      .then((res) => {
-        if (res.data.isLoggedIn && res.data.status === "Active") {
-          const role = res.data.role;
+    navigate('/MainPage'); // Redirect after login
 
-          if (role === "Enrollment Officer") {
-            navigate("/EnrollmentOfficerDashboard");
-          } else if (role === "Freshman") {
-            navigate("/FreshmenAdmissionForm");
-          } else if (role === "Transferee") {
-            navigate("/TransfereeAdmissionForm");
-          } else if (role === "Shiftee") {
-            navigate("/ShifteeForm");
-          } else if (role === "Regular" || res.data.role === "Irregular") {
-            navigate("/RegIrregDashboard");
-          } else if (role === "Society Officer") {
-            navigate("/SocOfficerDashboard");
-          } else if (role === "Adviser") {
-            navigate("/AdviserDashboard");
-          } else if (role === "DCS Head") {
-            navigate("/DCSHeadDashboard");
-          } else if (role === "School Head") {
-            navigate("/SchoolHeadDashboard");
-          } else {
-            navigate("/LoginPage"); // Fallback route if role is not recognized
-          }
-        } else if (res.data.isLoggedIn === false) {
-          setsignUpPrompt(false);
-          setsignUpMsg(res.data.message);
-          setErrorPrompt(true);
-          setErrorMsg(res.data.message);
-          setError("");
-          res.data.isLoggedIn = false;
-        }
-      })
-      .catch((err) => {
-        setError("Login failed. Please try again.");
-        console.error(err);
-      });
   };
 
   const [SideBar, setSideBar] = useState(false);
