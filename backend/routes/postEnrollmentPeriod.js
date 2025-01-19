@@ -1,20 +1,16 @@
 import express from 'express';
 import mysql from 'mysql';
+import dbConfig from './db/dbConfig.js';
 
+
+dotenv.config();
 const router = express.Router();
 
-// Create a database connection
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'cvsuenrollmentsystem'
-});
+const db = mysql.createConnection(dbConfig);
 
-// Connect to the database
 db.connect((err) => {
     if (err) {
-        console.error('Error connecting to the database:', err.message);
+        console.error('Error connecting to the database:', err.stack);
     }
 });
 

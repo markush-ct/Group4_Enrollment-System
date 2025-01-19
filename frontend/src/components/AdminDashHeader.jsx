@@ -5,10 +5,12 @@ import style from "/src/styles/AdminDashHeader.module.css";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import menu from '/src/assets/menu-button.png';
 
 function AdminDashHeader() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5173';
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const [accName, setAccName] = useState("");
   const [accRole, setAccRole] = useState("");
@@ -18,7 +20,7 @@ function AdminDashHeader() {
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(`${backendUrl}`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);
@@ -33,9 +35,9 @@ function AdminDashHeader() {
       });
 
     axios
-      .get("http://localhost:8080/getPFP")
+      .get(`${backendUrl}/getPFP`)
       .then((res) => {
-        setPFP(`http://localhost:8080/${res.data.uploadPFP}`);
+        setPFP(`${backendUrl}/${res.data.uploadPFP}`);
       })
       .catch((err) => {
         alert("Error: " + err);
@@ -55,7 +57,7 @@ function AdminDashHeader() {
             <button className={style.menuBtn} onClick={toggleSidebar}>
               <img
                 className={style.menuIcon}
-                src="/src/assets/menu-button.png"
+                src={menu}
                 alt="Menu"
               />
             </button>

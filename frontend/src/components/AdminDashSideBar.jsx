@@ -17,8 +17,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logoutFunction from "/src/components/logoutFunction.jsx";
 import studentIcon from '/src/assets/student_info_icon.png'
+import cvsulogo from '/src/assets/cvsu-logo.png';
 
 function AdminDashSideBar({ isOpen, toggleSidebar }) {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5173';
   const [accName, setAccName] = useState("");
   const navigate = useNavigate();
   const location = useLocation(); // to track current URL
@@ -28,7 +30,7 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(`${backendUrl}`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);
@@ -50,7 +52,7 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
   useEffect(() => {
     const fetchAccReqNotif = async () => {
       try {
-        const accReqRes = await axios.get("http://localhost:8080/accReqNotif");
+        const accReqRes = await axios.get(`${backendUrl}/accReqNotif`);
         setAccReqNotif(
           accReqRes.data.studentCount +
             accReqRes.data.empCount +
@@ -68,7 +70,7 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
     const fetchAdmissionNotif = async () => {
       try {
         const admissionReqRes = await axios.get(
-          "http://localhost:8080/admissionNotif"
+          `${backendUrl}/admissionNotif`
         );
         // console.log("Fetched admission notifications:", admissionReqRes.data);
         setFreshmenAdmissionNotif(admissionReqRes.data.freshmenCount);
@@ -85,7 +87,7 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
     const fetchShiftingNotif = async () => {
       try {
         const accReqRes = await axios.get(
-          "http://localhost:8080/getShiftingRequestsNotif"
+          `${backendUrl}/getShiftingRequestsNotif`
         );
         setShiftingNotif(accReqRes.data.studentCount);
       } catch (err) {
@@ -98,7 +100,7 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(`${backendUrl}`)
       .then((res) => {
         const role = res.data.role;
 
@@ -233,7 +235,7 @@ function AdminDashSideBar({ isOpen, toggleSidebar }) {
     <div className={`${style.sidebar} ${isOpen ? style.open : ""}`}>
       <div className={style.logoAndMenu}>
         <div className={style.TopSection}>
-          <img src="/src/assets/cvsu-logo.png" alt="cvsu logo" />
+          <img src={cvsulogo} alt="cvsu logo" />
           <h2>CAVITE STATE UNIVERSITY - BACOOR CITY CAMPUS</h2>
         </div>
         <div className={style.TopSection2}>

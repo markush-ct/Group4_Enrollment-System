@@ -6,6 +6,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function AccountSettingsStudent() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5173';
+
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
@@ -48,7 +50,7 @@ function AccountSettingsStudent() {
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(`${backendUrl}`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);
@@ -79,7 +81,7 @@ function AccountSettingsStudent() {
   //FETCH ACCOUNT INFO
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getAccInfo")
+      .get(`${backendUrl}/getAccInfo`)
       .then((res) => {
         if (res.data.message === "Fetch successful") {
           setAccInfo({
@@ -105,7 +107,7 @@ function AccountSettingsStudent() {
       });
 
     axios
-      .get("http://localhost:8080/getPFP")
+      .get(`${backendUrl}/getPFP`)
       .then((res) => {
         setUploadedPFP(res.data.pfpURL);
         setPFP({
@@ -137,12 +139,12 @@ function AccountSettingsStudent() {
     data.append("pfpURL", pfp.pfpURL);
 
     axios
-      .post("http://localhost:8080/changePFP", data, {
+      .post(`${backendUrl}/changePFP`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then((res) => {
         // console.log("Student saved successfully:", res.data);
-        setUploadedPFP(`http://localhost:8080/${res.data.pfpURL}`);
+        setUploadedPFP(`${backendUrl}/${res.data.pfpURL}`);
       })
       .catch((err) => {
         alert("Error: " + err);
@@ -163,7 +165,7 @@ function AccountSettingsStudent() {
 
   const handleSaveChanges = () => {
     axios
-      .post("http://localhost:8080/saveAccInfo", accInfo)
+      .post(`${backendUrl}/saveAccInfo`, accInfo)
       .then((res) => {
         if (res.data.message === "Account updated successfully") {
           setErrorMsg("");
@@ -200,7 +202,7 @@ function AccountSettingsStudent() {
     }
 
     axios
-      .post("http://localhost:8080/matchPass", { currentPassword })
+      .post(`${backendUrl}/matchPass`, { currentPassword })
       .then((res) => {
         if (res.data.message === "Account found") {
           setIsCurrentPasswordValid(true);
@@ -227,7 +229,7 @@ function AccountSettingsStudent() {
       setErrorMsg("Password do not match");
     } else {
       axios
-        .post("http://localhost:8080/changePass", {
+        .post(`${backendUrl}/changePass`, {
           newPassword,
           confirmPassword,
         })

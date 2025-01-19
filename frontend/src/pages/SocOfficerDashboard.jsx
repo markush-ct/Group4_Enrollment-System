@@ -7,6 +7,10 @@ import { Doughnut } from "react-chartjs-2";
 import { useNavigate } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import checkmark from '/src/assets/checkmark.png';
+import errormark from '/src/assets/errormark.png';
+import acsIcon from '/src/assets/ACS-ICON.png';
+import itsIcon from '/src/assets/ITS-ICON.png';
 
 import {
   Chart as ChartJS,
@@ -286,7 +290,7 @@ function SocOfficerDashboard() {
             </div>
             <div className={styles.Message}>
               <img
-                src="/src/assets/checkmark.png"
+                src={checkmark}
                 alt="Success Icon"
                 className={styles.messageImage}
               />
@@ -323,7 +327,7 @@ function SocOfficerDashboard() {
             </div>
             <div className={styles.MessageError}>
               <img
-                src="/src/assets/errormark.png"
+                src={errormark}
                 alt="Error Icon"
                 className={styles.messageImage}
               />
@@ -377,9 +381,9 @@ function SocOfficerDashboard() {
                   <img
                     src={
                       program === 1
-                        ? "/src/assets/ACS-ICON.png"
+                        ? acsIcon
                         : program === 2
-                        ? "/src/assets/ITS-ICON.png"
+                        ? itsIcon
                         : ""
                     }
                     alt="society logo"
