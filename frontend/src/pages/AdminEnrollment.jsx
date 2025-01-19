@@ -5,6 +5,8 @@ import axios from 'axios';
 import Header from '/src/components/AdminDashHeader.jsx';
 import styles from '/src/styles/AccountRequest.module.css';
 import { useNavigate } from 'react-router-dom';
+import checkmark from "/src/assets/checkmark.png";
+import errormark from "/src/assets/errormark.png";
 
 function Requirements() {
     const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
@@ -36,7 +38,7 @@ function Requirements() {
     //RETURNING ACCOUNT NAME IF LOGGED IN
     useEffect(() => {
         axios
-            .get("http://localhost:8080")
+            .get(`${backendUrl}`)
             .then((res) => {
                 if (res.data.valid) {
                     setAccName(res.data.name);
@@ -67,7 +69,7 @@ function Requirements() {
     // FETCH ACCOUNT REQUESTS
     useEffect(() => {
         axios
-            .get("http://localhost:8080/getPreEnrollForEnrollmentOff")
+            .get(`${backendUrl}/getPreEnrollForEnrollmentOff`)
             .then((res) => {
                 setAccountRequests(res.data.students);
                 setFilteredRequests(res.data.students);
@@ -134,7 +136,7 @@ function Requirements() {
         }
 
         try {
-            const res = await axios.post("http://localhost:8080/setEnrollmentStatus", {
+            const res = await axios.post(`${backendUrl}/setEnrollmentStatus`, {
                 studentID: request.StudentID,
                 studentType: updateStudent.studentType,
                 year: updateStudent.year,
@@ -180,8 +182,8 @@ function Requirements() {
         setPopUpVisible(true);
 
         Promise.all([
-            axios.post(`http://localhost:8080/getChecklistForEnrollmentOff`, { studentID: request.StudentID }),
-            axios.post(`http://localhost:8080/getPreEnrollmentValuesForAdmin`, { studentID: request.StudentID })
+            axios.post(`${backendUrl}/getChecklistForEnrollmentOff`, { studentID: request.StudentID }),
+            axios.post(`${backendUrl}/getPreEnrollmentValuesForAdmin`, { studentID: request.StudentID })
         ])
             .then((res) => {
                 if (res[0].data.message === "Success" && res[1].data.message === "Pre-enrollment is approved") {
@@ -260,7 +262,7 @@ function Requirements() {
                         </div>
                         <div className={styles.popupPromptMessage}>
                             <img
-                                src="/src/assets/checkmark.png"
+                                src={checkmark}
                                 alt="Success Icon"
                                 className={styles.popupPromptmessageImage}
                             />
@@ -294,7 +296,7 @@ function Requirements() {
                         </div>
                         <div className={styles.popupPromptMessage}>
                             <img
-                                src="/src/assets/checkmark.png"
+                                src={checkmark}
                                 alt="Success Icon"
                                 className={styles.popupPromptmessageImage}
                             />
@@ -319,7 +321,7 @@ function Requirements() {
                         </div>
                         <div className={styles.popupPromptMessageError}>
                             <img
-                                src="/src/assets/errormark.png"
+                                src={errormark}
                                 alt="Error Icon"
                                 className={styles.popupPromptmessageImage}
                             />

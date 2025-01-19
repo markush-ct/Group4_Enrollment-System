@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useReactToPrint } from "react-to-print";
 import styles from '/src/styles/DownloadForm.module.css';
+import cvsulogo from '/src/assets/cvsu-logo.png';
 
 const DownloadShiftingForm = () => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
@@ -16,11 +17,11 @@ const DownloadShiftingForm = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/get-shifteeForm/${id}`);
+                const response = await axios.get(`${backendUrl}/get-shifteeForm/${id}`);
                 setFormData(response.data);
                 setLoading(false);
 
-                const response1 = await axios.get(`http://localhost:8080/get-shiftee/${id}`);
+                const response1 = await axios.get(`${backendUrl}/get-shiftee/${id}`);
                 setStudentData(response1.data);
                 setLoading(false);
             } catch (error) {
@@ -49,7 +50,7 @@ const DownloadShiftingForm = () => {
         
                 <div className={styles.logoContainer}>
                   <img
-                    src="/src/assets/cvsu-logo.png"
+                    src={cvsulogo}
                     alt="CvSU Logo"
                     className={styles.logo}
                   />

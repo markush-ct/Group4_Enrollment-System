@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useReactToPrint } from "react-to-print";
 import styles from '/src/styles/DownloadForm.module.css';
+import cvsulogo from "/src/assets/cvsu-logo.png";
 
 const DownloadAdmissionForm = () => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
@@ -34,11 +35,11 @@ const DownloadAdmissionForm = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/get-form/${id}`);
+        const response = await axios.get(`${backendUrl}/get-form/${id}`);
         setFormData(response.data);
         setLoading(false);
 
-        const response1 = await axios.get(`http://localhost:8080/get-student/${id}`);
+        const response1 = await axios.get(`${backendUrl}/get-student/${id}`);
         setStudentData(response1.data);
         setLoading(false);
       } catch (error) {
@@ -63,7 +64,7 @@ const DownloadAdmissionForm = () => {
 
         <div className={styles.logoContainer}>
           <img
-            src="/src/assets/cvsu-logo.png"
+            src={cvsulogo}
             alt="CvSU Logo"
             className={styles.logo}
           />
@@ -79,7 +80,7 @@ const DownloadAdmissionForm = () => {
 
         <div className={styles.pictureContainer}>
           
-          <img className={styles.idPictureBox} src={`http://localhost:8080/${formData.IDPicture}`} alt="" />
+          <img className={styles.idPictureBox} src={`${backendUrl}/${formData.IDPicture}`} alt="" />
         </div>
       </div>
 

@@ -5,6 +5,8 @@ import axios from 'axios';
 import Header from '/src/components/AdminDashHeader.jsx';
 import styles from '/src/styles/AccountRequest.module.css';
 import { useNavigate } from 'react-router-dom';
+import checkmark from "/src/assets/checkmark.png";
+import errormark from "/src/assets/errormark.png";
 
 function Requirements() {
   const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
@@ -39,7 +41,7 @@ function Requirements() {
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(`${backendUrl}`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);
@@ -70,7 +72,7 @@ function Requirements() {
   // FETCH ACCOUNT REQUESTS
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getPreEnrollForAdviser")
+      .get(`${backendUrl}/getPreEnrollForAdviser`)
       .then((res) => {
         setAccountRequests(res.data.students);
         setFilteredRequests(res.data.students);
@@ -113,7 +115,7 @@ function Requirements() {
         // Prepare the data to save
         const selectedCourses = rows.map((row) => row.selectedCourse);
 
-        const res = await axios.post('http://localhost:8080/submitPreEnrollment', {
+        const res = await axios.post(`${backendUrl}/submitPreEnrollment`, {
           courses: selectedCourses,
           studentID: request.StudentID
         });
@@ -143,7 +145,7 @@ function Requirements() {
     console.log("values", selectedCoursesAndSections);
 
     try {
-      const res = await axios.post('http://localhost:8080/submitIrregPreEnrollment', {
+      const res = await axios.post(`${backendUrl}/submitIrregPreEnrollment`, {
         values: selectedCoursesAndSections,
         studentID: request.StudentID
       });
@@ -180,7 +182,7 @@ function Requirements() {
     console.log(request.StudentType);
 
     if(request.StudentType === "Regular"){
-      axios.post('http://localhost:8080/getEligibleCourse', {studentID: request.StudentID})
+      axios.post(`${backendUrl}/getEligibleCourse`, {studentID: request.StudentID})
       .then((res) => {
         if(res.data.message === "Success"){
           setEligibleCourses(res.data.courses);        
@@ -193,8 +195,8 @@ function Requirements() {
       })
     } else if(request.StudentType === "Irregular"){
       Promise.all([
-        axios.post('http://localhost:8080/classSchedIrreg/preEnroll', {studentID: request.StudentID}),
-        axios.post('http://localhost:8080/getEligibleCourse', {studentID: request.StudentID}),
+        axios.post(`${backendUrl}/classSchedIrreg/preEnroll`, {studentID: request.StudentID}),
+        axios.post(`${backendUrl}/getEligibleCourse`, {studentID: request.StudentID}),
       ])
       .then((res) => {
         if(res[0].data.message === "Success"){
@@ -290,7 +292,7 @@ function Requirements() {
     });
   
     // Fetch new sections based on the selected course
-    axios.post('http://localhost:8080/schedOnCourseChange', { courseID: courseID, studentID: selectedRequest.StudentID })
+    axios.post(`${backendUrl}/schedOnCourseChange`, { courseID: courseID, studentID: selectedRequest.StudentID })
       .then((res) => {
         if (res.data.message === "Success") {
           const sections = res.data.schedInfo; // Assuming the sections are returned here
@@ -408,7 +410,7 @@ function Requirements() {
             </div>
             <div className={styles.popupPromptMessage}>
               <img
-                src="/src/assets/checkmark.png"
+                src={checkmark}
                 alt="Success Icon"
                 className={styles.popupPromptmessageImage}
               />
@@ -442,7 +444,7 @@ function Requirements() {
             </div>
             <div className={styles.popupPromptMessage}>
               <img
-                src="/src/assets/checkmark.png"
+                src={checkmark}
                 alt="Success Icon"
                 className={styles.popupPromptmessageImage}
               />
@@ -467,7 +469,7 @@ function Requirements() {
             </div>
             <div className={styles.popupPromptMessageError}>
               <img
-                src="/src/assets/errormark.png"
+                src={errormark}
                 alt="Error Icon"
                 className={styles.popupPromptmessageImage}
               />

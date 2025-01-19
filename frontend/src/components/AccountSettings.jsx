@@ -4,6 +4,9 @@ import styles from "/src/styles/AccountSettings.module.css";
 import Header from "/src/components/AdminDashHeader.jsx";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import checkmark from '/src/assets/checkmark.png';
+import errormark from '/src/assets/errormark.png';
+import editIcon from '/src/assets/edit-icon.png';
 
 function AccountSettingsStudent() {
   const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
@@ -323,7 +326,7 @@ function AccountSettingsStudent() {
                 </div>
                 <div className={styles.Message}>
                   <img
-                    src="/src/assets/checkmark.png"
+                    src={checkmark}
                     alt="Success Icon"
                     className={styles.messageImage}
                   />
@@ -352,7 +355,7 @@ function AccountSettingsStudent() {
                 </div>
                 <div className={styles.MessageError}>
                   <img
-                    src="/src/assets/errormark.png"
+                    src={errormark}
                     alt="Error Icon"
                     className={styles.messageImage}
                   />
@@ -396,7 +399,7 @@ function AccountSettingsStudent() {
                         Edit{" "}
                         <img
                           data-testid="edit-icon"
-                          src="/src/assets/edit-icon.png"
+                          src={editIcon}
                           className={styles.editIcon}
                           alt="Edit"
                         />

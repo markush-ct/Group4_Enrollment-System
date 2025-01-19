@@ -11,6 +11,7 @@ import settingsIcon from "/src/assets/settingsicon.png";
 import logoutIcon from "/src/assets/logouticon.png";
 import axios from "axios";
 import logoutFunction from "/src/components/logoutFunction.jsx";
+import cvsulogo from "/src/assets/cvsu-logo.png";
 
 function StudentDashSideBar({ isOpen, toggleSidebar }) {
   const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
@@ -23,7 +24,7 @@ function StudentDashSideBar({ isOpen, toggleSidebar }) {
   // Load Student Navigation Menu
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(`${backendUrl}`)
       .then((res) => {
         if (res.data.valid && res.data.role === "Regular") {
           setNavBtn([
@@ -102,7 +103,7 @@ function StudentDashSideBar({ isOpen, toggleSidebar }) {
     <div className={`${style.sidebar} ${isOpen ? style.open : ""}`}>
       <div className={style.logoAndMenu}>
         <div className={style.TopSection}>
-          <img src="/src/assets/cvsu-logo.png" alt="CVSU Logo" />
+          <img src={cvsulogo} alt="CVSU Logo" />
           <h2>CAVITE STATE UNIVERSITY - BACOOR CITY CAMPUS</h2>
         </div>
         <div className={style.TopSection2}>

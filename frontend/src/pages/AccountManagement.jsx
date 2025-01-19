@@ -5,6 +5,8 @@ import axios from 'axios';
 import Header from '/src/components/AdminDashHeader.jsx';
 import styles from '/src/styles/AccountRequest.module.css';
 import { data, useNavigate } from 'react-router-dom';
+import checkmark from "/src/assets/checkmark.png";
+import errormark from "/src/assets/errormark.png";
 
 function AccountManagement() {
   const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
@@ -30,7 +32,7 @@ function AccountManagement() {
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(`${backendUrl}`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);
@@ -115,7 +117,7 @@ function AccountManagement() {
     }
 
     try {
-      const res = await axios.post('http://localhost:8080/activateAccount', {
+      const res = await axios.post(`${backendUrl}/activateAccount`, {
         email: acc.account.email,
         name: acc.account.name,
         role: acc.account.role
@@ -154,7 +156,7 @@ function AccountManagement() {
     }
 
     try {
-      const res = await axios.post('http://localhost:8080/terminateAccount', {
+      const res = await axios.post(`${backendUrl}/terminateAccount`, {
         email: acc.account.email,
         name: acc.account.name,
         role: acc.account.role
@@ -226,7 +228,7 @@ function AccountManagement() {
     console.log("Request object:", request);  
     
     try {
-      const res = await axios.post('http://localhost:8080/editEmpAccount', {
+      const res = await axios.post(`${backendUrl}/editEmpAccount`, {
         email: request?.account?.email,  
         job: editEmp.job || request?.account?.role,  
         status: editEmp.status || request?.employee?.empStatus, 
@@ -269,7 +271,7 @@ function AccountManagement() {
     console.log("Request object:", request);  
     
     try {
-      const res = await axios.post('http://localhost:8080/editSocOfficerAccount', {
+      const res = await axios.post(`${backendUrl}/editSocOfficerAccount`, {
         email: request?.account?.email, 
         position: editSocOff.position || request?.socOfficer?.position,  
         status: editSocOff.status || request?.socOfficer?.status, 
@@ -314,7 +316,7 @@ function AccountManagement() {
   const submitNewStdChange = async (request) => {
     console.log("Request object:", request);
     try {
-      const res = await axios.post('http://localhost:8080/editNewStudent', {
+      const res = await axios.post(`${backendUrl}/editNewStudent`, {
         email: request?.account?.email, 
         studentID: editNewStd.studentID || request?.student?.cvsuStudentID,
         studentType: editNewStd.studentType || request?.student?.studentType,
@@ -361,7 +363,7 @@ function AccountManagement() {
   const submitOldStdChange = async (request) => {
     
     try {
-      const res = await axios.post('http://localhost:8080/editOldStudent', {
+      const res = await axios.post(`${backendUrl}/editOldStudent`, {
         email: request?.account?.email, 
         status: editOldStd.status || request?.student?.studentStatus,
         studentType: editOldStd.studentType || request?.student?.studentType,
@@ -389,7 +391,7 @@ function AccountManagement() {
   // FETCH ACCOUNTS
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getAccounts")
+      .get(`${backendUrl}/getAccounts`)
       .then((res) => {
         setAccountRequests(res.data.accountResults);
       })
@@ -419,7 +421,7 @@ function AccountManagement() {
             </div>
             <div className={styles.popupPromptMessage}>
               <img
-                src="/src/assets/checkmark.png"
+                src={checkmark}
                 alt="Success Icon"
                 className={styles.popupPromptmessageImage}
               />
@@ -453,7 +455,7 @@ function AccountManagement() {
             </div>
             <div className={styles.popupPromptMessage}>
               <img
-                src="/src/assets/checkmark.png"
+                src={checkmark}
                 alt="Success Icon"
                 className={styles.popupPromptmessageImage}
               />
@@ -478,7 +480,7 @@ function AccountManagement() {
             </div>
             <div className={styles.popupPromptMessageError}>
               <img
-                src="/src/assets/errormark.png"
+                src={errormark}
                 alt="Error Icon"
                 className={styles.popupPromptmessageImage}
               />
