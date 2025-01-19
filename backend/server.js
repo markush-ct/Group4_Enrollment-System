@@ -97,7 +97,7 @@ app.use('/accReqNotif', accReqNotif);
 app.use('/admissionNotif', admissionNotif);
 app.use('/getFreshmenConfirmedSlots', getFreshmenConfirmedSlots);
 app.use('/getShiftingRequestsNotif', getShiftingRequestsNotif);
-app.use('/api', socOfficerProgram);
+app.use('/', socOfficerProgram);
 app.use('/DCSHeadProgram', DCSHeadProgram);
 app.use('/postEnrollmentPeriod', postEnrollmentPeriod);
 app.use('/', handleEnrollment);
