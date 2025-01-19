@@ -1,5 +1,4 @@
 import express from 'express'
-import mysql from 'mysql'
 import cors from 'cors'
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
@@ -7,7 +6,6 @@ import dotenv from 'dotenv';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import multer from 'multer';
-import path from 'path';
 import accReqNotif from './routes/accReqNotif.js';
 import admissionNotif from './routes/admissionNotif.js';
 import getFreshmenConfirmedSlots from './routes/getFreshmenConfirmedSlots.js';
@@ -28,9 +26,24 @@ import HandleEnrollmentStatus from './routes/HandleEnrollmentStatus.js';
 import SchedManagement from './routes/SchedManagement.js';
 import ClassSched from './routes/ClassSched.js';
 import StudentInformation from './routes/StudentInformation.js';
+import mysql from 'mysql'
+import path from 'path';
+import fs from 'fs';
+import dbConfig from './db/dbConfig.js';
+
 
 dotenv.config();
 const app = express();
+
+const db = mysql.createConnection(dbConfig);
+
+db.connect((err) => {
+    if (err) {
+        console.error('Error connecting to the database:', err.stack);
+    } else {
+        console.log('Connected to the database with SSL!');
+    }
+});
 
 // CORS configuration
 const corsConfig = {
@@ -54,12 +67,6 @@ app.use(session({
     }
 }));
 
-const db = mysql.createConnection({
-    host: 'gateway01.ap-southeast-1.prod.aws.tidbcloud.com',
-    user: 'yy1aykyEhDRFQV6.root',
-    password: 'RBP2ZbF0vd0Op2nY',
-    database: 'cvsuenrollmentsystem'
-})
 
 //Email sender
 const transporter = nodemailer.createTransport({
@@ -2716,8 +2723,10 @@ app.use((err, req, res, next) => {
     res.status(500).send('Internal Server Error');
 });
 
-app.listen(8080, () => {
-    console.log('Server is running');
+const PORT = process.env.PORT || 8080;
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
 
 export default app;
