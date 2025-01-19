@@ -2,8 +2,7 @@ import express from 'express';
 import mysql from 'mysql';
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
-import dbConfig from './db/dbConfig.js';
-
+import dbConfig from '../db/dbConfig.js';
 
 dotenv.config();
 const router = express.Router();

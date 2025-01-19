@@ -2,7 +2,7 @@ import express from 'express';
 import mysql from 'mysql';
 import multer from 'multer';
 import path from 'path';
-import dbConfig from './db/dbConfig.js';
+import dbConfig from '../db/dbConfig.js';
 
 
 dotenv.config();

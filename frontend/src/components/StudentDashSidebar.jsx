@@ -13,6 +13,7 @@ import axios from "axios";
 import logoutFunction from "/src/components/logoutFunction.jsx";
 
 function StudentDashSideBar({ isOpen, toggleSidebar }) {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
   const navigate = useNavigate();
   const location = useLocation();
   const [navBtn, setNavBtn] = useState([]);

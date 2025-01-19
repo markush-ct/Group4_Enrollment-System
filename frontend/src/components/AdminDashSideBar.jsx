@@ -20,7 +20,7 @@ import studentIcon from '/src/assets/student_info_icon.png'
 import cvsulogo from '/src/assets/cvsu-logo.png';
 
 function AdminDashSideBar({ isOpen, toggleSidebar }) {
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5173';
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
   const [accName, setAccName] = useState("");
   const navigate = useNavigate();
   const location = useLocation(); // to track current URL

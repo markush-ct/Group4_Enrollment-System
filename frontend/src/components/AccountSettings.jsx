@@ -6,7 +6,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function AccountSettingsStudent() {
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5173';
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
 
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");

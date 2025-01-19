@@ -5,6 +5,7 @@ import style from "/src/styles/header.module.css";
 import cvsuLogo from '/src/assets/cvsu-logo.png';
 
 function SidebarMenu({ SideBar, setSideBar }) {
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
     const [about, setAbout] = useState(false);
     const [admissions, setAdmissions] = useState(false);
 

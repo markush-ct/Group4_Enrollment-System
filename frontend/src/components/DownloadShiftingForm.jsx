@@ -5,6 +5,7 @@ import { useReactToPrint } from "react-to-print";
 import styles from '/src/styles/DownloadForm.module.css';
 
 const DownloadShiftingForm = () => {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
     const { id } = useParams(); // Fetch ID from URL
     const [formData, setFormData] = useState({});
     const [studentData, setStudentData] = useState({});

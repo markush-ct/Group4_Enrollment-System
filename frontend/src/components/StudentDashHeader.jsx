@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function StudentDashHeader() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const navigate = useNavigate();

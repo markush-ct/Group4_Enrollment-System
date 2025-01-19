@@ -1,7 +1,7 @@
 import express from 'express';
 import mysql from 'mysql';
 import nodemailer from 'nodemailer';
-import dbConfig from './db/dbConfig.js';
+import dbConfig from '../db/dbConfig.js';
 
 
 dotenv.config();

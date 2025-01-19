@@ -1,7 +1,7 @@
 import express from 'express';
 import session from 'express-session';
 import mysql from 'mysql';
-import dbConfig from './db/dbConfig.js';
+import dbConfig from '../db/dbConfig.js';
 
 
 dotenv.config();
