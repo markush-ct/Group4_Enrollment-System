@@ -30,6 +30,7 @@ ChartJS.register(
 );
 
 function SocOfficerDashboard() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5173';
   const [SideBar, setSideBar] = useState(false);
   const [CScount, setCScount] = useState(0);
   const [ITcount, setITcount] = useState(0);
@@ -55,7 +56,7 @@ function SocOfficerDashboard() {
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(`${backendUrl}/loginSession`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);
@@ -69,9 +70,9 @@ function SocOfficerDashboard() {
       });
 
     axios
-      .get("http://localhost:8080/getPFP")
+      .get(`${backendUrl}/getPFP`)
       .then((res) => {
-        setPFP(`http://localhost:8080/${res.data.pfpURL}`);
+        setPFP(`${backendUrl}/${res.data.pfpURL}`);
       })
       .catch((err) => {
         //TODO: Error prompt

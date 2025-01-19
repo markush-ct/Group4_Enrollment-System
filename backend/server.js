@@ -55,9 +55,9 @@ app.use(session({
 }));
 
 const db = mysql.createConnection({
-    host: '127.0.0.1',
-    user: 'root',
-    password: '',
+    host: 'gateway01.ap-southeast-1.prod.aws.tidbcloud.com',
+    user: 'yy1aykyEhDRFQV6.root',
+    password: 'RBP2ZbF0vd0Op2nY',
     database: 'cvsuenrollmentsystem'
 })
 
