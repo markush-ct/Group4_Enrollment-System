@@ -1,8 +1,8 @@
 import { error } from 'console';
 import express from 'express';
 import mysql from 'mysql';
+import dotenv from 'dotenv';
 import dbConfig from '../db/dbConfig.js';
-
 
 dotenv.config();
 const router = express.Router();
