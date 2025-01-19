@@ -2599,7 +2599,6 @@ app.post("/logoutFunction", (req, res) => {
                 return res.json({ valid: false, message: "Logout failed." });
             }
             res.clearCookie("connect.sid"); // Session cookie
-            res.clearCookie("rememberMe"); // Clear Remember Me cookie
             return res.json({ valid: false, message: "Logout successful." });
         });
     } else {
@@ -2615,6 +2614,7 @@ app.get('/loginSession', (req, res) => {
             if (err) {
                 return res.json({ valid: false });
             } else if (result.length > 0) {
+                console.log(req.session.email);
                 return res.json({
                     valid: true,
                     accountID: req.session.accountID,
@@ -2625,13 +2625,14 @@ app.get('/loginSession', (req, res) => {
             }
         })
     } else {
+        console.error("Error in login session")
         return res.json({ valid: false })
     }
 })
 
 app.post('/LoginPage', (req, res) => {
     const sql = `SELECT * FROM account WHERE Email = ? AND Password = ?`;
-    const { email, password, rememberMe } = req.body;
+    const { email, password } = req.body;
 
     db.query(sql, [email, password], (err, result) => {
         if (err) return res.json({ message: "Error in server" + err });
@@ -2655,18 +2656,6 @@ app.post('/LoginPage', (req, res) => {
                             req.session.email = user.Email;
                             req.session.studentID = user.StudentID;
 
-                            if (rememberMe) {
-                                // Set a cookie to remember the email
-                                res.cookie('rememberedEmail', email, {
-                                    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-                                    httpOnly: false, // Allows client-side access for pre-filling
-                                    secure: process.env.NODE_ENV === 'production' // Use secure cookies in production
-                                });
-                            } else {
-                                // Clear the email cookie if Remember Me is unchecked
-                                res.clearCookie('rememberedEmail');
-                            }
-
                             return res.json({
                                 message: 'Login successful',
                                 role: studentType,
@@ -2682,18 +2671,6 @@ app.post('/LoginPage', (req, res) => {
                     req.session.accountID = user.AccountID;
                     req.session.role = user.Role;
                     req.session.email = user.Email;
-
-                    if (rememberMe) {
-                        // Set a cookie to remember the email
-                        res.cookie('rememberedEmail', email, {
-                            maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-                            httpOnly: false, // Allows client-side access for pre-filling
-                            secure: process.env.NODE_ENV === 'production' // Use secure cookies in production
-                        });
-                    } else {
-                        // Clear the email cookie if Remember Me is unchecked
-                        res.clearCookie('rememberedEmail');
-                    }
 
                     return res.json({
                         message: 'Login successful',
