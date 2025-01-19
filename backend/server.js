@@ -62,8 +62,8 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: true,
-        maxAge: 1000 * 60 * 60 * 24
+        secure: process.env.NODE_ENV === 'production',  // Set to true in production, false in development
+        maxAge: 1000 * 60 * 60 * 24  // Session expiration time (1 day)
     }
 }));
 
