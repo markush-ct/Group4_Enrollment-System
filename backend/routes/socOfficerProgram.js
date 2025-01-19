@@ -15,6 +15,10 @@ db.connect((err) => {
 });
 
 router.get('/socOfficerProgram', (req, res) => {
+    if (!req.session.email) {
+        return res.json('No email found in session');
+    }
+
     const sql = 'SELECT * FROM societyofficer WHERE Email = ?';
 
     db.query(sql, req.session.email, (err, result) => {
