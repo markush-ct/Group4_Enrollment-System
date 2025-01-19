@@ -49,7 +49,7 @@ function App() {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/MainPage" element={<MainPage />} />
-        <Route path="/LoginPage" element={<LoginPage />} />
+        <Route path="/LoginPage" element={<LoginPage />} Component={<LoginPage />} />
         <Route path="/CvsuHistory" element={<CvsuHistory />} />
         <Route path="/MissionVision" element={<MissionVision />} />
         <Route path="/DcsPage" element={<DcsPage />} />
