@@ -14,7 +14,7 @@ db.connect((err) => {
     }
 });
 
-router.get('/', (req, res) => {
+router.get('/socOfficerProgram', (req, res) => {
     const sql = 'SELECT * FROM societyofficer WHERE Email = ?';
 
     db.query(sql, req.session.email, (err, result) => {
