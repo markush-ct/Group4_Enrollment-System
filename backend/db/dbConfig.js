@@ -1,9 +1,14 @@
-// /backend/config/dbConfig.js
 import mysql from 'mysql';
 import path from 'path';
 import fs from 'fs';
+import { fileURLToPath } from "url";
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const pemPath = path.resolve(__dirname, "../ssl/isrgrootx1.pem");
+
+dotenv.config();
 
 const dbConfig = {
     host: process.env.DB_HOST,
@@ -12,7 +17,7 @@ const dbConfig = {
     database: process.env.DB_NAME,
     port: process.env.DB_PORT,
     ssl: {
-        ca: fs.readFileSync(path.resolve(__dirname, '../ssl', 'isrgrootx1.pem')) // Adjusted path
+        ca: fs.readFileSync(pemPath)
     }
 };
 
