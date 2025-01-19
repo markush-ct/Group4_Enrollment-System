@@ -19,10 +19,7 @@ const dbConfig = {
     port: process.env.DB_PORT,
     ssl: {
         ca: fs.readFileSync(pemPath)
-    },
-    waitForConnections: true,
-    connectionLimit: 40,
-    queueLimit: 0
+    }
 };
 
 export default dbConfig;

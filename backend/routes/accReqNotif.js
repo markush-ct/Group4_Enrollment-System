@@ -14,6 +14,7 @@ db.connect((err) => {
     }
 });
 
+
 router.get('/', (req, res) => {
     const studentCountQuery = `SELECT COUNT(*) as studentCount FROM student WHERE RegStatus = 'Pending' AND StudentType NOT IN ('Regular', 'Irregular')`;
     const empCountQuery = `SELECT COUNT(*) as empCount FROM employee WHERE RegStatus = 'Pending'`;

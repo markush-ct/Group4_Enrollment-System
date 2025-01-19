@@ -1,7 +1,7 @@
 import express from 'express';
-import mysql from 'mysql';
 import multer from 'multer';
 import path from 'path';
+import mysql from 'mysql';
 import dotenv from 'dotenv';
 import dbConfig from '../db/dbConfig.js';
 
