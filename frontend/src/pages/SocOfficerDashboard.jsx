@@ -104,7 +104,7 @@ function SocOfficerDashboard() {
     }
 
     axios
-      .post("http://localhost:8080/postEnrollmentPeriod", enrollmentPeriod)
+      .post(`${backendUrl}/postEnrollmentPeriod`, enrollmentPeriod)
       .then((res) => {
         if (res.data.message === "Enrollment period posted successfully.") {
           setsuccessPrompt(true);
@@ -129,7 +129,7 @@ function SocOfficerDashboard() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/viewEnrollmentPeriod")
+      .get(`${backendUrl}/viewEnrollmentPeriod`)
       .then((res) => {
         const { enrollmentPeriod } = res.data;
         if (enrollmentPeriod) {
@@ -156,7 +156,7 @@ function SocOfficerDashboard() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/socOfficerProgram")
+      .get(`${backendUrl}/socOfficerProgram`)
       .then((res) => {
         console.log(res.data.program);
         setProgram(res.data.program);
@@ -200,7 +200,7 @@ function SocOfficerDashboard() {
   //GET NUMBER OF REGULAR STUDENTS ENROLLED IN BSCS
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getCS")
+      .get(`${backendUrl}/getCS`)
       .then((res) => {
         setCScount(res.data.CScount);
       })
@@ -213,7 +213,7 @@ function SocOfficerDashboard() {
   //GET NUMBER OF REGULAR STUDENTS ENROLLED IN BSIT
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getIT")
+      .get(`${backendUrl}/getIT`)
       .then((res) => {
         setITcount(res.data.ITcount);
       })
@@ -227,7 +227,7 @@ function SocOfficerDashboard() {
   //set enrollment period to ongoing
   const handleStartEnrollment = () => {
     axios
-      .post("http://localhost:8080/startEnrollment")
+      .post(`${backendUrl}/startEnrollment`)
       .then((res) => {
         if (res.data.message === "Enrollment is now ongoing") {
           //TODO: Success prompt
@@ -246,7 +246,7 @@ function SocOfficerDashboard() {
   //set enrollment period to finished
   const handleFinishEnrollment = () => {
     axios
-      .post("http://localhost:8080/finishEnrollment")
+      .post(`${backendUrl}/finishEnrollment`)
       .then((res) => {
         if (res.data.message === "Enrollment ended") {
           //TODO: Success prompt
