@@ -30,12 +30,17 @@ import mysql from 'mysql';
 import path from 'path';
 import fs from 'fs';
 import dbConfig from './db/dbConfig.js';
+import { createRequire } from 'module'; 
+const require = createRequire(import.meta.url);
+const MySQLStore = require('express-mysql-session');
 
 
 dotenv.config();
 const app = express();
 
 const db = mysql.createConnection(dbConfig);
+const sessionStore = new MySQLStore({}, db);
+
 
 db.connect((err) => {
     if (err) {
@@ -61,9 +66,11 @@ app.use(session({
     secret: 'secret',
     resave: false,
     saveUninitialized: false,
+    store: sessionStore,  // Use MySQL session store
     cookie: {
-        secure: process.env.NODE_ENV === 'production',  // Set to true in production, false in development
-        maxAge: 1000 * 60 * 60 * 24  // Session expiration time (1 day)
+        secure: process.env.NODE_ENV === 'production',  // Set to true in production with HTTPS
+        maxAge: 1000 * 60 * 60 * 24,  // 1 day expiration
+        sameSite: 'None'  // Allow cross-domain cookies if needed
     }
 }));
 
