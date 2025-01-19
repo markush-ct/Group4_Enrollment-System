@@ -7,6 +7,7 @@ import styles from '/src/styles/AccountRequest.module.css';
 import { data, useNavigate } from 'react-router-dom';
 
 function AccountRequest() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const [accountRequests, setAccountRequests] = useState([]);

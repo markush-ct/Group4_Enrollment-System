@@ -9,7 +9,7 @@ import checkmark from '/src/assets/checkmark.png';
 import errormark from '/src/assets/errormark.png';
 
 function CreateAcc() {
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5173';
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
 
   const [signUpPrompt, setsignUpPrompt] = useState(false); //success
   const [signUpMsg, setsignUpMsg] = useState("");
