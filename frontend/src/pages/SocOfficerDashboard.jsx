@@ -160,7 +160,7 @@ function SocOfficerDashboard() {
 
   useEffect(() => {
     axios
-      .get(`${backendUrl}/socOfficerProgram`)
+      .get(`${backendUrl}/api/socOfficerProgram`)
       .then((res) => {
         console.log(res.data.program);
         setProgram(res.data.program);
