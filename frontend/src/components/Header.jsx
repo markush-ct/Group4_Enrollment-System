@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'; // FOR LINKING PAGE
 import SidebarMenu from '/src/components/SidebarMenu';
 import style from '/src/styles/header.module.css';
 import cvsuLogo from '/src/assets/cvsu-logo.png'
+import menuIcon from '/src/assets/icons8-menu-30.png';
 
 function Header({SideBar, setSideBar}) {
 
@@ -26,7 +27,7 @@ function Header({SideBar, setSideBar}) {
                         </div>
 
                         <button className={style.menuBtn}>
-                            <img className={style.menuIcon} src="/src/assets/icons8-menu-30.png" alt="menu-icon" onClick={toggleSideBar} />
+                            <img className={style.menuIcon} src={menuIcon} alt="menu-icon" onClick={toggleSideBar} />
                         </button>
                     </div>
 

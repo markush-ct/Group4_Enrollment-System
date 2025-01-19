@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import style from "/src/styles/header.module.css";
+import cvsuLogo from '/src/assets/cvsu-logo.png';
 
 function SidebarMenu({ SideBar, setSideBar }) {
     const [about, setAbout] = useState(false);
@@ -39,7 +40,7 @@ function SidebarMenu({ SideBar, setSideBar }) {
     return (
         <div className={style.sideBarContainer} style={{left: SideBar ? '0' : '-100%'}}>
             <div className={style.sbTop}>
-                <img className={style.sb_cvsuLogo} src="/src/assets/cvsu-logo.png" alt="cvsu logo" />
+                <img className={style.sb_cvsuLogo} src={cvsuLogo} alt="cvsu logo" />
                 <div className={style.sbInstitution}>
                     <h2 className={style.sbSchoolName}>CAVITE STATE UNIVERSITY BACOOR CITY CAMPUS</h2>
                     <p className={style.sbDepartment}>DEPARTMENT OF COMPUTER STUDIES</p>
