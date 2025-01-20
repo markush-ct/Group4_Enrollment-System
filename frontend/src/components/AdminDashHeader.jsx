@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import menu from '/src/assets/menu-button.png';
 
 function AdminDashHeader() {
-  const backendUrl = 'https://group4-enrollment-system-server.onrender.com';
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();

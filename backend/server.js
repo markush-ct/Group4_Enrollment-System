@@ -102,6 +102,7 @@ app.use(session({
         secure: process.env.NODE_ENV === 'production', // Set to false for local development
         maxAge: 1000 * 60 * 60 * 24, // 1-day expiration
         httpOnly: true,
+        sameSite: 'strict'
     },
 }));
 
@@ -2651,6 +2652,7 @@ app.post("/logoutFunction", (req, res) => {
 
 //Login
 app.post('/LoginPage', (req, res) => {
+    console.log("Session before setting: ", req.session);
     const sql = `SELECT * FROM account WHERE Email = ? AND Password = ?`;
     const { email, password } = req.body;
 
@@ -2722,7 +2724,8 @@ app.post('/LoginPage', (req, res) => {
 
 // Session retrieval route
 app.get('/session', (req, res) => {
-    if (req.session && req.session.email) {
+    console.log("Session after setting: ", req.session);
+    if (req.session) {
         const getName = `SELECT * FROM account WHERE Email = ?`;
         db.query(getName, req.session.email, (err, result) => {
             if (err) {
@@ -2754,7 +2757,7 @@ app.use((err, req, res, next) => {
     res.status(500).send('Internal Server Error');
 });
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
