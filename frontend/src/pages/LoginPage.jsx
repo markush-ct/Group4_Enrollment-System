@@ -39,7 +39,7 @@ function LoginPage() {
 
   useEffect(() => {
     axios
-      .get(`${backendUrl}/session`)
+      .get(`https://group4-enrollment-system-server.onrender.com/session`)
       .then((res) => {
         if (res.data.valid) {
           if (res.data.role === "Enrollment Officer") {
@@ -82,7 +82,7 @@ function LoginPage() {
     e.preventDefault();
 
     axios
-      .post(`${backendUrl}/LoginPage`, values, { withCredentials: true })
+      .post(`https://group4-enrollment-system-server.onrender.com/LoginPage`, values, { withCredentials: true })
       .then((res) => {
         if (res.data.isLoggedIn && res.data.status === "Active") {
           const role = res.data.role;

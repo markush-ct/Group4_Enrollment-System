@@ -20,7 +20,7 @@ function AdminDashHeader() {
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
-      .get(`${backendUrl}/session`)
+      .get(`https://group4-enrollment-system-server.onrender.com/session`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);
