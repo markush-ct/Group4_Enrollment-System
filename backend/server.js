@@ -2698,6 +2698,9 @@ app.post('/LoginPage', (req, res) => {
                                 console.error("Error saving session:", err);
                                 return res.json({ message: "Error saving session", isLoggedIn: false });
                             }
+
+                            console.log('Set cookies:', req.cookies);
+                            console.log('Session data:', req.session);
                             return res.json({
                                 message: 'Login successful',
                                 role: req.session.role,
@@ -2718,6 +2721,9 @@ app.post('/LoginPage', (req, res) => {
                         console.error("Error saving session:", err);
                         return res.json({ message: "Error saving session", isLoggedIn: false });
                     }
+
+                    console.log('Set cookies:', req.cookies);
+                    console.log('Session data:', req.session);
                     return res.json({
                         message: 'Login successful',
                         role: req.session.role,
@@ -2739,7 +2745,7 @@ app.get('/session', (req, res) => {
     console.log("Session after setting: ", req.session);
     if (req.session) {
         const getName = `SELECT * FROM account WHERE Email = ?`;
-        db.query(getName, req.session.email, (err, result) => {
+        db.query(getName, [req.session.email], (err, result) => {
             if (err) {
                 console.log('session error', err);
                 return res.json({ valid: false });

@@ -41,6 +41,7 @@ function LoginPage() {
     axios
       .get(`${backendUrl}/session`)
       .then((res) => {
+        
         if (res.data.valid) {
           console.log("valid login: ", res.data);
           if (res.data.role === "Enrollment Officer") {
