@@ -39,7 +39,7 @@ function LoginPage() {
 
   useEffect(() => {
     axios
-      .get(`${backendUrl}/session`)
+      .get(`${backendUrl}/session`, { withCredentials: true })
       .then((res) => {
         if (res.data.valid) {
           if (res.data.role === "Enrollment Officer") {
@@ -65,10 +65,11 @@ function LoginPage() {
           } else if (res.data.role === "School Head") {
             navigate("/SchoolHeadDashboard");
           }
-        } else {
-          console.log(res.data.role);
-          navigate("/LoginPage");
-        }
+        } 
+        // else {
+        //   console.log(res.data.role);
+        //   navigate("/LoginPage");
+        // }
       })
       .catch((err) => {
         console.error("Error:", err);
