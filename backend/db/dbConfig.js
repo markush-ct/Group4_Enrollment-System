@@ -19,7 +19,8 @@ const dbConfig = {
     port: process.env.DB_PORT,
     ssl: {
         ca: fs.readFileSync(pemPath)
-    }
+    },
+    connectTimeout: 10000
 };
 
 export default dbConfig;
