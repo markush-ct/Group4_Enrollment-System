@@ -56,34 +56,33 @@ function SocOfficerDashboard() {
 
   //Reuse in other pages that requires logging in
   const navigate = useNavigate();
-  
   axios.defaults.withCredentials = true;
-  // //RETURNING ACCOUNT NAME IF LOGGED IN
-  // useEffect(() => {
-  //   axios
-  //     .get(`${backendUrl}/session`)
-  //     .then((res) => {
-  //       console.log(res.data);
-  //       if (res.data.valid) {
-  //         console.log(res.data);
-  //         setAccName(res.data.name);
-  //       }
-  //     })
-  //     //RETURNING ERROR IF NOT
-  //     .catch((err) => {
-  //       console.error("Error validating user session:", err);
-  //     });
+  //RETURNING ACCOUNT NAME IF LOGGED IN
+  useEffect(() => {
+    axios
+      .get(`${backendUrl}/session`)
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.valid) {
+          console.log(res.data);
+          setAccName(res.data.name);
+        }
+      })
+      //RETURNING ERROR IF NOT
+      .catch((err) => {
+        console.error("Error validating user session:", err);
+      });
 
-  //   axios
-  //     .get(`${backendUrl}/getPFP`)
-  //     .then((res) => {
-  //       setPFP(`${backendUrl}/${res.data.pfpURL}`);
-  //     })
-  //     .catch((err) => {
-  //       //TODO: Error prompt
-  //       alert("Error: " + err);
-  //     });
-  // }, []);
+    axios
+      .get(`${backendUrl}/getPFP`)
+      .then((res) => {
+        setPFP(`${backendUrl}/${res.data.pfpURL}`);
+      })
+      .catch((err) => {
+        //TODO: Error prompt
+        alert("Error: " + err);
+      });
+  }, []);
 
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
