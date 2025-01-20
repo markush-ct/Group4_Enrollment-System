@@ -91,6 +91,8 @@ sessionStore.on('disconnect', () => {
     console.log('Session store disconnected');
 });
 
+app.set('trust proxy', 1);
+
 // CORS configuration
 app.use(cors({
     origin: ['https://group4-enrollment-system-client.vercel.app', 
@@ -108,10 +110,10 @@ app.use(session({
     saveUninitialized: false,
     store: sessionStore, // session store
     cookie: {
-        secure: process.env.NODE_ENV === 'production', // Set to false for local development
+        secure: false, // Set to false for local development
         maxAge: 1000 * 60 * 60 * 24, // 1-day expiration
         httpOnly: true,
-        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+        sameSite: 'none',
         path: '/',
     },
 }));
