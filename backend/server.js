@@ -28,6 +28,7 @@ import StudentInformation from './routes/StudentInformation.js';
 import mysql from 'mysql';
 import path from 'path';
 import fs from 'fs';
+import session from 'express-session';
 import dbConfig from './db/dbConfig.js';
 
 import { createRequire } from 'module'; 
