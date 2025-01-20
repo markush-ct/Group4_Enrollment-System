@@ -30,65 +30,46 @@ import mysql from 'mysql';
 import path from 'path';
 import fs from 'fs';
 import dbConfig from './db/dbConfig.js';
-
 import { createRequire } from 'module'; 
 const require = createRequire(import.meta.url);
 const MySQLStore = require('express-mysql-session');
-dotenv.config();
 
+
+dotenv.config();
 const app = express();
 
 const db = mysql.createConnection(dbConfig);
 
-function handleDisconnect() {
-    db.connect((err) => {
-        if (err) {
-            console.error('Error reconnecting to the database:', err.stack);
-            setTimeout(handleDisconnect, 2000);
-        } else {
-            console.log('Connected to the database with SSL!');
-        }
-    });
-
-    db.on('error', (err) => {
-        console.error('Database error:', err);
-        if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-            handleDisconnect();
-        } else {
-            throw err;
-        }
-    });
-}
-
-// Start the database connection
-handleDisconnect();
-
-// Use MySQLStore for session management
-const sessionStore = new MySQLStore({}, db);
-sessionStore.on('error', (err) => {
-    console.error('Session store error:', err);
+db.connect((err) => {
+    if (err) {
+        console.error('Error connecting to the database:', err.stack);
+    } else {
+        console.log('Connected to the database with SSL!');
+    }
 });
 
 // CORS configuration
-app.use(cors({
+const corsConfig = {
     origin: ['http://localhost:5173', 'https://group4-enrollment-system-client.vercel.app'],
     credentials: true,
-}));
+};
+
+// Enable CORS middleware
+app.use(cors(corsConfig));
 
 app.use(express.json());
 
 app.use(cookieParser());
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: 'secret',
     resave: false,
     saveUninitialized: false,
-    store: sessionStore,
     cookie: {
-        secure: process.env.NODE_ENV === 'production',  // Set to false for local development
-        maxAge: 1000 * 60 * 60 * 24, // 1-day expiration
-        httpOnly: true
+        secure: process.env.NODE_ENV === 'production',  // Set to true in production with HTTPS
+        maxAge: 1000 * 60 * 60 * 24,  // 1 day expiration
     }
 }));
+//
 
 //Email sender
 const transporter = nodemailer.createTransport({
@@ -2628,83 +2609,9 @@ app.post("/logoutFunction", (req, res) => {
     }
 });
 
-//Login
-app.post('/LoginPage', (req, res) => {
-    const sql = `SELECT * FROM account WHERE Email = ? AND Password = ?`;
-    const { email, password } = req.body;
-
-    db.query(sql, [email, password], (err, result) => {
-        if (err) return res.json({ message: "Error in server: " + err });
-
-        if (result.length > 0) {
-            const user = result[0];
-            if (user.Status === "Terminated") {
-                return res.json({
-                    message: "Account is no longer active. Fill out contact form to ask for reactivation",
-                    isLoggedIn: false
-                });
-            }
-
-            req.session.accountID = user.AccountID;
-            req.session.email = user.Email;
-
-            if (user.Role === "Student") {
-                const studentTypeQuery = `SELECT StudentType FROM student WHERE Email = ?`;
-                db.query(studentTypeQuery, email, (err, studentResult) => {
-                    if (err) {
-                        return res.json({ message: "Error in server: " + err });
-                    } else if (studentResult.length > 0) {
-                        const studentType = studentResult[0].StudentType;
-                        req.session.role = studentType;
-
-                        // Save session and respond
-                        req.session.save((err) => {
-                            if (err) {
-                                console.error("Error saving session:", err);
-                                return res.json({ message: "Error saving session", isLoggedIn: false });
-                            }
-                            return res.json({
-                                message: 'Login successful',
-                                role: req.session.role,
-                                email: req.session.email,
-                                accountID: req.session.accountID,
-                                status: user.Status,
-                                isLoggedIn: true
-                            });
-                        });
-                    }
-                });
-            } else {
-                req.session.role = user.Role;
-
-                // Save session and respond
-                req.session.save((err) => {
-                    if (err) {
-                        console.error("Error saving session:", err);
-                        return res.json({ message: "Error saving session", isLoggedIn: false });
-                    }
-                    return res.json({
-                        message: 'Login successful',
-                        role: req.session.role,
-                        email: req.session.email,
-                        accountID: req.session.accountID,
-                        status: user.Status,
-                        isLoggedIn: true
-                    });
-                });
-            }
-        } else {
-            return res.json({ message: "Invalid credentials", isLoggedIn: false });
-        }
-    });
-});
-
-
-//LOGIN SESSION
+//LOGIN
 app.get('/session', (req, res) => {
-    console.log('Session Data:', req.session);
-    console.log(req.session.email);
-    if (req.session) {
+    if (req.session && req.session.accountID) {
         const getName = `SELECT * FROM account WHERE Email = ?`;
         db.query(getName, req.session.email, (err, result) => {
             if (err) {
@@ -2726,6 +2633,65 @@ app.get('/session', (req, res) => {
     }
 })
 
+app.post('/LoginPage', (req, res) => {
+    const sql = `SELECT * FROM account WHERE Email = ? AND Password = ?`;
+    const { email, password } = req.body;
+
+    db.query(sql, [email, password], (err, result) => {
+        if (err) return res.json({ message: "Error in server" + err });
+
+        const user = result[0];
+        if (result.length > 0) {
+            if (user.Status === "Terminated") {
+                return res.json({ message: "Account is no longer active. Fill out contact form to ask for reactivation", isLoggedIn: false });
+            } else if (user.Status === "Active") {
+                if (user.Role === "Student") {
+
+                    const studentTypeQuery = `SELECT StudentType from student WHERE Email = ?`;
+                    db.query(studentTypeQuery, email, (err, studentResult) => {
+                        if (err) {
+                            return res.json({ message: "Error in server: " + err });
+                        } else if (studentResult.length > 0) {
+                            const studentType = studentResult[0].StudentType;
+
+                            req.session.accountID = user.AccountID;
+                            req.session.role = studentType;
+                            req.session.email = user.Email;
+                            req.session.studentID = user.StudentID;
+
+                            return res.json({
+                                message: 'Login successful',
+                                role: studentType,
+                                email: req.session.email,
+                                accountID: req.session.accountID,
+                                status: user.Status,
+                                isLoggedIn: true,
+                                studentID: req.session.studentID,
+                            });
+                        }
+                    })
+                } else {
+                    req.session.accountID = user.AccountID;
+                    req.session.role = user.Role;
+                    req.session.email = user.Email;
+
+                    return res.json({
+                        message: 'Login successful',
+                        role: req.session.role,
+                        email: req.session.email,
+                        accountID: req.session.accountID,
+                        status: user.Status,
+                        isLoggedIn: true
+                    });
+                }
+
+            }
+
+        } else {
+            return res.json({ message: "Invalid credentials", isLoggedIn: false })
+        }
+    });
+});
 
 app.get('/', (req, res) => {
     console.log("Request received at '/'");
@@ -2737,7 +2703,7 @@ app.use((err, req, res, next) => {
     res.status(500).send('Internal Server Error');
 });
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.DB_PORT || 8080;
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
