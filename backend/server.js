@@ -84,8 +84,9 @@ app.use(session({
     saveUninitialized: false,
     store: sessionStore, // Use MySQL session store
     cookie: {
-        secure: process.env.NODE_ENV === 'production', // Secure cookies in production
-        maxAge: 1000 * 60 * 60 * 24,  // 1 day expiration
+        secure: process.env.NODE_ENV === 'production',  // Set to false for local development
+        maxAge: 1000 * 60 * 60 * 24, // 1-day expiration
+        httpOnly: true
     }
 }));
 //

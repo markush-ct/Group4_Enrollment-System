@@ -68,7 +68,9 @@ function LoginPage() {
           navigate("/LoginPage");
         }
       })
-      .catch((err) => alert("Error: " + err));
+      .catch((err) => {
+        console.error("Error:", err);
+        alert("Error: " + err)});
   }, []);
   {
     /* NECESSARY FOR OTHER MAIN PAGES TO AVOID ROLLING BACK WHEN LOGGED IN. COPY TOGETHER WITH NECESSARY IMPORTED MODULES */
