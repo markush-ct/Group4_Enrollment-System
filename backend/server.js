@@ -84,11 +84,9 @@ app.use(session({
     saveUninitialized: false,
     store: sessionStore, // Use MySQL session store
     cookie: {
-        secure: process.env.NODE_ENV === 'production',
-        httpOnly: true,
-        sameSite: 'strict',
-        maxAge: 1000 * 60 * 60 * 24, // 1 day
-    },
+        secure: process.env.NODE_ENV === 'production', // Secure cookies in production
+        maxAge: 1000 * 60 * 60 * 24,  // 1 day expiration
+    }
 }));
 //
 
@@ -2632,6 +2630,7 @@ app.post("/logoutFunction", (req, res) => {
 
 //LOGIN
 app.get('/session', (req, res) => {
+    console.log('Session Data:', req.session);  // Log session data
     if (req.session && req.session.accountID) {
         const getName = `SELECT * FROM account WHERE Email = ?`;
         db.query(getName, req.session.email, (err, result) => {
