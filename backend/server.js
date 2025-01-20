@@ -44,7 +44,7 @@ function handleDisconnect() {
     db.connect((err) => {
         if (err) {
             console.error('Error reconnecting to the database:', err.stack);
-            setTimeout(handleDisconnect, 2000); // Retry connection after 2 seconds
+            setTimeout(handleDisconnect, 2000);
         } else {
             console.log('Connected to the database with SSL!');
         }
