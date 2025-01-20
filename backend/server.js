@@ -78,8 +78,12 @@ const sessionStore = new MySQLStore({
     checkExpirationInterval: 900000,  // Check every 15 minutes
 }, db);
 
-sessionStore.on('error', (err) => {
-    console.error('Session store error:', err);
+sessionStore.on('connect', () => {
+    console.log('Session store connected');
+});
+
+sessionStore.on('disconnect', () => {
+    console.log('Session store disconnected');
 });
 
 // CORS configuration
@@ -102,6 +106,7 @@ app.use(session({
         secure: process.env.NODE_ENV === 'production', // Set to false for local development
         maxAge: 1000 * 60 * 60 * 24, // 1-day expiration
         httpOnly: true,
+        sameSite: 'none'
     },
 }));
 app.use((req, res, next) => {
