@@ -82,7 +82,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    store: sessionStore, // Use MySQL session store
+    store: sessionStore,
     cookie: {
         secure: process.env.NODE_ENV === 'production',  // Set to false for local development
         maxAge: 1000 * 60 * 60 * 24, // 1-day expiration
