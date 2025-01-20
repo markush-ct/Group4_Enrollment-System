@@ -39,9 +39,10 @@ function LoginPage() {
 
   useEffect(() => {
     axios
-      .get(`https://group4-enrollment-system-server.onrender.com/session`)
+      .get(`${backendUrl}/session`)
       .then((res) => {
         if (res.data.valid) {
+          console.log("valid login: ", res.data);
           if (res.data.role === "Enrollment Officer") {
             navigate("/EnrollmentOfficerDashboard");
           } else if (res.data.role === "Freshman") {
@@ -56,7 +57,7 @@ function LoginPage() {
           ) {
             navigate("/RegIrregDashboard");
           } else if (res.data.role === "Society Officer") {
-            console.log("Role: ",res.data.role);
+            console.log("Role: ", res.data);
             navigate("/SocOfficerDashboard");
           } else if (res.data.role === "Adviser") {
             navigate("/AdviserDashboard");
@@ -66,7 +67,7 @@ function LoginPage() {
             navigate("/SchoolHeadDashboard");
           }
         } else {
-          console.log(res.data.role);
+          console.log(res.data);
           navigate("/LoginPage");
         }
       })
@@ -82,7 +83,7 @@ function LoginPage() {
     e.preventDefault();
 
     axios
-      .post(`https://group4-enrollment-system-server.onrender.com/LoginPage`, values, { withCredentials: true })
+      .post(`${backendUrl}/LoginPage`, values, { withCredentials: true })
       .then((res) => {
         if (res.data.isLoggedIn && res.data.status === "Active") {
           const role = res.data.role;

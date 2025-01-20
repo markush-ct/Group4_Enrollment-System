@@ -106,7 +106,8 @@ app.use(session({
         secure: process.env.NODE_ENV === 'production', // Set to false for local development
         maxAge: 1000 * 60 * 60 * 24, // 1-day expiration
         httpOnly: true,
-        sameSite: 'none'
+        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+        path: '/',
     },
 }));
 app.use((req, res, next) => {
@@ -2740,8 +2741,10 @@ app.get('/session', (req, res) => {
         const getName = `SELECT * FROM account WHERE Email = ?`;
         db.query(getName, req.session.email, (err, result) => {
             if (err) {
+                console.log('session error', err);
                 return res.json({ valid: false });
             } else if (result.length > 0) {
+                console.log(req.session);
                 return res.json({
                     valid: true,
                     accountID: req.session.accountID,

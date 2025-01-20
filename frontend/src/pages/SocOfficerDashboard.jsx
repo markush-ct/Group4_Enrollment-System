@@ -60,7 +60,7 @@ function SocOfficerDashboard() {
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
-      .get(`https://group4-enrollment-system-server.onrender.com/session`)
+      .get(`${backendUrl}/session`)
       .then((res) => {
         console.log(res.data);
         if (res.data.valid) {
