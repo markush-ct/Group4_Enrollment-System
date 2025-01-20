@@ -28,7 +28,6 @@ import ClassSched from './routes/ClassSched.js';
 import StudentInformation from './routes/StudentInformation.js';
 import mysql from 'mysql';
 import path from 'path';
-import fs from 'fs';
 import dbConfig from './db/dbConfig.js';
 
 
