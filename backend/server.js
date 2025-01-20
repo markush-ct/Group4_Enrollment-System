@@ -38,6 +38,11 @@ dotenv.config();
 
 const app = express();
 
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    next();
+});
+
 const db = mysql.createConnection(dbConfig);
 
 function handleDisconnect() {
