@@ -2659,43 +2659,55 @@ app.post('/LoginPage', (req, res) => {
     const { email, password } = req.body;
 
     db.query(sql, [email, password], (err, result) => {
-        if (err) return res.json({ message: "Error in server" + err });
+        if (err) return res.json({ message: "Error in server: " + err });
 
-        const user = result[0];
         if (result.length > 0) {
+            const user = result[0];
             if (user.Status === "Terminated") {
-                return res.json({ message: "Account is no longer active. Fill out contact form to ask for reactivation", isLoggedIn: false });
-            } else if (user.Status === "Active") {
-                if (user.Role === "Student") {
+                return res.json({
+                    message: "Account is no longer active. Fill out contact form to ask for reactivation",
+                    isLoggedIn: false
+                });
+            }
 
-                    const studentTypeQuery = `SELECT StudentType from student WHERE Email = ?`;
-                    db.query(studentTypeQuery, email, (err, studentResult) => {
-                        if (err) {
-                            return res.json({ message: "Error in server: " + err });
-                        } else if (studentResult.length > 0) {
-                            const studentType = studentResult[0].StudentType;
+            req.session.accountID = user.AccountID;
+            req.session.email = user.Email;
 
-                            req.session.accountID = user.AccountID;
-                            req.session.role = studentType;
-                            req.session.email = user.Email;
-                            req.session.studentID = user.StudentID;
+            if (user.Role === "Student") {
+                const studentTypeQuery = `SELECT StudentType FROM student WHERE Email = ?`;
+                db.query(studentTypeQuery, email, (err, studentResult) => {
+                    if (err) {
+                        return res.json({ message: "Error in server: " + err });
+                    } else if (studentResult.length > 0) {
+                        const studentType = studentResult[0].StudentType;
+                        req.session.role = studentType;
 
+                        // Save session and respond
+                        req.session.save((err) => {
+                            if (err) {
+                                console.error("Error saving session:", err);
+                                return res.json({ message: "Error saving session", isLoggedIn: false });
+                            }
                             return res.json({
                                 message: 'Login successful',
-                                role: studentType,
+                                role: req.session.role,
                                 email: req.session.email,
                                 accountID: req.session.accountID,
                                 status: user.Status,
-                                isLoggedIn: true,
-                                studentID: req.session.studentID,
+                                isLoggedIn: true
                             });
-                        }
-                    })
-                } else {
-                    req.session.accountID = user.AccountID;
-                    req.session.role = user.Role;
-                    req.session.email = user.Email;
+                        });
+                    }
+                });
+            } else {
+                req.session.role = user.Role;
 
+                // Save session and respond
+                req.session.save((err) => {
+                    if (err) {
+                        console.error("Error saving session:", err);
+                        return res.json({ message: "Error saving session", isLoggedIn: false });
+                    }
                     return res.json({
                         message: 'Login successful',
                         role: req.session.role,
@@ -2704,15 +2716,14 @@ app.post('/LoginPage', (req, res) => {
                         status: user.Status,
                         isLoggedIn: true
                     });
-                }
-
+                });
             }
-
         } else {
-            return res.json({ message: "Invalid credentials", isLoggedIn: false })
+            return res.json({ message: "Invalid credentials", isLoggedIn: false });
         }
     });
 });
+
 
 app.get('/', (req, res) => {
     console.log("Request received at '/'");
