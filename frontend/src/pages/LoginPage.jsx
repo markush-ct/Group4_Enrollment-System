@@ -37,6 +37,43 @@ function LoginPage() {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
+  useEffect(() => {
+    axios
+      .get(`${backendUrl}/session`)
+      .then((res) => {
+        if (res.data.valid) {
+          if (res.data.role === "Enrollment Officer") {
+            navigate("/EnrollmentOfficerDashboard");
+          } else if (res.data.role === "Freshman") {
+            navigate("/FreshmanDashboard");
+          } else if (res.data.role === "Transferee") {
+            navigate("/TransfereeDashboard");
+          } else if (res.data.role === "Shiftee") {
+            navigate("/ShifteeForm");
+          } else if (
+            res.data.role === "Regular" ||
+            res.data.role === "Irregular"
+          ) {
+            navigate("/RegIrregDashboard");
+          } else if (res.data.role === "Society Officer") {
+            navigate("/SocOfficerDashboard");
+          } else if (res.data.role === "Adviser") {
+            navigate("/AdviserDashboard");
+          } else if (res.data.role === "DCS Head") {
+            navigate("/DCSHeadDashboard");
+          } else if (res.data.role === "School Head") {
+            navigate("/SchoolHeadDashboard");
+          }
+        } else {
+          navigate("/LoginPage");
+        }
+      })
+      .catch((err) => alert("Error: " + err));
+  }, []);
+  {
+    /* NECESSARY FOR OTHER MAIN PAGES TO AVOID ROLLING BACK WHEN LOGGED IN. COPY TOGETHER WITH NECESSARY IMPORTED MODULES */
+  }
+
   const submitLogin = (e) => {
     e.preventDefault();
 
