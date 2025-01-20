@@ -23,4 +23,12 @@ const dbConfig = {
     connectTimeout: 10000
 };
 
+// const dbConfig = {
+//     host: 'localhost',
+//     user: 'root',
+//     password: '',
+//     database: 'cvsuenrollmentsystem',    
+// };
+
+
 export default dbConfig;

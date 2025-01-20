@@ -69,19 +69,24 @@ const sessionStore = new MySQLStore({
     schema: {
         tableName: 'sessions',
         columnNames: {
-            session_id: 'session_id', // Column for session ID
-            expires: 'expires', // Column for session expiration
-            data: 'data', // Column for storing session data
+            session_id: 'session_id',
+            expires: 'expires',
+            data: 'data',
         },
     },
+    clearExpired: true,  // Automatically clear expired sessions
+    checkExpirationInterval: 900000,  // Check every 15 minutes
 }, db);
+
 sessionStore.on('error', (err) => {
     console.error('Session store error:', err);
 });
 
 // CORS configuration
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://group4-enrollment-system-client.vercel.app'],
+    origin: ['http://localhost:5173'
+    // , 'https://group4-enrollment-system-client.vercel.app'
+    ],
     credentials: true,
 }));
 
@@ -92,28 +97,15 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    store: sessionStore,
+    store: sessionStore, // session store
     cookie: {
-        secure: process.env.NODE_ENV === 'production',  // Set to false for local development
+        secure: process.env.NODE_ENV === 'production', // Set to false for local development
         maxAge: 1000 * 60 * 60 * 24, // 1-day expiration
         httpOnly: true,
     },
 }));
 
 
-
-app.use((req, res, next) => {
-    // Retrieve session from the store
-    sessionStore.get(req.cookies[process.env.SESSION_ID], (err, session) => {
-        if (err) {
-            console.error('Error retrieving session:', err);
-            return res.status(500).json({ message: 'Error retrieving session' });
-        }
-
-        req.session = session || {}; // If session does not exist, initialize an empty object
-        next();
-    });
-});
 
 //Email sender
 const transporter = nodemailer.createTransport({
@@ -2643,10 +2635,14 @@ app.post("/logoutFunction", (req, res) => {
     if (req.session) {
         req.session.destroy((err) => {
             if (err) {
-                return res.json({ valid: false, message: "Logout failed." });
+                return res.status(500).json({ valid: false, message: "Logout failed." });
             }
-            res.clearCookie("connect.sid"); // Session cookie
-            return res.json({ valid: false, message: "Logout successful." });
+            // Clear the session cookie
+            res.clearCookie("connect.sid", {
+                httpOnly: true,  // Ensures the cookie cannot be accessed through JavaScript
+                secure: process.env.NODE_ENV === 'production',  // Set to true for production environments
+            });
+            return res.json({ valid: true, message: "Logout successful." });
         });
     } else {
         return res.json({ valid: false, message: "No active session." });
@@ -2758,7 +2754,7 @@ app.use((err, req, res, next) => {
     res.status(500).send('Internal Server Error');
 });
 
-const PORT = process.env.PORT || 8080;
+const PORT =8080;
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
