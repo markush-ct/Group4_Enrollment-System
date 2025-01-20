@@ -1,6 +1,5 @@
 import express from 'express'
 import cors from 'cors'
-import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import crypto from 'crypto';
@@ -30,47 +29,90 @@ import mysql from 'mysql';
 import path from 'path';
 import fs from 'fs';
 import dbConfig from './db/dbConfig.js';
+
 import { createRequire } from 'module'; 
 const require = createRequire(import.meta.url);
 const MySQLStore = require('express-mysql-session');
-
-
 dotenv.config();
+
 const app = express();
 
 const db = mysql.createConnection(dbConfig);
 
-db.connect((err) => {
-    if (err) {
-        console.error('Error connecting to the database:', err.stack);
-    } else {
-        console.log('Connected to the database with SSL!');
-    }
+function handleDisconnect() {
+    db.connect((err) => {
+        if (err) {
+            console.error('Error reconnecting to the database:', err.stack);
+            setTimeout(handleDisconnect, 2000);
+        } else {
+            console.log('Connected to the database with SSL!');
+        }
+    });
+
+    db.on('error', (err) => {
+        console.error('Database error:', err);
+        if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+            handleDisconnect();
+        } else {
+            throw err;
+        }
+    });
+}
+
+// Start the database connection
+handleDisconnect();
+
+// Session store configuration
+const sessionStore = new MySQLStore({
+    expiration: 1000 * 60 * 60 * 24, // 1-day expiration
+    schema: {
+        tableName: 'sessions',
+        columnNames: {
+            session_id: 'session_id', // Column for session ID
+            expires: 'expires', // Column for session expiration
+            data: 'data', // Column for storing session data
+        },
+    },
+}, db);
+sessionStore.on('error', (err) => {
+    console.error('Session store error:', err);
 });
 
 // CORS configuration
-const corsConfig = {
+app.use(cors({
     origin: ['http://localhost:5173', 'https://group4-enrollment-system-client.vercel.app'],
     credentials: true,
-};
-
-// Enable CORS middleware
-app.use(cors(corsConfig));
+}));
 
 app.use(express.json());
-
 app.use(cookieParser());
+
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    store: sessionStore,
     cookie: {
-        secure: process.env.NODE_ENV === 'production',  // Set to true in production with HTTPS
-        maxAge: 1000 * 60 * 60 * 24,  // 1 day expiration
+        secure: process.env.NODE_ENV === 'production',  // Set to false for local development
+        maxAge: 1000 * 60 * 60 * 24, // 1-day expiration
         httpOnly: true,
-    }
+    },
 }));
-//
+
+
+
+app.use((req, res, next) => {
+    // Retrieve session from the store
+    sessionStore.get(req.cookies[process.env.SESSION_ID], (err, session) => {
+        if (err) {
+            console.error('Error retrieving session:', err);
+            return res.status(500).json({ message: 'Error retrieving session' });
+        }
+
+        req.session = session || {}; // If session does not exist, initialize an empty object
+        next();
+    });
+});
 
 //Email sender
 const transporter = nodemailer.createTransport({
@@ -2610,73 +2652,61 @@ app.post("/logoutFunction", (req, res) => {
     }
 });
 
-//LOGIN
-app.get('/session', (req, res) => {
-    console.log("Request session: ", req.session);
-    if (req.session) {
-        const getName = `SELECT * FROM account WHERE Email = ?`;
-        db.query(getName, req.session.email, (err, result) => {
-            if (err) {
-                return res.json({ valid: false });
-            } else if (result.length > 0) {
-                console.log(req.session.email);
-                return res.json({
-                    valid: true,
-                    accountID: req.session.accountID,
-                    role: req.session.role,
-                    name: result[0].Name,
-                    email: req.session.email
-                })
-            }
-        })
-    } else {
-        console.error("Error in login session")
-        return res.json({ valid: false })
-    }
-})
-
+//Login
 app.post('/LoginPage', (req, res) => {
     const sql = `SELECT * FROM account WHERE Email = ? AND Password = ?`;
     const { email, password } = req.body;
 
     db.query(sql, [email, password], (err, result) => {
-        if (err) return res.json({ message: "Error in server" + err });
+        if (err) return res.json({ message: "Error in server: " + err });
 
-        const user = result[0];
         if (result.length > 0) {
+            const user = result[0];
             if (user.Status === "Terminated") {
-                return res.json({ message: "Account is no longer active. Fill out contact form to ask for reactivation", isLoggedIn: false });
-            } else if (user.Status === "Active") {
-                if (user.Role === "Student") {
+                return res.json({
+                    message: "Account is no longer active. Fill out contact form to ask for reactivation",
+                    isLoggedIn: false
+                });
+            }
 
-                    const studentTypeQuery = `SELECT StudentType from student WHERE Email = ?`;
-                    db.query(studentTypeQuery, email, (err, studentResult) => {
-                        if (err) {
-                            return res.json({ message: "Error in server: " + err });
-                        } else if (studentResult.length > 0) {
-                            const studentType = studentResult[0].StudentType;
+            req.session.accountID = user.AccountID;
+            req.session.email = user.Email;
 
-                            req.session.accountID = user.AccountID;
-                            req.session.role = studentType;
-                            req.session.email = user.Email;
-                            req.session.studentID = user.StudentID;
+            if (user.Role === "Student") {
+                const studentTypeQuery = `SELECT StudentType FROM student WHERE Email = ?`;
+                db.query(studentTypeQuery, email, (err, studentResult) => {
+                    if (err) {
+                        return res.json({ message: "Error in server: " + err });
+                    } else if (studentResult.length > 0) {
+                        const studentType = studentResult[0].StudentType;
+                        req.session.role = studentType;
 
+                        // Save session to MySQL
+                        sessionStore.set(req.sessionID, req.session, (err) => {
+                            if (err) {
+                                console.error("Error saving session:", err);
+                                return res.json({ message: "Error saving session", isLoggedIn: false });
+                            }
                             return res.json({
                                 message: 'Login successful',
-                                role: studentType,
+                                role: req.session.role,
                                 email: req.session.email,
                                 accountID: req.session.accountID,
                                 status: user.Status,
-                                isLoggedIn: true,
-                                studentID: req.session.studentID,
+                                isLoggedIn: true
                             });
-                        }
-                    })
-                } else {
-                    req.session.accountID = user.AccountID;
-                    req.session.role = user.Role;
-                    req.session.email = user.Email;
+                        });
+                    }
+                });
+            } else {
+                req.session.role = user.Role;
 
+                // Save session to MySQL
+                sessionStore.set(req.sessionID, req.session, (err) => {
+                    if (err) {
+                        console.error("Error saving session:", err);
+                        return res.json({ message: "Error saving session", isLoggedIn: false });
+                    }
                     return res.json({
                         message: 'Login successful',
                         role: req.session.role,
@@ -2685,15 +2715,37 @@ app.post('/LoginPage', (req, res) => {
                         status: user.Status,
                         isLoggedIn: true
                     });
-                }
-
+                });
             }
-
         } else {
-            return res.json({ message: "Invalid credentials", isLoggedIn: false })
+            return res.json({ message: "Invalid credentials", isLoggedIn: false });
         }
     });
 });
+
+// Session retrieval route
+app.get('/session', (req, res) => {
+    if (req.session && req.session.email) {
+        const getName = `SELECT * FROM account WHERE Email = ?`;
+        db.query(getName, req.session.email, (err, result) => {
+            if (err) {
+                return res.json({ valid: false });
+            } else if (result.length > 0) {
+                return res.json({
+                    valid: true,
+                    accountID: req.session.accountID,
+                    role: req.session.role,
+                    name: result[0].Name,
+                    email: req.session.email
+                });
+            }
+        });
+    } else {
+        console.error("Session not found or email is missing in session");
+        return res.json({ valid: false });
+    }
+});
+
 
 app.get('/', (req, res) => {
     console.log("Request received at '/'");
