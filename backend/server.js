@@ -102,9 +102,15 @@ app.use(session({
         secure: process.env.NODE_ENV === 'production', // Set to false for local development
         maxAge: 1000 * 60 * 60 * 24, // 1-day expiration
         httpOnly: true,
-        sameSite: 'strict'
     },
 }));
+app.use((req, res, next) => {
+    if (!req.session) {
+        console.error('Session not initialized');
+    }
+    next();
+});
+
 
 
 
