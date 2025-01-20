@@ -30,17 +30,12 @@ import mysql from 'mysql';
 import path from 'path';
 import fs from 'fs';
 import dbConfig from './db/dbConfig.js';
-import { createRequire } from 'module'; 
-const require = createRequire(import.meta.url);
-const MySQLStore = require('express-mysql-session');
 
 
 dotenv.config();
 const app = express();
 
 const db = mysql.createConnection(dbConfig);
-const sessionStore = new MySQLStore({}, db);
-
 
 db.connect((err) => {
     if (err) {
@@ -66,11 +61,9 @@ app.use(session({
     secret: 'secret',
     resave: false,
     saveUninitialized: false,
-    store: sessionStore,  // Use MySQL session store
     cookie: {
-        secure: process.env.NODE_ENV === 'production',  // Set to true in production with HTTPS
+        secure: process.env.NODE_ENV === 'production',
         maxAge: 1000 * 60 * 60 * 24,  // 1 day expiration
-        sameSite: 'None'  // Allow cross-domain cookies if needed
     }
 }));
 //
@@ -2616,6 +2609,7 @@ app.post("/logoutFunction", (req, res) => {
 //LOGIN
 app.get('/', (req, res) => {
     if (req.session && req.session.accountID) {
+        console.log('Session created');
         const getName = `SELECT * FROM account WHERE Email = ?`;
         db.query(getName, req.session.email, (err, result) => {
             if (err) {
@@ -2695,11 +2689,6 @@ app.post('/LoginPage', (req, res) => {
             return res.json({ message: "Invalid credentials", isLoggedIn: false })
         }
     });
-});
-
-app.get('/', (req, res) => {
-    console.log("Request received at '/'");
-    res.send('Hello, World!');
 });
 
 app.use((err, req, res, next) => {
