@@ -65,6 +65,9 @@ handleDisconnect();
 
 // Use MySQLStore for session management
 const sessionStore = new MySQLStore({}, db);
+sessionStore.on('error', (err) => {
+    console.error('Session store error:', err);
+});
 
 // CORS configuration
 app.use(cors({
@@ -81,8 +84,10 @@ app.use(session({
     saveUninitialized: false,
     store: sessionStore, // Use MySQL session store
     cookie: {
-        secure: process.env.NODE_ENV === 'production', // Secure cookies in production
-        maxAge: 1000 * 60 * 60 * 24, // 1-day expiration
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        sameSite: 'strict',
+        maxAge: 1000 * 60 * 60 * 24, // 1 day
     },
 }));
 //
@@ -2719,7 +2724,7 @@ app.use((err, req, res, next) => {
     res.status(500).send('Internal Server Error');
 });
 
-const PORT = process.env.DB_PORT || 8080;
+const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
