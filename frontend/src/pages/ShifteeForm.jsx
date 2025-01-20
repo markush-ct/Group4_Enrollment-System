@@ -6,9 +6,9 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import checkIcon from "src/assets/check-icon.png";
-import pendingIcon from "src/assets/pending-icon.png";
-import rejectedIcon from "src/assets/rejected-icon.png";
+import checkIcon from "/src/assets/check-icon.png";
+import pendingIcon from "/src/assets/pending-icon.png";
+import rejectedIcon from "/src/assets/rejected-icon.png";
 import checkmark from "/src/assets/checkmark.png";
 import errormark from "/src/assets/errormark.png";
 

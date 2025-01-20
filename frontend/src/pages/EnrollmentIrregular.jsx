@@ -6,12 +6,12 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import uploadImageIcon from "src/assets/upload-image-icon.png";
+import uploadImageIcon from "/src/assets/upload-image-icon.png";
 import warningIcon from "/src/assets/warning-icon.png";
-import paidIcon from "src/assets/paid-icon.png";
-import pendingIcon from "src/assets/pending-icon.png";
-import unpaidIcon from "src/assets/unpaid-icon.png";
-import admissionIcon from "src/assets/admission-icon.png";
+import paidIcon from "/src/assets/paid-icon.png";
+import pendingIcon from "/src/assets/pending-icon.png";
+import unpaidIcon from "/src/assets/unpaid-icon.png";
+import admissionIcon from "/src/assets/admission-icon.png";
 import checkmark from "/src/assets/checkmark.png";
 import errormark from "/src/assets/errormark.png";
 
