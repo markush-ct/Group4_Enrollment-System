@@ -89,7 +89,6 @@ app.use(session({
         httpOnly: true
     }
 }));
-//
 
 //Email sender
 const transporter = nodemailer.createTransport({
