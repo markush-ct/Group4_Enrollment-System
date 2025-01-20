@@ -82,7 +82,7 @@ function LoginPage() {
     e.preventDefault();
 
     axios
-      .post(`${backendUrl}/LoginPage`, values)
+      .post(`${backendUrl}/LoginPage`, values, { withCredentials: true })
       .then((res) => {
         if (res.data.isLoggedIn && res.data.status === "Active") {
           const role = res.data.role;
@@ -98,6 +98,7 @@ function LoginPage() {
           } else if (role === "Regular" || res.data.role === "Irregular") {
             navigate("/RegIrregDashboard");
           } else if (role === "Society Officer") {
+            console.log(res.data);
             navigate("/SocOfficerDashboard");
           } else if (role === "Adviser") {
             navigate("/AdviserDashboard");
@@ -106,6 +107,7 @@ function LoginPage() {
           } else if (role === "School Head") {
             navigate("/SchoolHeadDashboard");
           } else {
+            console.log(res.data.email);
             navigate("/LoginPage"); // Fallback route if role is not recognized
           }
         } else if (res.data.isLoggedIn === false) {

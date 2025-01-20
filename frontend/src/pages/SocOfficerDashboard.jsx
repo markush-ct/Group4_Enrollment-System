@@ -62,11 +62,7 @@ function SocOfficerDashboard() {
     axios
       .get(`${backendUrl}/session`)
       .then((res) => {
-        if (res.data.valid) {
-          setAccName(res.data.name);
-        } else {
-          navigate("/LoginPage");
-        }
+        console.log(res.data);
       })
       //RETURNING ERROR IF NOT
       .catch((err) => {

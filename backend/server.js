@@ -2628,31 +2628,6 @@ app.post("/logoutFunction", (req, res) => {
     }
 });
 
-//LOGIN SESSION
-app.get('/session', (req, res) => {
-    console.log('Session Data:', req.session);
-    if (req.session) {
-        const getName = `SELECT * FROM account WHERE Email = ?`;
-        db.query(getName, req.session.email, (err, result) => {
-            if (err) {
-                return res.json({ valid: false });
-            } else if (result.length > 0) {
-                console.log(req.session.email);
-                return res.json({
-                    valid: true,
-                    accountID: req.session.accountID,
-                    role: req.session.role,
-                    name: result[0].Name,
-                    email: req.session.email
-                })
-            }
-        })
-    } else {
-        console.error("Error in login session")
-        return res.json({ valid: false })
-    }
-})
-
 //Login
 app.post('/LoginPage', (req, res) => {
     const sql = `SELECT * FROM account WHERE Email = ? AND Password = ?`;
@@ -2723,6 +2698,33 @@ app.post('/LoginPage', (req, res) => {
         }
     });
 });
+
+
+//LOGIN SESSION
+app.get('/session', (req, res) => {
+    console.log('Session Data:', req.session);
+    console.log(req.session.email);
+    if (req.session) {
+        const getName = `SELECT * FROM account WHERE Email = ?`;
+        db.query(getName, req.session.email, (err, result) => {
+            if (err) {
+                return res.json({ valid: false });
+            } else if (result.length > 0) {
+                console.log(req.session.email);
+                return res.json({
+                    valid: true,
+                    accountID: req.session.accountID,
+                    role: req.session.role,
+                    name: result[0].Name,
+                    email: req.session.email
+                })
+            }
+        })
+    } else {
+        console.error("Error in login session")
+        return res.json({ valid: false })
+    }
+})
 
 
 app.get('/', (req, res) => {
