@@ -2630,7 +2630,7 @@ app.post("/logoutFunction", (req, res) => {
 
 //LOGIN
 app.get('/session', (req, res) => {
-    console.log('Session Data:', req.session);  // Log session data
+    console.log('Session Data:', req.session);
     if (req.session && req.session.accountID) {
         const getName = `SELECT * FROM account WHERE Email = ?`;
         db.query(getName, req.session.email, (err, result) => {
