@@ -20,7 +20,7 @@ import studentIcon from '/src/assets/student_info_icon.png'
 import cvsulogo from '/src/assets/cvsu-logo.png';
 
 function AdminDashSideBar({ isOpen, toggleSidebar }) {
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
+  const backendUrl = "https://group4-enrollment-system-server.onrender.com";
   const [accName, setAccName] = useState("");
   const navigate = useNavigate();
   const location = useLocation(); // to track current URL

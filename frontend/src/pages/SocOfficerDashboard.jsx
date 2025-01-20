@@ -34,7 +34,7 @@ ChartJS.register(
 );
 
 function SocOfficerDashboard() {
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
+  const backendUrl = 'https://group4-enrollment-system-server.onrender.com';
   const [SideBar, setSideBar] = useState(false);
   const [CScount, setCScount] = useState(0);
   const [ITcount, setITcount] = useState(0);

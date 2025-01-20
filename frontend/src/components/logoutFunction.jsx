@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 function logoutFunction(navigate) {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
+    const backendUrl = 'https://group4-enrollment-system-server.onrender.com';
     axios
         .post(`${backendUrl}/logoutFunction`, {}, { withCredentials: true })
         .then((response) => {

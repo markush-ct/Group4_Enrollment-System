@@ -12,7 +12,7 @@ import userLogo from '/src/assets/login-userlogo.svg';
 import passLogo from '/src/assets/login-pwlogo.svg';
 
 function LoginPage() {
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
+  const backendUrl = 'https://group4-enrollment-system-server.onrender.com';
 
   const [signUpPrompt, setsignUpPrompt] = useState(false); //success
   const [signUpMsg, setsignUpMsg] = useState("");
