@@ -15,6 +15,36 @@ function RegIrregDashboard() {
   const [program, setProgram] = useState("");
   const [pfp, setPFP] = useState("");
 
+  //Reuse in other pages that requires logging in
+  const navigate = useNavigate();
+  axios.defaults.withCredentials = true;
+  //RETURNING ACCOUNT NAME IF LOGGED IN
+  useEffect(() => {
+    axios
+      .get(`${backendUrl}/session`)
+      .then((res) => {
+        if (res.data.valid) {
+          setAccName(res.data.name);
+        } else {
+          navigate("/LoginPage");
+        }
+      })
+      //RETURNING ERROR IF NOT
+      .catch((err) => {
+        console.error("Error validating user session:", err);
+      });
+
+    axios
+      .get(`${backendUrl}/getPFP`)
+      .then((res) => {
+        setPFP(`${backendUrl}/${res.data.pfpURL}`);
+      })
+      .catch((err) => {
+        alert("Error: " + err);
+      });
+  }, []);
+  //Reuse in other pages that requires logging in
+
   useEffect(() => {
     axios
       .get(`${backendUrl}/getStudentProgram`)
@@ -73,36 +103,6 @@ function RegIrregDashboard() {
     const percentage = (completedSteps / 5) * 100;
     setProgressWidth(`${percentage}%`);
   }, [socFeeProg, reqsProg, adviseProg, preEnrollProg, enrollProg]);
-
-  //Reuse in other pages that requires logging in
-  const navigate = useNavigate();
-  axios.defaults.withCredentials = true;
-  //RETURNING ACCOUNT NAME IF LOGGED IN
-  useEffect(() => {
-    axios
-      .get(`${backendUrl}/session`)
-      .then((res) => {
-        if (res.data.valid) {
-          setAccName(res.data.name);
-        } else {
-          navigate("/LoginPage");
-        }
-      })
-      //RETURNING ERROR IF NOT
-      .catch((err) => {
-        console.error("Error validating user session:", err);
-      });
-
-    axios
-      .get(`${backendUrl}/getPFP`)
-      .then((res) => {
-        setPFP(`${backendUrl}/${res.data.pfpURL}`);
-      })
-      .catch((err) => {
-        alert("Error: " + err);
-      });
-  }, []);
-  //Reuse in other pages that requires logging in
 
   const [isEnrollment, setIsEnrollment] = useState(false);
   const [enrollment, setEnrollment] = useState([]);

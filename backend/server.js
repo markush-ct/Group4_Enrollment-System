@@ -30,32 +30,47 @@ import mysql from 'mysql';
 import path from 'path';
 import fs from 'fs';
 import dbConfig from './db/dbConfig.js';
+
 import { createRequire } from 'module'; 
 const require = createRequire(import.meta.url);
 const MySQLStore = require('express-mysql-session');
-
-
 dotenv.config();
+
 const app = express();
 
 const db = mysql.createConnection(dbConfig);
 
-db.connect((err) => {
-    if (err) {
-        console.error('Error connecting to the database:', err.stack);
-    } else {
-        console.log('Connected to the database with SSL!');
-    }
-});
+function handleDisconnect() {
+    db.connect((err) => {
+        if (err) {
+            console.error('Error reconnecting to the database:', err.stack);
+            setTimeout(handleDisconnect, 2000); // Retry connection after 2 seconds
+        } else {
+            console.log('Connected to the database with SSL!');
+        }
+    });
+
+    db.on('error', (err) => {
+        console.error('Database error:', err);
+        if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+            handleDisconnect();
+        } else {
+            throw err;
+        }
+    });
+}
+
+// Start the database connection
+handleDisconnect();
+
+// Use MySQLStore for session management
+const sessionStore = new MySQLStore({}, db);
 
 // CORS configuration
-const corsConfig = {
+app.use(cors({
     origin: ['http://localhost:5173', 'https://group4-enrollment-system-client.vercel.app'],
     credentials: true,
-};
-
-// Enable CORS middleware
-app.use(cors(corsConfig));
+}));
 
 app.use(express.json());
 
@@ -64,10 +79,11 @@ app.use(session({
     secret: 'secret',
     resave: false,
     saveUninitialized: false,
+    store: sessionStore, // Use MySQL session store
     cookie: {
-        secure: process.env.NODE_ENV === 'production',  // Set to true in production with HTTPS
-        maxAge: 1000 * 60 * 60 * 24,  // 1 day expiration
-    }
+        secure: process.env.NODE_ENV === 'production', // Secure cookies in production
+        maxAge: 1000 * 60 * 60 * 24, // 1-day expiration
+    },
 }));
 //
 
@@ -2703,7 +2719,7 @@ app.use((err, req, res, next) => {
     res.status(500).send('Internal Server Error');
 });
 
-const PORT = process.env.DB_PORT || 8080;
+const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
