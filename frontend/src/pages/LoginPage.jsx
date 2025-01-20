@@ -64,14 +64,12 @@ function LoginPage() {
           } else if (res.data.role === "School Head") {
             navigate("/SchoolHeadDashboard");
           }
-        } else {
-          navigate("/LoginPage");
         }
       })
       .catch((err) => {
         console.error("Error:", err);
         alert("Error: " + err)});
-  }, [navigate]);
+  }, []);
   {
     /* NECESSARY FOR OTHER MAIN PAGES TO AVOID ROLLING BACK WHEN LOGGED IN. COPY TOGETHER WITH NECESSARY IMPORTED MODULES */
   }

@@ -82,7 +82,7 @@ function SocOfficerDashboard() {
         //TODO: Error prompt
         alert("Error: " + err);
       });
-  }, [navigate]);
+  }, []);
 
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });

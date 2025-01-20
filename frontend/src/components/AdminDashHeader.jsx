@@ -42,7 +42,7 @@ function AdminDashHeader() {
       .catch((err) => {
         alert("Error: " + err);
       });
-  }, [navigate]);
+  }, []);
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prevState) => !prevState);
