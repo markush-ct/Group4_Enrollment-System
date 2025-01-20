@@ -2614,7 +2614,7 @@ app.post("/logoutFunction", (req, res) => {
 });
 
 //LOGIN
-app.get('/loginSession', (req, res) => {
+app.get('/', (req, res) => {
     if (req.session && req.session.accountID) {
         const getName = `SELECT * FROM account WHERE Email = ?`;
         db.query(getName, req.session.email, (err, result) => {
