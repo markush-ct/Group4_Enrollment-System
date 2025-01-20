@@ -4,6 +4,9 @@ import styles from "/src/styles/FAQs.module.css";
 import Header from "/src/components/Header.jsx";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import acad1 from "/src/assets/academic-calendar.jpg";
+import acad2 from "/src/assets/academic-calendar2.jpg";
+import acad3 from "/src/assets/academic-calendar3.jpg";
 
 function FAQs() {
   const [SideBar, setSideBar] = useState(false);
@@ -387,17 +390,17 @@ function FAQs() {
                 </button>
               </div>
               <img
-                src="/src/assets/academic-calendar.jpg"
+                src={acad1}
                 alt="Academic Calendar 1"
                 data-testid="image-1"
               />
               <img
-                src="/src/assets/academic-calendar2.jpg"
+                src={acad2}
                 alt="Academic Calendar 2"
                 data-testid="image-2"
               />
               <img
-                src="/src/assets/academic-calendar3.jpg"
+                src={acad3}
                 alt="Academic Calendar 3"
                 data-testid="image-3"
               />

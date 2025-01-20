@@ -6,8 +6,10 @@ import axios from "axios";
 import Header from "/src/components/AdminDashHeader.jsx";
 import styles from "/src/styles/AccountRequest.module.css";
 import { useNavigate } from "react-router-dom";
+import errormark from "/src/assets/errormark.png";
 
 function ShiftingRequest() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const [accountRequests, setAccountRequests] = useState([]);
@@ -30,7 +32,7 @@ function ShiftingRequest() {
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(`${backendUrl}/session`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);
@@ -61,7 +63,7 @@ function ShiftingRequest() {
   // FETCH SHIFTING REQUESTS
   useEffect(() => {
     axios
-      .get("http://localhost:8080/shiftingRequests")
+      .get(`${backendUrl}/shiftingRequests`)
       .then((res) => {
         setAccountRequests(res.data.records);
         setFilteredRequests(res.data.records);
@@ -108,7 +110,7 @@ function ShiftingRequest() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/approveShiftingReq",
+        `${backendUrl}/approveShiftingReq`,
         {
           email: request.Email,
           name: request.Firstname + " " + request.Lastname,
@@ -157,7 +159,7 @@ function ShiftingRequest() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/rejectShiftingReq",
+        `${backendUrl}/rejectShiftingReq`,
         {
           email: request.Email,
           name: request.Firstname + " " + request.Lastname,
@@ -337,7 +339,7 @@ function ShiftingRequest() {
             </div>
             <div className={styles.popupPromptMessageError}>
               <img
-                src="/src/assets/errormark.png"
+                src={errormark}
                 alt="Error Icon"
                 className={styles.popupPromptmessageImage}
               />

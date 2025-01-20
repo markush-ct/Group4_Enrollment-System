@@ -5,6 +5,8 @@ import axios from "axios";
 import Header from "/src/components/AdminDashHeader.jsx";
 import { Doughnut } from "react-chartjs-2";
 import { useNavigate } from "react-router-dom";
+import acsIcon from '/src/assets/ACS-ICON.png';
+import itsIcon from "/src/assets/ITS-ICON.png";
 
 import {
   Chart as ChartJS,
@@ -27,6 +29,7 @@ ChartJS.register(
 );
 
 function EnrollmentOfficerDashboard() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
   const [SideBar, setSideBar] = useState(false);
   const [CScount, setCScount] = useState(0);
   const [ITcount, setITcount] = useState(0);
@@ -45,7 +48,7 @@ function EnrollmentOfficerDashboard() {
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(`${backendUrl}/session`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);
@@ -94,7 +97,7 @@ function EnrollmentOfficerDashboard() {
   //GET NUMBER OF REGULAR STUDENTS ENROLLED IN BSCS
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getCS")
+      .get(`${backendUrl}/getCS`)
       .then((res) => {
         setCScount(res.data.CScount);
       })
@@ -107,7 +110,7 @@ function EnrollmentOfficerDashboard() {
   //GET NUMBER OF REGULAR STUDENTS ENROLLED IN BSIT
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getIT")
+      .get(`${backendUrl}/getIT`)
       .then((res) => {
         setITcount(res.data.ITcount);
       })
@@ -119,7 +122,7 @@ function EnrollmentOfficerDashboard() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getTotalShiftingReq")
+      .get(`${backendUrl}/getTotalShiftingReq`)
       .then((res) => {
         setReqCount(res.data.shiftingReqCount);
       })
@@ -136,7 +139,7 @@ function EnrollmentOfficerDashboard() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/CSEnrollmentPeriod")
+      .get(`${backendUrl}/CSEnrollmentPeriod`)
       .then((res) => {
         const { csEnrollmentRes } = res.data;
 
@@ -155,7 +158,7 @@ function EnrollmentOfficerDashboard() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/ITEnrollmentPeriod")
+      .get(`${backendUrl}/ITEnrollmentPeriod`)
       .then((res) => {
         const { itEnrollmentRes } = res.data;
 
@@ -176,7 +179,7 @@ function EnrollmentOfficerDashboard() {
   useEffect(() => {
     const fetchAccReqNotif = async () => {
       try {
-        const accReqRes = await axios.get("http://localhost:8080/accReqNotif");
+        const accReqRes = await axios.get(`${backendUrl}/accReqNotif`);
         setAccReqNotif(
           accReqRes.data.studentCount +
             accReqRes.data.empCount +
@@ -193,7 +196,7 @@ function EnrollmentOfficerDashboard() {
   const [enrolledStudents, setEnrolledStudents] = useState(0);
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getEnrolledStdCount")
+      .get(`${backendUrl}/getEnrolledStdCount`)
       .then((res) => {
         if (res.data.message === "Rows fetched") {
           setEnrolledStudents(res.data.enrolledCount);
@@ -221,12 +224,12 @@ function EnrollmentOfficerDashboard() {
                 </div>
                 <div className={styles.logos} data-testid="logo">
                   <img
-                    src="/src/assets/ACS-ICON.png"
+                    src={acsIcon}
                     alt="Logo 1"
                     className={styles.logo}
                   />
                   <img
-                    src="/src/assets/ITS-ICON.png"
+                    src={itsIcon}
                     alt="Logo 2"
                     className={styles.logo}
                   />

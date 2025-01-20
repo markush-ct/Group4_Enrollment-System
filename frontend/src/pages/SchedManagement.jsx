@@ -7,6 +7,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function SchedManagement() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
   const [SideBar, setSideBar] = useState(false);
   const [errorPrompt, setErrorPrompt] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -22,7 +23,7 @@ function SchedManagement() {
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(`${backendUrl}/session`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);
@@ -88,7 +89,7 @@ function SchedManagement() {
       return;
     }
 
-    axios.post('http://localhost:8080/postClassSched', formData)
+    axios.post(`${backendUrl}/postClassSched`, formData)
       .then((res) => {
         if (res.data.message === "Success") {
           setSchedule((prev) => [...prev, formData]);
@@ -119,7 +120,7 @@ function SchedManagement() {
   const handleSectionClick = (request) => {
     setSelectedSection(request);
 
-    axios.post('http://localhost:8080/getClassSched/popup', {
+    axios.post(`${backendUrl}/getClassSched/popup`, {
       year: request.YearLevel,
       section: request.Section
     })
@@ -156,8 +157,8 @@ function SchedManagement() {
   useEffect(() => {
 
     Promise.all([
-      axios.get('http://localhost:8080/getOptionsForSched'),
-      axios.get('http://localhost:8080/getClassSched/table'),
+      axios.get(`${backendUrl}/getOptionsForSched`),
+      axios.get(`${backendUrl}/getClassSched/table`),
     ])
       .then((res) => {
         if (res[0].data.message === "Success") {

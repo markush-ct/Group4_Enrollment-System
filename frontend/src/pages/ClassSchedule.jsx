@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function ClassSchedule() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
   const [SideBar, setSideBar] = useState(false);
   const [activeDay, setActiveDay] = useState("All"); // Default to "All"
   const [accName, setAccName] = useState("");
@@ -24,7 +25,7 @@ function ClassSchedule() {
   const navigate = useNavigate();
   axios.defaults.withCredentials = true;
   useEffect(() => {
-    axios.get("http://localhost:8080")
+    axios.get(`${backendUrl}/session`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);
@@ -39,7 +40,7 @@ function ClassSchedule() {
 
   // Fetch schedule data
   useEffect(() => {
-    axios.get('http://localhost:8080/viewSched/regirreg')
+    axios.get(`${backendUrl}/viewSched/regirreg`)
       .then((res) => {
         if (res.data.message === "Success") {
           const schedules = res.data.schedInfo.reduce((acc, item) => {

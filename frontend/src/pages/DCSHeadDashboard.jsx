@@ -5,6 +5,8 @@ import axios from "axios";
 import Header from "/src/components/AdminDashHeader.jsx";
 import { Doughnut } from "react-chartjs-2";
 import { useNavigate } from "react-router-dom";
+import acsIcon from '/src/assets/ACS-ICON.png';
+import itsIcon from "/src/assets/ITS-ICON.png";
 
 import {
   Chart as ChartJS,
@@ -27,6 +29,7 @@ ChartJS.register(
 );
 
 function DCSHeadDashboard() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
   const [SideBar, setSideBar] = useState(false);
   const [CScount, setCScount] = useState(0);
   const [ITcount, setITcount] = useState(0);
@@ -46,7 +49,7 @@ function DCSHeadDashboard() {
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(`${backendUrl}/session`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);
@@ -94,7 +97,7 @@ function DCSHeadDashboard() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/DCSHeadProgram")
+      .get(`${backendUrl}/DCSHeadProgram`)
       .then((res) => {
         console.log(res.data.program);
         setProgram(res.data.program);
@@ -107,7 +110,7 @@ function DCSHeadDashboard() {
   //GET NUMBER OF REGULAR STUDENTS ENROLLED IN BSCS
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getCS")
+      .get(`${backendUrl}/getCS`)
       .then((res) => {
         setCScount(res.data.CScount);
       })
@@ -120,7 +123,7 @@ function DCSHeadDashboard() {
   //GET NUMBER OF REGULAR STUDENTS ENROLLED IN BSIT
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getIT")
+      .get(`${backendUrl}/getIT`)
       .then((res) => {
         setITcount(res.data.ITcount);
       })
@@ -132,7 +135,7 @@ function DCSHeadDashboard() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getTotalShiftingReq")
+      .get(`${backendUrl}/getTotalShiftingReq`)
       .then((res) => {
         setReqCount(res.data.shiftingReqCount);
       })
@@ -148,7 +151,7 @@ function DCSHeadDashboard() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/dcsViewEnrollment")
+      .get(`${backendUrl}/dcsViewEnrollment`)
       .then((res) => {
         const { enrollmentPeriod } = res.data;
 
@@ -175,7 +178,7 @@ function DCSHeadDashboard() {
 
   const [enrolledStudents, setEnrolledStudents] = useState(0);
   useEffect(() => {
-    axios.get('http://localhost:8080/getEnrolledStdCount')
+    axios.get(`${backendUrl}/getEnrolledStdCount`)
     .then((res) => {
       if(res.data.message === "Rows fetched"){
         setEnrolledStudents(res.data.enrolledCount);
@@ -205,9 +208,9 @@ function DCSHeadDashboard() {
                   <img
                     src={
                       program === 1
-                        ? "/src/assets/ACS-ICON.png"
+                        ? acsIcon
                         : program === 2
-                        ? "/src/assets/ITS-ICON.png"
+                        ? itsIcon
                         : ""
                     }
                     alt="society logo"

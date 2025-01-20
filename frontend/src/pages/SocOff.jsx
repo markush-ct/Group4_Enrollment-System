@@ -5,8 +5,11 @@ import { useState } from "react";
 import Header from "/src/components/Header.jsx";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import acslogo from "/src/assets/ACS-logo.svg";
+import itslogo from "/src/assets/ITS-logo.svg";
 
 function SocOff() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
   const [SideBar, setSideBar] = useState(false);
   SideBar
     ? (document.body.style.overflow = "hidden")
@@ -28,7 +31,7 @@ function SocOff() {
   const socData = [
     {
       name: "Alliance of Computer Scientist",
-      logo: "/src/assets/ACS-logo.svg",
+      logo: acslogo,
       officers: [
         { name: "Jelixces Cajontoy", position: "President" },
         { name: "Ernest Monticalvo", position: "Vice President" },
@@ -52,7 +55,7 @@ function SocOff() {
     },
     {
       name: "Information Technology Society",
-      logo: "/src/assets/ITS-logo.svg",
+      logo: itslogo,
       officers: [
         { name: "Rheena Bellera", position: "President" },
         { name: "Erica Mae Zardoma", position: "Vice President" },

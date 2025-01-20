@@ -24,7 +24,7 @@ function StudentDashSideBar({ isOpen, toggleSidebar }) {
   // Load Student Navigation Menu
   useEffect(() => {
     axios
-      .get(`${backendUrl}`)
+      .get(`${backendUrl}/session`)
       .then((res) => {
         if (res.data.valid && res.data.role === "Regular") {
           setNavBtn([

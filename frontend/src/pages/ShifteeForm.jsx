@@ -6,8 +6,14 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import checkIcon from "src/assets/check-icon.png";
+import pendingIcon from "src/assets/pending-icon.png";
+import rejectedIcon from "src/assets/rejected-icon.png";
+import checkmark from "/src/assets/checkmark.png";
+import errormark from "/src/assets/errormark.png";
 
 function ShifteeForm() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
   const [SideBar, setSideBar] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const [accName, setAccName] = useState("");
@@ -35,7 +41,7 @@ function ShifteeForm() {
   };
 
   useEffect(() => {
-    axios.get("http://localhost:8080/getShifteeInfo")
+    axios.get(`${backendUrl}/getShifteeInfo`)
       .then((res) => {
         if (res.data.message === "Fetched records successfully") {
           console.log(res.data);
@@ -66,7 +72,7 @@ function ShifteeForm() {
 
   const autoSave = async () => {
     try {
-      const res1 = await axios.post("http://localhost:8080/saveShiftingInfo", formValues)
+      const res1 = await axios.post(`${backendUrl}/saveShiftingInfo`, formValues)
       if (res1.data.message === "Record updated successfully") {
         console.log(res1.data);
         setErrorMsg("");
@@ -77,7 +83,7 @@ function ShifteeForm() {
         return;
       }
 
-      const res2 = await axios.post("http://localhost:8080/saveShifteeInfo", formValues)
+      const res2 = await axios.post(`${backendUrl}/saveShifteeInfo`, formValues)
       if (res2.data.message === "Record updated successfully") {
         console.log(res2.data);
         setErrorMsg("");
@@ -116,7 +122,7 @@ function ShifteeForm() {
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(`${backendUrl}/session`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);
@@ -161,7 +167,7 @@ function ShifteeForm() {
     // Update the dateSubmitted here
     const currentDate = new Date().toISOString();  // or use .toLocaleDateString() based on your preference
 
-    axios.post("http://localhost:8080/submitShiftingForm", { ...formValues, dateSubmitted: currentDate })
+    axios.post(`${backendUrl}/submitShiftingForm`, { ...formValues, dateSubmitted: currentDate })
       .then((res) => {
         if (res.data.message === "Form submitted successfully") {
           setStudentID(res.data.studentID);
@@ -321,12 +327,12 @@ function ShifteeForm() {
     <img
         src={
             formValues.shiftingStatus === "Approved"
-                ? "src/assets/check-icon.png"
+                ? checkIcon
                 : formValues.shiftingStatus === "Submitted"
-                ? "src/assets/pending-icon.png"
+                ? pendingIcon
                 : formValues.shiftingStatus === "Rejected"
-                ? "src/assets/rejected-icon.png"
-                : "src/assets/pending-icon.png"
+                ? rejectedIcon
+                : pendingIcon
         }
         alt="Fee Status Icon"
         className={styles.uploadIcon}
@@ -475,7 +481,7 @@ function ShifteeForm() {
                 <h2>Success</h2>
               </div>
               <div className={styles.Message}>
-                <img src="/src/assets/checkmark.png" alt="SUccess Icon" className={styles.messageImage} />
+                <img src={checkmark} alt="SUccess Icon" className={styles.messageImage} />
 
               </div>
               <p className={styles.popupText}>Submit Successful</p>
@@ -498,7 +504,7 @@ function ShifteeForm() {
                 <h2>Error</h2>
               </div>
               <div className={styles.Message}>
-                <img src="/src/assets/errormark.png" alt="Error Icon" className={styles.messageImage} />
+                <img src={errormark} alt="Error Icon" className={styles.messageImage} />
 
               </div>
               <p className={styles.popupText}>{errorMsg}</p>

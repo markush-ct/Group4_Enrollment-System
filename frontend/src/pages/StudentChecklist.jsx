@@ -5,6 +5,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function StudentChecklist() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const [checklistData, setChecklistData] = useState([]);
@@ -13,7 +14,7 @@ function StudentChecklist() {
   useEffect(() => {
     // Fetch the checklist data
     axios
-      .get('http://localhost:8080/viewStudentChecklist')
+      .get(`${backendUrl}/viewStudentChecklist`)
       .then((response) => {
         if (response.data.message === 'Success') {
           setChecklistData(response.data.checklistData);
@@ -52,7 +53,7 @@ function StudentChecklist() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(`${backendUrl}/session`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);

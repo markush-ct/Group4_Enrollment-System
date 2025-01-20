@@ -6,8 +6,17 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import admissionIcon from '/src/assets/admission-icon.png';
+import personalIcon from '/src/assets/personal-icon.png';
+import famIcon from '/src/assets/family-icon.png';
+import educIcon from '/src/assets/education-icon.png';
+import medIcon from '/src/assets/medical-icon.png';
+import calendarIcon from '/src/assets/calendar-icon.png';
+import pendingIcon from "/src/assets/pending-icon.png";
+import errormark from "/src/assets/errormark.png";
 
 function FreshmenAdmissionForm() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
   const [accName, setAccName] = useState("");
   const [uploadedImage, setUploadedImage] = useState(null);
   const [activeStep, setActiveStep] = useState(0);
@@ -95,7 +104,7 @@ function FreshmenAdmissionForm() {
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(`${backendUrl}/session`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);
@@ -167,7 +176,7 @@ function FreshmenAdmissionForm() {
 
   //TODO: Fetch the transferee's data from the database
   useEffect(() => {
-    axios.get("http://localhost:8080/getTransfereeData")
+    axios.get(`${backendUrl}/getTransfereeData`)
     .then((res) => {
       if(res.data.message === "Fetched records successfully"){
         const student = res.data.student;
@@ -330,16 +339,16 @@ function FreshmenAdmissionForm() {
 
 
     Promise.all([
-      axios.post("http://localhost:8080/saveTransfereeAdmissionForm", data, {
+      axios.post(`${backendUrl}/saveTransfereeAdmissionForm`, data, {
         headers: { "Content-Type": "multipart/form-data", },
       }),
-      axios.post("http://localhost:8080/saveTransfereeData", formData)
+      axios.post(`${backendUrl}/saveTransfereeData`, formData)
     ])
       .then((responses) => {
         console.log("Form saved successfully:", responses[0].data);
         console.log("Student saved successfully:", responses[1].data);
 
-        setUploadedImage(`http://localhost:8080/${responses[0].data.idPictureUrl}`);
+        setUploadedImage(`${backendUrl}/${responses[0].data.idPictureUrl}`);
       })
       .catch((err) => {
         console.log("Error:", err);
@@ -387,7 +396,7 @@ e.preventDefault();
     if(!isConfirmation){
       alert("Please check the box to proceed.")
     } else{
-      axios.post("http://localhost:8080/submitAdmissionForm")
+      axios.post(`${backendUrl}/submitAdmissionForm`)
       .then((res) => {
         if(res.data.message === "Admission Form submitted successfully."){
           setStudentID(res.data.studentID)
@@ -419,7 +428,7 @@ e.preventDefault();
           <div className={styles.content}>
             <h3 className={styles.stepTitle}>
               <img
-                src='/src/assets/admission-icon.png'
+                src={admissionIcon}
                 alt="ICON"
                 className={styles.icon}
               />Admission Information
@@ -517,7 +526,7 @@ e.preventDefault();
         return (
           <div className={styles.content}>
             <h3 className={styles.stepTitle}>
-              <img src='/src/assets/personal-icon.png' alt="ICON" className={styles.icon} />
+              <img src={personalIcon} alt="ICON" className={styles.icon} />
               Personal Information
             </h3>
             <form className={styles.form}>
@@ -811,7 +820,7 @@ e.preventDefault();
         return (
           <div className={styles.content}>
             <h3 className={styles.stepTitle}>
-              <img src='/src/assets/family-icon.png' alt="Personal Info Icon" className={styles.icon} />
+              <img src={famIcon} alt="Personal Info Icon" className={styles.icon} />
               Family Background
             </h3>
 
@@ -1018,7 +1027,7 @@ e.preventDefault();
         return (
           <div className={styles.content}>
             <h3 className={styles.stepTitle}>
-              <img src='/src/assets/education-icon.png' alt="Personal Info Icon" className={styles.icon} />
+              <img src={educIcon} alt="Personal Info Icon" className={styles.icon} />
               Educational Background
             </h3>
 
@@ -1344,7 +1353,7 @@ e.preventDefault();
         return (
           <div className={styles.content}>
             <h3 className={styles.stepTitle}>
-              <img src='/src/assets/medical-icon.png' alt="Personal Info Icon" className={styles.icon} />
+              <img src={medIcon} alt="Personal Info Icon" className={styles.icon} />
               Medical History
             </h3>
 
@@ -1401,7 +1410,7 @@ e.preventDefault();
         return (
           <div className={styles.content}>
             <h3 className={styles.stepTitle}>
-              <img src='/src/assets/calendar-icon.png' alt="Personal Info Icon" className={styles.icon} />
+              <img src={calendarIcon} alt="Personal Info Icon" className={styles.icon} />
               Admission Status
             </h3>
 
@@ -1558,7 +1567,7 @@ e.preventDefault();
               </div>
               <div className={styles.MessageError}>
                 <img
-                  src="/src/assets/errormark.png"
+                  src={errormark}
                   alt="Error Icon"
                   className={styles.messageImage}
                 />

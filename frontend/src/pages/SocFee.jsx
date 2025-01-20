@@ -5,9 +5,11 @@ import axios from 'axios';
 import Header from '/src/components/AdminDashHeader.jsx';
 import styles from '/src/styles/AccountRequest.module.css';
 import { useNavigate } from 'react-router-dom';
+import errormark from "/src/assets/errormark.png";
 
 
 function SocFee() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const [accountRequests, setAccountRequests] = useState([]);
@@ -30,7 +32,7 @@ function SocFee() {
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(`${backendUrl}/session`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);
@@ -61,7 +63,7 @@ function SocFee() {
   // FETCH ALL SOCIETY FEES
   useEffect(() => {
     axios
-        .get("http://localhost:8080/getSocFee")
+        .get(`${backendUrl}/getSocFee`)
         .then((res) => {
             setAccountRequests(res.data.records);
             setFilteredRequests(res.data.records);
@@ -121,7 +123,7 @@ useEffect(() => {
     setLoading(true);
   
     try {
-      const response = await axios.post('http://localhost:8080/approveShiftingReq', {
+      const response = await axios.post(`${backendUrl}/approveShiftingReq`, {
         email: request.Email,
         name: request.Firstname + " " + request.Lastname,
         studentID: request.CvSUStudentID,
@@ -159,7 +161,7 @@ const handleReject = async (request) => {
   setLoading(true);
 
   try {
-      const response = await axios.post('http://localhost:8080/rejectShiftingReq', {
+      const response = await axios.post(`${backendUrl}/rejectShiftingReq`, {
           email: request.Email,
           name: request.Firstname + " " + request.Lastname,
           studentID: request.CvSUStudentID,
@@ -212,7 +214,7 @@ const closePrompt = () => {
     setLoading(true);
   
     try {
-        const res = await axios.post('http://localhost:8080/verifyPaidSocFee', {
+        const res = await axios.post(`${backendUrl}/verifyPaidSocFee`, {
             studentID: request.StudentID,
             cvsuStudentID: request.CvSUStudentID
         });
@@ -238,7 +240,7 @@ const closePrompt = () => {
     setLoading(true);
   
     try {
-        const res = await axios.post('http://localhost:8080/verifyUnpaidSocFee', {
+        const res = await axios.post(`${backendUrl}/verifyUnpaidSocFee`, {
             studentID: request.StudentID,
             cvsuStudentID: request.CvSUStudentID
         });
@@ -352,7 +354,7 @@ const closePrompt = () => {
             </div>
             <div className={styles.popupPromptMessageError}>
                 <img
-                    src="/src/assets/errormark.png"
+                    src={errormark}
                     alt="Error Icon"
                     className={styles.popupPromptmessageImage}
                 />

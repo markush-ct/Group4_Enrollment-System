@@ -5,8 +5,11 @@ import Header from "/src/components/Header.jsx";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import axios from "axios";
+import checkmark from "/src/assets/checkmark.png";
+import errormark from "/src/assets/errormark.png";
 
 function SignUp() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
   const [signUpPrompt, setsignUpPrompt] = useState(false); //success
   const [signUpMsg, setsignUpMsg] = useState("");
   const [errorPrompt, setErrorPrompt] = useState(false); //errors
@@ -30,7 +33,7 @@ function SignUp() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/programs")
+      .get(`${backendUrl}/programs`)
       .then((res) => {
         setPrograms(res.data);
       })
@@ -43,7 +46,7 @@ function SignUp() {
     e.preventDefault();
 
     axios
-      .post("http://localhost:8080/SignUp", values)
+      .post(`${backendUrl}/SignUp`, values)
       .then((res) => {
         if (
           res.data.message ===
@@ -133,7 +136,7 @@ function SignUp() {
             </div>
             <div className={styles.Message}>
               <img
-                src="/src/assets/checkmark.png"
+                src={checkmark}
                 alt="Success Icon"
                 className={styles.messageImage}
               />
@@ -163,7 +166,7 @@ function SignUp() {
             </div>
             <div className={styles.MessageError}>
               <img
-                src="/src/assets/errormark.png"
+                src={errormark}
                 alt="Error Icon"
                 className={styles.messageImage}
               />

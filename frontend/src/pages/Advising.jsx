@@ -5,6 +5,8 @@ import axios from 'axios';
 import Header from '/src/components/AdminDashHeader.jsx';
 import styles from '/src/styles/AccountRequest.module.css';
 import { useNavigate } from 'react-router-dom';
+import checkmark from "/src/assets/checkmark.png";
+import errormark from "/src/assets/errormark.png";
 
 function Requirements() {
   const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
@@ -38,7 +40,7 @@ function Requirements() {
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(`${backendUrl}/session`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);
@@ -69,7 +71,7 @@ function Requirements() {
   // FETCH ACCOUNT REQUESTS
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getReqsForAdviser")
+      .get(`${backendUrl}/getReqsForAdviser`)
       .then((res) => {
         setAccountRequests(res.data.students);
         setFilteredRequests(res.data.students);
@@ -94,7 +96,7 @@ function Requirements() {
     }
 
     try {
-      const res = await axios.post('http://localhost:8080/sendAdvisingSched', {
+      const res = await axios.post(`${backendUrl}/sendAdvisingSched`, {
         sched: schedAdvising,
         studentID: request.StudentID
       })
@@ -123,7 +125,7 @@ function Requirements() {
     console.log(request.StudentID);
 
     try {
-      const res = await axios.post('http://localhost:8080/setAdvisingStatus', {
+      const res = await axios.post(`${backendUrl}/setAdvisingStatus`, {
         studentID: request.StudentID
       })
 
@@ -159,14 +161,14 @@ function Requirements() {
     setPopUpVisible(true);
 
     Promise.all([
-      axios.post(`http://localhost:8080/getCOGForAdviser`, { studentID: request.StudentID }),
-      axios.post(`http://localhost:8080/getChecklistForAdviser`, { studentID: request.StudentID }),
-      axios.post(`http://localhost:8080/getCoursesForAdviser`, { studentID: request.StudentID }),
-      axios.post(`http://localhost:8080/getAdviceStatus/advising`, { studentID: request.StudentID }),
+      axios.post(`${backendUrl}/getCOGForAdviser`, { studentID: request.StudentID }),
+      axios.post(`${backendUrl}/getChecklistForAdviser`, { studentID: request.StudentID }),
+      axios.post(`${backendUrl}/getCoursesForAdviser`, { studentID: request.StudentID }),
+      axios.post(`${backendUrl}/getAdviceStatus/advising`, { studentID: request.StudentID }),
     ])
       .then((res) => {
         if (res[0].data.message === "Success" && res[1].data.message === "Success" && res[2].data.message === "Success") {
-          setCOG(`http://localhost:8080/${res[0].data.cogPath}`);
+          setCOG(`${backendUrl}/${res[0].data.cogPath}`);
           setChecklist(res[1].data.checklistData);
           setCourses(res[2].data.courses);
         } else {
@@ -303,7 +305,7 @@ function Requirements() {
             </div>
             <div className={styles.popupPromptMessage}>
               <img
-                src="/src/assets/checkmark.png"
+                src={checkmark}
                 alt="Success Icon"
                 className={styles.popupPromptmessageImage}
               />
@@ -337,7 +339,7 @@ function Requirements() {
             </div>
             <div className={styles.popupPromptMessage}>
               <img
-                src="/src/assets/checkmark.png"
+                src={checkmark}
                 alt="Success Icon"
                 className={styles.popupPromptmessageImage}
               />
@@ -363,7 +365,7 @@ function Requirements() {
             
             <div className={styles.popupPromptMessageError}>
               <img
-                src="/src/assets/errormark.png"
+                src={errormark}
                 alt="Error Icon"
                 className={styles.popupPromptmessageImage}
               />

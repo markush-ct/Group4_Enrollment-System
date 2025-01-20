@@ -6,8 +6,17 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import uploadImageIcon from "src/assets/upload-image-icon.png";
+import warningIcon from "/src/assets/warning-icon.png";
+import paidIcon from "src/assets/paid-icon.png";
+import pendingIcon from "src/assets/pending-icon.png";
+import unpaidIcon from "src/assets/unpaid-icon.png";
+import admissionIcon from "src/assets/admission-icon.png";
+import checkmark from "/src/assets/checkmark.png";
+import errormark from "/src/assets/errormark.png";
 
 function EnrollmentRegular() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
   const [SideBar, setSideBar] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const [Enrollmentstatus, setEnrollmentStatus] = useState("Enrolled"); //value ng enrollmentstatus
@@ -28,11 +37,11 @@ function EnrollmentRegular() {
 
   useEffect(() => {
     Promise.all([
-      axios.get("http://localhost:8080/socFeeProgress"),
-      axios.get("http://localhost:8080/reqsProgress"),
-      axios.get("http://localhost:8080/adviseProgress"),
-      axios.get("http://localhost:8080/preEnrollProgress"),
-      axios.get("http://localhost:8080/enrollStatusProgress"),
+      axios.get(`${backendUrl}/socFeeProgress`),
+      axios.get(`${backendUrl}/reqsProgress`),
+      axios.get(`${backendUrl}/adviseProgress`),
+      axios.get(`${backendUrl}/preEnrollProgress`),
+      axios.get(`${backendUrl}/enrollStatusProgress`),
     ])
       .then((res) => {
         setSocFeeProg(res[0].data.message === "Success");
@@ -68,7 +77,7 @@ function EnrollmentRegular() {
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(`${backendUrl}/session`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);
@@ -114,7 +123,7 @@ function EnrollmentRegular() {
   const [stdEnrollStatus, setStdEnrollStatus] = useState('');
 
   useEffect(() => {
-    axios.get("http://localhost:8080/getEnrollment")
+    axios.get(`${backendUrl}/getEnrollment`)
       .then((res) => {
         const { enrollmentPeriod } = res.data;
 
@@ -123,7 +132,7 @@ function EnrollmentRegular() {
             setIsEnrollment(true);
             setEnrollment(enrollmentPeriod);
 
-            axios.get("http://localhost:8080/getStudentSocFeeStatus")
+            axios.get(`${backendUrl}/getStudentSocFeeStatus`)
               .then((res) => {
                 setSocFeeStatus(res.data.records.SocFeePayment);
               })
@@ -132,7 +141,7 @@ function EnrollmentRegular() {
               });
 
 
-            axios.get("http://localhost:8080/getStdEnrollmentStatus")
+            axios.get(`${backendUrl}/getStdEnrollmentStatus`)
               .then((res) => {
                 if (res.data.message === "Success") {
                   setStdEnrollStatus(res.data.enrollStatus);
@@ -173,12 +182,12 @@ function EnrollmentRegular() {
 
   useEffect(() => {
     Promise.all([
-      axios.get('http://localhost:8080/getCourseChecklist'),
-      axios.get('http://localhost:8080/getSubmittedCOG'),
-      axios.get('http://localhost:8080/getAdvisingResult'),
-      axios.get('http://localhost:8080/getChecklistStatus'),
-      axios.get('http://localhost:8080/getPreEnrollmentStatus'),
-      axios.get('http://localhost:8080/getPreEnrollmentValues'),
+      axios.get(`${backendUrl}/getCourseChecklist`),
+      axios.get(`${backendUrl}/getSubmittedCOG`),
+      axios.get(`${backendUrl}/getAdvisingResult`),
+      axios.get(`${backendUrl}/getChecklistStatus`),
+      axios.get(`${backendUrl}/getPreEnrollmentStatus`),
+      axios.get(`${backendUrl}/getPreEnrollmentValues`),
     ])
       .then((response) => {
         if (response[0].data.message === 'Success') {
@@ -189,7 +198,7 @@ function EnrollmentRegular() {
 
         if (response[1].data.message === 'Success') {
           if (response[1].data.cogPath !== null) {
-            setUploadedImage(`http://localhost:8080/${response[1].data.cogPath}`);
+            setUploadedImage(`${backendUrl}/${response[1].data.cogPath}`);
             setCogChecklist({
               cog: response[1].data.cogPath,
               cogURL: response[1].data.cogPath,
@@ -301,7 +310,7 @@ function EnrollmentRegular() {
 
     // Send the data to the backend
     axios
-      .post('http://localhost:8080/submitCOGChecklist', formData, {
+      .post(`${backendUrl}/submitCOGChecklist`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -357,7 +366,7 @@ function EnrollmentRegular() {
 
   const [enrolledStdData, SetEnrolledStdData] = useState([]);
   useEffect(() => {
-    axios.get('http://localhost:8080/getEnrolledStdInfo')
+    axios.get(`${backendUrl}/getEnrolledStdInfo`)
       .then((res) => {
         if (res.data.message === "Success") {
           console.log(res.data.studentData);
@@ -382,7 +391,7 @@ function EnrollmentRegular() {
 
               <div className={styles.uploadBox}>
                 <img
-                  src={uploadedImage || "src/assets/upload-image-icon.png"}
+                  src={uploadedImage || uploadImageIcon}
                   alt="Upload Icon"
                   style={{
                     width: uploadedImage !== null ? '100%' : '100px',
@@ -411,7 +420,7 @@ function EnrollmentRegular() {
               {reqStatus === "Rejected" && (
                 <>
                   <img
-                    src="/src/assets/warning-icon.png"
+                    src={warningIcon}
                     alt="Warning Icon"
                     className={styles.uploadIcon}
                   />
@@ -521,10 +530,10 @@ function EnrollmentRegular() {
             <img
               src={
                 SocFeestatus === "Paid"
-                  ? "src/assets/paid-icon.png"
+                  ? paidIcon
                   : SocFeestatus === "Pending"
-                    ? "src/assets/pending-icon.png"
-                    : "src/assets/unpaid-icon.png"
+                    ? pendingIcon
+                    : unpaidIcon
               }
               alt="Fee Status Icon"
               className={styles.uploadIcon}
@@ -540,10 +549,10 @@ function EnrollmentRegular() {
             <img
               src={
                 advisingStatus === "Approved"
-                  ? "src/assets/paid-icon.png"
+                  ? paidIcon
                   : advisingStatus === "Pending"
-                    ? "src/assets/pending-icon.png"
-                    : "src/assets/unpaid-icon.png"
+                    ? pendingIcon
+                    : unpaidIcon
               }
               alt="Fee Status Icon"
               className={styles.uploadIcon}
@@ -591,7 +600,7 @@ function EnrollmentRegular() {
         return (
           <div className={styles.Contentt}>
             <img
-              src="src/assets/admission-icon.png"
+              src={admissionIcon}
               alt="Form Icon"
               className={styles.uploadIcon}
             />
@@ -634,12 +643,12 @@ function EnrollmentRegular() {
             <img
               src={
                 stdEnrollStatus === "Enrolled"
-                  ? "src/assets/paid-icon.png"
+                  ? paidIcon
                   : stdEnrollStatus === "Pending"
-                    ? "src/assets/pending-icon.png"
+                    ? pendingIcon
                     : stdEnrollStatus === "Not Enrolled"
-                      ? "src/assets/unpaid-icon.png"
-                      : "src/assets/pending-icon.png"
+                      ? unpaidIcon
+                      : pendingIcon
               }
               alt="Fee Status Icon"
               className={styles.uploadIcon}
@@ -763,7 +772,7 @@ function EnrollmentRegular() {
                   <h2>Success</h2>
                 </div>
                 <div className={styles.Message}>
-                  <img src="/src/assets/checkmark.png" alt="SUccess Icon" className={styles.messageImage} />
+                  <img src={checkmark} alt="SUccess Icon" className={styles.messageImage} />
 
                 </div>
                 <p className={styles.popupText}>Submit Successful</p>
@@ -786,7 +795,7 @@ function EnrollmentRegular() {
                   <h2>Error</h2>
                 </div>
                 <div className={styles.Message}>
-                  <img src="/src/assets/errormark.png" alt="Error Icon" className={styles.messageImage} />
+                  <img src={errormark} alt="Error Icon" className={styles.messageImage} />
 
                 </div>
                 <p className={styles.popupText}>{errorMsg}</p>

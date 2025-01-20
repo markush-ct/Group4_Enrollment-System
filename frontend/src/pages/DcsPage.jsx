@@ -5,6 +5,7 @@ import { useState } from "react";
 import Header from "/src/components/Header.jsx";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import profileIcon from "/src/assets/profile-icon.svg";
 
 function DcsPage() {
   const [SideBar, setSideBar] = useState(false);
@@ -79,7 +80,7 @@ function DcsPage() {
         <div data-aos="fade-up" className={styles.mainContainer}>
           <div data-aos="fade-up" className={styles.DcsContainer}>
             <div className={styles.DcsIcon}>
-              <img src="/src/assets/profile-icon.svg" alt="Profile Icon" />
+              <img src={profileIcon} alt="Profile Icon" />
             </div>
             <h2>Donnalyn B. Montallana, MIT</h2>
             <p>DCS Chairperson</p>
@@ -88,14 +89,14 @@ function DcsPage() {
         <div data-aos="fade-up" className={styles.TwoContainers}>
           <div className={styles.DcsContainer}>
             <div className={styles.DcsIcon}>
-              <img src="/src/assets/profile-icon.svg" alt="Profile Icon" />
+              <img src={profileIcon} alt="Profile Icon" />
             </div>
             <h2>ELy Rose L. Panganiban-Briones, MIT</h2>
             <p>CS Program Head</p>
           </div>
           <div className={styles.DcsContainer}>
             <div className={styles.DcsIcon}>
-              <img src="/src/assets/profile-icon.svg" alt="Profile Icon" />
+              <img src={profileIcon} alt="Profile Icon" />
             </div>
             <h2>Jovelyn D. Ocampo, MIT</h2>
             <p>IT Program Head</p>

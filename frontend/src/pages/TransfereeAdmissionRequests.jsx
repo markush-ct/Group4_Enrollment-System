@@ -6,8 +6,11 @@ import axios from "axios";
 import Header from "/src/components/AdminDashHeader.jsx";
 import styles from "/src/styles/FreshmenAdmissionRequests.module.css";
 import { useNavigate } from "react-router-dom";
+import errormark from "/src/assets/errormark.png";
+import cvsuLogo from "/src/assets/cvsu-logo.png";
 
 function TransfereeAdmissionRequest() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const [accountRequests, setAccountRequests] = useState([]);
@@ -30,7 +33,7 @@ function TransfereeAdmissionRequest() {
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(`${backendUrl}/session`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);
@@ -61,7 +64,7 @@ function TransfereeAdmissionRequest() {
   // FETCH ADMISSION REQUEST
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getTransfereeAdmissionReq")
+      .get(`${backendUrl}/getTransfereeAdmissionReq`)
       .then((res) => {
         setAccountRequests(res.data.records);
         setFilteredRequests(res.data.records);
@@ -82,7 +85,7 @@ function TransfereeAdmissionRequest() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getTransfereePreProgram")
+      .get(`${backendUrl}/getTransfereePreProgram`)
       .then((res) => {
         setPrevCourses(res.data.prevCourses);
         setLoading(false);
@@ -135,7 +138,7 @@ function TransfereeAdmissionRequest() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/approveTransfereeAdmissionReq",
+        `${backendUrl}/approveTransfereeAdmissionReq`,
         {
           email: request.Email,
           name: request.Firstname + " " + request.Lastname,
@@ -191,7 +194,7 @@ function TransfereeAdmissionRequest() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/rejectTransfereeAdmissionReq",
+        `${backendUrl}/rejectTransfereeAdmissionReq`,
         {
           email: request.Email,
           name: request.Firstname + " " + request.Lastname,
@@ -350,7 +353,7 @@ function TransfereeAdmissionRequest() {
             </div>
             <div className={styles.popupPromptMessageError}>
               <img
-                src="/src/assets/errormark.png"
+                src={errormark}
                 alt="Error Icon"
                 className={styles.popupPromptmessageImage}
               />
@@ -468,7 +471,7 @@ function TransfereeAdmissionRequest() {
                 <div className={styles.headerContainer}>
                   <div className={styles.logoContainer}>
                     <img
-                      src="/src/assets/cvsu-logo.png"
+                      src={cvsuLogo}
                       alt="CvSU Logo"
                       className={styles.logo}
                     />
@@ -483,7 +486,7 @@ function TransfereeAdmissionRequest() {
                   <div className={styles.pictureContainer}>
                     <img
                       className={styles.idPictureBox}
-                      src={`http://localhost:8080/${selectedRequest.IDPicture}`}
+                      src={`${backendUrl}/${selectedRequest.IDPicture}`}
                       alt=""
                     />
                   </div>

@@ -5,6 +5,13 @@ import { useState } from "react";
 import Header from "/src/components/Header.jsx";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import educLogo from "/src/assets/EDUC-logo.svg";
+import bmLogo from "/src/assets/BM-logo.svg";
+import acsLogo from "/src/assets/ACS-logo.svg";
+import crimLogo from "/src/assets/CRIM-logo.svg";
+import hmLogo from "/src/assets/HM-logo.svg";
+import itsLogo from "/src/assets/ITS-logo.svg";
+import psychLogo from "/src/assets/PSYCH-logo.svg";
 
 function Undergrad() {
   const [SideBar, setSideBar] = useState(false);
@@ -73,43 +80,43 @@ function Undergrad() {
         <div data-aos="fade-up" className={styles.SocContainers}>
           <div className={styles.iconContainer} data-testid="icon-container">
             <div className={styles.SocIcon}>
-              <img src="/src/assets/EDUC-logo.svg" alt="Profile Icon" />
+              <img src={educLogo} alt="Profile Icon" />
             </div>
             <p>Teacher Education Society</p>
           </div>
           <div className={styles.iconContainer} data-testid="icon-container">
             <div className={styles.SocIcon}>
-              <img src="/src/assets/BM-logo.svg" alt="Profile Icon" />
+              <img src={bmLogo} alt="Profile Icon" />
             </div>
             <p>Le Manager’s Societe</p>
           </div>
           <div className={styles.iconContainer} data-testid="icon-container">
             <div className={styles.SocIcon}>
-              <img src="/src/assets/ACS-logo.svg" alt="Profile Icon" />
+              <img src={acsLogo} alt="Profile Icon" />
             </div>
             <p>Alliance of Computer Scientist</p>
           </div>
           <div className={styles.iconContainer} data-testid="icon-container">
             <div className={styles.SocIcon}>
-              <img src="/src/assets/CRIM-logo.svg" alt="Profile Icon" />
+              <img src={crimLogo}alt="Profile Icon" />
             </div>
             <p>La Ciencia de Crimines Sociedad</p>
           </div>
           <div className={styles.iconContainer} data-testid="icon-container">
             <div className={styles.SocIcon}>
-              <img src="/src/assets/HM-logo.svg" alt="Profile Icon" />
+              <img src={hmLogo} alt="Profile Icon" />
             </div>
             <p>Hospitality Management Society</p>
           </div>
           <div className={styles.iconContainer} data-testid="icon-container">
             <div className={styles.SocIcon}>
-              <img src="/src/assets/ITS-logo.svg" alt="Profile Icon" />
+              <img src={itsLogo} alt="Profile Icon" />
             </div>
             <p>Information Technology Society</p>
           </div>
           <div className={styles.iconContainer} data-testid="icon-container">
             <div className={styles.SocIcon}>
-              <img src="/src/assets/PSYCH-logo.svg" alt="Profile Icon" />
+              <img src={psychLogo} alt="Profile Icon" />
             </div>
             <p>La Liga Psicologia</p>
           </div>

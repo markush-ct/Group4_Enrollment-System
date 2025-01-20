@@ -28,7 +28,11 @@ import ClassSched from './routes/ClassSched.js';
 import StudentInformation from './routes/StudentInformation.js';
 import mysql from 'mysql';
 import path from 'path';
+import fs from 'fs';
 import dbConfig from './db/dbConfig.js';
+import { createRequire } from 'module'; 
+const require = createRequire(import.meta.url);
+const MySQLStore = require('express-mysql-session');
 
 
 dotenv.config();
@@ -61,7 +65,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === 'production',
+        secure: process.env.NODE_ENV === 'production',  // Set to true in production with HTTPS
         maxAge: 1000 * 60 * 60 * 24,  // 1 day expiration
     }
 }));
@@ -2606,9 +2610,8 @@ app.post("/logoutFunction", (req, res) => {
 });
 
 //LOGIN
-app.get('/', (req, res) => {
+app.get('/session', (req, res) => {
     if (req.session && req.session.accountID) {
-        console.log('Session created');
         const getName = `SELECT * FROM account WHERE Email = ?`;
         db.query(getName, req.session.email, (err, result) => {
             if (err) {
@@ -2688,6 +2691,11 @@ app.post('/LoginPage', (req, res) => {
             return res.json({ message: "Invalid credentials", isLoggedIn: false })
         }
     });
+});
+
+app.get('/', (req, res) => {
+    console.log("Request received at '/'");
+    res.send('Hello, World!');
 });
 
 app.use((err, req, res, next) => {

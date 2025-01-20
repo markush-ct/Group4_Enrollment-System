@@ -4,8 +4,12 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "/src/styles/StudentDash.module.css";
 import Header from "/src/components/StudentDashHeader.jsx";
+import acsIcon from '/src/assets/ACS-ICON.png';
+import itsIcon from "/src/assets/ITS-ICON.png";
+import calendarIcon from "/src/assets/calendar-icon.png";
 
 function RegIrregDashboard() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const [program, setProgram] = useState("");
@@ -13,7 +17,7 @@ function RegIrregDashboard() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getStudentProgram")
+      .get(`${backendUrl}/getStudentProgram`)
       .then((res) => {
         if (res.data.program === 1) {
           setProgram("BSCS");
@@ -43,11 +47,11 @@ function RegIrregDashboard() {
 
   useEffect(() => {
     Promise.all([
-      axios.get("http://localhost:8080/socFeeProgress"),
-      axios.get("http://localhost:8080/reqsProgress"),
-      axios.get("http://localhost:8080/adviseProgress"),
-      axios.get("http://localhost:8080/preEnrollProgress"),
-      axios.get("http://localhost:8080/enrollStatusProgress"),
+      axios.get(`${backendUrl}/socFeeProgress`),
+      axios.get(`${backendUrl}/reqsProgress`),
+      axios.get(`${backendUrl}/adviseProgress`),
+      axios.get(`${backendUrl}/preEnrollProgress`),
+      axios.get(`${backendUrl}/enrollStatusProgress`),
     ]).then((res) => {
       setSocFeeProg(res[0].data.message === "Success");
       setReqsProg(res[1].data.message === "Success");
@@ -76,7 +80,7 @@ function RegIrregDashboard() {
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(`${backendUrl}/session`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);
@@ -90,9 +94,9 @@ function RegIrregDashboard() {
       });
 
     axios
-      .get("http://localhost:8080/getPFP")
+      .get(`${backendUrl}/getPFP`)
       .then((res) => {
-        setPFP(`http://localhost:8080/${res.data.pfpURL}`);
+        setPFP(`${backendUrl}/${res.data.pfpURL}`);
       })
       .catch((err) => {
         alert("Error: " + err);
@@ -105,7 +109,7 @@ function RegIrregDashboard() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getEnrollment")
+      .get(`${backendUrl}/getEnrollment`)
       .then((res) => {
         const { enrollmentPeriod } = res.data;
 
@@ -149,7 +153,7 @@ function RegIrregDashboard() {
               data-testid="society-section"
             >
               <div className={styles.profilePic} data-testid="logo">
-                <img src="\src\assets\ACS-logo.svg" alt="Society Logo" />
+                <img src={acsIcon} alt="Society Logo" />
               </div>
               <h3>Alliance of Computer Scientist</h3>
             </div>
@@ -159,7 +163,7 @@ function RegIrregDashboard() {
               data-testid="society-section"
             >
               <div className={styles.profilePic} data-testid="logo">
-                <img src="\src\assets\ITS-logo.svg" alt="Society Logo" />
+                <img src={itsIcon} alt="Society Logo" />
               </div>
               <h3>Information Technology Society</h3>
             </div>
@@ -238,7 +242,7 @@ function RegIrregDashboard() {
         </div>
 
         <div className={styles.linksSection} data-testid="link-section">
-          <img src="\src\assets\calendar-icon.png" alt="Calendar" />
+          <img src={calendarIcon} alt="Calendar" />
           <Link to="/ClassSchedule" data-testid="class-schedule-link">
             View Schedule
           </Link>

@@ -5,8 +5,11 @@ import axios from 'axios';
 import Header from '/src/components/AdminDashHeader.jsx';
 import styles from '/src/styles/AccountRequest.module.css';
 import { data, useNavigate } from 'react-router-dom';
+import checkmark from "/src/assets/checkmark.png";
+import errormark from "/src/assets/errormark.png";
 
 function StudentInformation() {
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
     const [SideBar, setSideBar] = useState(false);
     const [accName, setAccName] = useState("");
     const [accountRequests, setAccountRequests] = useState([]);
@@ -29,7 +32,7 @@ function StudentInformation() {
     //RETURNING ACCOUNT NAME IF LOGGED IN
     useEffect(() => {
         axios
-            .get("http://localhost:8080")
+            .get(`${backendUrl}/session`)
             .then((res) => {
                 if (res.data.valid) {
                     setAccName(res.data.name);
@@ -70,7 +73,7 @@ function StudentInformation() {
         e.preventDefault();
         console.log(values);
 
-        axios.post('http://localhost:8080/addStudent/studentInfo', values)
+        axios.post(`${backendUrl}/addStudent/studentInfo`, values)
             .then((res) => {
                 if (res.data.message === "Success") {
                     setApprovalPrompt(true);
@@ -135,7 +138,7 @@ function StudentInformation() {
 
         console.log(index.StudentID);
 
-        axios.post('http://localhost:8080/getEnrollStatus/studentInfo', { studentID: index.StudentID })
+        axios.post(`${backendUrl}/getEnrollStatus/studentInfo`, { studentID: index.StudentID })
             .then((res) => {
                 if (res.data.message === "Success") {
                     setEnrollmentStatus(res.data.enrollStatus);
@@ -194,7 +197,7 @@ function StudentInformation() {
     // FETCH ACCOUNTS
     useEffect(() => {
         axios
-            .get("http://localhost:8080/getAllStudent")
+            .get(`${backendUrl}/getAllStudent`)
             .then((res) => {
                 setAccountRequests(res.data.studentRes);
                 setFilteredRequests(res.data.studentRes);
@@ -227,7 +230,7 @@ function StudentInformation() {
                         </div>
                         <div className={styles.popupPromptMessage}>
                             <img
-                                src="/src/assets/checkmark.png"
+                                src={checkmark}
                                 alt="Success Icon"
                                 className={styles.popupPromptmessageImage}
                             />
@@ -261,7 +264,7 @@ function StudentInformation() {
                         </div>
                         <div className={styles.popupPromptMessage}>
                             <img
-                                src="/src/assets/checkmark.png"
+                                src={checkmark}
                                 alt="Success Icon"
                                 className={styles.popupPromptmessageImage}
                             />
@@ -286,7 +289,7 @@ function StudentInformation() {
                         </div>
                         <div className={styles.popupPromptMessageError}>
                             <img
-                                src="/src/assets/errormark.png"
+                                src={errormark}
                                 alt="Error Icon"
                                 className={styles.popupPromptmessageImage}
                             />

@@ -6,8 +6,12 @@ import Header from "/src/components/Header.jsx";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import axios from "axios";
+import resetpwLogo from "/src/assets/reset-pwlogo.svg";
+import verifyIcon from "/src/assets/verify-icon.png";
+import errormark from "/src/assets/errormark.png";
 
 function ForgotPass() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
   const [SideBar, setSideBar] = useState(false);
   const [verificationPrompt, setVerificationPrompt] = useState(false);
   const [passwordResetPrompt, setPasswordResetPrompt] = useState(false);
@@ -77,7 +81,7 @@ function ForgotPass() {
     }
 
     axios
-      .post("http://localhost:8080/verifyPin", {
+      .post(`${backendUrl}/verifyPin`, {
         email: values.email,
         pin: values.pin.join(""),
       })
@@ -125,7 +129,7 @@ function ForgotPass() {
     setShowSuccessPopup(true);
 
     axios
-      .post("http://localhost:8080/resetPass", {
+      .post(`${backendUrl}/resetPass`, {
         email: values.email,
         newPassword: values.newPassword,
       })
@@ -150,7 +154,7 @@ function ForgotPass() {
       <div className={styles.mainPage}>
         <div data-aos="fade-up" className={styles.resetContainer}>
           <div className={styles.lockIcon}>
-            <img src="/src/assets/reset-pwlogo.svg" alt="Lock Icon" />
+            <img src={resetpwLogo} alt="Lock Icon" />
           </div>
 
           <h2>Trouble Logging In?</h2>
@@ -190,7 +194,7 @@ function ForgotPass() {
             </button>
             <div className={styles.Message}>
               <img
-                src="/src/assets/verify-icon.png"
+                src={verifyIcon}
                 alt="Verification Icon"
                 className={styles.messageImage}
               />
@@ -296,7 +300,7 @@ function ForgotPass() {
                     
                     <div className={styles.popupPromptMessageError}>
                       <img
-                        src="/src/assets/errormark.png"
+                        src={errormark}
                         alt="Error Icon"
                         className={styles.popupPromptmessageImage}
                       />

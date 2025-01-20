@@ -5,8 +5,10 @@ import { useState } from "react";
 import Header from "/src/components/Header.jsx";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import arrowIcon from '/src/assets/arrow-icon.svg';
 
 function Apply() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
   const [SideBar, setSideBar] = useState(false);
   SideBar
     ? (document.body.style.overflow = "hidden")
@@ -141,7 +143,7 @@ function Apply() {
             className={styles.studentContainer}
             data-testid="freshman-container"
           >
-            <img src="/src/assets/arrow-icon.svg" alt="Arrow Icon" />
+            <img src={arrowIcon} alt="Arrow Icon" />
             Freshman
           </div>
           <div
@@ -150,7 +152,7 @@ function Apply() {
             className={styles.studentContainer}
             data-testid="transferee-container"
           >
-            <img src="/src/assets/arrow-icon.svg" alt="Arrow Icon" />
+            <img src={arrowIcon} alt="Arrow Icon" />
             Transferee
           </div>
           <div
@@ -159,7 +161,7 @@ function Apply() {
             className={styles.studentContainer}
             data-testid="shiftee-container"
           >
-            <img src="/src/assets/arrow-icon.svg" alt="Arrow Icon" />
+            <img src={arrowIcon} alt="Arrow Icon" />
             Shiftee
           </div>
 
@@ -174,7 +176,7 @@ function Apply() {
             className={styles.studentContainer}
             data-testid="regular-container"
           >
-            <img src="/src/assets/arrow-icon.svg" alt="Arrow Icon" />
+            <img src={arrowIcon} alt="Arrow Icon" />
             Regular Student
           </div>
           <div
@@ -183,7 +185,7 @@ function Apply() {
             className={styles.studentContainer}
             data-testid="irregular-container"
           >
-            <img src="/src/assets/arrow-icon.svg" alt="Arrow Icon" />
+            <img src={arrowIcon} alt="Arrow Icon" />
             Irregular Student
           </div>
         </div>

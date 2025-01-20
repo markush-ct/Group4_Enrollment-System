@@ -6,6 +6,7 @@ import Header from "/src/components/AdminDashHeader.jsx";
 
 
 function TransfereeDashboard() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ function TransfereeDashboard() {
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(`${backendUrl}/session`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);

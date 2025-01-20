@@ -5,8 +5,11 @@ import axios from 'axios';
 import Header from '/src/components/AdminDashHeader.jsx';
 import styles from '/src/styles/AccountRequest.module.css';
 import { useNavigate } from 'react-router-dom';
+import checkmark from "/src/assets/checkmark.png";
+import errormark from "/src/assets/errormark.png";
 
 function Requirements() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const [accountRequests, setAccountRequests] = useState([]);
@@ -29,7 +32,7 @@ function Requirements() {
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(`${backendUrl}/session`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);
@@ -59,7 +62,7 @@ function Requirements() {
 
   // FETCH ACCOUNT REQUESTS
   useEffect(() => {
-    axios.get("http://localhost:8080/getReqsForSocOff")
+    axios.get(`${backendUrl}/getReqsForSocOff`)
         .then((res) => {
             setAccountRequests(res.data.students);
             setFilteredRequests(res.data.students);
@@ -83,7 +86,7 @@ const handleApprove = async (request) => {
   }
 
   try {
-    const res = await axios.post('http://localhost:8080/socfeeVerifyChecklist', {studentID: request.StudentID}); 
+    const res = await axios.post(`${backendUrl}/socfeeVerifyChecklist`, {studentID: request.StudentID}); 
     console.log('Response:', res.data);
     setApprovalPrompt(true);
       setApprovalMsg(`Verification successful for Student ID: ${request.CvSUStudentID}`);
@@ -108,7 +111,7 @@ const handleReject = async (request) => {
   }
 
   try {
-    const res = await axios.post('http://localhost:8080/socfeeRejectChecklist', {studentID: request.StudentID}); 
+    const res = await axios.post(`${backendUrl}/socfeeRejectChecklist`, {studentID: request.StudentID}); 
     console.log('Response:', res.data);
     setApprovalPrompt(true);
       setApprovalMsg(`Rejection successful for Student ID: ${request.CvSUStudentID}`);
@@ -135,12 +138,12 @@ const closePrompt = () => {
     setPopUpVisible(true);
     
     Promise.all([
-      axios.post(`http://localhost:8080/getCOGForSocOff`, {studentID: request.StudentID}),
-      axios.post(`http://localhost:8080/getChecklistForSocOff`, {studentID: request.StudentID}),
+      axios.post(`${backendUrl}/getCOGForSocOff`, {studentID: request.StudentID}),
+      axios.post(`${backendUrl}/getChecklistForSocOff`, {studentID: request.StudentID}),
     ])
     .then((res) => {
       if(res[0].data.message === "Success" && res[1].data.message === "Success"){
-        setCOG(`http://localhost:8080/${res[0].data.cogPath}`);
+        setCOG(`${backendUrl}/${res[0].data.cogPath}`);
         setChecklist(res[1].data.checklistData);
       } else{
         setCOG(null);
@@ -234,7 +237,7 @@ const closePrompt = () => {
             </div>
             <div className={styles.popupPromptMessage}>
                 <img
-                    src="/src/assets/checkmark.png"
+                    src={checkmark}
                     alt="Success Icon"
                     className={styles.popupPromptmessageImage}
                 />
@@ -268,7 +271,7 @@ const closePrompt = () => {
             </div>
             <div className={styles.popupPromptMessage}>
                 <img
-                    src="/src/assets/checkmark.png"
+                    src={checkmark}
                     alt="Success Icon"
                     className={styles.popupPromptmessageImage}
                 />
@@ -293,7 +296,7 @@ const closePrompt = () => {
             </div>
             <div className={styles.popupPromptMessageError}>
                 <img
-                    src="/src/assets/errormark.png"
+                    src={errormark}
                     alt="Error Icon"
                     className={styles.popupPromptmessageImage}
                 />

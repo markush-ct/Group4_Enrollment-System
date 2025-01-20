@@ -6,8 +6,13 @@ import axios from "axios";
 import Header from "/src/components/AdminDashHeader.jsx";
 import styles from "/src/styles/FreshmenAdmissionRequests.module.css";
 import { useNavigate } from "react-router-dom";
+import checkmark from "/src/assets/checkmark.png";
+import errormark from "/src/assets/errormark.png";
+import switchIcon from "/src/assets/switch-icon.png";
+import cvsuLogo from "/src/assets/cvsu-logo.png";
 
 function FreshmenAdmissionRequest() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
   const [SideBar, setSideBar] = useState(false);
   const [accName, setAccName] = useState("");
   const [accountRequests, setAccountRequests] = useState([]);
@@ -36,7 +41,7 @@ function FreshmenAdmissionRequest() {
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
-      .get("http://localhost:8080")
+      .get(`${backendUrl}/session`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);
@@ -67,7 +72,7 @@ function FreshmenAdmissionRequest() {
   // FETCH ADMISSION REQUEST
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getFreshmenAdmissionReq")
+      .get(`${backendUrl}/getFreshmenAdmissionReq`)
       .then((res) => {
         setAccountRequests(res.data.records);
         setFilteredRequests(res.data.records);
@@ -102,7 +107,7 @@ function FreshmenAdmissionRequest() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getFreshmenConfirmedSlots")
+      .get(`${backendUrl}/getFreshmenConfirmedSlots`)
       .then((res) => {
         setAccountRequests1(res.data.admissionRes);
         setFilteredRequests1(res.data.admissionRes);
@@ -157,7 +162,7 @@ function FreshmenAdmissionRequest() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/approveFreshmenAdmissionReq",
+        `${backendUrl}/approveFreshmenAdmissionReq`,
         {
           email: request.Email,
           name: request.Firstname + " " + request.Lastname,
@@ -214,7 +219,7 @@ function FreshmenAdmissionRequest() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/rejectFreshmenAdmissionReq",
+        `${backendUrl}/rejectFreshmenAdmissionReq`,
         {
           email: request.Email,
           name: request.Firstname + " " + request.Lastname,
@@ -386,7 +391,7 @@ function FreshmenAdmissionRequest() {
             </div>
             <div className={styles.popupPromptMessageError}>
               <img
-                src="/src/assets/errormark.png"
+                src={errormark}
                 alt="Error Icon"
                 className={styles.popupPromptmessageImage}
               />
@@ -410,7 +415,7 @@ function FreshmenAdmissionRequest() {
             }
           >
             <img
-              src={"/src/assets/switch-icon.png"}
+              src={switchIcon}
               alt={activeView === "Request" ? "Confirm Slot" : "Request"}
               className={styles.iconImage}
             />
@@ -576,7 +581,7 @@ function FreshmenAdmissionRequest() {
                 <div className={styles.headerContainer}>
                   <div className={styles.logoContainer}>
                     <img
-                      src="/src/assets/cvsu-logo.png"
+                      src={cvsuLogo}
                       alt="CvSU Logo"
                       className={styles.logo}
                     />
@@ -591,7 +596,7 @@ function FreshmenAdmissionRequest() {
                   <div className={styles.pictureContainer}>
                     <img
                       className={styles.idPictureBox}
-                      src={`http://localhost:8080/${selectedRequest.IDPicture}`}
+                      src={`${backendUrl}/${selectedRequest.IDPicture}`}
                       alt=""
                     />
                   </div>
