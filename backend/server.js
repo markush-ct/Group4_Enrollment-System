@@ -79,7 +79,7 @@ app.use(express.json());
 
 app.use(cookieParser());
 app.use(session({
-    secret: 'secret',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: sessionStore, // Use MySQL session store
