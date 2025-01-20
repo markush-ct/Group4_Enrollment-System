@@ -2628,7 +2628,7 @@ app.post("/logoutFunction", (req, res) => {
     }
 });
 
-//LOGIN
+//LOGIN SESSION
 app.get('/session', (req, res) => {
     console.log('Session Data:', req.session);
     if (req.session) {
@@ -2653,6 +2653,7 @@ app.get('/session', (req, res) => {
     }
 })
 
+//Login
 app.post('/LoginPage', (req, res) => {
     const sql = `SELECT * FROM account WHERE Email = ? AND Password = ?`;
     const { email, password } = req.body;
