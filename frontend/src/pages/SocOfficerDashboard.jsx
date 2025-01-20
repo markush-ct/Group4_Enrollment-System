@@ -60,7 +60,7 @@ function SocOfficerDashboard() {
   //RETURNING ACCOUNT NAME IF LOGGED IN
   useEffect(() => {
     axios
-      .get(`${backendUrl}/loginSession`)
+      .get(`${backendUrl}`)
       .then((res) => {
         if (res.data.valid) {
           setAccName(res.data.name);

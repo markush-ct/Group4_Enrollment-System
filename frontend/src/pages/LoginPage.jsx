@@ -109,7 +109,6 @@ function LoginPage() {
           setsignUpMsg(res.data.message);
           setErrorPrompt(true);
           setErrorMsg(res.data.message);
-          setError("");
           res.data.isLoggedIn = false;
         }
       })
