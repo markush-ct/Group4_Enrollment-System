@@ -56,6 +56,7 @@ function SocOfficerDashboard() {
 
   //Reuse in other pages that requires logging in
   const navigate = useNavigate();
+  
   axios.defaults.withCredentials = true;
   // //RETURNING ACCOUNT NAME IF LOGGED IN
   // useEffect(() => {
