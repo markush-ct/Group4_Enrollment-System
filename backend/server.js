@@ -85,7 +85,7 @@ sessionStore.on('error', (err) => {
 // CORS configuration
 app.use(cors({
     origin: ['http://localhost:5173'
-    // , 'https://group4-enrollment-system-client.vercel.app'
+    , 'https://group4-enrollment-system-client.vercel.app'
     ],
     credentials: true,
 }));
